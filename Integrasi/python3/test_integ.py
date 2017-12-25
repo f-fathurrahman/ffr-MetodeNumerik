@@ -5,7 +5,7 @@
 # \end{equation}
 
 import math
-from integ import *
+from integ_trapezoid import *
 
 # the function to be integrated
 def f(x):
