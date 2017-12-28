@@ -1,11 +1,11 @@
 % Example 6.4 (Recursive trapezoidal rule)
 
-% Function to be integrated
-func = @(x) (sqrt(x)*cos(x));
+% Function to be integrated, using change of variable
+func = @(t) (2* t^2 * cos(t^2));
 
 I2h = 0;
 for k = 1:20
-  Ih = integ_trapezoid_recursive(func,0,pi,I2h,k);
+  Ih = integ_trapezoid_recursive( func,0,sqrt(pi), I2h, k );
   diffI = abs(Ih - I2h);
   fprintf('k = %5d %18.10f %18.10e\n', k, Ih, diffI);
   if( k > 1 && diffI < 1.0e-6 )
