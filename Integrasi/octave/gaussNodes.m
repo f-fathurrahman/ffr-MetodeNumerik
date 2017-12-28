@@ -15,7 +15,8 @@ x = zeros(N,1);
 % Truncate fractional portion of X and return the integer portion.
 % This is equivalent to rounding towards zero.
 nRoots = fix(N+1)/2;
-fprintf('nRoots = %d\n', nRoots)
+
+%fprintf('nRoots = %d\n', nRoots)
 
 for i = 1:nRoots
   t = cos(pi*(i-0.25)/(N+0.5)); % approximate roots
