@@ -26,7 +26,8 @@ if f1*f2 > 0
 end
 
 MaxIter = ceil( log(abs(x2-x1)/tol)/log(2.0) );
-fprintf('MaxIter = %d\n', MaxIter)
+
+%fprintf('MaxIter = %d\n', MaxIter)
 
 for i = 1:MaxIter
   x3 = 0.5*(x1 + x2);
