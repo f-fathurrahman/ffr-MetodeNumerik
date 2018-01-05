@@ -35,5 +35,6 @@ while x < xStop
   x = x + H;
   xSol(k) = x;
   ySol(k,:) = y;
+  %fprintf('%18.10f %18.10f %18.10f\n', xSol(k), ySol(k,1), ySol(k,2))
 end
 

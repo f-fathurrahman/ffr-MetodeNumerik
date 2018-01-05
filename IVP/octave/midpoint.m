@@ -15,12 +15,12 @@ function y = midpoint(dEqs,x,y,xStop,tol)
   end
 
   % y must be row vector
-  if nargin <5
+  if nargin < 5
     tol = 1.0e-6;
   end
 
   kMax = 21;
-
+  
   n = length(y);
   r = zeros(kMax,n);
 
@@ -46,26 +46,3 @@ function y = midpoint(dEqs,x,y,xStop,tol)
   error('Midpoint method did not converge')
 endfunction
 
-function r = richardson(r,k,n)
-  % Richardson extrapolation.
-  for j = k-1:-1:1
-    c =(k/(k-1))^(2*(k-j));
-    r(j,1:n) =(c*r(j+1,1:n) - r(j,1:n))/(c - 1.0);
-  end
-  return
-endfunction
-
-
-function y = mid(dEqs,x,y,xStop,nSteps)
-  % Midpoint formulas.
-  h = (xStop - x)/nSteps;
-  y0 = y;
-  y1 = y0 + h*feval(dEqs,x,y0);
-  for i = 1:nSteps-1
-    x = x + h;
-    y2 = y0 + 2.0*h*feval(dEqs,x,y1);
-    y0 = y1;
-    y1 = y2;
-  end
-  y = 0.5*(y1 + y0 + h*feval(dEqs,x,y2));
-endfunction
