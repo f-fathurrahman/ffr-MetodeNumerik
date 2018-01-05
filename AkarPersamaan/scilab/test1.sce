@@ -1,10 +1,10 @@
 clear
 
-exec "bisection.sci"
-exec "regula_falsi.sci"
-exec "ridder.sci"
-exec "newton_raphson.sci"
-exec "secant.sci"
+exec "bisection.sce"
+exec "regula_falsi.sce"
+exec "ridder.sce"
+exec "newton_raphson.sce"
+exec "secant.sce"
 
 function f = fun1(x)
   f = x^3 - 10*x^2 + 5
@@ -38,4 +38,5 @@ endfunction
 //root = regula_falsi( fun3, 0.5, 0.7 )
 //root = ridder( fun3, 0.5, 0.7 )
 
-exit
+quit()
+

@@ -6,3 +6,5 @@ endfunction
 [x, y] = myfct(3,2)
 
 printf("x = %f, y = %f\n", x, y)
+
+quit()
