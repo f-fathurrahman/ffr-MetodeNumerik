@@ -9,7 +9,7 @@ function root = bisection( f, x1, x2, tol )
 
   Niter = int32( ceil( log(abs(x1-x2)/tol)/log(2.0) ) )
   
-  printf("\nRoot searching via bisection algorithm\n")
+  printf("\nRoot searching via bisection method\n")
   printf("Initial search interval: [%18.10f,%18.10f]\n", x1, x2)
   printf("Tolerance: %18.10e\n", tol)
   printf("bisection will iterate to %d iterations.\n", Niter)
@@ -18,6 +18,16 @@ function root = bisection( f, x1, x2, tol )
 //> The sign of \texttt{f1} and \texttt{f2} must be opposite.
   f1 = f(x1)
   f2 = f(x2)
+
+  if abs(f1) <= tol
+    root = x1
+    return
+  end
+
+  if abs(f2) <= tol
+    root = x2
+    return
+  end
 
   if(f1*f2 > 0.0)
     printf("ERROR in bisection: Root is not bracketed\n")

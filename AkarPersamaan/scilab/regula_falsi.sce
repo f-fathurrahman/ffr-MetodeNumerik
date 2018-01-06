@@ -11,13 +11,23 @@ function root = regula_falsi( f, x1, x2, tol, NiterMax )
     NiterMax = 100
   end
 
-  printf("\nRoot searching via regula falsi algorithm\n")
+  printf("\nRoot searching via regula falsi method\n")
   printf("Initial search interval: [%18.10f,%18.10f]\n", x1, x2)
   printf("Tolerance: %18.10e\n", tol)
   printf("regula_falsi will iterate up to %d maximum iterations.\n", NiterMax)
 
   f1 = f(x1)
   f2 = f(x2)
+
+  if abs(f1) <= tol
+    root = x1
+    return
+  end
+
+  if abs(f2) <= tol
+    root = x2
+    return
+  end
 
   if(f1*f2 > 0.0)
     printf("ERROR: Root is not bracketed")
