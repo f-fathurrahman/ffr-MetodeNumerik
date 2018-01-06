@@ -6,13 +6,6 @@ exec "ridder.sce"
 exec "newton_raphson.sce"
 exec "secant.sce"
 
-function f = fun1(x)
-  f = x^3 - 10*x^2 + 5
-endfunction
-
-function df = dfun1(x)
-  df = 3*x^2 - 20*x
-endfunction
 
 //root = bisection( fun1, 0.6, 0.8 )
 //root = regula_falsi( fun1, 0.6, 0.8 )

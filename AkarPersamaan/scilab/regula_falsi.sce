@@ -1,3 +1,6 @@
+//> Find root of equation $f(x) = 0$ using regula falsi.
+//> \texttt{x1} and \texttt{x2} is initial search interval
+//> \texttt{tol} is optional and is set to $10^{-9}$ by default.
 function root = regula_falsi( f, x1, x2, tol, NiterMax )
 
   if ~exists("tol", "local") then
@@ -8,6 +11,11 @@ function root = regula_falsi( f, x1, x2, tol, NiterMax )
     NiterMax = 100
   end
 
+  printf("\nRoot searching via regula falsi algorithm\n")
+  printf("Initial search interval: [%18.10f,%18.10f]\n", x1, x2)
+  printf("Tolerance: %18.10e\n", tol)
+  printf("regula_falsi will iterate up to %d maximum iterations.\n", NiterMax)
+
   f1 = f(x1)
   f2 = f(x2)
 
@@ -16,15 +24,21 @@ function root = regula_falsi( f, x1, x2, tol, NiterMax )
     return
   end
 
+  printf("\n")
+  
+//>
+//> Regula falsi iterations starts here.
+//>
+
   for iter = 1:NiterMax
 
     x3 = (x1*f2 - x2*f1)/(f2 - f1)
     f3 = f(x3)
 
-    printf("Regula falsi: %5d (%18.10f,%18.10e)\n", iter, x3,f3 )
+    printf("regula_falsi: %5d %18.10f %18.10e\n", iter, x3,f3 )
 
     if abs(f3) < tol
-      printf("Regula falsi: Convergence achieved\n")
+      printf("regula_falsi: Convergence achieved in %d iterations\n", iter)
       break
     end
 
