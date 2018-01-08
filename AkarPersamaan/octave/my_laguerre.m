@@ -1,6 +1,6 @@
 function x = my_laguerre(a,tol)
 
-x = randn;
+x = randn();
 
 n = length(a) - 1;
 MaxIter = 30;
