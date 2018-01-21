@@ -5,6 +5,6 @@ Z = sqrt(X.^2 + Y.^2)
 
 plot3d(x, y, Z)
 
-//if getscilabmode() ~= "STD"
-//  quit()
-//end
+if getscilabmode() ~= "STD"
+  quit()
+end
