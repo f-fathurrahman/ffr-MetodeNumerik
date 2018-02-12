@@ -27,6 +27,7 @@ function root = ridder( f, a, b, tol, NiterMax )
 
   if fa*fb > 0.0
     printf("ERROR in ridder: Root is not bracketed\n")
+    printf("fa = %18.10f, fb = %18.10f\n", fa, fb)
     return 0.0
   end
 

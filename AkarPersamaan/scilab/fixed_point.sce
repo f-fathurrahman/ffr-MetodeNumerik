@@ -9,6 +9,12 @@ function root = fixed_point( f, x, tol, NiterMax )
     NiterMax = 100
   end
 
+  printf("\nRoot searching via fixed-point method\n")
+  printf("Initial guess: [%18.10f]\n", x)
+  printf("Tolerance: %18.10e\n", tol)
+  printf("fixed_point will iterate up to %d maximum iterations.\n", NiterMax)
+
+  printf("fixed_point: Begin iteration\n")
   for iter = 1:NiterMax
     fx = f(x)
     diffx = abs(x - fx)
