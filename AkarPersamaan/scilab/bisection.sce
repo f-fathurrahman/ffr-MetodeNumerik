@@ -1,18 +1,21 @@
 //> Find root of equation $f(x) = 0$ using bisection.
 //> \texttt{x1} and \texttt{x2} is initial search interval
 //> \texttt{tol} is optional and is set to $10^{-9}$ by default.
-function root = bisection( f, x1, x2, tol )
+function root = bisection( f, x1, x2, tol, NiterMax )
 
   if ~exists("tol", "local") then
     tol = 1e-9
   end
 
-  Niter = int32( ceil( log(abs(x1-x2)/tol)/log(2.0) ) )
+
+  if ~exists("NiterMax", "local") then
+    NiterMax = int32( ceil( log(abs(x1-x2)/tol)/log(2.0) ) )
+  end
   
   printf("\nRoot searching via bisection method\n")
   printf("Initial search interval: [%18.10f,%18.10f]\n", x1, x2)
   printf("Tolerance: %18.10e\n", tol)
-  printf("bisection will iterate to %d iterations.\n", Niter)
+  printf("bisection will iterate up to %d iterations.\n", NiterMax)
 
 //> Check whether the root is bracked or not.
 //> The sign of \texttt{f1} and \texttt{f2} must be opposite.
@@ -38,7 +41,7 @@ function root = bisection( f, x1, x2, tol )
 //> Bisection iterations starts here.
 //>
   printf("bisection: Begin iteration\n")
-  for iter = 1:Niter
+  for iter = 1:NiterMax
 
     // midpoint
     x3 = 0.5*(x1 + x2)

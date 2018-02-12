@@ -85,7 +85,7 @@ function root = ridder( f, a, b, tol, NiterMax )
 
   end
 
-  printf("Too many iterations")
+  printf("Too many iterations\n")
   root = x
 
 endfunction
