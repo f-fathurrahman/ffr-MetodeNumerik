@@ -35,6 +35,9 @@ endfunction
 exec("bisection.sce", -1)
 root = bisection( soal_09, 0.4242424242, 0.4343434343, NiterMax=50 )
 
+exec("regula_falsi.sce", -1)
+root = regula_falsi( soal_09, 0.4242424242, 0.4343434343 )
+
 exec("ridder.sce", -1)
 root = ridder( soal_09, 0.4242424242, 0.4343434343, NiterMax=50 )
 
