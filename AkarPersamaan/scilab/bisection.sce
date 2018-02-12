@@ -34,11 +34,10 @@ function root = bisection( f, x1, x2, tol )
     return
   end
 
-  printf("\n")
-
 //>
 //> Bisection iterations starts here.
 //>
+  printf("bisection: Begin iteration\n")
   for iter = 1:Niter
 
     // midpoint

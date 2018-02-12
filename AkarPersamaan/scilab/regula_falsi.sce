@@ -33,13 +33,12 @@ function root = regula_falsi( f, x1, x2, tol, NiterMax )
     printf("ERROR: Root is not bracketed")
     return
   end
-
-  printf("\n")
   
 //>
 //> Regula falsi iterations starts here.
 //>
 
+  printf("regula_falsi: Begin iteration\n")
   for iter = 1:NiterMax
 
     x3 = (x1*f2 - x2*f1)/(f2 - f1)
@@ -49,7 +48,8 @@ function root = regula_falsi( f, x1, x2, tol, NiterMax )
 
     if abs(f3) < tol
       printf("regula_falsi: Convergence achieved in %d iterations\n", iter)
-      break
+      root = x3
+      return
     end
 
     if f2*f3 < 0.0
@@ -61,7 +61,5 @@ function root = regula_falsi( f, x1, x2, tol, NiterMax )
     end
 
   end
-
-  root = x3
 
 endfunction

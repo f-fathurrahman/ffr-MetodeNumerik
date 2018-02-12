@@ -32,6 +32,7 @@ function root = ridder( f, a, b, tol, NiterMax )
 
   xOld = 0.0
 
+  printf("ridder: Begin iteration\n") 
   for iter = 1:NiterMax
 
     // midpoint
