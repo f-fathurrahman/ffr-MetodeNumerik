@@ -25,6 +25,10 @@ function do_plot_v1()
     f(i) = soal_08(omega(i))
     printf("%18.10f %18.10f\n", omega(i), f(i))
   end
+  clf()
+  plot(omega, f)
+  xgrid()
+  xs2pdf( gcf(), "soal_08_v1.pdf" )
 endfunction
 
 function do_plot_v2()
@@ -37,10 +41,14 @@ function do_plot_v2()
     f(i) = soal_08(omega(i))
     printf("%18.10f %18.10f\n", omega(i), f(i))
   end
+  clf()
+  plot(omega, f)
+  xgrid()
+  xs2pdf( gcf(), "soal_08_v2.pdf" )  
 endfunction
 
-//do_plot_v1()
-//do_plot_v2()
+do_plot_v1()
+do_plot_v2()
 
 exec("bisection.sce", -1)
 root1 = bisection( soal_08, 219.1919191919, 221.7171717172 )
