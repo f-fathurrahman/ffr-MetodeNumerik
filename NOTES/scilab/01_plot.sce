@@ -7,6 +7,7 @@ xs2pdf( gcf(), "images/01_plot_v1.pdf" )
 
 clf()
 plot( x, y1, "r*")
+set(gca(),"grid",[1 1]) // or xgrid()
 xs2pdf( gcf(), "images/01_plot_v2.pdf" )
 
 L = 5
