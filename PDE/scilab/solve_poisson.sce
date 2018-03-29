@@ -1,5 +1,5 @@
-function [u,x,y] = poisson(f,g,bx0,bxf,by0,byf,D,Mx,My,tol,MaxIter)
-// solve Poisson equation in 1D:
+function [u,x,y] = solve_poisson(f,g,bx0,bxf,by0,byf,D,Mx,My,tol,MaxIter)
+// solve Poisson equation in 2D:
 //
 //   u_xx + u_yy +g(x,y)u= f(x,y) 
 //
@@ -50,7 +50,8 @@ function [u,x,y] = poisson(f,g,bx0,bxf,by0,byf,D,Mx,My,tol,MaxIter)
   
   for i=1:My
     for j=1:Mx
-      F(i,j) = f(x(j),y(i)); G(i,j)=g(x(j),y(i));
+      F(i,j) = f(x(j),y(i))
+      G(i,j) = g(x(j),y(i))
     end
   end
   
@@ -70,6 +71,7 @@ function [u,x,y] = poisson(f,g,bx0,bxf,by0,byf,D,Mx,My,tol,MaxIter)
       end
     end
     if itr>1 & max(max(abs(u-u0))) < tol
+      printf("Convergence achieved in %d iterations\n", itr)
       break
     end
     u0 = u
