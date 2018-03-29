@@ -38,6 +38,7 @@ tol = 1e-4
 
 [U,x,y] = solve_poisson(f,g,bx0,bxf,by0,byf,D,Mx,My,tol,MaxIter)
 
+plot3d(x,y,U)
 
 if getscilabmode() ~= "STD"
   quit()
