@@ -1,4 +1,4 @@
-exec("solve_poisson.sce", -1)
+exec("poisson_2d.sce", -1)
 
 function z = f(x,y)
   z = 0.0

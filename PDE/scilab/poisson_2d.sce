@@ -1,4 +1,4 @@
-function [u,x,y] = solve_poisson(f,g,bx0,bxf,by0,byf,D,Mx,My,tol,MaxIter)
+function [u,x,y] = poisson_2d(f,g,bx0,bxf,by0,byf,D,Mx,My,tol,MaxIter)
 // solve Poisson equation in 2D:
 //
 //   u_xx + u_yy +g(x,y)u= f(x,y) 
