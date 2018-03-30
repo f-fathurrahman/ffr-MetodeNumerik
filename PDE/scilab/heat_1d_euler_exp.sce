@@ -1,14 +1,14 @@
-function [u,x,t] = heat_1d_euler_exp(a,xf,T,initialT,bx0,bxf,Nx,Nt)
+function [u,x,t] = heat_1d_euler_exp(a,xf,T,initialTemp,bx0,bxf,Nx,Nt)
 
-// solve 1d heat equation:
+// solve 1d heat equation using explicit Euler method
 //
 //   a u_xx = u_t
 //
 // for: 0<=x<=xf, 0<=t<=T
 //
-// Initial condition: u(x,0)=it0(x)
+// Initial condition: u(x,0) = it0(x)
 //
-// Boundary condition: u(0,t)=bx0(t), u(xf,t)=bxf(t)
+// Boundary condition: u(0,t) = bx0(t), u(xf,t) = bxf(t)
 //
 // Nx = no. of subintervals along x-axis
 //      Total number of points is Nx + 1
@@ -24,7 +24,7 @@ function [u,x,t] = heat_1d_euler_exp(a,xf,T,initialT,bx0,bxf,Nx,Nt)
 
   // Set initial condition
   for i = 1:Nx+1
-    u(i,1) = initialT(x(i))
+    u(i,1) = initialTemp(x(i))
   end
   
   for it = 1:Nt+1

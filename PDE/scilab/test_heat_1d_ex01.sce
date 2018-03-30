@@ -1,5 +1,7 @@
 exec("heat_1d_euler_exp.sce",-1)
 
+exec("heat_1d_euler_imp.sce",-1)
+
 // initial condition (function of x)
 function T = it0(x)
   T = sin(%pi*x)
@@ -20,12 +22,22 @@ endfunction
 
 a = 1 // the parameter of (E9.2-1)
 
-xf =   1
-Nt =  50
-T  =   0.2
-Nx = 500
+xf = 1
+Nt = 50
+T  = 0.5
+Nx = 100
 
-[u1,x,t] = heat_1d_euler_exp( a, xf, T, it0, bx0, bxf, Nt, Nx )
+//[u1,x,t] = heat_1d_euler_exp( a, xf, T, it0, bx0, bxf, Nt, Nx )
+
+//for it = 1:Nt+1
+//  clf()
+//  plot(x,u1(:,it))
+//  set(gca(), "data_bounds", [0,1,0,1])
+//  xs2png( gcf(), "TEMP_" + string(it) + ".png" )
+//  printf("Done output solution for time %d\n", it)
+//end
+
+[u1,x,t] = heat_1d_euler_imp( a, xf, T, it0, bx0, bxf, Nt, Nx )
 
 for it = 1:Nt+1
   clf()
