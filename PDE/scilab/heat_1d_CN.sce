@@ -37,7 +37,7 @@ function [u,x,t] = heat_1d_CN(a,xf,T,initialTemp,bx0,bxf,Nx,Nt)
   // Build matrix A
   A = zeros(Nx-1,Nx-1)
   for i = 1:Nx-1
-    A(i,i) = r1
+    A(i,i) = 2*(1 + r)
     if i > 1
       A(i-1,i) = -r
       A(i,i-1) = -r
@@ -45,17 +45,18 @@ function [u,x,t] = heat_1d_CN(a,xf,T,initialTemp,bx0,bxf,Nx,Nt)
   end
 
   // Build matrix B
-  //B = zeros(Nx-1,Nx-1)
-  //for i = 1:Nx-1
-  //end
+  B = zeros(Nx-1,Nx-1)
+  for i = 1:Nx-1
+    B(i,i) = 2*(1 - r)
+    if i > 1
+      B(i-1,i) = r
+      B(i,i-1) = r
+    end
+  end
 
   for it = 2:Nt+1
-    b = zeros(Nx-1)
-    b(1)    = r*u(1,it)
-    b(Nx-1) = r*u(Nx+1,it)
-    b = b + r*(u(1:Nx-1,it-1) + u(3:Nx+1,it-1)) + r2*u(2:Nx,it-1)
+    b = B*u(2:Nx,it-1)
     u(2:Nx,it) = A\b
-    //printf("t = %f, s = %f\n", t(it), sum(u(2:Nx,it)))
   end
 
 endfunction

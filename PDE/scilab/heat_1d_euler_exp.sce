@@ -35,7 +35,7 @@ function [u,x,t] = heat_1d_euler_exp(a,xf,T,initialTemp,bx0,bxf,Nx,Nt)
   r1 = 1 - 2*r
 
   if r > 0.5
-    printf("\nheat_1d_euler:\n")
+    printf("\nheat_1d_euler_exp:\n")
     printf("WARNING: r is larger than 0.5: %f\n", r)
     printf("WARNING: solution is not stable\n\n")
   else

@@ -43,8 +43,7 @@ function [u,x,t] = heat_1d_euler_imp(a,xf,T,initialTemp,bx0,bxf,Nx,Nt)
   end
 
   for k=2:Nt+1
-    b = [r*u(1,k); zeros(Nx-3,1);
-    r*u(Nx+1,k)] + u(2:Nx,k-1);
+    b = [r*u(1,k); zeros(Nx-3,1); r*u(Nx+1,k)] + u(2:Nx,k-1);
     //u(2:Nx,k) = trid(A,b)
     u(2:Nx,k) = A\b
   end
