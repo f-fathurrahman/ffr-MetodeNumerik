@@ -20,6 +20,7 @@ function [u,x,y,t] = heat_2d_ADI(a,D,T,ixy0,bxyt,Mx,My,N)
       u(i,j)= ixy0(x(j),y(i));
     end
   end
+
   rx  = a*dt/(dx*dx)
   rx1 = 1 + 2*rx
   rx2 = 1 - 2*rx
@@ -63,14 +64,14 @@ function [u,x,y,t] = heat_2d_ADI(a,D,T,ixy0,bxyt,Mx,My,N)
     if modulo(k,2)==0
       for i = 2:My
         jj = 2:Mx
-        bx = [ry*u(i,1) zeros(1,Mx-3) ry*u(i,My+1)] + ..
+        bx = [ry*u(i,1) zeros(1,Mx-3) ry*u(i,My+1)] + ...
              rx*( u_1(i-1,jj) + u_1(i+1,jj) ) + rx2*u_1(i,jj)
         u(i,jj)= (Ay\bx')'
       end
     else
       for j = 2:Mx
         ii = 2:My
-        by = [rx*u(1,j); zeros(My-3,1); rx*u(Mx+1,j)] + ..
+        by = [rx*u(1,j); zeros(My-3,1); rx*u(Mx+1,j)] + ...
              ry*(u_1(ii,j-1) + u_1(ii,j+1)) + ry2*u_1(ii,j)
         u(ii,j) = Ax\by
       end
