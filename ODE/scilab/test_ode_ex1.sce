@@ -3,7 +3,7 @@ exec("ode_heun.sce",-1)
 exec("ode_RK4.sce",-1)
 exec("ode_hamming.sce",-1)
 
-function x = df61(t,y)
+function x = df(t,y)
   x = -y + 1
 endfunction
 
@@ -16,10 +16,10 @@ yt = 1 - exp(-a*t)
 
 N = 4
 
-[t1,ye] = ode_euler(df61,tspan,y0,N)
-[t2,yh] = ode_heun(df61,tspan,y0,N)
-[t3,yr] = ode_RK4(df61,tspan,y0,N)
-[t4,yhm] = ode_hamming(df61,tspan,y0,N)
+[t1,ye] = ode_euler(df,tspan,y0,N)
+[t2,yh] = ode_heun(df,tspan,y0,N)
+[t3,yr] = ode_RK4(df,tspan,y0,N)
+[t4,yhm] = ode_hamming(df,tspan,y0,N)
 
 clf()
 plot(t,yt,"k")
