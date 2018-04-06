@@ -20,7 +20,7 @@ endfunction
 tspan = [0 100]
 y0 = [0 1]
 
-method = "euler_PC"
+method = "RK4"
 
 h = 0.05
 N = (tspan(2) - tspan(1))/h
@@ -58,8 +58,10 @@ ylabel('$y_1$')
 if method == "euler"
   xs2pdf( gcf(), "images/soal_01_ode_euler_t_y1.pdf")
 elseif method == "euler_PC"
-    xs2pdf( gcf(), "images/soal_01_ode_euler_PC_t_y1.pdf")  
+  set(gca(),"data_bounds",[0,100,-1.2,1.2])
+  xs2pdf( gcf(), "images/soal_01_ode_euler_PC_t_y1.pdf")  
 elseif method == "RK4"
+  set(gca(),"data_bounds",[0,100,-1.2,1.2])  
   xs2pdf( gcf(), "images/soal_01_ode_RK4_t_y1.pdf")
 end
 
