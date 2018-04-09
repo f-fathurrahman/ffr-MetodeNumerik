@@ -8,7 +8,7 @@ function [x,y,div_idx] = sch_numerov(E,V,xspan,y0,dy0,N)
 //
 // div_idx is index of divergence point
   
-  h = xspan(2) - xspan(1)
+  h = (xspan(2) - xspan(1))/N
   
   x = xspan(1) + [0:N]'*h // column vector
   y = zeros(N+1,1)  // column vector
