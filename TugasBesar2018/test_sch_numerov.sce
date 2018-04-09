@@ -16,4 +16,4 @@ N = 100
 y0  = 0.0
 dy0 = 1.0
 
-[x,y,div_idx] = sch_numerov(E,HarmonicPot,xspan,y0,dy0,N)
+[x,y,idx_div] = sch_numerov(E,HarmonicPot,xspan,y0,dy0,N)

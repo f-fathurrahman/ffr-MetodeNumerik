@@ -1,4 +1,4 @@
-function [x,y,div_idx] = sch_numerov(E,V,xspan,y0,dy0,N)
+function [x,y,idx_div] = sch_numerov(E,V,xspan,y0,dy0,N)
 //
 // the differential equation is defined by scalar E and function V
 //
@@ -26,7 +26,7 @@ function [x,y,div_idx] = sch_numerov(E,V,xspan,y0,dy0,N)
   ux  = 1 - h6*( V(x(2)) - E )
 
   // default return value for div_idx
-  div_idx = N
+  idx_div = N
 
   for i = 2:N
     up1 = 1.0 - h6*( V(x(i+1)) - E )
@@ -35,7 +35,7 @@ function [x,y,div_idx] = sch_numerov(E,V,xspan,y0,dy0,N)
     ux = up1
     //
     if abs(y(i+1)) > 1e10
-      div_idx = i
+      idx_div = i
       break
     end
   end
