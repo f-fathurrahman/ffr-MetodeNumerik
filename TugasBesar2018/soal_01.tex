@@ -1,0 +1,43 @@
+\section{Soal 1: Perbandingan akurasi beberapa metode}
+
+Misalkan $y(t)$ menyatakan suatu fungsi dari variabel independen $t$.
+$y'(t)$ dan $y''(t)$ secara berturut-turut melambangkan turunan pertama dan
+kedua dari $y$ terhadap $t$.
+
+Selesaikan ODE berikut ini
+\begin{equation}
+y''(t) + y(t) = 0
+\end{equation}
+dengan syarat awal:
+\begin{equation}
+y(0) = 0, \hspace{1cm} y'(0) = 1
+\end{equation}
+dengan menggunakan metode Euler dan predictor-corrector Euler.
+
+Perhatikan bahwa solusi analitik dari permasalahan di atas adalah:
+\begin{equation}
+y(t) = \sin(t)
+\end{equation}
+
+SOLUSI
+
+Dengan menggunakan notasi berikut:
+\begin{equation}
+y_1 \equiv y, \hspace{1cm} y_2 \equiv y'
+\end{equation}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.3\textwidth]{images/soal_01_ode_euler_y1_y2.pdf}
+\includegraphics[width=0.3\textwidth]{images/soal_01_ode_euler_PC_y1_y2.pdf}
+\includegraphics[width=0.3\textwidth]{images/soal_01_ode_RK4_y1_y2.pdf}
+\par
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.3\textwidth]{images/soal_01_ode_euler_t_y1.pdf}
+\includegraphics[width=0.3\textwidth]{images/soal_01_ode_euler_PC_t_y1.pdf}
+\includegraphics[width=0.3\textwidth]{images/soal_01_ode_RK4_t_y1.pdf}
+\par
+\end{figure}
