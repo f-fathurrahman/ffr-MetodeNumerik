@@ -13,7 +13,6 @@
 \usepackage{xcolor}
 
 \usepackage{minted}
-%\newminted{scilab}{breaklines,fontsize=\footnotesize}
 \newminted{scilab}{breaklines}
 
 \definecolor{mintedbg}{rgb}{0.95,0.95,0.95}
@@ -28,20 +27,45 @@
 \date{}
 \maketitle
 
-test
-
 \begin{scilabcode}
 function [a,b] = func1(c,d)
   // Test comment
 endfunction
 \end{scilabcode}
 
-\input{soal_01}
-\input{soal_02}
-\input{soal_03}
-\input{soal_04}
-\input{soal_05}
-\input{soal_06}
-\input{soal_07}
+Selesaikan soal-soal berikut ini dengan menggunakan Scilab.
+
+\section{Soal 1: Perbandingan akurasi beberapa metode}
+
+Carilah solusi numerik dari persamaan diferensial dengan syarat awal:
+\begin{align}
+y''(t) + y(t) = 0 \\
+y(0) = 0, \hspace{1cm} y'(0) = 1
+\end{align}
+
+Bandingkan solusi yang diperoleh dengan solusi analitik:
+\begin{equation}
+y(t) = \sin(t)
+\end{equation}
+
+Gunakan menggunakan metode-metode berikut ini untuk mencari solusi numeriknya.
+\begin{itemize}
+\item Euler
+\item Euler dengan prediktor-korektor (Runge-Kutta orde-2)
+\item Runge-Kutta orde-4
+\end{itemize}
+
+Dari solusi numerik yang didapatkan, buatlah (1) plot antara $y$ dan $y'$
+dan (2) plot antara $t$ dan $y$.
+
+\input{solusi_01}
+
+
+\input{solusi_02}
+\input{solusi_03}
+\input{solusi_04}
+\input{solusi_05}
+\input{solusi_06}
+\input{solusi_07}
 
 \end{document}

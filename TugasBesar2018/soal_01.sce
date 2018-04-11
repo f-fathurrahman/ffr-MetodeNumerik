@@ -17,7 +17,7 @@ function f = dy(t,y)
   f = f'
 endfunction
 
-tspan = [0 100]
+tspan = [0 10]
 y0 = [0 1]
 
 method = "RK4"
