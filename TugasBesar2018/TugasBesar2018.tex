@@ -7,7 +7,7 @@
   
 \usepackage{float}
 \usepackage{graphicx}
-
+\usepackage{enumitem}
 \usepackage{hyperref}
 \usepackage{url}
 \usepackage{xcolor}
@@ -35,13 +35,18 @@ endfunction
 
 Selesaikan soal-soal berikut ini dengan menggunakan Scilab.
 
+%=====================================================
 \section{Soal 1: Perbandingan akurasi beberapa metode}
+%=====================================================
 
-Carilah solusi numerik dari persamaan diferensial dengan syarat awal:
-\begin{align}
-y''(t) + y(t) = 0 \\
+Carilah solusi numerik dari persamaan diferensial berikut
+\begin{equation}
+y'' + y = 0
+\end{equation}
+dengan syarat awal
+\begin{equation}
 y(0) = 0, \hspace{1cm} y'(0) = 1
-\end{align}
+\end{equation}
 
 Bandingkan solusi yang diperoleh dengan solusi analitik:
 \begin{equation}
@@ -58,14 +63,72 @@ Gunakan menggunakan metode-metode berikut ini untuk mencari solusi numeriknya.
 Dari solusi numerik yang didapatkan, buatlah (1) plot antara $y$ dan $y'$
 dan (2) plot antara $t$ dan $y$.
 
-\input{solusi_01}
+Bandingkan hasilnya pada interval $t$ dan parameter step ($h$) yang sama.
+
+%=================================
+\section{Soal 2: Gerakan pendulum}
+%=================================
+
+Gerak suatu pendulum dapat dinyatakan dengan persamaan diferensial:
+\begin{equation}
+u'' = -\frac{g}{L}\sin(u) - ku'
+\end{equation}
+dengan syarat awal
+\begin{equation}
+u(0) = u_0, \hspace{1cm} u'(t) = 0
+\end{equation}
+Dalam persamaan tersebut $u$ menyatakan simpangan pendulum,
+$u_0$ menyatakan simpangan awal pendulum,
+$g$ menyatakan percepatan gravitasi, $L$ menyatakan panjang benang pendulum,
+dan $ku'$ menyatakan suku redaman (gesekan) yang berbanding lurus
+dengan kecepatan $u'$ ($k$ adalah bilangan positif).
+
+\begin{enumerate}[label=(\alph*)]
+\item Cari solusi $u(t)$ untuk kasus $k=0$
+\item Masih untuk kasus $k=0$, tentukan periode osilasi $T$ sebagai
+fungsi dari simpangan awal $u_0$.
+\item Carilah solusi $u(t)$ untuk kasus $k=0$
+\end{enumerate}
 
 
-\input{solusi_02}
-\input{solusi_03}
-\input{solusi_04}
-\input{solusi_05}
-\input{solusi_06}
-\input{solusi_07}
+%========================================================
+\section{Soal 3: Persamaan Schrodinger (metode shooting)}
+%========================================================
+
+\begin{enumerate}[label=(\alph*)]
+\item Persamaan Schrodinger independen-waktu pada 1 dimensi
+dapat dinyatakan sebagai berikut.
+\begin{equation}
+-\frac{\hbar^2}{2m}\frac{\mathrm{d}\psi}{\mathrm{d}x^2}
++ V(x)\psi(x) = E\psi(x)
+\label{eq:sch1d}
+\end{equation}
+Dengan menggunakan unit atomik, kita dapat mengambil $\hbar = 1$
+dan $m = 1$, dan persamaan \eqref{eq:sch1d} dapat ditulis menjadi:
+\begin{equation}
+\psi'' = 2\left[ V(x) - E \right]\psi
+\end{equation}
+
+\item Metode shooting
+\end{enumerate}
+
+Metode shooting untuk quantum harmonic oscillator
+
+
+%====================================================
+\section{Soal 4: Persamaan Schrodinger (nilai eigen)}
+%====================================================
+
+(a) Finite difference orde h
+
+(b) Finite difference orde h
+
+%\input{solusi_01}
+%\input{solusi_02}
+%\input{solusi_03}
+%\input{solusi_04}
+%\input{solusi_05}
+%\input{solusi_06}
+%\input{solusi_07}
 
 \end{document}
