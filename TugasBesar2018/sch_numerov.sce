@@ -1,5 +1,3 @@
-function [x,y,idx_div] = sch_numerov(E,V,xspan,y0,dy0,N)
-//
 // the differential equation is defined by scalar E and function V
 //
 // y'' = 2*(V(x) - E)
@@ -7,6 +5,7 @@ function [x,y,idx_div] = sch_numerov(E,V,xspan,y0,dy0,N)
 // y'(0) = y'(0)
 //
 // div_idx is index of divergence point
+function [x,y,idx_div] = sch_numerov(E,V,xspan,y0,dy0,N)
   
   h = (xspan(2) - xspan(1))/N
   

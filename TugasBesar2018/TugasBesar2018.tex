@@ -75,7 +75,7 @@ u'' = -\frac{g}{L}\sin(u) - ku'
 \end{equation}
 dengan syarat awal
 \begin{equation}
-u(0) = u_0, \hspace{1cm} u'(t) = 0
+u(0) = u_0, \hspace{1cm} u'(0) = 0
 \end{equation}
 Dalam persamaan tersebut $u$ menyatakan simpangan pendulum,
 $u_0$ menyatakan simpangan awal pendulum,
@@ -95,8 +95,7 @@ fungsi dari simpangan awal $u_0$.
 \section{Soal 3: Persamaan Schrodinger (metode shooting)}
 %========================================================
 
-\begin{enumerate}[label=(\alph*)]
-\item Persamaan Schrodinger independen-waktu pada 1 dimensi
+Persamaan Schrodinger independen-waktu pada 1 dimensi
 dapat dinyatakan sebagai berikut.
 \begin{equation}
 -\frac{\hbar^2}{2m}\frac{\mathrm{d}\psi}{\mathrm{d}x^2}
@@ -107,21 +106,98 @@ Dengan menggunakan unit atomik, kita dapat mengambil $\hbar = 1$
 dan $m = 1$, dan persamaan \eqref{eq:sch1d} dapat ditulis menjadi:
 \begin{equation}
 \psi'' = 2\left[ V(x) - E \right]\psi
+\label{eq:sch1d_2}
+\end{equation}
+Untuk solusi keadaan terikat (bound states), nilai $E$ hanya dapat memiliki
+nilai yang diskrit. Selain itu, untuk bound states
+fungsi gelombang dibatasi dengan syarat
+\begin{equation}
+\lim_{x\rightarrow\infty} \psi(x) = 0,\hspace{1cm}\lim_{x\rightarrow-\infty} \psi(x) = 0
+\end{equation}
+Selain itu, fungsi gelombang biasanya juga dinyatakan dalam bentuk ternormalisasi:
+\begin{equation}
+\int_{-\infty}^{\infty} \psi^{*}(x) \psi(x)\,\mathrm{d}x = 1
 \end{equation}
 
+Untuk potensial yang simetrik terhadap $x=0$, secara matematis dapat ditulis
+$V(-x) = V(x)$. Contoh potential simetrik yang akan dibahas adalah potensial harmonik
+\begin{equation}
+V(x) = \frac{1}{2}x^2
+\end{equation}
+Dengan demikian, kita bisa mendapatkan solusi pada $(-\infty,\infty)$ hanya dengan
+solusi pada $(0,\infty)$.
+Ingat lagi dari kuliah mekanika kuantum bahwa,
+untuk potensial harmonik, nilai $E$ yang diperbolehkan adalah:
+\begin{equation}
+E = \frac{(n + 1)}{2}, \hspace{0.5cm} n = 0,1,2,\ldots
+\end{equation}
+Kita dapat mengelompokkan solusi ini menjadi dua kelompok:
+\begin{itemize}
+\item solusi ganjil ($n = 1, 3, 5, \ldots$)
+\item solusi genap ($n = 0, 2, 4, \ldots$)
+\end{itemize}
+
+Persamaan \eqref{eq:sch1d_2} dapat diselesaikan dengan
+menggunakan metode standard seperti Runge-Kutta
+orde-4. Metode lain yang sering digunakan adalah metode Numerov. Metode ini biasa
+digunakan untuk menyelesaikan persamaan diferensial orde dua tanpa suku dengan turunan
+pertama, seperti pada persamaan \eqref{eq:sch1d_2}.
+Metode ini dapat dituliskan dalam bentuk:
+\begin{align}
+u_{m} & = 1 - \dfrac{1}{6}h^2 \left[ V(x_m) - E \right] \\
+\psi_{m+1} & = \dfrac{\left(12 - 10u_{m}\right)\psi_{m} - u_{m-1}\psi_{m-1}}{u_{m+1}}
+\end{align}
+
+Untuk mengaplikasikan metode shooting, persamaan nilai batas harus dikonversi menjadi
+permasalahan syarat awal:
+\begin{align}
+\psi(0) & = \psi_{0},\hspace{1cm} \psi'(0) = 0,\hspace{1cm} n = 0,2,\ldots \text{(solusi genap)}\\
+\psi(0) & = 0,\hspace{1cm} \psi'(0) = \psi'_{0},\hspace{1cm} n = 1,3,\ldots \text{(solusi ganjil)}
+\end{align}
+Nilai dari $\psi_0$ dan $\psi'_0$ dapat dipilih dengan nilai sembarang (bukan 0).
+
+\begin{enumerate}[label=(\alph*)]
+\item Buatlah program untuk menghitung solusi numerik
 \item Metode shooting
 \end{enumerate}
-
-Metode shooting untuk quantum harmonic oscillator
 
 
 %====================================================
 \section{Soal 4: Persamaan Schrodinger (nilai eigen)}
 %====================================================
 
-(a) Finite difference orde h
+Metode alternatif (dan lebih umum)
+yang dapat digunakan untuk menyelesaikan persamaan
+Schrodinger independen-waktu adalah dengan menyelesaikan
+persamaan eigenvalue
+\begin{equation}
+H\psi = E\psi
+\end{equation}
+dengan matriks H terdiri dari:
+\begin{equation}
+H = K + V
+\end{equation}
+Matriks K merupakan operator kinetik dan potensial. Matriks K dapat
+dapat diaproksimasi dengan menggunakan metode beda hingga.
 
-(b) Finite difference orde h
+\begin{enumerate}[label=(\alph*)]
+\item Item
+\item Ite
+\end{enumerate}
+
+
+\section{Soal 5: Persamaan Poisson 2D}
+
+
+
+\section{Soal 6: difusi dan kalor}
+
+
+
+
+\section{Soal 7: Persamaan gelombang}
+
+
 
 %\input{solusi_01}
 %\input{solusi_02}

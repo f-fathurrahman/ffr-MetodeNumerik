@@ -19,7 +19,7 @@ function [E,is_exist] = sch_shoot( E1, E2, V, xspan, y0, dy0, N, EPS )
 
       E = 0.5*(E1 + E2)
       
-      deltaE = abs(E_old-E)
+      deltaE = abs(E_old - E)
       if deltaE < EPS
         printf("Root is found: E = %18.10f, deltaE = %18.10f\n", E, deltaE)
         break
