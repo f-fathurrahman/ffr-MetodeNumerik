@@ -48,4 +48,5 @@ printf("integRho = %18.10f\n", sum(rho)*dVol)
 
 VHartree = poisson3d( u0, x,y,z, Nx,Ny,Nz, 1e-5, -4.0*%pi*rho )
 
+EHartree = 0.5*sum(VHartree.*rho)*dVol
 EHartree_analytic = ((1/sigma1+1/sigma2)/2-sqrt(2)/sqrt(sigma1^2+sigma2^2))/sqrt(%pi)
