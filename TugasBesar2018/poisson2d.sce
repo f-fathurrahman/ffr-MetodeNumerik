@@ -1,4 +1,4 @@
-function u = poisson2d(u0, x, y, Nx, Ny, TOL, func)
+function u = poisson2d(u0, x, y, Nx, Ny, TOL, f)
 // Nx, Ny: no of nodes in x and y direction
   
   MaxIter = 10000
@@ -10,14 +10,6 @@ function u = poisson2d(u0, x, y, Nx, Ny, TOL, func)
   ky = 1.0/(hy*hy)
 
   kxy = 2.0*(kx + ky)
-
-  // calculate array for RHS
-  f = zeros(Nx,Ny)
-  for j = 2:Ny-1
-    for i = 2:Nx-1
-      f(i,j) = func( x(i), y(j) )
-    end
-  end
 
   u = u0
   for iter =1:MaxIter

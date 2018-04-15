@@ -21,4 +21,17 @@ u0(:,1) = 0.0
 u0(Nx,:) = 0.0
 u0(:,Ny) = 0.0
 
-u = poisson2d(u0,x,y,Nx,Ny,1e-5,func)
+// calculate array for RHS
+f = zeros(Nx,Ny)
+for j = 1:Ny
+  for i = 1:Nx
+    f(i,j) = func( x(i), y(j) )
+  end
+end
+
+u = poisson2d(u0,x,y,Nx,Ny,1e-5,f)
+
+surf(x,y,u)
+set(gcf(),"color_map",jetcolormap(32))
+colorbar(min(u),max(u))
+xs2pdf(gcf(),"poisson2d.pdf")
