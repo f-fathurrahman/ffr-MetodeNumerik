@@ -1,6 +1,6 @@
-\documentclass[12pt]{article}
+\documentclass[12pt,bahasa]{article}
 \usepackage[a4paper]{geometry}
-\geometry{verbose,tmargin=2cm,bmargin=2cm,lmargin=2cm,rmargin=2cm}
+\geometry{verbose,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm}
 \usepackage{amsmath}
     
 \setlength{\parindent}{0cm}
@@ -11,6 +11,7 @@
 \usepackage{hyperref}
 \usepackage{url}
 \usepackage{xcolor}
+\usepackage{babel}
 
 \usepackage{minted}
 \newminted{scilab}{breaklines}
@@ -27,11 +28,11 @@
 \date{}
 \maketitle
 
-\begin{scilabcode}
-function [a,b] = func1(c,d)
-  // Test comment
-endfunction
-\end{scilabcode}
+%\begin{scilabcode}
+%function [a,b] = func1(c,d)
+%  // Test comment
+%endfunction
+%\end{scilabcode}
 
 Selesaikan soal-soal berikut ini dengan menggunakan Scilab.
 
@@ -41,12 +42,13 @@ Selesaikan soal-soal berikut ini dengan menggunakan Scilab.
 
 Carilah solusi numerik dari persamaan diferensial berikut
 \begin{equation}
-y'' + y = 0
+y''(t) + y(t) = 0
 \end{equation}
 dengan syarat awal
 \begin{equation}
-y(0) = 0, \hspace{1cm} y'(0) = 1
+y(0) = 0, \hspace{0.5cm} y'(0) = 1
 \end{equation}
+pada interval $0 \leq t \leq 10$.
 
 Bandingkan solusi yang diperoleh dengan solusi analitik:
 \begin{equation}
@@ -63,31 +65,39 @@ Gunakan menggunakan metode-metode berikut ini untuk mencari solusi numeriknya.
 Dari solusi numerik yang didapatkan, buatlah (1) plot antara $y$ dan $y'$
 dan (2) plot antara $t$ dan $y$.
 
-Bandingkan hasilnya pada interval $t$ dan parameter step ($h$) yang sama.
-
 %=================================
 \section{Soal 2: Gerakan pendulum}
 %=================================
 
 Gerak suatu pendulum dapat dinyatakan dengan persamaan diferensial:
 \begin{equation}
-u'' = -\frac{g}{L}\sin(u) - ku'
+\theta''(t) = -\frac{g}{L}\sin(\theta(t)) - k\theta'(t)
 \end{equation}
 dengan syarat awal
 \begin{equation}
-u(0) = u_0, \hspace{1cm} u'(0) = 0
+\theta(0) = \theta_0, \hspace{0.5cm} \theta'(0) = 0
 \end{equation}
-Dalam persamaan tersebut $u$ menyatakan simpangan pendulum,
-$u_0$ menyatakan simpangan awal pendulum,
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{images/pendulum.png}
+\par
+\caption{Pendulum sederhana}
+\end{figure}
+
+Dalam persamaan tersebut $\theta$ menyatakan simpangan pendulum,
+$\theta_0$ menyatakan simpangan awal pendulum,
 $g$ menyatakan percepatan gravitasi, $L$ menyatakan panjang benang pendulum,
-dan $ku'$ menyatakan suku redaman (gesekan) yang berbanding lurus
-dengan kecepatan $u'$ ($k$ adalah bilangan positif).
+dan $k\theta'$ menyatakan suku redaman (gesekan) yang berbanding lurus
+dengan kecepatan $\theta'$ ($k$ adalah bilangan positif).
 
 \begin{enumerate}[label=(\alph*)]
-\item Cari solusi $u(t)$ untuk kasus $k=0$
+\item Cari solusi $\theta(t)$ untuk kasus $k=0$ untuk simpangan awal $\theta_0 = 0.1, \pi/5$
+dan 3.0.
 \item Masih untuk kasus $k=0$, tentukan periode osilasi $T$ sebagai
 fungsi dari simpangan awal $u_0$.
-\item Carilah solusi $u(t)$ untuk kasus $k=0$
+\item Carilah solusi $u(t)$ untuk kasus $k = 0.1, 0.3, 0.5$ dan 0.8 untuk
+simpangan awal yang sama.
 \end{enumerate}
 
 
@@ -112,7 +122,7 @@ Untuk solusi keadaan terikat (bound states), nilai $E$ hanya dapat memiliki
 nilai yang diskrit. Selain itu, untuk bound states
 fungsi gelombang dibatasi dengan syarat
 \begin{equation}
-\lim_{x\rightarrow\infty} \psi(x) = 0,\hspace{1cm}\lim_{x\rightarrow-\infty} \psi(x) = 0
+\lim_{x\rightarrow\infty} \psi(x) = 0,\hspace{0.5cm}\lim_{x\rightarrow-\infty} \psi(x) = 0
 \end{equation}
 Selain itu, fungsi gelombang biasanya juga dinyatakan dalam bentuk ternormalisasi:
 \begin{equation}
@@ -153,14 +163,32 @@ u_{m} & = 1 - \dfrac{1}{6}h^2 \left[ V(x_m) - E \right] \\
 Untuk mengaplikasikan metode shooting, persamaan nilai batas harus dikonversi menjadi
 permasalahan syarat awal:
 \begin{align}
-\psi(0) & = \psi_{0},\hspace{1cm} \psi'(0) = 0,\hspace{1cm} n = 0,2,\ldots \text{(solusi genap)}\\
-\psi(0) & = 0,\hspace{1cm} \psi'(0) = \psi'_{0},\hspace{1cm} n = 1,3,\ldots \text{(solusi ganjil)}
+\psi(0) & = \psi_{0},\hspace{0.5cm} \psi'(0) = 0,\hspace{0.5cm} n = 0,2,4,\ldots \\
+\psi(0) & = 0,\hspace{0.5cm} \psi'(0) = \psi'_{0},\hspace{0.5cm} n = 1,3,5,\ldots
 \end{align}
-Nilai dari $\psi_0$ dan $\psi'_0$ dapat dipilih dengan nilai sembarang (bukan 0).
+Nilai dari $\psi_0$ dan $\psi'_0$ dapat dipilih dengan nilai sembarang bukan nol.
+Untuk soal ini kita akan ambil $\psi_0 = 1$ dan $\psi'_0 = 1$.
 
 \begin{enumerate}[label=(\alph*)]
-\item Buatlah program untuk menghitung solusi numerik
-\item Metode shooting
+\item Buatlah program untuk menghitung solusi numerik dari persamaan \ref{eq:sch1d_2}
+dengan menggunakan metode Numerov. Perhatikan bahwa untuk mendapatkan nilai $\psi_{m+1}$ kita memerlukan dua nilai
+sebelumnya, yaitu $\psi_{m}$ dan $\psi_{m-1}$, sedangkan dari deskripsi masalah kita
+biasanya hanya memiliki informasi nilai awal $\psi_{0}$ dan $\psi'_{0}$.
+Untuk mencari nilai $\psi_{1}$ kita dapat menggunakan metode Euler-Cromer:
+\begin{equation}
+\psi_{1} = \psi_{0} + \psi'_{0}\Delta x
+\end{equation}
+Gunakan nilai solusi analitik $E = 0.5$ dan disekitarnya misalnya $E = 0.499$ dan $0.501$
+serta bandingkan hasilnya numerik dari $\psi$ yang didapatkan dengan
+$\psi$ eksak, yaitu $\psi = \exp(-x^2/2)$.
+Anda dapat mengaproksimasi solusi pada selang $0 \leq x < \infty$
+dengan solusi selang $0 < x < 5$, misalnya dengan asumsi bahwa fungsi gelombang
+eksak telah memiliki nilai nol pada $x = 5$.
+Gunakan juga syarat awal yang sesuai untuk $E = 0.5$ (solusi genap), yaitu
+$\psi_{0} = 1$ dan $\psi'_{0} = 0$.
+%
+\item Gunakan metode shooting dengan cara memvariasikan nilai $E$ untuk mencari
+nilai $E$ yang mungkin dalam rentang $0 \leq E \leq 15$.
 \end{enumerate}
 
 
@@ -168,39 +196,127 @@ Nilai dari $\psi_0$ dan $\psi'_0$ dapat dipilih dengan nilai sembarang (bukan 0)
 \section{Soal 4: Persamaan Schrodinger (nilai eigen)}
 %====================================================
 
-Metode alternatif (dan lebih umum)
+Metode alternatif
 yang dapat digunakan untuk menyelesaikan persamaan
 Schrodinger independen-waktu adalah dengan menyelesaikan
 persamaan eigenvalue
 \begin{equation}
-H\psi = E\psi
+H\psi(x) = E\psi(x)
 \end{equation}
-dengan matriks H terdiri dari:
+Nilai-nilai $E$ yang mungkin dapat dicari dengan cara menghitung
+nilai eigen dari matriks Hamiltonian 
 \begin{equation}
-H = K + V
+H_{ij} = K_{ij} + V_{ij}
 \end{equation}
-Matriks K merupakan operator kinetik dan potensial. Matriks K dapat
-dapat diaproksimasi dengan menggunakan metode beda hingga.
+dan fungsi eigen terkait adalah fungsi gelombang solusi dari
+persamaan \eqref{eq:sch1d_2}.
+
+Suatu selang $-L < x < L$ dengan $L$ suatu bilangan positif
+dibagi-bagi kedalam $N-1$ partisi dengan jumlah total titik $N$,
+yaitu $x_{i}$, $i = 1, 2, \ldots, N$.
+Potensial $V(x)$ dapat dihitung pada $x_{i}$ sehingga
+kita peroleh representasi diskrit dari potensial:
+$V_{i} = V_(x_{i})$.
+
+Matriks $K_{ij}$ dapat
+dapat diaproksimasi dengan menggunakan metode beda hingga, sedangkan
+matriks $V_{ij}$ adalah matriks diagonal yang elemen diagonalnya adalah
+nilai dari $V(x)$ pada titik $x_{i}$.
 
 \begin{enumerate}[label=(\alph*)]
-\item Item
+\item Gunakan beda hingga sentral dengan 3 titik untuk mengaproksimasi
 \item Ite
 \end{enumerate}
 
 
 \section{Soal 5: Persamaan Poisson 2D}
 
+Hitung solusi numerik dari persamaan Laplace:
 \begin{equation}
-\frac{\partial^2 u(x,y)}{\partial x^2} + g(x,y)u(x,y) = f(x,y)
+\frac{\partial^2 u(x,y)}{\partial x^2} +
+\frac{\partial^2 u(x,y)}{\partial y^2} = \cos(x + y) - \sin(x - y)
+\end{equation}
+pada domain rektangular $-\pi < x < \pi$, $-\pi < y < \pi$ dengan syarat batas
+\begin{equation}
+u(\pm\pi,y) = 0, \hspace{0.5cm} u(x,\pm\pi) = 0
+\end{equation}
+dengan menggunakan metode beda hingga. Bandingkan solusi numerik yang diperoleh dengan
+solusi analitik
+\begin{equation}
+u(x,y) = \sin(x)\cos(y)
 \end{equation}
 
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{poisson2d.pdf}
+\par
+\caption{Solusi persamaan Laplace $u(x,y)$}
+\end{figure}
 
-\section{Soal 6: difusi dan kalor}
 
+\section{Soal 6: Persamaan transfer kalor}
 
-
+Hitung solusi numerik dari
+\begin{equation}
+\frac{\partial^2 u(x,t)}{\partial x^2} = \frac{\partial u(x,t)}{\partial t}
+\end{equation}
+untuk $0 \leq x \leq 1$ dan $0 \leq t \leq 0.1$ dengan syarat awal
+\begin{equation}
+u(x,0) = \sin(\pi x)
+\end{equation}
+dan syarat batas
+\begin{equation}
+u(0,t) = 0,\hspace{0.5cm} u(1,t) = 0
+\end{equation}
+Gunakan metode Euler eksplisit, Euler implisit dan Crank-Nicolson.
+Buat juga animasi (dalam format GIF) yang menggambarkan perubatan profil
+suhu terhadap waktu.
 
 \section{Soal 7: Persamaan gelombang}
+
+Selesaikan PDE berikut dengan menggunakan metode beda hingga.
+Buat juga visualisasi solusi berupa animasi dari solusi yang didapatkan.
+
+\begin{enumerate}[label=(\alph*)]
+%
+\item Hitung solusi numerik persamaan gelombang 1d
+\begin{equation}
+\frac{\partial^2 u(x,t)}{\partial x^2} = \frac{\partial^2 u(x,t)}{\partial t^2}
+\end{equation}
+untuk $0 < x < 1$ dan $0 \leq t \leq 5$ dengan syarat awal
+\begin{equation*}
+u(x,0) = \sin\left(2\pi x\right)
+\end{equation*}
+dan syarat batas:
+\begin{equation*}
+u(0,t) = 0, \hspace{0.5cm} u(1,t) = 0
+\end{equation*}
+%
+\item Selesaikan persamaan gelombang 2d
+\begin{equation}
+\frac{1}{4}\left(\frac{\partial^2 u(x,y,t)}{\partial x^2} +
+\frac{\partial^2 u(x,y,t)}{\partial y^2}\right)
+= \frac{\partial^2 u(x,y,t)}{\partial t^2}
+\end{equation}
+pada domain rektangular dengan $0 < x < 1$ dan $0 < y < 1$ serta
+pada selang waktu $0 < t < 2$ dengan syarat awal
+\begin{equation*}
+u(x,y,0) = \sin(6\pi x)\sin(2\pi y)
+\end{equation*}
+dan syarat batas:
+\begin{align*}
+u(0,y,t) = 0, \hspace{0.5cm} u(x,0,t) = 0 \\
+u(1,y,t) = 0, \hspace{0.5cm} u(x,1,t) = 0
+\end{align*}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{images/TEMP_wave2d_0000.pdf}
+\par
+\caption{Syarat awal $u(x,y,0)$}
+\end{figure}
+%
+\end{enumerate}
 
 
 

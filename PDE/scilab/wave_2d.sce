@@ -4,9 +4,13 @@ function [u,x,y,t] = wave_2d(a,D,T,it0,i1t0,bxyt,Mx,My,N)
  //  Boundary Condition: u(x,y,t) = bxyt(x,y,t) for (x,y)cBoundary
  //  Mx/My = # of subintervals along x/y-axis
  //  N = # of subintervals along t-axis
-  dx= (D(2)-D(1))/Mx; x= D(1)+[0:Mx]*dx; 
-  dy= (D(4)-D(3))/My; y= D(3)+[0:My]'*dy; 
-  dt= T/N;  t= [0:N]*dt;
+  dx = ( D(2) - D(1) )/Mx
+  x  = D(1) + [0:Mx]*dx
+
+  dy = ( D(4) - D(3) )/My
+  y  = D(3) + [0:My]'*dy
+  dt = T/N
+  t  = [0:N]*dt
   
   // Initialization
   u  = zeros(My+1,Mx+1)
@@ -31,6 +35,7 @@ function [u,x,y,t] = wave_2d(a,D,T,it0,i1t0,bxyt,Mx,My,N)
     
     t = k*dt
     
+    // should not have spatial (x and y) dependence
     for i = 1:My+1
       u(i,1) = bxyt(x(1),y(i),t)
       u(i,Mx+1) = bxyt(x(Mx+1),y(i),t)
@@ -46,7 +51,7 @@ function [u,x,y,t] = wave_2d(a,D,T,it0,i1t0,bxyt,Mx,My,N)
       for i=2:My
         for j=2:Mx
           u(i,j) = 0.5*(rx*(u_1(i,j-1) + u_1(i,j+1)) + ...
-                   ry*(u_1(i-1,j) + u_1(i+1,j))) + rxy1*u(i,j)+dt*ut(i,j)
+                   ry*(u_1(i-1,j) + u_1(i+1,j))) + rxy1*u(i,j) + dt*ut(i,j)
         end
       end
 
@@ -55,7 +60,7 @@ function [u,x,y,t] = wave_2d(a,D,T,it0,i1t0,bxyt,Mx,My,N)
       for i=2:My
         for j=2:Mx
           u(i,j) = rx*(u_1(i,j-1) + u_1(i,j+1)) + ...
-                   ry*(u_1(i-1,j) + u_1(i+1,j)) + rxy2*u(i,j) -u_2(i,j)
+                   ry*(u_1(i-1,j) + u_1(i+1,j)) + rxy2*u(i,j) - u_2(i,j)
         end
       end
     
@@ -65,9 +70,14 @@ function [u,x,y,t] = wave_2d(a,D,T,it0,i1t0,bxyt,Mx,My,N)
     u_1 = u
     
     clf()
-    mesh(x,y,u)
-    set(gca(), "data_bounds", [0 2 0 2 -0.1 0.1])
-    xs2png(gcf(),"TEMP_wave2d_" + to_string(k) + ".png")
+    surf(x,y,u)
+    set(gca(), "data_bounds", [0 1 0 1 -1 1])
+    set(gcf(),"color_map",jetcolormap(32))
+    if k == 0
+      xs2pdf(gcf(),"TEMP_wave2d_" + to_string(k) + ".pdf")
+      xs2png(gcf(),"TEMP_wave2d_" + to_string(k) + ".png")
+    else
+    end
 
   end
 

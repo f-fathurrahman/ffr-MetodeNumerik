@@ -33,13 +33,13 @@ function [u,x,y,t] = heat_2d_ADI(a,D,T,ixy0,bxyt,Mx,My,N)
   for j=1:Mx-1
     Ay(j,j) = ry1
     if j > 1
-      Ay(j-1,j)= -ry
-      Ay(j,j-1)= -ry
+      Ay(j-1,j) = -ry
+      Ay(j,j-1) = -ry
     end
   end
   
   for i=1:My-1
-    Ax(i,i)= rx1
+    Ax(i,i) = rx1
     if i>1
       Ax(i-1,i) = -rx
       Ax(i,i-1) = -rx

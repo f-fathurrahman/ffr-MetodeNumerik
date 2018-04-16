@@ -33,5 +33,5 @@ u = poisson2d(u0,x,y,Nx,Ny,1e-5,f)
 
 surf(x,y,u)
 set(gcf(),"color_map",jetcolormap(32))
-colorbar(min(u),max(u))
+//colorbar(min(u),max(u))
 xs2pdf(gcf(),"poisson2d.pdf")

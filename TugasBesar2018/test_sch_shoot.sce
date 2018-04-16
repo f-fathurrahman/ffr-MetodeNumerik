@@ -13,21 +13,29 @@ endfunction
 y0  = 1.0
 dy0 = 0.0
 
-xspan = [0 10]
+xspan = [0 5]
 N = 2000
 //idx_check = 60
 EPS = 1e-6
 
 dE_search = 0.1
-Emin_search = 0.1
+Emin_search = 0.0
 Emax_search = 15.0
 
 E1 = Emin_search
 E2 = Emin_search + dE_search
 
+E_result = []
+ifound = 0
 while E2 < Emax_search
   //printf("Searching root within [%f %f]\n", E1, E2)
   [E,is_exist] = sch_shoot(E1,E2,HarmonicPot,xspan,y0,dy0,N,EPS)
+  if is_exist
+    ifound = ifound + 1
+    E_result(ifound) = E
+  end
   E1 = E2
   E2 = E2 + dE_search
 end
+
+
