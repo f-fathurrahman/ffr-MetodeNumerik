@@ -2,8 +2,9 @@ exec("wave_1d.sce",-1)
 exec("to_string.sce",-1)
 
 function y = it0(x)
-  omega = 2*%pi/5.0
-  y = sin(omega*x) // + 0.25*sin(2*omega*x) + 0.25*sin(4*omega*x)
+  x0 = 2.5
+  dr2 = (x - x0)^2
+  y = exp(-5*dr2)
 endfunction
 
 function y = i1t0(x)
@@ -23,8 +24,8 @@ a  = 1
 xf = 5.0
 
 Nx = 100
-tf = 5.0
-Nt = 100
+tf = 20.0
+Nt = 500
 
 dx = xf/Nx
 dt = tf/Nt

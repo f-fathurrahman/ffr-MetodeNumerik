@@ -77,6 +77,7 @@ function [u,x,y,t] = wave_2d(a,D,T,it0,i1t0,bxyt,Mx,My,N)
       xs2pdf(gcf(),"TEMP_wave2d_" + to_string(k) + ".pdf")
       xs2png(gcf(),"TEMP_wave2d_" + to_string(k) + ".png")
     else
+      xs2png(gcf(),"TEMP_wave2d_" + to_string(k) + ".png")
     end
 
   end
