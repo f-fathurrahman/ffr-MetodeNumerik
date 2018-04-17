@@ -176,7 +176,7 @@ sebelumnya, yaitu $\psi_{m}$ dan $\psi_{m-1}$, sedangkan dari deskripsi masalah 
 biasanya hanya memiliki informasi nilai awal $\psi_{0}$ dan $\psi'_{0}$.
 Untuk mencari nilai $\psi_{1}$ kita dapat menggunakan metode Euler-Cromer:
 \begin{equation}
-\psi_{1} = \psi_{0} + \psi'_{0}\Delta x
+\psi_{1} = \psi_{0} + \psi'_{0}\Delta x + 2(V(x_{0}) - E)(\Delta x)^2
 \end{equation}
 Gunakan nilai solusi analitik $E = 0.5$ dan disekitarnya misalnya $E = 0.499$ dan $0.501$
 serta bandingkan hasilnya numerik dari $\psi$ yang didapatkan dengan
@@ -188,7 +188,8 @@ Gunakan juga syarat awal yang sesuai untuk $E = 0.5$ (solusi genap), yaitu
 $\psi_{0} = 1$ dan $\psi'_{0} = 0$.
 %
 \item Gunakan metode shooting dengan cara memvariasikan nilai $E$ untuk mencari
-nilai $E$ yang mungkin dalam rentang $0 \leq E \leq 15$.
+nilai $E$ yang mungkin dalam rentang $0 \leq E \leq 15$. Gunakan syarat awal
+yang sesuai untuk solusi ganjil dan genap.
 \end{enumerate}
 
 
@@ -200,15 +201,18 @@ Metode alternatif
 yang dapat digunakan untuk menyelesaikan persamaan
 Schrodinger independen-waktu adalah dengan menyelesaikan
 persamaan eigenvalue
-\begin{equation}
-H\psi(x) = E\psi(x)
-\end{equation}
+\begin{align}
+\left[-\frac{\mathrm{d}^2}{\mathrm{d}x^2} + V(x)\right]\psi(x) & = E\psi(x) \\
+\hat{H}\psi(x) & = E \psi(x)
+\end{align}
 Nilai-nilai $E$ yang mungkin dapat dicari dengan cara menghitung
 nilai eigen dari matriks Hamiltonian 
 \begin{equation}
 H_{ij} = K_{ij} + V_{ij}
 \end{equation}
-dan fungsi eigen terkait adalah fungsi gelombang solusi dari
+Dengan $K_{ij}$ dan $V_{ij}$ adalah representasi matriks dari operator
+kinetik dan potensial.
+Fungsi eigen terkait adalah fungsi gelombang solusi dari
 persamaan \eqref{eq:sch1d_2}.
 
 Suatu selang $-L < x < L$ dengan $L$ suatu bilangan positif
@@ -218,14 +222,20 @@ Potensial $V(x)$ dapat dihitung pada $x_{i}$ sehingga
 kita peroleh representasi diskrit dari potensial:
 $V_{i} = V_(x_{i})$.
 
-Matriks $K_{ij}$ dapat
-dapat diaproksimasi dengan menggunakan metode beda hingga, sedangkan
-matriks $V_{ij}$ adalah matriks diagonal yang elemen diagonalnya adalah
+Matriks $V_{ij}$ adalah matriks diagonal yang elemen diagonalnya adalah
 nilai dari $V(x)$ pada titik $x_{i}$.
 
+Matriks $K_{ij}$ dapat
+dapat diaproksimasi dengan cara mengaproksimasi operator $\mathrm{d}^2/mathrm{d}x^2$
+dengan menggunakan beda hingga.
+
 \begin{enumerate}[label=(\alph*)]
-\item Gunakan beda hingga sentral dengan 3 titik untuk mengaproksimasi
-\item Ite
+\item Gunakan beda hingga sentral 3 titik untuk mengaproksimasi matriks $K_{ij}$
+\item Hitung matriks Hamiltonian dan selesaikan persamaan eigen $H\psi = E\psi$. Anda dapat
+menggunakan perintah \texttt{[psi,D] = spec(H); E = diag(D)} pada Scilab.
+Bandingkan hasil yang Anda peroleh dengan solusi analitik.
+\item Ulangi (a) dan (b) dengan menggunakan beda hingga sentral 5, 7, dan 9 titik.
+Bandingkan hasilnya dengan menggunakan $\Delta x$ yang sama.
 \end{enumerate}
 
 
