@@ -45,15 +45,15 @@ Nt = 100
 
 // Explicit Euler
 [u1,x,t] = heat_1d_euler_exp( a, xf, T, it0, bx0, bxf, Nx, Nt )
-//plot_to_png(u1,x,t,"TEMP_exp_")
+plot_to_png(u1,x,t,"TEMP_exp_")
 
 // Using implicit Euler method
 [u2,x,t] = heat_1d_euler_imp( a, xf, T, it0, bx0, bxf, Nx, Nt )
-//plot_to_png(u2,x,t,"TEMP_imp_")
+plot_to_png(u2,x,t,"TEMP_imp_")
 
 // Using Crank-Nicholson method
 [u3,x,t] = heat_1d_CN( a, xf, T, it0, bx0, bxf, Nx, Nt )
-//plot_to_png(u3,x,t,"TEMP_CN_")
+plot_to_png(u3,x,t,"TEMP_CN_")
 
 
 NxNt = Nx*Nt

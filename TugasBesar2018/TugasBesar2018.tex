@@ -37,7 +37,7 @@
 Selesaikan soal-soal berikut ini dengan menggunakan Scilab.
 
 %=====================================================
-\section{Soal 1: Perbandingan akurasi beberapa metode}
+\section{Perbandingan akurasi beberapa metode untuk ODE}
 %=====================================================
 
 Carilah solusi numerik dari persamaan diferensial berikut
@@ -66,7 +66,7 @@ Dari solusi numerik yang didapatkan, buatlah (1) plot antara $y$ dan $y'$
 dan (2) plot antara $t$ dan $y$.
 
 %=================================
-\section{Soal 2: Gerakan pendulum}
+\section{Gerakan pendulum}
 %=================================
 
 Gerak suatu pendulum dapat dinyatakan dengan persamaan diferensial:
@@ -80,7 +80,7 @@ dengan syarat awal
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{images/pendulum.png}
+\includegraphics[scale=0.4]{images/pendulum.png}
 \par
 \caption{Pendulum sederhana}
 \end{figure}
@@ -102,7 +102,7 @@ simpangan awal yang sama.
 
 
 %========================================================
-\section{Soal 3: Persamaan Schrodinger (metode shooting)}
+\section{Persamaan Schrodinger (metode shooting)}
 %========================================================
 
 Persamaan Schrodinger independen-waktu pada 1 dimensi
@@ -194,7 +194,7 @@ yang sesuai untuk solusi ganjil dan genap.
 
 
 %====================================================
-\section{Soal 4: Persamaan Schrodinger (nilai eigen)}
+\section{Persamaan Schrodinger (nilai eigen)}
 %====================================================
 
 Metode alternatif
@@ -226,7 +226,7 @@ Matriks $V_{ij}$ adalah matriks diagonal yang elemen diagonalnya adalah
 nilai dari $V(x)$ pada titik $x_{i}$.
 
 Matriks $K_{ij}$ dapat
-dapat diaproksimasi dengan cara mengaproksimasi operator $\mathrm{d}^2/mathrm{d}x^2$
+dapat diaproksimasi dengan cara mengaproksimasi operator $\mathrm{d}^2/\mathrm{d}x^2$
 dengan menggunakan beda hingga.
 
 \begin{enumerate}[label=(\alph*)]
@@ -239,7 +239,7 @@ Bandingkan hasilnya dengan menggunakan $\Delta x$ yang sama.
 \end{enumerate}
 
 
-\section{Soal 5: Persamaan Poisson 2D}
+\section{Persamaan Poisson 2D}
 
 Hitung solusi numerik dari persamaan Laplace:
 \begin{equation}
@@ -266,7 +266,7 @@ u(x,y) = \sin(x)\cos(y)
 \end{figure}
 
 
-\section{Soal 6: Persamaan transfer kalor}
+\section{Persamaan transfer kalor}
 
 Hitung solusi numerik dari
 \begin{equation}
@@ -285,7 +285,7 @@ bandingkan hasilnya.
 Buat juga animasi (dalam format GIF) yang menggambarkan perubatan profil
 suhu terhadap waktu.
 
-\section{Soal 7: Persamaan gelombang}
+\section{Persamaan gelombang}
 
 Selesaikan PDE berikut dengan menggunakan metode beda hingga.
 Buat juga visualisasi solusi berupa animasi dari solusi yang didapatkan.
@@ -297,9 +297,10 @@ Buat juga visualisasi solusi berupa animasi dari solusi yang didapatkan.
 \frac{\partial^2 u(x,t)}{\partial x^2} = \frac{\partial^2 u(x,t)}{\partial t^2}
 \end{equation}
 untuk $0 < x < 1$ dan $0 \leq t \leq 5$ dengan syarat awal
-\begin{equation*}
-u(x,0) = \sin\left(2\pi x\right)
-\end{equation*}
+\begin{align*}
+u(x,0)  & = \sin\left(2\pi x\right) \\
+u'(x,0) & = 0
+\end{align*}
 dan syarat batas:
 \begin{equation*}
 u(0,t) = 0, \hspace{0.5cm} u(1,t) = 0

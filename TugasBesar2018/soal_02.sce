@@ -7,7 +7,7 @@ global k
 
 g = 9.81
 L = 1.0
-k = 0.0
+k = 0.5
 
 // Initial conditions
 // u0 will be varied later when calling ode_RK4

@@ -79,9 +79,10 @@ function [u,x,y,t] = wave_2d(a,D,T,it0,i1t0,bxyt,Mx,My,N)
     fc.rotation_angles = [77.75,-161.75]
     if k == 0
       xs2pdf(gcf(),"TEMP_wave2d_" + to_string(k) + ".pdf")
-      xs2png(gcf(),"TEMP_wave2d_" + to_string(k) + ".png")
+      //xs2png(gcf(),"TEMP_wave2d_" + to_string(k) + ".png")
     else
-      xs2png(gcf(),"TEMP_wave2d_" + to_string(k) + ".png")
+      //xs2png(gcf(),"TEMP_wave2d_" + to_string(k) + ".png")
+      xs2pdf(gcf(),"TEMP_wave2d_" + to_string(k) + ".pdf")
     end
 
   end
