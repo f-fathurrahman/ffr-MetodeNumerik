@@ -1,0 +1,123 @@
+\documentclass[bahasa,10pt]{beamer}
+
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+
+\setbeamersize{text margin left=5pt, text margin right=5pt}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{braket}
+
+\usepackage{minted}
+\newminted{scilab}{breaklines,fontsize=\footnotesize,texcomments=true}
+
+\definecolor{mintedbg}{rgb}{0.95,0.95,0.95}
+\usepackage{mdframed}
+
+\BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=mintedbg]}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+ % this default might be overridden by plain title style
+ \newcommand\makebeamertitle{\frame{\maketitle}}%
+ % (ERT) argument for the TOC
+ \AtBeginDocument{%
+   \let\origtableofcontents=\tableofcontents
+   \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+   \def\gobbletableofcontents#1{\origtableofcontents}
+ }
+
+\makeatother
+
+\usepackage{babel}
+
+\begin{document}
+
+
+\title{Tugas Besar TF2202}
+\author{}
+\institute{}
+%\institute{
+%Program Studi Teknik Fisika \\
+%Divisi Komputasi Pusat Penelitian Nanosains dan Nanoteknologi \\
+%Institut Teknologi Bandung
+%}
+\date{}
+
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{Format Laporan}
+
+Bagian-bagian yang harus ada dalam laporan:
+\begin{itemize}
+\item Deskripsi masalah
+\item Penurunan model numerik (diskrit) dan/atau metode yang digunakan
+\item Implementasi solusi dalam Scilab
+\item Solusi numerik yang diperoleh beserta visualisasinya. Gunakan beberapa
+parameter numerik (misalnya jumlah titik yang digunakan untuk diskritisasi)
+untuk menghitung solusi numerik dan berikan komentar atas hasil yang Anda
+dapatkan.
+\item Referensi yang digunakan
+\item Informasi lain yang Anda anggap perlu.
+\end{itemize}
+
+\end{frame}
+
+
+
+
+\begin{frame}[fragile]
+\frametitle{Pengumpulan}
+
+\begin{itemize}
+\item Laporan ditulis dalam format PDF.
+\item File-file pendukung, seperti kode Scilab juga disertakan.
+\item Kumpulkan laporan dan file-file pendukung dalam satu folder dengan
+nama \texttt{TF2202\_NIM1\_NIM2}.
+\item Kompresi folder dalam file \texttt{*.zip}: {\color{blue}\texttt{TF2202\_NIM1\_NIM2.zip}}
+\item Pengumpulan secara online melalui \url{kuliah2013.tf.itb.ac.id}.
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Kode Scilab}
+
+\begin{itemize}
+\item Kode Scilab ditulis dengan rapi, perhatikan indentasi.
+\item Berikan komentar mengenai kode yang Anda buat: deskripsi input dan output,
+arti dari variabel-variabel yang digunakan, dsb.
+\end{itemize}
+
+\begin{scilabcode}
+function [t,y] = solve_ode(func,ti,tf,N)
+// Komentar ...
+// t: 
+// y:
+// func:
+// ... etc
+
+  // cek argumen
+
+  // Algoritma Euler
+  for k = 1:N
+    y(k+1,:) = y(k,:) + h*func(t(k),y(k,:))
+  end
+
+endfunction
+\end{scilabcode}
+
+
+\end{frame}
+
+
+
+\end{document}
+
