@@ -15,6 +15,7 @@ function [u,x,t] = wave_1d(a,xf,tf,it0,i1t0,bx0,bxf,Nx,Nt)
   r2 = 2*(1 - r)
   if r > 1
     printf("WARNING: propagation will not be stable\n\n")
+    printf("r = %f > 1\n", r)
   end
 
   // initial conditions
