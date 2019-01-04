@@ -6,7 +6,9 @@ TEMP_*
 
 a.out
 
+OLD_*
+OLDS*
 olds
 LOGBOOK.md
 
-
+_build
