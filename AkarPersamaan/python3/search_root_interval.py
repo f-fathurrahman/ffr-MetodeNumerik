@@ -14,7 +14,7 @@ def search_root_interval(f, a, b, dx, verbose=False):
     x2 = a + dx
     f2 = f(x2)
 
-    while np.sign(f1) == np.sign(f2):
+    while f1*f2 > 0.0:
 
         # This should only happen when the root is not bracketed within
         # a and b

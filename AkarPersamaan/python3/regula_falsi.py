@@ -4,7 +4,7 @@ def regula_falsi(f, x1, x2, TOL=1.0e-9, verbose=False, NiterMax=100):
         print("")
         print("Searching root with regula falsi method:")
         print("Interval = (%18.10f,%18.10f)" % (x1,x2))
-        print("TOL = %e" % TOL)        
+        print("TOL = %e" % TOL)
         print("")
 
     assert TOL >= 0.0
@@ -18,11 +18,17 @@ def regula_falsi(f, x1, x2, TOL=1.0e-9, verbose=False, NiterMax=100):
         return x2, 0.0
 
     if f1*f2 > 0.0:
-        raise RuntimeError("Root is not bracketed")    
+        raise RuntimeError("Root is not bracketed")
 
     # For the purpose of calculating relative error
     x3 = 0.0
     x3_old = 0.0
+
+
+    if verbose:
+        print(15*" "+"Iter       Estimated         f(x)")
+        print(15*" "+"----       ---------         ----")
+        print("")
 
     for i in range(1,NiterMax+1):
 
@@ -32,13 +38,14 @@ def regula_falsi(f, x1, x2, TOL=1.0e-9, verbose=False, NiterMax=100):
         f3 = f(x3)
         
         if verbose:
-            print("regula_falsi: %5d %18.10f %18.10f" % (i, x3, f3))
+            print("regula_falsi: %5d %18.10f %15.5e" % (i, x3, abs(f3)))
 
         if abs(f3) <= TOL:
             if verbose:
                 print("")
                 print("regula_falsi: Convergence is achieved in %d iterations" % (i))
-            break
+            # return the result
+            return x3, abs(x3 - x3_old)
 
         if f2*f3 < 0.0:
             # sign of f2 and f3 is different
@@ -53,4 +60,8 @@ def regula_falsi(f, x1, x2, TOL=1.0e-9, verbose=False, NiterMax=100):
             x2 = x3
             f2 = f3
 
-    return x3, abs(x3 - x3_old)
+    # No root is found after NiterMax iterations
+    if verbose:
+        print("No root is found")
+    return None, None
+
