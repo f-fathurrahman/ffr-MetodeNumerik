@@ -13,7 +13,7 @@ while True:
     x1, x2 = search_root_interval(f,a,b,dx)
     if x1 != None:
         a = x2
-        root = bisection(f, x1, x2)
+        root, _ = bisection(f, x1, x2)
         if root != None:
             print("Root is found: {:18.10f}".format(root))
     else:

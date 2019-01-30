@@ -2,10 +2,10 @@ from bisection import *
 from regula_falsi import *
 
 def f(x):
-    return x**3 - 10*x**2 + 5.0
+    return x**3 - 75
 
-x1 = 0.0
-x2 = 1.0
+x1 = 3.0
+x2 = 5.0
 
 x, err = bisection(f, x1, x2, TOL=1e-10, verbose=True)
 
