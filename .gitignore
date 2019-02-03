@@ -3,6 +3,13 @@ __pycache__
 *.pyx
 *.pyc
 
+*_files
+
+*.aux
+*.log
+*.out
+
+
 *.swp
 *.swo
 *~

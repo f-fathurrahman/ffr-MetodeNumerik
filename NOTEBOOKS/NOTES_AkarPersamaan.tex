@@ -1,0 +1,1434 @@
+
+% Default to the notebook output style
+
+    
+
+
+% Inherit from the specified cell style.
+
+
+
+
+    
+\documentclass[11pt]{article}
+
+    
+    
+    \usepackage[T1]{fontenc}
+    % Nicer default font (+ math font) than Computer Modern for most use cases
+    \usepackage{mathpazo}
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % We will generate all images so they have a width \maxwidth. This means
+    % that they will get their normal width if they fit onto the page, but
+    % are scaled down if they would overflow the margins.
+    \makeatletter
+    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+    \else\Gin@nat@width\fi}
+    \makeatother
+    \let\Oldincludegraphics\includegraphics
+    % Set max figure width to be 80% of text width, for now hardcoded.
+    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionLabelFormat{nolabel}{}
+    \captionsetup{labelformat=nolabel}
+
+    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    
+
+    
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatability definitions
+    \def\gt{>}
+    \def\lt{<}
+    % Document parameters
+    \title{NOTES\_AkarPersamaan}
+    
+    
+    
+
+    % Pygments definitions
+    
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+    \begin{document}
+    
+    
+    \maketitle
+    
+    
+
+    
+    \hypertarget{tf2202-metode-komputasi---akar-persamaan-nonlinear}{%
+\section{TF2202 Metode Komputasi - Akar Persamaan
+Nonlinear}\label{tf2202-metode-komputasi---akar-persamaan-nonlinear}}
+
+    Fadjar Fathurrahman
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}1}]:} \PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+        \PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}2}]:} \PY{k+kn}{from} \PY{n+nn}{IPython}\PY{n+nn}{.}\PY{n+nn}{display} \PY{k}{import} \PY{n}{set\PYZus{}matplotlib\PYZus{}formats}
+        \PY{n}{set\PYZus{}matplotlib\PYZus{}formats}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{svg}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}3}]:} \PY{k+kn}{import} \PY{n+nn}{matplotlib}
+        \PY{c+c1}{\PYZsh{}matplotlib.style.use(\PYZdq{}dark\PYZus{}background\PYZdq{})}
+        \PY{n}{matplotlib}\PY{o}{.}\PY{n}{style}\PY{o}{.}\PY{n}{use}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{default}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \hypertarget{metode-bisection}{%
+\subsection{Metode Bisection}\label{metode-bisection}}
+
+    Ide dari metode bisection fakta bahwa jika tanda dari \(f(x_{1})\) dan
+\(f(x_{2})\) berbeda, maka setidaknya ada satu akar dari persamaan
+\(f(x) = 0\) ada dalam selang \((x_1,x_2)\).
+
+    Misalkan kita ingin mencari akar dari fungsi berikut: \[
+f(x) = 5x^3 - 5x^2 + 6x - 2
+\] Untuk memperoleh gambaran mengenai akar dari persamaan \(f(x)=0\),
+kita akan membuat plot dari dari \(f(x)\) terlebih dahulu.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} \PY{k}{def} \PY{n+nf}{func\PYZus{}01}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+            \PY{k}{return} \PY{l+m+mi}{5}\PY{o}{*}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{3} \PY{o}{\PYZhy{}} \PY{l+m+mi}{5}\PY{o}{*}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{+} \PY{l+m+mi}{6}\PY{o}{*}\PY{n}{x} \PY{o}{\PYZhy{}} \PY{l+m+mi}{2}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}5}]:} \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{100}\PY{p}{)}
+        \PY{n}{y} \PY{o}{=}  \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{f(x)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{NOTES_AkarPersamaan_files/NOTES_AkarPersamaan_9_0.pdf}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Dari plot di atas dapat dilihat bahwa akar dari \(f(x)\) terletak di
+sekitar \(x = 0.5\). Sebagai ilustrasi untuk metode bisection kita akan
+menggunakan interval \(x_1 = 0\) dan \(x_2 = 1\).
+
+    Mari kita cek bahwa tanda \(f(x_1)\) dan \(f(x_2)\) memiliki tanda yang
+berbeda, atau \(f(x_1)f(x_2) < 0\).
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}6}]:} \PY{n}{x1} \PY{o}{=} \PY{l+m+mf}{0.0}
+        \PY{n}{x2} \PY{o}{=} \PY{l+m+mf}{1.0}
+        \PY{n}{f1} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{x1}\PY{p}{)}
+        \PY{n}{f2} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{x2}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{f1 = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{f1}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{f2 = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{f2}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{n}{f1}\PY{o}{*}\PY{n}{f2} \PY{o}{\PYZlt{}} \PY{l+m+mi}{0}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+f1 =  -2.0
+f2 =  4.0
+True
+
+    \end{Verbatim}
+
+    Sekarang, kita perlu menentukan tebakan akar dari selang \(x_1\) dan
+\(x_2\). Dengan metode bisection, tebakan akar dihitung tepat berada di
+tengah selang yaitu: \[
+x_{r} = \frac{x_1 + x_2}{2}
+\]
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}7}]:} \PY{n}{xr} \PY{o}{=} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{p}{(}\PY{n}{x1} \PY{o}{+} \PY{n}{x2}\PY{p}{)}
+        \PY{n}{xr}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}7}]:} 0.5
+\end{Verbatim}
+            
+    OK, sepertinya kita sudah berada dekat di akar sebenarnya. Mari kita cek
+nilai \(f(x_r)\):
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}8}]:} \PY{n}{fxr} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{xr}\PY{p}{)}
+        \PY{n}{fxr}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}8}]:} 0.375
+\end{Verbatim}
+            
+    Ternyata nilai dari \(f(x_r)\) tidak tepat pada 0. Mari buat plot
+\(f(x)\) pada domain (interval) yang lebih sempit.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}9}]:} \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mf}{0.0}\PY{p}{,} \PY{l+m+mf}{1.0}\PY{p}{,} \PY{l+m+mi}{500}\PY{p}{)}
+        \PY{n}{y} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{xr}\PY{p}{,} \PY{n}{fxr}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{o}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{c+c1}{\PYZsh{} Tandai nilai fx pada xr, yaitu (xr,fxr)}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{NOTES_AkarPersamaan_files/NOTES_AkarPersamaan_18_0.pdf}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Kita dapat memperbaiki tebakan akar dengan memilih rentang baru di mana
+kita akan mengaplikasikan lagi metode bisection. Kita sekarang memiliki
+3 titik yaitu \(x_1\), \(x_2\), dan \(x_r\), dengan nilai fungsi pada
+titik-titik tersebut adalah:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}10}]:} \PY{n}{f1}\PY{p}{,} \PY{n}{f2}\PY{p}{,} \PY{n}{fxr}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}10}]:} (-2.0, 4.0, 0.375)
+\end{Verbatim}
+            
+    Dengan informasi tersebut, kita dapat menggunakan \(x_r\) sebagai
+pengganti dari \(x_2\) karena selang ini lebih kecil dan diharapkan
+nilai tebakan akar dapat menjadi lebih dekat dengan akar sebenarnya.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}11}]:} \PY{n}{x2} \PY{o}{=} \PY{n}{xr}
+         \PY{n}{f2} \PY{o}{=} \PY{n}{fxr}
+\end{Verbatim}
+
+
+    Cek apakah nilai fungsi pada interval baru ini berbeda tanda (hasil kali
+\(f_(x_{1})\) dan \(f(x_2)\) adalah negatif.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}12}]:} \PY{n+nb}{print}\PY{p}{(}\PY{n}{f1}\PY{o}{*}\PY{n}{f2} \PY{o}{\PYZlt{}} \PY{l+m+mi}{0}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+True
+
+    \end{Verbatim}
+
+    Kita hitung lagi tebakan akar \(x_r\) sebagai nilai tengah antara
+\(x_{1}\) dan \(x_2\):
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}13}]:} \PY{n}{xr} \PY{o}{=} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{p}{(}\PY{n}{x1} \PY{o}{+} \PY{n}{x2}\PY{p}{)}
+         \PY{n}{fxr} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{xr}\PY{p}{)}
+         \PY{n}{fxr}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}13}]:} -0.734375
+\end{Verbatim}
+            
+    Sepertinya nilai akar yang kita dapatkan masih belum baik.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}14}]:} \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{n}{x1}\PY{p}{,} \PY{n}{x2}\PY{p}{,} \PY{l+m+mi}{500}\PY{p}{)}
+         \PY{n}{y} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{xr}\PY{p}{,} \PY{n}{fxr}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{o}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{c+c1}{\PYZsh{} Tandai nilai fx pada xr, yaitu (xr,fxr)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{NOTES_AkarPersamaan_files/NOTES_AkarPersamaan_28_0.pdf}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}15}]:} \PY{n}{f1}\PY{p}{,} \PY{n}{f2}\PY{p}{,} \PY{n}{fxr}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}15}]:} (-2.0, 0.375, -0.734375)
+\end{Verbatim}
+            
+    Kita akan melakukan kembali prosedur bisection. Untuk interval baru kita
+akan ganti \(x_1\) dengan \(x_r\).
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}16}]:} \PY{n}{x1} \PY{o}{=} \PY{n}{xr}
+         \PY{n}{f1} \PY{o}{=} \PY{n}{fxr}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}17}]:} \PY{n+nb}{print}\PY{p}{(}\PY{n}{f1}\PY{o}{*}\PY{n}{f2} \PY{o}{\PYZlt{}} \PY{l+m+mi}{0}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+True
+
+    \end{Verbatim}
+
+    Hitung kembali tebakan akar pada selang \(x_1\) dan \(x_2\)
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}18}]:} \PY{n}{xr} \PY{o}{=} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{p}{(}\PY{n}{x1} \PY{o}{+} \PY{n}{x2}\PY{p}{)}
+         \PY{n}{fxr} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{xr}\PY{p}{)}
+         \PY{n}{fxr}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}18}]:} -0.189453125
+\end{Verbatim}
+            
+    Nilai ini sudah lebih dekat dari tebakan-tebakan kita sebelumnya.
+
+Untuk mendapatkan tebakan akar yang lebih baik kita akan lakukan sekali
+lagi metode bisection.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}19}]:} \PY{n}{f1}\PY{p}{,} \PY{n}{f2}\PY{p}{,} \PY{n}{fxr}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}19}]:} (-0.734375, 0.375, -0.189453125)
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}20}]:} \PY{n}{x1} \PY{o}{=} \PY{n}{xr}
+         \PY{n}{f1} \PY{o}{=} \PY{n}{fxr}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{f1}\PY{o}{*}\PY{n}{f2} \PY{o}{\PYZlt{}} \PY{l+m+mi}{0}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+True
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}21}]:} \PY{n}{xr} \PY{o}{=} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{p}{(}\PY{n}{x1} \PY{o}{+} \PY{n}{x2}\PY{p}{)}
+         \PY{n}{fxr} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{xr}\PY{p}{)}
+         \PY{n}{fxr}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}21}]:} 0.086669921875
+\end{Verbatim}
+            
+    Tebakan ini lebih baik dari tebakan sebelumnya karena \(f(x_r)\) yang
+diperoleh lebih dekat dengan 0. Kita dapat melakukan prosedur bisection
+sekali lagi.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}22}]:} \PY{n}{f1}\PY{p}{,} \PY{n}{f2}\PY{p}{,} \PY{n}{fxr}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}22}]:} (-0.189453125, 0.375, 0.086669921875)
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}23}]:} \PY{n}{x2} \PY{o}{=} \PY{n}{xr}
+         \PY{n}{f2} \PY{o}{=} \PY{n}{fxr}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}24}]:} \PY{n}{xr} \PY{o}{=} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{p}{(}\PY{n}{x1} \PY{o}{+} \PY{n}{x2}\PY{p}{)}
+         \PY{n}{fxr} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{xr}\PY{p}{)}
+         \PY{n}{fxr}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}24}]:} -0.052459716796875
+\end{Verbatim}
+            
+    Setelah melakukan iterasi metode bisection secara manual, sekarang kita
+akan membuat prosedur bisection dalam suatu subrutin (fungsi). Fungsi
+ini menerima masukan \texttt{f} sebagai fungsi yang akan dicari akarnya,
+\texttt{x1} dan \texttt{x2} sebagai input selang di mana akar akan
+dicari. Fungsi ini juga menggunakan \texttt{TOL} dengan nilai default
+\texttt{1e-10} untuk menentukan akurasi hasil yang diperoleh dan juga
+\texttt{NiterMax} dengan nilai default \texttt{100} sebagai jumlah
+maksimum iterasi yang dilakukan.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}25}]:} \PY{k}{def} \PY{n+nf}{bisection}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{x1}\PY{p}{,} \PY{n}{x2}\PY{p}{,} \PY{n}{TOL}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}10}\PY{p}{,} \PY{n}{NiterMax}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{)}\PY{p}{:}
+             
+             \PY{n}{f1} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{x1}\PY{p}{)}
+             \PY{n}{f2} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{x2}\PY{p}{)}
+             
+             \PY{k}{if} \PY{n}{f1}\PY{o}{*}\PY{n}{f2} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{:}
+                 \PY{k}{raise} \PY{n+ne}{RuntimeError}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{f1 dan f2 memiliki tanda yang sama}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                 
+             \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{NiterMax}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+                 
+                 \PY{n}{xr} \PY{o}{=} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{p}{(}\PY{n}{x1} \PY{o}{+} \PY{n}{x2}\PY{p}{)}
+                 \PY{n}{fxr} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{xr}\PY{p}{)}
+                 
+                 \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fxr}\PY{p}{)} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{TOL}\PY{p}{:}
+                     \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iterasi konvergen: akar ditemukan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                     \PY{k}{return} \PY{n}{xr}
+                 
+                 \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iter = }\PY{l+s+si}{\PYZpc{}5d}\PY{l+s+s2}{, xr = }\PY{l+s+si}{\PYZpc{}18.10f}\PY{l+s+s2}{, abs(fxr) = }\PY{l+s+si}{\PYZpc{}15.5e}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{n}{xr}\PY{p}{,} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fxr}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+             
+                 \PY{c+c1}{\PYZsh{} f1 dan fxr berbeda tanda}
+                 \PY{k}{if} \PY{n}{f1}\PY{o}{*}\PY{n}{fxr} \PY{o}{\PYZlt{}} \PY{l+m+mf}{0.0}\PY{p}{:}
+                     \PY{n}{x2} \PY{o}{=} \PY{n}{xr}
+                     \PY{n}{f2} \PY{o}{=} \PY{n}{fxr}
+                 \PY{k}{else}\PY{p}{:}
+                     \PY{n}{x1} \PY{o}{=} \PY{n}{xr}
+                     \PY{n}{f1} \PY{o}{=} \PY{n}{fxr}
+                 
+             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Konvergensi tidak diperleh setelah }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{ iterasi}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{n}{NiterMax}\PY{p}{)}
+             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Nilai tebakan akhir akan dikembalikan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+             \PY{k}{return} \PY{n}{xr}
+\end{Verbatim}
+
+
+    Contoh penggunaan:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}26}]:} \PY{n}{xr} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{0.0}\PY{p}{,} \PY{l+m+mf}{1.0}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, xr =       0.5000000000, abs(fxr) =     3.75000e-01
+Iter =     2, xr =       0.2500000000, abs(fxr) =     7.34375e-01
+Iter =     3, xr =       0.3750000000, abs(fxr) =     1.89453e-01
+Iter =     4, xr =       0.4375000000, abs(fxr) =     8.66699e-02
+Iter =     5, xr =       0.4062500000, abs(fxr) =     5.24597e-02
+Iter =     6, xr =       0.4218750000, abs(fxr) =     1.67809e-02
+Iter =     7, xr =       0.4140625000, abs(fxr) =     1.79133e-02
+Iter =     8, xr =       0.4179687500, abs(fxr) =     5.85616e-04
+Iter =     9, xr =       0.4199218750, abs(fxr) =     8.09266e-03
+Iter =    10, xr =       0.4189453125, abs(fxr) =     3.75230e-03
+Iter =    11, xr =       0.4184570312, abs(fxr) =     1.58304e-03
+Iter =    12, xr =       0.4182128906, abs(fxr) =     4.98635e-04
+Iter =    13, xr =       0.4180908203, abs(fxr) =     4.35092e-05
+Iter =    14, xr =       0.4181518555, abs(fxr) =     2.27558e-04
+Iter =    15, xr =       0.4181213379, abs(fxr) =     9.20233e-05
+Iter =    16, xr =       0.4181060791, abs(fxr) =     2.42567e-05
+Iter =    17, xr =       0.4180984497, abs(fxr) =     9.62632e-06
+Iter =    18, xr =       0.4181022644, abs(fxr) =     7.31519e-06
+Iter =    19, xr =       0.4181003571, abs(fxr) =     1.15557e-06
+Iter =    20, xr =       0.4181013107, abs(fxr) =     3.07981e-06
+Iter =    21, xr =       0.4181008339, abs(fxr) =     9.62119e-07
+Iter =    22, xr =       0.4181005955, abs(fxr) =     9.67255e-08
+Iter =    23, xr =       0.4181007147, abs(fxr) =     4.32697e-07
+Iter =    24, xr =       0.4181006551, abs(fxr) =     1.67986e-07
+Iter =    25, xr =       0.4181006253, abs(fxr) =     3.56301e-08
+Iter =    26, xr =       0.4181006104, abs(fxr) =     3.05477e-08
+Iter =    27, xr =       0.4181006178, abs(fxr) =     2.54121e-09
+Iter =    28, xr =       0.4181006141, abs(fxr) =     1.40032e-08
+Iter =    29, xr =       0.4181006160, abs(fxr) =     5.73101e-09
+Iter =    30, xr =       0.4181006169, abs(fxr) =     1.59490e-09
+Iter =    31, xr =       0.4181006174, abs(fxr) =     4.73154e-10
+Iter =    32, xr =       0.4181006171, abs(fxr) =     5.60874e-10
+Iterasi konvergen: akar ditemukan
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}27}]:} \PY{n}{xr} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{0.0}\PY{p}{,} \PY{l+m+mf}{0.5}\PY{p}{,} \PY{n}{TOL}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}9}\PY{p}{,} \PY{n}{NiterMax}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, xr =       0.2500000000, abs(fxr) =     7.34375e-01
+Iter =     2, xr =       0.3750000000, abs(fxr) =     1.89453e-01
+Iter =     3, xr =       0.4375000000, abs(fxr) =     8.66699e-02
+Iter =     4, xr =       0.4062500000, abs(fxr) =     5.24597e-02
+Iter =     5, xr =       0.4218750000, abs(fxr) =     1.67809e-02
+Iter =     6, xr =       0.4140625000, abs(fxr) =     1.79133e-02
+Iter =     7, xr =       0.4179687500, abs(fxr) =     5.85616e-04
+Iter =     8, xr =       0.4199218750, abs(fxr) =     8.09266e-03
+Iter =     9, xr =       0.4189453125, abs(fxr) =     3.75230e-03
+Iter =    10, xr =       0.4184570312, abs(fxr) =     1.58304e-03
+WARNING: Konvergensi tidak diperleh setelah 10 iterasi
+WARNING: Nilai tebakan akhir akan dikembalikan
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}28}]:} \PY{n}{xr} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{0.0}\PY{p}{,} \PY{l+m+mf}{0.5}\PY{p}{,} \PY{n}{TOL}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}9}\PY{p}{,} \PY{n}{NiterMax}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, xr =       0.2500000000, abs(fxr) =     7.34375e-01
+Iter =     2, xr =       0.3750000000, abs(fxr) =     1.89453e-01
+Iter =     3, xr =       0.4375000000, abs(fxr) =     8.66699e-02
+Iter =     4, xr =       0.4062500000, abs(fxr) =     5.24597e-02
+Iter =     5, xr =       0.4218750000, abs(fxr) =     1.67809e-02
+Iter =     6, xr =       0.4140625000, abs(fxr) =     1.79133e-02
+Iter =     7, xr =       0.4179687500, abs(fxr) =     5.85616e-04
+Iter =     8, xr =       0.4199218750, abs(fxr) =     8.09266e-03
+Iter =     9, xr =       0.4189453125, abs(fxr) =     3.75230e-03
+Iter =    10, xr =       0.4184570312, abs(fxr) =     1.58304e-03
+Iter =    11, xr =       0.4182128906, abs(fxr) =     4.98635e-04
+Iter =    12, xr =       0.4180908203, abs(fxr) =     4.35092e-05
+Iter =    13, xr =       0.4181518555, abs(fxr) =     2.27558e-04
+Iter =    14, xr =       0.4181213379, abs(fxr) =     9.20233e-05
+Iter =    15, xr =       0.4181060791, abs(fxr) =     2.42567e-05
+Iter =    16, xr =       0.4180984497, abs(fxr) =     9.62632e-06
+Iter =    17, xr =       0.4181022644, abs(fxr) =     7.31519e-06
+Iter =    18, xr =       0.4181003571, abs(fxr) =     1.15557e-06
+Iter =    19, xr =       0.4181013107, abs(fxr) =     3.07981e-06
+Iter =    20, xr =       0.4181008339, abs(fxr) =     9.62119e-07
+Iter =    21, xr =       0.4181005955, abs(fxr) =     9.67255e-08
+Iter =    22, xr =       0.4181007147, abs(fxr) =     4.32697e-07
+Iter =    23, xr =       0.4181006551, abs(fxr) =     1.67986e-07
+Iter =    24, xr =       0.4181006253, abs(fxr) =     3.56301e-08
+Iter =    25, xr =       0.4181006104, abs(fxr) =     3.05477e-08
+Iter =    26, xr =       0.4181006178, abs(fxr) =     2.54121e-09
+Iter =    27, xr =       0.4181006141, abs(fxr) =     1.40032e-08
+Iter =    28, xr =       0.4181006160, abs(fxr) =     5.73101e-09
+Iter =    29, xr =       0.4181006169, abs(fxr) =     1.59490e-09
+Iterasi konvergen: akar ditemukan
+
+    \end{Verbatim}
+
+    Sebagai contoh lain, kita akan mencari akar persamaan berikut: \[
+x^2 \left| \cos\left(\sqrt{x}\right) \right| = 5
+\] Untuk menggunakan fungsi \texttt{bisection} kita perlu mengubah
+persamaan tersebut dalam bentuk \(f(x) = 0\): \[
+f(x) = x^2 \left| \cos\left(\sqrt{x}\right) \right| - 5 = 0
+\]
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}29}]:} \PY{k}{def} \PY{n+nf}{func\PYZus{}02}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+             \PY{k}{return} \PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{abs}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{cos}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{)}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{l+m+mi}{5}
+\end{Verbatim}
+
+
+    Kita perlu selang untuk tebakan awal akar. Untuk memperoleh informasi
+tersebut kita akan buat plot dari \(f(x)\) terlebih dahulu.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}30}]:} \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{500}\PY{p}{)}
+         \PY{n}{y} \PY{o}{=} \PY{n}{func\PYZus{}02}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{NOTES_AkarPersamaan_files/NOTES_AkarPersamaan_52_0.pdf}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Akar terletak antara \(x = 0\) dan \(x = 5\).
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}31}]:} \PY{n}{xr} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}02}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, xr =       2.5000000000, abs(fxr) =     4.93536e+00
+Iter =     2, xr =       3.7500000000, abs(fxr) =     2.87324e-02
+Iter =     3, xr =       3.1250000000, abs(fxr) =     3.08887e+00
+Iter =     4, xr =       3.4375000000, abs(fxr) =     1.69754e+00
+Iter =     5, xr =       3.5937500000, abs(fxr) =     8.77063e-01
+Iter =     6, xr =       3.6718750000, abs(fxr) =     4.34912e-01
+Iter =     7, xr =       3.7109375000, abs(fxr) =     2.05785e-01
+Iter =     8, xr =       3.7304687500, abs(fxr) =     8.92016e-02
+Iter =     9, xr =       3.7402343750, abs(fxr) =     3.04035e-02
+Iter =    10, xr =       3.7451171875, abs(fxr) =     8.77797e-04
+Iter =    11, xr =       3.7475585938, abs(fxr) =     1.39167e-02
+Iter =    12, xr =       3.7463378906, abs(fxr) =     6.51683e-03
+Iter =    13, xr =       3.7457275391, abs(fxr) =     2.81886e-03
+Iter =    14, xr =       3.7454223633, abs(fxr) =     9.70364e-04
+Iter =    15, xr =       3.7452697754, abs(fxr) =     4.62426e-05
+Iter =    16, xr =       3.7451934814, abs(fxr) =     4.15787e-04
+Iter =    17, xr =       3.7452316284, abs(fxr) =     1.84775e-04
+Iter =    18, xr =       3.7452507019, abs(fxr) =     6.92668e-05
+Iter =    19, xr =       3.7452602386, abs(fxr) =     1.15123e-05
+Iter =    20, xr =       3.7452650070, abs(fxr) =     1.73651e-05
+Iter =    21, xr =       3.7452626228, abs(fxr) =     2.92641e-06
+Iter =    22, xr =       3.7452614307, abs(fxr) =     4.29294e-06
+Iter =    23, xr =       3.7452620268, abs(fxr) =     6.83264e-07
+Iter =    24, xr =       3.7452623248, abs(fxr) =     1.12157e-06
+Iter =    25, xr =       3.7452621758, abs(fxr) =     2.19155e-07
+Iter =    26, xr =       3.7452621013, abs(fxr) =     2.32055e-07
+Iter =    27, xr =       3.7452621385, abs(fxr) =     6.44991e-09
+Iter =    28, xr =       3.7452621572, abs(fxr) =     1.06352e-07
+Iter =    29, xr =       3.7452621479, abs(fxr) =     4.99512e-08
+Iter =    30, xr =       3.7452621432, abs(fxr) =     2.17507e-08
+Iter =    31, xr =       3.7452621409, abs(fxr) =     7.65038e-09
+Iter =    32, xr =       3.7452621397, abs(fxr) =     6.00232e-10
+Iter =    33, xr =       3.7452621391, abs(fxr) =     2.92484e-09
+Iter =    34, xr =       3.7452621394, abs(fxr) =     1.16230e-09
+Iter =    35, xr =       3.7452621396, abs(fxr) =     2.81036e-10
+Iter =    36, xr =       3.7452621396, abs(fxr) =     1.59599e-10
+Iterasi konvergen: akar ditemukan
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}32}]:} \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{500}\PY{p}{)}
+         \PY{n}{y} \PY{o}{=} \PY{n}{func\PYZus{}02}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{xr}\PY{p}{,} \PY{n}{func\PYZus{}02}\PY{p}{(}\PY{n}{xr}\PY{p}{)}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{o}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{NOTES_AkarPersamaan_files/NOTES_AkarPersamaan_55_0.pdf}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Mari kita coba gunakan selang \(x = 3\) dan \(x = 4\).
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}33}]:} \PY{n}{xr} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}02}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, xr =       3.5000000000, abs(fxr) =     1.37950e+00
+Iter =     2, xr =       3.7500000000, abs(fxr) =     2.87324e-02
+Iter =     3, xr =       3.6250000000, abs(fxr) =     7.02772e-01
+Iter =     4, xr =       3.6875000000, abs(fxr) =     3.43907e-01
+Iter =     5, xr =       3.7187500000, abs(fxr) =     1.59314e-01
+Iter =     6, xr =       3.7343750000, abs(fxr) =     6.57229e-02
+Iter =     7, xr =       3.7421875000, abs(fxr) =     1.86034e-02
+Iter =     8, xr =       3.7460937500, abs(fxr) =     5.03748e-03
+Iter =     9, xr =       3.7441406250, abs(fxr) =     6.78970e-03
+Iter =    10, xr =       3.7451171875, abs(fxr) =     8.77797e-04
+Iter =    11, xr =       3.7456054688, abs(fxr) =     2.07942e-03
+Iter =    12, xr =       3.7453613281, abs(fxr) =     6.00706e-04
+Iter =    13, xr =       3.7452392578, abs(fxr) =     1.38572e-04
+Iter =    14, xr =       3.7453002930, abs(fxr) =     2.31060e-04
+Iter =    15, xr =       3.7452697754, abs(fxr) =     4.62426e-05
+Iter =    16, xr =       3.7452545166, abs(fxr) =     4.61651e-05
+Iter =    17, xr =       3.7452621460, abs(fxr) =     3.86710e-08
+Iter =    18, xr =       3.7452583313, abs(fxr) =     2.30632e-05
+Iter =    19, xr =       3.7452602386, abs(fxr) =     1.15123e-05
+Iter =    20, xr =       3.7452611923, abs(fxr) =     5.73681e-06
+Iter =    21, xr =       3.7452616692, abs(fxr) =     2.84907e-06
+Iter =    22, xr =       3.7452619076, abs(fxr) =     1.40520e-06
+Iter =    23, xr =       3.7452620268, abs(fxr) =     6.83264e-07
+Iter =    24, xr =       3.7452620864, abs(fxr) =     3.22296e-07
+Iter =    25, xr =       3.7452621162, abs(fxr) =     1.41813e-07
+Iter =    26, xr =       3.7452621311, abs(fxr) =     5.15708e-08
+Iter =    27, xr =       3.7452621385, abs(fxr) =     6.44991e-09
+Iter =    28, xr =       3.7452621423, abs(fxr) =     1.61106e-08
+Iter =    29, xr =       3.7452621404, abs(fxr) =     4.83032e-09
+Iter =    30, xr =       3.7452621395, abs(fxr) =     8.09795e-10
+Iter =    31, xr =       3.7452621399, abs(fxr) =     2.01026e-09
+Iter =    32, xr =       3.7452621397, abs(fxr) =     6.00232e-10
+Iter =    33, xr =       3.7452621396, abs(fxr) =     1.04781e-10
+Iter =    34, xr =       3.7452621397, abs(fxr) =     2.47725e-10
+Iterasi konvergen: akar ditemukan
+
+    \end{Verbatim}
+
+    \hypertarget{metode-regula-falsi}{%
+\subsection{Metode Regula-Falsi}\label{metode-regula-falsi}}
+
+    Metode regula-falsi mirip dengan metode bisection, namun dengan
+persamaan yang berbeda untuk menentukan aproksimasi akar. Pada metode
+bisection, tebakan akar diberikan sebagai nilai tengah dari \(x_1\) dan
+\(x_2\) sedangkan pada metode regula-falsi digunakan interpolasi linear
+antara \(f(x_1)\) dan \(f(x_2)\). Tebakan akar adalah perpotongan antara
+garis interpolasi linear ini dengan sumbu \(x\). Hasil akhirnya adalah:
+\[
+x_r = x_2 - \frac{f(x_2)}{f(x_1) - f(x_2)}(x_1 - x_2)
+\]
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}34}]:} \PY{k}{def} \PY{n+nf}{regula\PYZus{}falsi}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{x1}\PY{p}{,} \PY{n}{x2}\PY{p}{,} \PY{n}{TOL}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}10}\PY{p}{,} \PY{n}{NiterMax}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{)}\PY{p}{:}
+             
+             \PY{n}{f1} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{x1}\PY{p}{)}
+             \PY{n}{f2} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{x2}\PY{p}{)}
+             
+             \PY{k}{if} \PY{n}{f1}\PY{o}{*}\PY{n}{f2} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{:}
+                 \PY{k}{raise} \PY{n+ne}{RuntimeError}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{f1 dan f2 memiliki tanda yang sama}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                 
+             \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{NiterMax}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+                 
+                 \PY{n}{xr} \PY{o}{=} \PY{n}{x2} \PY{o}{\PYZhy{}} \PY{n}{f2}\PY{o}{*}\PY{p}{(}\PY{n}{x1} \PY{o}{\PYZhy{}} \PY{n}{x2}\PY{p}{)}\PY{o}{/}\PY{p}{(}\PY{n}{f1} \PY{o}{\PYZhy{}} \PY{n}{f2}\PY{p}{)}
+                 \PY{n}{fxr} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{xr}\PY{p}{)}
+                 
+                 \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fxr}\PY{p}{)} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{TOL}\PY{p}{:}
+                     \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iterasi konvergen: akar ditemukan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                     \PY{k}{return} \PY{n}{xr}
+                 
+                 \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iter = }\PY{l+s+si}{\PYZpc{}5d}\PY{l+s+s2}{, xr = }\PY{l+s+si}{\PYZpc{}18.10f}\PY{l+s+s2}{, abs(fxr) = }\PY{l+s+si}{\PYZpc{}15.5e}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{n}{xr}\PY{p}{,} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fxr}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+             
+                 \PY{c+c1}{\PYZsh{} f1 dan fxr berbeda tanda}
+                 \PY{k}{if} \PY{n}{f1}\PY{o}{*}\PY{n}{fxr} \PY{o}{\PYZlt{}} \PY{l+m+mf}{0.0}\PY{p}{:}
+                     \PY{n}{x2} \PY{o}{=} \PY{n}{xr}
+                     \PY{n}{f2} \PY{o}{=} \PY{n}{fxr}
+                 \PY{k}{else}\PY{p}{:}
+                     \PY{n}{x1} \PY{o}{=} \PY{n}{xr}
+                     \PY{n}{f1} \PY{o}{=} \PY{n}{fxr}
+                 
+             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Konvergensi tidak diperleh setelah }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{ iterasi}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{n}{NiterMax}\PY{p}{)}
+             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Nilai tebakan akhir akan dikembalikan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+             \PY{k}{return} \PY{n}{xr}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}35}]:} \PY{n}{xr} \PY{o}{=} \PY{n}{regula\PYZus{}falsi}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{0.0}\PY{p}{,} \PY{l+m+mf}{1.0}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, xr =       0.3333333333, abs(fxr) =     3.70370e-01
+Iter =     2, xr =       0.3898305085, abs(fxr) =     1.24648e-01
+Iter =     3, xr =       0.4082699418, abs(fxr) =     4.35410e-02
+Iter =     4, xr =       0.4146417183, abs(fxr) =     1.53464e-02
+Iter =     5, xr =       0.4168789156, abs(fxr) =     5.42383e-03
+Iter =     6, xr =       0.4176685323, abs(fxr) =     1.91870e-03
+Iter =     7, xr =       0.4179477285, abs(fxr) =     6.78967e-04
+Iter =     8, xr =       0.4180465103, abs(fxr) =     2.40291e-04
+Iter =     9, xr =       0.4180814678, abs(fxr) =     8.50444e-05
+Iter =    10, xr =       0.4180938398, abs(fxr) =     3.00995e-05
+Iter =    11, xr =       0.4180982185, abs(fxr) =     1.06531e-05
+Iter =    12, xr =       0.4180997683, abs(fxr) =     3.77043e-06
+Iter =    13, xr =       0.4181003168, abs(fxr) =     1.33446e-06
+Iter =    14, xr =       0.4181005109, abs(fxr) =     4.72306e-07
+Iter =    15, xr =       0.4181005796, abs(fxr) =     1.67163e-07
+Iter =    16, xr =       0.4181006039, abs(fxr) =     5.91639e-08
+Iter =    17, xr =       0.4181006125, abs(fxr) =     2.09398e-08
+Iter =    18, xr =       0.4181006156, abs(fxr) =     7.41122e-09
+Iter =    19, xr =       0.4181006167, abs(fxr) =     2.62305e-09
+Iter =    20, xr =       0.4181006170, abs(fxr) =     9.28374e-10
+Iter =    21, xr =       0.4181006172, abs(fxr) =     3.28579e-10
+Iter =    22, xr =       0.4181006172, abs(fxr) =     1.16294e-10
+Iterasi konvergen: akar ditemukan
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}36}]:} \PY{n}{xr} \PY{o}{=} \PY{n}{regula\PYZus{}falsi}\PY{p}{(}\PY{n}{func\PYZus{}02}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, xr =       3.6819027315, abs(fxr) =     3.76606e-01
+Iter =     2, xr =       3.7407725061, abs(fxr) =     2.71536e-02
+Iter =     3, xr =       3.7449486892, abs(fxr) =     1.89809e-03
+Iter =     4, xr =       3.7452402785, abs(fxr) =     1.32391e-04
+Iter =     5, xr =       3.7452606151, abs(fxr) =     9.23275e-06
+Iter =     6, xr =       3.7452620333, abs(fxr) =     6.43873e-07
+Iter =     7, xr =       3.7452621322, abs(fxr) =     4.49024e-08
+Iter =     8, xr =       3.7452621391, abs(fxr) =     3.13140e-09
+Iter =     9, xr =       3.7452621396, abs(fxr) =     2.18379e-10
+Iterasi konvergen: akar ditemukan
+
+    \end{Verbatim}
+
+    \hypertarget{metode-fixed-point}{%
+\subsection{Metode fixed-point}\label{metode-fixed-point}}
+
+    Pada metode ini, persamaan \(f(x)\) yang ingin kita cari akarnya diubah
+menjadi \(x = g(x)\). Contoh: untuk mencari akar dari persamaan
+\(f(x) = e^{-x} - x = 0\) kita mengubah persamaan tersebut menjadi
+\(x = g(x) = e^{-x}\).
+
+Iterasi dimulai dengan suatu tebakan awal \(x_0\). Nilai tebakan akar
+berikutnya dihitung dengan persamaan \[
+x_{i+1} = g(x_{i})
+\] Jika iterasi ini konvergen, maka \(x_{i+1}\) adalah akar dari
+persamaan \(f(x) = 0\).
+
+Perhatikan bahwa metode ini tidak selalu konvergen.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}37}]:} \PY{c+c1}{\PYZsh{} definisi fungsi g(x) = exp(\PYZhy{}x)}
+         \PY{k}{def} \PY{n+nf}{func\PYZus{}03}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+             \PY{k}{return} \PY{n}{np}\PY{o}{.}\PY{n}{exp}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{x}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}38}]:} \PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
+         \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{500}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdl{}f(x) = x\PYZdl{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{func\PYZus{}03}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdl{}g(x) = exp(\PYZhy{}x)\PYZdl{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{NOTES_AkarPersamaan_files/NOTES_AkarPersamaan_66_0.pdf}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}39}]:} \PY{k}{def} \PY{n+nf}{fixed\PYZus{}point}\PY{p}{(}\PY{n}{g}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n}{TOL}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}10}\PY{p}{,} \PY{n}{NiterMax}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{)}\PY{p}{:}
+             
+             \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{NiterMax}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+                 \PY{n}{gx} \PY{o}{=} \PY{n}{g}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+                 \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iter = }\PY{l+s+si}{\PYZpc{}5d}\PY{l+s+s2}{, x = }\PY{l+s+si}{\PYZpc{}18.10f}\PY{l+s+s2}{, abs(x\PYZhy{}g(x)) }\PY{l+s+si}{\PYZpc{}15.5e}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{x}\PY{o}{\PYZhy{}}\PY{n}{gx}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+                 \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{x} \PY{o}{\PYZhy{}} \PY{n}{gx}\PY{p}{)} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{TOL}\PY{p}{:}
+                     \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iterasi konvergen: akar ditemukan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                     \PY{k}{return} \PY{n}{x}
+                 \PY{n}{x} \PY{o}{=} \PY{n}{gx}
+             
+             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Konvergensi tidak diperleh setelah }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{ iterasi}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{n}{NiterMax}\PY{p}{)}
+             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Nilai tebakan akhir akan dikembalikan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+             \PY{k}{return} \PY{n}{x}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}40}]:} \PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{0.0}
+         \PY{n}{xr} \PY{o}{=} \PY{n}{fixed\PYZus{}point}\PY{p}{(}\PY{n}{func\PYZus{}03}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =       0.0000000000, abs(x-g(x))     1.00000e+00
+Iter =     2, x =       1.0000000000, abs(x-g(x))     6.32121e-01
+Iter =     3, x =       0.3678794412, abs(x-g(x))     3.24321e-01
+Iter =     4, x =       0.6922006276, abs(x-g(x))     1.91727e-01
+Iter =     5, x =       0.5004735006, abs(x-g(x))     1.05770e-01
+Iter =     6, x =       0.6062435351, abs(x-g(x))     6.08477e-02
+Iter =     7, x =       0.5453957860, abs(x-g(x))     3.42165e-02
+Iter =     8, x =       0.5796123355, abs(x-g(x))     1.94969e-02
+Iter =     9, x =       0.5601154614, abs(x-g(x))     1.10277e-02
+Iter =    10, x =       0.5711431151, abs(x-g(x))     6.26377e-03
+Iter =    11, x =       0.5648793474, abs(x-g(x))     3.54938e-03
+Iter =    12, x =       0.5684287250, abs(x-g(x))     2.01399e-03
+Iter =    13, x =       0.5664147331, abs(x-g(x))     1.14190e-03
+Iter =    14, x =       0.5675566373, abs(x-g(x))     6.47725e-04
+Iter =    15, x =       0.5669089119, abs(x-g(x))     3.67320e-04
+Iter =    16, x =       0.5672762322, abs(x-g(x))     2.08334e-04
+Iter =    17, x =       0.5670678984, abs(x-g(x))     1.18152e-04
+Iter =    18, x =       0.5671860501, abs(x-g(x))     6.70100e-05
+Iter =    19, x =       0.5671190401, abs(x-g(x))     3.80039e-05
+Iter =    20, x =       0.5671570440, abs(x-g(x))     2.15538e-05
+Iter =    21, x =       0.5671354902, abs(x-g(x))     1.22241e-05
+Iter =    22, x =       0.5671477143, abs(x-g(x))     6.93280e-06
+Iter =    23, x =       0.5671407815, abs(x-g(x))     3.93189e-06
+Iter =    24, x =       0.5671447133, abs(x-g(x))     2.22995e-06
+Iter =    25, x =       0.5671424834, abs(x-g(x))     1.26470e-06
+Iter =    26, x =       0.5671437481, abs(x-g(x))     7.17265e-07
+Iter =    27, x =       0.5671430308, abs(x-g(x))     4.06792e-07
+Iter =    28, x =       0.5671434376, abs(x-g(x))     2.30709e-07
+Iter =    29, x =       0.5671432069, abs(x-g(x))     1.30845e-07
+Iter =    30, x =       0.5671433378, abs(x-g(x))     7.42080e-08
+Iter =    31, x =       0.5671432636, abs(x-g(x))     4.20866e-08
+Iter =    32, x =       0.5671433056, abs(x-g(x))     2.38691e-08
+Iter =    33, x =       0.5671432818, abs(x-g(x))     1.35372e-08
+Iter =    34, x =       0.5671432953, abs(x-g(x))     7.67754e-09
+Iter =    35, x =       0.5671432876, abs(x-g(x))     4.35427e-09
+Iter =    36, x =       0.5671432920, abs(x-g(x))     2.46949e-09
+Iter =    37, x =       0.5671432895, abs(x-g(x))     1.40056e-09
+Iter =    38, x =       0.5671432909, abs(x-g(x))     7.94316e-10
+Iter =    39, x =       0.5671432901, abs(x-g(x))     4.50491e-10
+Iter =    40, x =       0.5671432906, abs(x-g(x))     2.55493e-10
+Iter =    41, x =       0.5671432903, abs(x-g(x))     1.44901e-10
+Iter =    42, x =       0.5671432905, abs(x-g(x))     8.21796e-11
+Iterasi konvergen: akar ditemukan
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}41}]:} \PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
+         \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{500}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdl{}f(x) = x\PYZdl{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{func\PYZus{}03}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdl{}g(x) = exp(\PYZhy{}x)\PYZdl{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{xr}\PY{p}{,} \PY{n}{func\PYZus{}03}\PY{p}{(}\PY{n}{xr}\PY{p}{)}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{o}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{NOTES_AkarPersamaan_files/NOTES_AkarPersamaan_69_0.pdf}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{metode-newton-raphson}{%
+\subsection{Metode Newton-Raphson}\label{metode-newton-raphson}}
+
+    Metode Newton-Raphson adalah salah satu metode yang paling sering
+digunakan untuk mencari akar persamaan nonlinear. Metode ini memerlukan
+informasi tebakan awal akar dan turunan pertama dari fungsi yang akan
+dicari akarnya.
+
+Metode Newton-Rapshon dapat diturunkan dari deret Taylor untuk \(f(x)\)
+disekitar \(x\): \[
+f(x_{i+1}) = f(x_{i}) +
+f'(x_{i})(x_{i+1} - x_{i}) +
+\mathcal{O}(x_{i+1} - x_{i})^2
+\]
+
+Jika \(x_{i+1}\) adalah akar dari \(f(x)=0\) maka diperoleh: \[
+0 = f(x_{i}) +
+f'(x_{i})(x_{i+1} - x_{i}) +
+\mathcal{O}(x_{i+1} - x_{i})^2
+\]
+
+Dengan mengasumsikan \(x_{i}\) dekat dengan \(x_{i+1}\), suku
+\(\mathcal{O}(x_{i+1} - x_{i})\) dapat dianggap nol sehingga diperoleh:
+\[
+x_{i+1} = x_{i} - \frac{f(x_{i})}{f'(x_{i})}
+\]
+
+    Sebagai contoh, kita akan menghitung akar dari persamaan
+\(f(x) = x^3 - 35\)
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}42}]:} \PY{k}{def} \PY{n+nf}{func\PYZus{}04}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+             \PY{k}{return} \PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{3} \PY{o}{\PYZhy{}} \PY{l+m+mf}{35.0}
+         
+         \PY{k}{def} \PY{n+nf}{dfunc\PYZus{}04}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+             \PY{k}{return} \PY{l+m+mi}{3}\PY{o}{*}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}43}]:} \PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
+         \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{,}\PY{l+m+mi}{500}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{func\PYZus{}04}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{NOTES_AkarPersamaan_files/NOTES_AkarPersamaan_74_0.pdf}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}44}]:} \PY{k}{def} \PY{n+nf}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{df}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n}{TOL}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}10}\PY{p}{,} \PY{n}{NiterMax}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{)}\PY{p}{:}
+             
+             \PY{n}{SMALL} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{finfo}\PY{p}{(}\PY{n+nb}{float}\PY{p}{)}\PY{o}{.}\PY{n}{eps}
+             
+             \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{NiterMax}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+                 \PY{n}{fx} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+                 \PY{n}{dfx} \PY{o}{=} \PY{n}{df}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+                 
+                 \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{dfx}\PY{p}{)} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{SMALL}\PY{p}{:}
+                     \PY{k}{raise} \PY{n+ne}{RuntimeError}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Turunan f(x) sangat kecil}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                     
+                 \PY{n}{xr} \PY{o}{=} \PY{n}{x} \PY{o}{\PYZhy{}} \PY{n}{fx}\PY{o}{/}\PY{n}{dfx}
+                 
+                 \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iter = }\PY{l+s+si}{\PYZpc{}5d}\PY{l+s+s2}{, x = }\PY{l+s+si}{\PYZpc{}18.10f}\PY{l+s+s2}{, abs(f(x)) }\PY{l+s+si}{\PYZpc{}15.5e}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fx}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+                 \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fx}\PY{p}{)} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{TOL}\PY{p}{:}
+                     \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iterasi konvergen: akar ditemukan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                     \PY{k}{return} \PY{n}{x}
+                 
+                 \PY{n}{x} \PY{o}{=} \PY{n}{xr}
+             
+             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Konvergensi tidak diperleh setelah }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{ iterasi}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{n}{NiterMax}\PY{p}{)}
+             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Nilai tebakan akhir akan dikembalikan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+             \PY{k}{return} \PY{n}{x}
+\end{Verbatim}
+
+
+    Kita akan coba mencari akar persamaan \texttt{func\_04} dengan beberapa
+tebakan awal.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}45}]:} \PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{3.0}
+         \PY{n}{xr} \PY{o}{=} \PY{n}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{func\PYZus{}04}\PY{p}{,} \PY{n}{dfunc\PYZus{}04}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =       3.0000000000, abs(f(x))     8.00000e+00
+Iter =     2, x =       3.2962962963, abs(f(x))     8.16136e-01
+Iter =     3, x =       3.2712589288, abs(f(x))     6.18335e-03
+Iter =     4, x =       3.2710663215, abs(f(x))     3.64060e-07
+Iter =     5, x =       3.2710663102, abs(f(x))     0.00000e+00
+Iterasi konvergen: akar ditemukan
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}46}]:} \PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{4.0}
+         \PY{n}{xr} \PY{o}{=} \PY{n}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{func\PYZus{}04}\PY{p}{,} \PY{n}{dfunc\PYZus{}04}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =       4.0000000000, abs(f(x))     2.90000e+01
+Iter =     2, x =       3.3958333333, abs(f(x))     4.15968e+00
+Iter =     3, x =       3.2755942598, abs(f(x))     1.45547e-01
+Iter =     4, x =       3.2710725664, abs(f(x))     2.00823e-04
+Iter =     5, x =       3.2710663102, abs(f(x))     3.84091e-10
+Iter =     6, x =       3.2710663102, abs(f(x))     0.00000e+00
+Iterasi konvergen: akar ditemukan
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}47}]:} \PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{10.0}
+         \PY{n}{xr} \PY{o}{=} \PY{n}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{func\PYZus{}04}\PY{p}{,} \PY{n}{dfunc\PYZus{}04}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =      10.0000000000, abs(f(x))     9.65000e+02
+Iter =     2, x =       6.7833333333, abs(f(x))     2.77126e+02
+Iter =     3, x =       4.7757703873, abs(f(x))     7.39257e+01
+Iter =     4, x =       3.6953637378, abs(f(x))     1.54628e+01
+Iter =     5, x =       3.3179190978, abs(f(x))     1.52560e+00
+Iter =     6, x =       3.2717248105, abs(f(x))     2.11419e-02
+Iter =     7, x =       3.2710664427, abs(f(x))     4.25408e-06
+Iter =     8, x =       3.2710663102, abs(f(x))     1.70530e-13
+Iterasi konvergen: akar ditemukan
+
+    \end{Verbatim}
+
+    Kita coba mencari akar dari \texttt{func\_01}. Kita perlu mendefinisikan
+dulu turunan dari \texttt{func\_01}.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}48}]:} \PY{k}{def} \PY{n+nf}{dfunc\PYZus{}01}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+             \PY{k}{return} \PY{l+m+mi}{15}\PY{o}{*}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{\PYZhy{}} \PY{l+m+mi}{10}\PY{o}{*}\PY{n}{x} \PY{o}{+} \PY{l+m+mi}{6}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}49}]:} \PY{n}{xr} \PY{o}{=} \PY{n}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{n}{dfunc\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{0.0}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =       0.0000000000, abs(f(x))     2.00000e+00
+Iter =     2, x =       0.3333333333, abs(f(x))     3.70370e-01
+Iter =     3, x =       0.4188034188, abs(f(x))     3.12185e-03
+Iter =     4, x =       0.4181007594, abs(f(x))     6.31253e-07
+Iter =     5, x =       0.4181006173, abs(f(x))     2.57572e-14
+Iterasi konvergen: akar ditemukan
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}50}]:} \PY{n}{xr} \PY{o}{=} \PY{n}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{n}{dfunc\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{1.0}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =       1.0000000000, abs(f(x))     4.00000e+00
+Iter =     2, x =       0.6363636364, abs(f(x))     1.08189e+00
+Iter =     3, x =       0.4469148796, abs(f(x))     1.29143e-01
+Iter =     4, x =       0.4183866706, abs(f(x))     1.27050e-03
+Iter =     5, x =       0.4181006407, abs(f(x))     1.04260e-07
+Iter =     6, x =       0.4181006173, abs(f(x))     8.88178e-16
+Iterasi konvergen: akar ditemukan
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}51}]:} \PY{n}{xr} \PY{o}{=} \PY{n}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{n}{dfunc\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{10.0}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =      10.0000000000, abs(f(x))     4.55800e+03
+Iter =     2, x =       6.7581792319, abs(f(x))     1.35352e+03
+Iter =     3, x =       4.5873900492, abs(f(x))     4.02992e+02
+Iter =     4, x =       3.1261527539, abs(f(x))     1.20650e+02
+Iter =     5, x =       2.1317684971, abs(f(x))     3.65069e+01
+Iter =     6, x =       1.4409899718, abs(f(x))     1.12244e+01
+Iter =     7, x =       0.9473245383, abs(f(x))     3.44759e+00
+Iter =     8, x =       0.6021555613, abs(f(x))     8.91659e-01
+Iter =     9, x =       0.4375613295, abs(f(x))     8.69457e-02
+Iter =    10, x =       0.4182241073, abs(f(x))     5.48453e-04
+Iter =    11, x =       0.4181006216, abs(f(x))     1.94077e-08
+Iter =    12, x =       0.4181006173, abs(f(x))     0.00000e+00
+Iterasi konvergen: akar ditemukan
+
+    \end{Verbatim}
+
+    Sebagai perbandingan dengan metode fixed-point, kita akan menghitung
+akar dari persamaan \(f(x) = e^{-x} - x\). Turunan pertama dari fungsi
+ini adalah \(f'(x) = -e^{-x} - 1\)
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}52}]:} \PY{k}{def} \PY{n+nf}{func\PYZus{}05}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+             \PY{k}{return} \PY{n}{np}\PY{o}{.}\PY{n}{exp}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{x}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{x}
+         
+         \PY{k}{def} \PY{n+nf}{dfunc\PYZus{}05}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+             \PY{k}{return} \PY{o}{\PYZhy{}}\PY{n}{np}\PY{o}{.}\PY{n}{exp}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{x}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}53}]:} \PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{0.0}
+         \PY{n}{xr} \PY{o}{=} \PY{n}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{func\PYZus{}05}\PY{p}{,} \PY{n}{dfunc\PYZus{}05}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =       0.0000000000, abs(f(x))     1.00000e+00
+Iter =     2, x =       0.5000000000, abs(f(x))     1.06531e-01
+Iter =     3, x =       0.5663110032, abs(f(x))     1.30451e-03
+Iter =     4, x =       0.5671431650, abs(f(x))     1.96480e-07
+Iter =     5, x =       0.5671432904, abs(f(x))     4.44089e-15
+Iterasi konvergen: akar ditemukan
+
+    \end{Verbatim}
+
+    Dapat diamati bahwa metode Newton-Raphson konvergen dengan cepat
+dibandingkan dengan metode fixed-point.
+
+    \hypertarget{metode-secant}{%
+\subsection{Metode secant}\label{metode-secant}}
+
+    Metode secant menggunakan ide yang sama dengan metode Newton-Raphson.
+Perbedaannya adalah metode secant menggunakan aproksimasi terhadap
+turunan pertama dari \(f(x)\). \[
+f'(x) \approx \frac{f(x_{i-1}) - f(x_{i})}{x_{i-1} - x_{i}}
+\]
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}54}]:} \PY{k}{def} \PY{n+nf}{secant}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n}{TOL}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}10}\PY{p}{,} \PY{n}{NiterMax}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{,} \PY{n}{DELTA}\PY{o}{=}\PY{l+m+mf}{0.001}\PY{p}{)}\PY{p}{:}
+             
+             \PY{n}{SMALL} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{finfo}\PY{p}{(}\PY{n+nb}{float}\PY{p}{)}\PY{o}{.}\PY{n}{eps}
+             
+             \PY{c+c1}{\PYZsh{} Untuk aproksimasi turunan pertama}
+             \PY{n}{x\PYZus{}old} \PY{o}{=} \PY{n}{x} \PY{o}{+} \PY{n}{DELTA}
+                 
+             \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{NiterMax}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+                 
+                 \PY{n}{fx} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+                 \PY{n}{fx\PYZus{}old} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{x\PYZus{}old}\PY{p}{)}
+         
+                 \PY{n}{dfx} \PY{o}{=} \PY{p}{(}\PY{n}{fx\PYZus{}old} \PY{o}{\PYZhy{}} \PY{n}{fx}\PY{p}{)}\PY{o}{/}\PY{p}{(}\PY{n}{x\PYZus{}old} \PY{o}{\PYZhy{}} \PY{n}{x}\PY{p}{)}
+                 
+                 \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{dfx}\PY{p}{)} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{SMALL}\PY{p}{:}
+                     \PY{k}{raise} \PY{n+ne}{RuntimeError}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Turunan f(x) sangat kecil}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                     
+                 \PY{n}{xr} \PY{o}{=} \PY{n}{x} \PY{o}{\PYZhy{}} \PY{n}{fx}\PY{o}{/}\PY{n}{dfx}
+                 
+                 \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iter = }\PY{l+s+si}{\PYZpc{}5d}\PY{l+s+s2}{, x = }\PY{l+s+si}{\PYZpc{}18.10f}\PY{l+s+s2}{, abs(f(x)) }\PY{l+s+si}{\PYZpc{}15.5e}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fx}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+                 \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fx}\PY{p}{)} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{TOL}\PY{p}{:}
+                     \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iterasi konvergen: akar ditemukan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                     \PY{k}{return} \PY{n}{x}
+                 
+                 \PY{n}{x\PYZus{}old} \PY{o}{=} \PY{n}{x}
+                 \PY{n}{x} \PY{o}{=} \PY{n}{xr}
+             
+             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Konvergensi tidak diperleh setelah }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{ iterasi}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{n}{NiterMax}\PY{p}{)}
+             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Nilai tebakan akhir akan dikembalikan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+             \PY{k}{return} \PY{n}{x}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}55}]:} \PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{0.0}
+         \PY{n}{xr} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{func\PYZus{}05}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =       0.0000000000, abs(f(x))     1.00000e+00
+Iter =     2, x =       0.5001249896, abs(f(x))     1.06330e-01
+Iter =     3, x =       0.5596304161, abs(f(x))     1.17898e-02
+Iter =     4, x =       0.5670511519, abs(f(x))     1.44397e-04
+Iter =     5, x =       0.5671431650, abs(f(x))     1.96523e-07
+Iter =     6, x =       0.5671432904, abs(f(x))     3.27660e-12
+Iterasi konvergen: akar ditemukan
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}56}]:} \PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{0.0}
+         \PY{n}{xr} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =       0.0000000000, abs(f(x))     2.00000e+00
+Iter =     2, x =       0.3336110645, abs(f(x))     3.69167e-01
+Iter =     3, x =       0.4091296137, abs(f(x))     3.97425e-02
+Iter =     4, x =       0.4182403537, abs(f(x))     6.20610e-04
+Iter =     5, x =       0.4181002700, abs(f(x))     1.54234e-06
+Iter =     6, x =       0.4181006172, abs(f(x))     6.17357e-11
+Iterasi konvergen: akar ditemukan
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}57}]:} \PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{1.0}
+         \PY{n}{xr} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{func\PYZus{}04}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =       1.0000000000, abs(f(x))     3.40000e+01
+Iter =     2, x =      12.3220075518, abs(f(x))     1.83587e+03
+Iter =     3, x =       1.2058686147, abs(f(x))     3.32465e+01
+Iter =     4, x =       1.4035942709, abs(f(x))     3.22348e+01
+Iter =     5, x =       7.7034593939, abs(f(x))     4.22149e+02
+Iter =     6, x =       1.8505185189, abs(f(x))     2.86630e+01
+Iter =     7, x =       2.2226542773, abs(f(x))     2.40197e+01
+Iter =     8, x =       4.1476654265, abs(f(x))     3.63528e+01
+Iter =     9, x =       2.9885349159, abs(f(x))     8.30838e+00
+Iter =    10, x =       3.2041693472, abs(f(x))     2.10375e+00
+Iter =    11, x =       3.2772827235, abs(f(x))     1.99924e-01
+Iter =    12, x =       3.2709375923, abs(f(x))     4.13163e-03
+Iter =    13, x =       3.2710660659, abs(f(x))     7.84243e-06
+Iter =    14, x =       3.2710663102, abs(f(x))     3.08610e-10
+Iter =    15, x =       3.2710663102, abs(f(x))     0.00000e+00
+Iterasi konvergen: akar ditemukan
+
+    \end{Verbatim}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+    \end{document}
