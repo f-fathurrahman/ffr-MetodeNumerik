@@ -1,7 +1,7 @@
 import numpy as np
 from gauss_elim import *
 
-def vandermode(v):
+def vandermonde(v):
     n = len(v)
     a = np.zeros((n,n))
     for j in range(n):
@@ -11,7 +11,7 @@ def vandermode(v):
 v = np.array([1.0, 1.2, 1.4, 1.6, 1.8, 2.0])
 b = np.matrix([0.0, 1.0, 0.0, 1.0, 0.0, 1.0]).transpose()
 
-A = np.matrix(vandermode(v))
+A = np.matrix(vandermonde(v))
 print(A)
 
 x = gauss_elim(A,b)
