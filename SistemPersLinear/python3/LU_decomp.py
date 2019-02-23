@@ -17,12 +17,11 @@ def LU_decomp(A_):
     return A
 
 
-def LU_solve(A_, b_):
+def LU_solve(A, b_):
     
-    N, M = A_.shape
+    N, M = A.shape
     assert N == M
 
-    A = np.matrix.copy(A_)
     b = np.matrix.copy(b_)
     
     for k in range(1,N):
