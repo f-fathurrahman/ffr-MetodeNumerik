@@ -8,5 +8,10 @@ b = [-14 22;
 A_chol = choleskiDec(A)
 
 x1 = choleskiSol(A_chol,b(:,1))
-
 x2 = choleskiSol(A_chol,b(:,2))
+
+disp('Test')
+disp(A*x1 - b(:,1))
+disp(A*x2 - b(:,2))
+
+
