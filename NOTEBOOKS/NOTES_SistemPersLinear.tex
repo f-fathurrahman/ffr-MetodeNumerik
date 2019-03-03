@@ -1,0 +1,1877 @@
+
+% Default to the notebook output style
+
+    
+
+
+% Inherit from the specified cell style.
+
+
+
+
+    
+\documentclass[11pt]{article}
+
+    
+    
+    \usepackage[T1]{fontenc}
+    % Nicer default font (+ math font) than Computer Modern for most use cases
+    \usepackage{mathpazo}
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % We will generate all images so they have a width \maxwidth. This means
+    % that they will get their normal width if they fit onto the page, but
+    % are scaled down if they would overflow the margins.
+    \makeatletter
+    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+    \else\Gin@nat@width\fi}
+    \makeatother
+    \let\Oldincludegraphics\includegraphics
+    % Set max figure width to be 80% of text width, for now hardcoded.
+    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionLabelFormat{nolabel}{}
+    \captionsetup{labelformat=nolabel}
+
+    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    
+
+    
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatability definitions
+    \def\gt{>}
+    \def\lt{<}
+    % Document parameters
+    \title{NOTES\_SistemPersLinear}
+    
+    
+    
+
+    % Pygments definitions
+    
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+    \begin{document}
+    
+    
+    \maketitle
+    
+    
+
+    
+    \hypertarget{tf2202-teknik-komputasi---sistem-persamaan-linear}{%
+\section{TF2202 Teknik Komputasi - Sistem Persamaan
+Linear}\label{tf2202-teknik-komputasi---sistem-persamaan-linear}}
+
+Fadjar Fathurrahman
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}1}]:} \PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\end{Verbatim}
+
+
+    Pada catatan ini kita kan fokus pada metode untuk mencari solusi dari
+sistem persamaan linear yang dapat dituliskan dalam bentuk matriks
+sebagai berikut: \[
+\mathbf{A}\mathbf{x} = \mathbf{b}
+\] di mana \(A\) dan \(b\) masing-masing diberikan dan tugas kita adalah
+mencari \(\mathbf{x}\).
+
+    Sebelum membahas mengenai metode numerik untuk menyelesaikan sistem
+persamaan linear, kita akan mulai dengan pembahasan mengenai operasi
+matriks dan vektor dengan dalam Numpy.
+
+    \hypertarget{matrix-vs-ndarray}{%
+\subsection{Matrix vs ndarray}\label{matrix-vs-ndarray}}
+
+    \texttt{ndarray} adalah tipe array yang paling penting pada Numpy. Untuk
+merepresentasikan matriks kita dapat menggunakan \texttt{ndarray} dengan
+menggunakan \texttt{ndarray} dengan dua dimensi. Untuk merepresentasikan
+vektor (baris atau kolom) kita dapat menggunakan \texttt{ndarray} dengan
+satu dimensi.
+
+    Contoh untuk matriks: \[
+A = \begin{bmatrix}
+4 & 1 & 2 & 3 \\
+3 & 8 & 1 & 9 \\
+3 & 4 & 10 & 4
+\end{bmatrix}
+\]
+
+    Dengan menggunakan \texttt{ndarray}, kita dapa mendefinisikan matriks
+\(A\) dengan:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}2}]:} \PY{n}{A} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}
+            \PY{p}{[}\PY{l+m+mi}{4}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}
+            \PY{p}{[}\PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{8}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{9}\PY{p}{]}\PY{p}{,}
+            \PY{p}{[}\PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{,}\PY{l+m+mi}{10}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{]}
+        \PY{p}{]}\PY{p}{)}
+        \PY{n}{A}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}2}]:} array([[ 4,  1,  2,  3],
+               [ 3,  8,  1,  9],
+               [ 3,  4, 10,  4]])
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}3}]:} \PY{n+nb}{type}\PY{p}{(}\PY{n}{A}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}3}]:} numpy.ndarray
+\end{Verbatim}
+            
+    Properti \texttt{shape} dapat digunakan untuk mengetahu ukuran dari
+\texttt{ndarray}. Dalam hal ini kita akan mendapatkan tupel berisi dua
+integer, yang masing-masing integer merupakan jumlah baris dan kolom
+dari matriks \(A\)
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} \PY{n}{A}\PY{o}{.}\PY{n}{shape}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}4}]:} (3, 4)
+\end{Verbatim}
+            
+    Anda dapat menuliskan sebagai berikut:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}5}]:} \PY{n}{Nrow} \PY{o}{=} \PY{n}{A}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+        \PY{n}{Ncol} \PY{o}{=} \PY{n}{A}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Nrow = }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{, Ncol = }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{Nrow}\PY{p}{,} \PY{n}{Ncol}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Nrow = 3, Ncol = 4
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}6}]:} \PY{n}{Nrow}\PY{p}{,} \PY{n}{Ncol} \PY{o}{=} \PY{n}{A}\PY{o}{.}\PY{n}{shape}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Nrow = }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{, Ncol = }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{Nrow}\PY{p}{,} \PY{n}{Ncol}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Nrow = 3, Ncol = 4
+
+    \end{Verbatim}
+
+    Untuk merepresentasikan vektor, kita dapat menggunakan \texttt{ndarray}
+1d, misalnya:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}7}]:} \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{,}\PY{l+m+mi}{7}\PY{p}{]}\PY{p}{)}
+        \PY{n}{x}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}7}]:} array([3, 1, 6, 7])
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}8}]:} \PY{n+nb}{type}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}8}]:} numpy.ndarray
+\end{Verbatim}
+            
+    Properti \texttt{shape} dapat digunakan seperti pada \texttt{ndarray}
+dua dimensi. Pada kasus ini akan dikembalikan tupel dengan satu bilangan
+integer.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}9}]:} \PY{n}{x}\PY{o}{.}\PY{n}{shape}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}9}]:} (4,)
+\end{Verbatim}
+            
+    Fungsi \texttt{len} juga dapat digunakan dalam kasus \texttt{ndarray} 1d
+untuk mengetahui jumlah elemen pada suatu vektor:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}10}]:} \PY{n+nb}{len}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}10}]:} 4
+\end{Verbatim}
+            
+    Fungsi \texttt{len} juga dapat diaplikasikan pada \texttt{ndarray} dua
+dimensi, namun fungsi ini akan mengembalikan banyak elemen pada dimensi
+pertama.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}11}]:} \PY{n+nb}{len}\PY{p}{(}\PY{n}{A}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}11}]:} 3
+\end{Verbatim}
+            
+    Untuk mengetahui jumlah kolom, kita dapat mencari panjang dari
+\texttt{A{[}0{]}} (misalnya):
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}12}]:} \PY{n+nb}{len}\PY{p}{(}\PY{n}{A}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}12}]:} 4
+\end{Verbatim}
+            
+    \hypertarget{operasi-perkalian-matriks-dan-vektor}{%
+\subsubsection{Operasi perkalian matriks dan
+vektor}\label{operasi-perkalian-matriks-dan-vektor}}
+
+    Untuk menghitung operasi perkalian, misalnya
+\(\mathbf{b} = \mathbf{A}\mathbf{x}\). Untuk tipe \texttt{numpy.ndarray}
+kita dapat menggunakan fungsi \texttt{np.matmul}:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}13}]:} \PY{n}{b} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matmul}\PY{p}{(}\PY{n}{A}\PY{p}{,}\PY{n}{x}\PY{p}{)}
+         \PY{n}{b}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}13}]:} array([ 46,  86, 101])
+\end{Verbatim}
+            
+    Operator \texttt{*} memiliki arti yang berbeda untuk operasi antara dua
+\texttt{ndarray}:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}14}]:} \PY{n}{A}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}14}]:} array([[ 4,  1,  2,  3],
+                [ 3,  8,  1,  9],
+                [ 3,  4, 10,  4]])
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}15}]:} \PY{n}{Ax} \PY{o}{=} \PY{n}{A}\PY{o}{*}\PY{n}{x}
+         \PY{n}{Ax}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}15}]:} array([[12,  1, 12, 21],
+                [ 9,  8,  6, 63],
+                [ 9,  4, 60, 28]])
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}16}]:} \PY{n+nb}{print}\PY{p}{(}\PY{n}{Ax}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{/}\PY{n}{A}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{Ax}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{/}\PY{n}{A}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{Ax}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{]}\PY{o}{/}\PY{n}{A}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[3. 3. 3.]
+[1. 1. 1.]
+[6. 6. 6.]
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}17}]:} \PY{n}{B} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{p}{[}
+             \PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{l+m+mi}{5}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{l+m+mi}{7}\PY{p}{,} \PY{l+m+mi}{8}\PY{p}{]}
+         \PY{p}{]}\PY{p}{)}
+         \PY{n}{np}\PY{o}{.}\PY{n}{matmul}\PY{p}{(}\PY{n}{A}\PY{p}{,}\PY{n}{B}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}17}]:} matrix([[ 38,  48],
+                 [ 95, 116],
+                 [ 93, 114]])
+\end{Verbatim}
+            
+    Jika ingin menggunakan operator \texttt{*} kita dapat menggunakan
+konstruktor \texttt{np.matrix}.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}18}]:} \PY{n}{AA} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{n}{A}\PY{p}{)}
+         \PY{n}{BB} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{n}{B}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}19}]:} \PY{n}{AA}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}19}]:} matrix([[ 4,  1,  2,  3],
+                 [ 3,  8,  1,  9],
+                 [ 3,  4, 10,  4]])
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}20}]:} \PY{n}{BB}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}20}]:} matrix([[1, 2],
+                 [3, 4],
+                 [5, 6],
+                 [7, 8]])
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}21}]:} \PY{n+nb}{type}\PY{p}{(}\PY{n}{AA}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}21}]:} numpy.matrixlib.defmatrix.matrix
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}22}]:} \PY{n}{AA}\PY{o}{.}\PY{n}{shape}\PY{p}{,} \PY{n}{BB}\PY{o}{.}\PY{n}{shape}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}22}]:} ((3, 4), (4, 2))
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}23}]:} \PY{n}{AA}\PY{o}{*}\PY{n}{BB}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}23}]:} matrix([[ 38,  48],
+                 [ 95, 116],
+                 [ 93, 114]])
+\end{Verbatim}
+            
+    \hypertarget{perkalian-dot-skalar}{%
+\subsubsection{Perkalian dot (skalar)}\label{perkalian-dot-skalar}}
+
+    Untuk operasi skalar antara dua vektor kita dapat menggunakan fungsi
+\texttt{np.dot}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}24}]:} \PY{n}{y} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{]}\PY{p}{)}
+         \PY{n}{y}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}24}]:} array([2, 1, 3, 6])
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}25}]:} \PY{n}{np}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{y}\PY{p}{,}\PY{n}{y}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}25}]:} 50
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}26}]:} \PY{n}{np}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}26}]:} 67
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}27}]:} \PY{n}{np}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{x}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}27}]:} 95
+\end{Verbatim}
+            
+    Metode \texttt{dot} juga dapat digunakan untuk operasi dot product:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}28}]:} \PY{n}{x}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}28}]:} 95
+\end{Verbatim}
+            
+    Operasi \texttt{dot} juga dapat digunakan untuk melakukan perkalian
+antara matriks dengan vektor:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}29}]:} \PY{n}{A}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}29}]:} array([ 46,  86, 101])
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}30}]:} \PY{n}{np}\PY{o}{.}\PY{n}{matmul}\PY{p}{(}\PY{n}{A}\PY{p}{,}\PY{n}{x}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}30}]:} array([ 46,  86, 101])
+\end{Verbatim}
+            
+    Untuk tipe \texttt{matrix}:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}31}]:} \PY{n}{xx} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{p}{)}
+         \PY{n}{xx}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}31}]:} matrix([[3],
+                 [1],
+                 [6],
+                 [7]])
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}32}]:} \PY{n}{xx}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{xx}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}32}]:} 95
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}33}]:} \PY{n}{AA}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{xx}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}33}]:} matrix([[ 46],
+                 [ 86],
+                 [101]])
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}34}]:} \PY{n}{AA}\PY{o}{*}\PY{n}{xx}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}34}]:} matrix([[ 46],
+                 [ 86],
+                 [101]])
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}35}]:} \PY{n}{AA}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{BB}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}35}]:} matrix([[ 38,  48],
+                 [ 95, 116],
+                 [ 93, 114]])
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}36}]:} \PY{n}{AA}\PY{o}{*}\PY{n}{BB}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}36}]:} matrix([[ 38,  48],
+                 [ 95, 116],
+                 [ 93, 114]])
+\end{Verbatim}
+            
+    Pada catatan ini, penulis akan menggunakan \texttt{matrix}. Jika Anda
+lebih suka menggunakan \texttt{ndarray} langsung, Anda dapat
+menggunakannya dengan dengan sedikit modifikasi.
+
+    Operasi vektorisasi sebisa mungkin akan dihindari.
+
+    \hypertarget{metode-eliminasi-gauss}{%
+\subsection{Metode Eliminasi Gauss}\label{metode-eliminasi-gauss}}
+
+    Dalam metode eliminasi Gauss, matriks \(\mathbf{A}\) dan vektor kolom
+\(\mathbf{b}\) akan ditransformasi sedemikian rupa sehingga diperoleh
+matriks dalam bentuk segitiga atas atau segitiga bawah.
+
+    Transformasi yang dilakukan adalah sebagai berikut. \[
+\begin{align*}
+A_{ij} \leftarrow A_{ij} - \alpha A_{kj} \\
+b_{i} \leftarrow b_{i} - \alpha b_{k}
+\end{align*}
+\] Setelah matriks \(\mathbf{A}\) direduksi menjadi bentuk segitiga
+atas, solusi persamaan linear yang dihasilkan dapat dicari dengan
+menggunakan substitusi mundur (\emph{backward substitution}). \[
+x_{k} = \left(
+b_{k} - \sum_{j=k+1}^{N} A_{kj} x_{j}
+\right)\frac{1}{A_{kk}}\,\,\,, k = N-1, N-2, \ldots, 1
+\]
+
+    \hypertarget{contoh-penggunaan-metode-eliminasi-gauss}{%
+\subsubsection{Contoh penggunaan metode eliminasi
+Gauss}\label{contoh-penggunaan-metode-eliminasi-gauss}}
+
+    Perhatikan sistem persamaan linear berikut ini: \[
+\begin{align*}
+x_{1} + x_{2} + x_{3} & = 4 \\
+2x_{1} + 3x_{2} + x_{3} & = 9 \\
+x_{1} - x_{2} - x_{3} & = -2
+\end{align*}
+\] Persamaan di atas dapat diubah dalam bentuk matrix sebagai \[
+\begin{bmatrix}
+1 & 1 & 1 \\
+2 & 3 & 1 \\
+1 & -1 & -1
+\end{bmatrix}
+\begin{bmatrix}
+x_{1} \\
+x_{2} \\
+x_{3}
+\end{bmatrix}
+= 
+\begin{bmatrix}
+4 \\
+9 \\
+-2
+\end{bmatrix}
+\]
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}37}]:} \PY{n}{A} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{p}{[}
+             \PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+         \PY{p}{]}\PY{p}{)}
+         \PY{n}{A}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}37}]:} matrix([[ 1,  1,  1],
+                 [ 2,  3,  1],
+                 [ 1, -1, -1]])
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}38}]:} \PY{n}{b} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{9}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{p}{)}
+         \PY{n}{b}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}38}]:} matrix([[ 4],
+                 [ 9],
+                 [-2]])
+\end{Verbatim}
+            
+    Karena kita akan memodifikasi matrix \texttt{A} dan \texttt{b}, maka
+kita harus membuat backup (copy) dari nilai asli mereka.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}39}]:} \PY{n}{A\PYZus{}orig} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{n}{A}\PY{p}{)}
+         \PY{n}{b\PYZus{}orig} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{n}{b}\PY{p}{)}
+\end{Verbatim}
+
+
+    Dimulai dengan menggunakan elemen matriks \(A_{11}\) (atau
+\texttt{A{[}0,0{]}} dalam notasi Numpy) sebagai pivot, kita akan
+melakukan reduksi pada baris kedua dan ketiga.
+
+Kita akan mulai dengan reduksi baris kedua.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}40}]:} \PY{n}{alpha} \PY{o}{=} \PY{n}{A}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{/}\PY{n}{A}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}
+         \PY{n}{A}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{A}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{alpha}\PY{o}{*}\PY{n}{A}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{p}{:}\PY{p}{]}
+         \PY{n}{b}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{=} \PY{n}{b}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{alpha}\PY{o}{*}\PY{n}{b}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+         
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{A = }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{A}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{b = }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{b}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+A = 
+ [[ 1  1  1]
+ [ 0  1 -1]
+ [ 1 -1 -1]]
+b = 
+ [[ 4]
+ [ 1]
+ [-2]]
+
+    \end{Verbatim}
+
+    Masih menggunakan \texttt{A{[}0,0{]}} sebagai pivot, kita akan reduksi
+baris ketiga:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}41}]:} \PY{n}{alpha} \PY{o}{=} \PY{n}{A}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{/}\PY{n}{A}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}
+         \PY{n}{A}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{A}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{alpha}\PY{o}{*}\PY{n}{A}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{p}{:}\PY{p}{]}
+         \PY{n}{b}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]} \PY{o}{=} \PY{n}{b}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{alpha}\PY{o}{*}\PY{n}{b}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+         
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{A = }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{A}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{b = }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{b}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+A = 
+ [[ 1  1  1]
+ [ 0  1 -1]
+ [ 0 -2 -2]]
+b = 
+ [[ 4]
+ [ 1]
+ [-6]]
+
+    \end{Verbatim}
+
+    Setelah menjadikan \texttt{A{[}0,0{]}} sebagai pivot dan mereduksi baris
+kedua dan ketiga, kita akan menggunakan \texttt{A{[}1,1{]}} sebagai
+pivot dan mereduksi baris ketiga:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}42}]:} \PY{n}{alpha} \PY{o}{=} \PY{n}{A}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{/}\PY{n}{A}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}
+         \PY{n}{A}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{A}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{alpha}\PY{o}{*}\PY{n}{A}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}\PY{p}{:}\PY{p}{]}
+         \PY{n}{b}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]} \PY{o}{=} \PY{n}{b}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{alpha}\PY{o}{*}\PY{n}{b}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+         
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{A = }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{A}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{b = }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{b}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+A = 
+ [[ 1  1  1]
+ [ 0  1 -1]
+ [ 0  0 -4]]
+b = 
+ [[ 4]
+ [ 1]
+ [-4]]
+
+    \end{Verbatim}
+
+    Sekarang \texttt{A} telah tereduksi menjadi bentuk matriks segitiga
+atas. Persamaan yang kita miliki sekarang adalah: \[
+\begin{bmatrix}
+1 & 1 & 1 \\
+0 & 1 & -3 \\
+0 & 0 & -8
+\end{bmatrix}
+\begin{bmatrix}
+x_{1} \\
+x_{2} \\
+x_{3}
+\end{bmatrix}
+= 
+\begin{bmatrix}
+4 \\
+1 \\
+-4
+\end{bmatrix}
+\]
+
+    Sistem persamaan linear ini dapat dengan mudah diselesaikan dengan
+menggunakan substitusi balik: mulai dari mencari \(x_3\), kemudian
+\(x_2\), dan akhirnya \(x_1\).
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}43}]:} \PY{n}{N} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{b}\PY{p}{)}
+         \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{N}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+         
+         \PY{n}{x}\PY{p}{[}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{=} \PY{n}{b}\PY{p}{[}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{/}\PY{n}{A}\PY{p}{[}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+         \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{2}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+             \PY{n}{ss} \PY{o}{=} \PY{l+m+mf}{0.0}
+             \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{k}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+                 \PY{n}{ss} \PY{o}{=} \PY{n}{ss} \PY{o}{+} \PY{n}{A}\PY{p}{[}\PY{n}{k}\PY{p}{,}\PY{n}{j}\PY{p}{]}\PY{o}{*}\PY{n}{x}\PY{p}{[}\PY{n}{j}\PY{p}{]}
+             \PY{n}{x}\PY{p}{[}\PY{n}{k}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{n}{b}\PY{p}{[}\PY{n}{k}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{ss}\PY{p}{)}\PY{o}{/}\PY{n}{A}\PY{p}{[}\PY{n}{k}\PY{p}{,}\PY{n}{k}\PY{p}{]}
+         
+         \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+             \PY{n+nb}{print}\PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[1.]]
+[[2.]]
+[[1.]]
+
+    \end{Verbatim}
+
+    Sekarang kita dapat mengecek apakah solusi yang kita dapatkan sudah
+benar.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}44}]:} \PY{c+c1}{\PYZsh{} Gunakan matrix dan vektor original}
+         \PY{c+c1}{\PYZsh{} Hasil seharunya berupa vektor kolom dengan elemen\PYZhy{}element 0}
+         \PY{n}{A\PYZus{}orig}\PY{o}{*}\PY{n}{x} \PY{o}{\PYZhy{}} \PY{n}{b\PYZus{}orig}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}44}]:} matrix([[0.],
+                 [0.],
+                 [0.]])
+\end{Verbatim}
+            
+    \hypertarget{kode-python-untuk-eliminasi-gauss}{%
+\subsubsection{Kode Python untuk eliminasi
+Gauss}\label{kode-python-untuk-eliminasi-gauss}}
+
+    Berikut ini adalah implementasi metode eliminasi Gauss pada Python.
+
+Kode ini menerima masukan matriks \texttt{A\_} dan vektor kolom
+\texttt{b\_}. dan mengembalikan solusi \texttt{x} dari sistem persamaan
+linear \texttt{A\_*x\ =\ b\_}. Tanda \texttt{\_} digunakan untuk
+menunjukkan input asli. Pada kode berikut kita bekerja dengan matriks
+\texttt{A} dan vektor \texttt{x} yang merupakan kopi dari input-input
+awal. Kode ini terbatas pada vektor input \texttt{b\_} yang hanya
+terdiri dari satu kolom. Kode dapat dikembangkan untuk kasus kolom lebih
+dari satu.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}45}]:} \PY{k}{def} \PY{n+nf}{gauss\PYZus{}elim}\PY{p}{(}\PY{n}{A\PYZus{}}\PY{p}{,} \PY{n}{b\PYZus{}}\PY{p}{)}\PY{p}{:}
+             
+             \PY{n}{N}\PY{p}{,} \PY{n}{Nrhs} \PY{o}{=} \PY{n}{b\PYZus{}}\PY{o}{.}\PY{n}{shape}
+             
+             \PY{k}{assert} \PY{n}{Nrhs} \PY{o}{==} \PY{l+m+mi}{1}
+         
+             \PY{n}{A} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{n}{A\PYZus{}}\PY{p}{)}
+             \PY{n}{b} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{n}{b\PYZus{}}\PY{p}{)}
+         
+             \PY{c+c1}{\PYZsh{} Eliminasi maju}
+             \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+                 \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{k}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+                     \PY{k}{if} \PY{n}{A}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{k}\PY{p}{]} \PY{o}{!=} \PY{l+m+mf}{0.0}\PY{p}{:}
+                         \PY{n}{alpha} \PY{o}{=} \PY{n}{A}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{k}\PY{p}{]}\PY{o}{/}\PY{n}{A}\PY{p}{[}\PY{n}{k}\PY{p}{,}\PY{n}{k}\PY{p}{]}
+                         \PY{n}{A}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{A}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{alpha}\PY{o}{*}\PY{n}{A}\PY{p}{[}\PY{n}{k}\PY{p}{,}\PY{p}{:}\PY{p}{]}
+                         \PY{n}{b}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{b}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{alpha}\PY{o}{*}\PY{n}{b}\PY{p}{[}\PY{n}{k}\PY{p}{]}
+             
+             \PY{c+c1}{\PYZsh{} Alokasi mememori untuk solusi}
+             \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{N}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+             
+             \PY{c+c1}{\PYZsh{} Substitusi balik}
+             \PY{n}{x}\PY{p}{[}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{=} \PY{n}{b}\PY{p}{[}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{/}\PY{n}{A}\PY{p}{[}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+             \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{2}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+                 \PY{n}{ss} \PY{o}{=} \PY{l+m+mf}{0.0}
+                 \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{k}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+                     \PY{n}{ss} \PY{o}{=} \PY{n}{ss} \PY{o}{+} \PY{n}{A}\PY{p}{[}\PY{n}{k}\PY{p}{,}\PY{n}{j}\PY{p}{]}\PY{o}{*}\PY{n}{x}\PY{p}{[}\PY{n}{j}\PY{p}{]}
+                 \PY{n}{x}\PY{p}{[}\PY{n}{k}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{n}{b}\PY{p}{[}\PY{n}{k}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{ss}\PY{p}{)}\PY{o}{/}\PY{n}{A}\PY{p}{[}\PY{n}{k}\PY{p}{,}\PY{n}{k}\PY{p}{]}
+             
+             \PY{k}{return} \PY{n}{x}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}46}]:} \PY{n}{gauss\PYZus{}elim}\PY{p}{(}\PY{n}{A\PYZus{}orig}\PY{p}{,} \PY{n}{b\PYZus{}orig}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}46}]:} matrix([[1.],
+                 [2.],
+                 [1.]])
+\end{Verbatim}
+            
+    \hypertarget{dekomposisi-lu}{%
+\subsection{Dekomposisi LU}\label{dekomposisi-lu}}
+
+    Pada dekomposisi LU, matriks persegi \(\mathbf{A}\) dapat dinyatakan
+sebagai hasil kali dari matriks segitiga bawah \(\mathbf{L}\) dan
+matriks segitiga atas \(\mathbf{U}\): \[
+\mathbf{A} = \mathbf{LU}
+\] Proses untuk mendapatkan matriks \(\mathbf{L}\) dan \(\mathbf{U}\)
+dari matriks \(\mathbf{A}\) disebut dengan dekomposisi LU atau
+faktorisasi LU. Dekomposisi LU tidak unik, artinya bisa terdapat banyak
+kombinasi \(\mathbf{L}\) dan \(\mathbf{U}\) yang mungkin untuk suatu
+matriks \(\mathbf{A}\) yang diberikan. Untuk mendapatkan pasangan
+\(\mathbf{L}\) dan \(\mathbf{U}\) yang unik, kita perlu memberikan
+batasan atau konstrain terhadap proses dekomposisi LU. Terdapat beberapa
+varian dekomposisi LU:
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\begin{minipage}[b]{0.29\columnwidth}\raggedright
+Nama\strut
+\end{minipage} & \begin{minipage}[b]{0.65\columnwidth}\raggedright
+Konstrain\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.29\columnwidth}\raggedright
+Dekomposisi Doolittle\strut
+\end{minipage} & \begin{minipage}[t]{0.65\columnwidth}\raggedright
+\(L_{ii} = 1\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.29\columnwidth}\raggedright
+Dekomposisi Crout\strut
+\end{minipage} & \begin{minipage}[t]{0.65\columnwidth}\raggedright
+\(U_{ii} = 1\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.29\columnwidth}\raggedright
+Dekomposisi Cholesky\strut
+\end{minipage} & \begin{minipage}[t]{0.65\columnwidth}\raggedright
+\(\mathbf{L} = \mathbf{U}^{T}\) (untuk matriks \(\mathbf{A}\) simetrik
+dan definit positif\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+    Dengan dekomposisi LU kita dapat menuliskan sistem persamaan linear \[
+\mathbf{Ax} = \mathbf{b}
+\] menjadi: \[
+\mathbf{LUx} = \mathbf{b}
+\] Dengan menggunakan \(\mathbf{y} = \mathbf{Ux}\) kita dapat
+menuliskan: \[
+\mathbf{Ly} = \mathbf{b}
+\] Persamaan ini dapat diselesaikan dengan menggunakan substitusi maju.
+Solusi \(\mathbf{x}\) dapat dicari dengan menggunakan substitusi balik
+(mundur).
+
+    Varian Doolittle untuk dekomposisi LU memiliki bentuk berikut untuk
+matriks \(\mathbf{L}\) dan \(\mathbf{U}\), misalnya untuk ukuran
+\(3\times3\) \[
+\mathbf{L} =
+\begin{bmatrix}
+1 & 0 & 0 \\
+L_{21} & 1 & 0 \\
+L_{31} & L_{32} & 1
+\end{bmatrix},\,\,\,
+\mathbf{U} =
+\begin{bmatrix}
+U_{11} & U_{12} & U_{13} \\
+0 & U_{22} & U_{23} \\
+0 & 0 & U_{33}
+\end{bmatrix}
+\] Dengan melakukan perkalian \(\mathbf{A} = \mathbf{LU}\) \[
+\mathbf{A} = \begin{bmatrix}
+U_{11} & U_{12} & U_{13} \\
+U_{11}L_{21} & U_{12}L_{21} + U_{22} & U_{13}L_{21} + U_{23} \\
+U_{11}L_{31} & U_{12}L_{31} + U_{22}L_{32} & U_{13}L_{31} + U_{23}L_{32} + U_{33}
+\end{bmatrix}
+\]
+
+    Dapat ditunjukkan bahwa matriks \(\mathbf{U}\) adalah matriks segitiga
+atas hasil dari eliminasi Gauss pada matriks \(\mathbf{A}\). Elemen
+\emph{off-diagonal} dari matriks \(\mathbf{L}\) adalah pengali
+\(\alpha\), atau \(L_{ij}\) adalah pengali yang mengelimisasi
+\(A_{ij}\).
+
+    \hypertarget{kode-python-untuk-dekomposisi-lu-varian-doolittle}{%
+\subsubsection{Kode Python untuk dekomposisi LU (varian
+Doolittle)}\label{kode-python-untuk-dekomposisi-lu-varian-doolittle}}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}47}]:} \PY{k}{def} \PY{n+nf}{LU\PYZus{}decomp}\PY{p}{(}\PY{n}{A\PYZus{}}\PY{p}{)}\PY{p}{:}
+             
+             \PY{n}{Nrow}\PY{p}{,} \PY{n}{Ncol} \PY{o}{=} \PY{n}{A\PYZus{}}\PY{o}{.}\PY{n}{shape}
+             
+             \PY{k}{assert} \PY{n}{Nrow} \PY{o}{==} \PY{n}{Ncol}
+         
+             \PY{n}{A} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{n}{A\PYZus{}}\PY{p}{)}
+         
+             \PY{c+c1}{\PYZsh{} Eliminasi Gauss (maju)}
+             \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+                 \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{k}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+                     \PY{k}{if} \PY{n}{A}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{k}\PY{p}{]} \PY{o}{!=} \PY{l+m+mf}{0.0}\PY{p}{:}
+                         \PY{n}{alpha} \PY{o}{=} \PY{n}{A}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{k}\PY{p}{]}\PY{o}{/}\PY{n}{A}\PY{p}{[}\PY{n}{k}\PY{p}{,}\PY{n}{k}\PY{p}{]}
+                         \PY{n}{A}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{k}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{:}\PY{n}{N}\PY{p}{]} \PY{o}{=} \PY{n}{A}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{k}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{:}\PY{n}{N}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{alpha}\PY{o}{*}\PY{n}{A}\PY{p}{[}\PY{n}{k}\PY{p}{,}\PY{n}{k}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{:}\PY{n}{N}\PY{p}{]}
+                         \PY{n}{A}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{k}\PY{p}{]} \PY{o}{=} \PY{n}{alpha}
+             
+             \PY{n}{L} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(} \PY{n}{np}\PY{o}{.}\PY{n}{tril}\PY{p}{(}\PY{n}{A}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)} \PY{p}{)}
+             \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+                 \PY{n}{L}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{l+m+mf}{1.0} \PY{c+c1}{\PYZsh{} konstrain Doolittle}
+             \PY{n}{U} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(} \PY{n}{np}\PY{o}{.}\PY{n}{triu}\PY{p}{(}\PY{n}{A}\PY{p}{)} \PY{p}{)}
+             
+             \PY{k}{return} \PY{n}{L}\PY{p}{,} \PY{n}{U} \PY{c+c1}{\PYZsh{} kembalikan matriks L dan U}
+\end{Verbatim}
+
+
+    Definisikan lagi matriks dan vektor yang ada pada contoh sebelumnya.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}48}]:} \PY{n}{A} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{p}{[}
+             \PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+         \PY{p}{]}\PY{p}{)}
+         \PY{n}{b} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{9}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    Lakukan dekomposisi LU:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}49}]:} \PY{n}{L}\PY{p}{,} \PY{n}{U} \PY{o}{=} \PY{n}{LU\PYZus{}decomp}\PY{p}{(}\PY{n}{A}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{L = }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{L}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{U = }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{U}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+L = 
+ [[ 1  0  0]
+ [ 2  1  0]
+ [ 1 -2  1]]
+U = 
+ [[ 1  1  1]
+ [ 0  1 -1]
+ [ 0  0 -4]]
+
+    \end{Verbatim}
+
+    Periksa bahwa \(\mathbf{A} = \mathbf{LU}\):
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}50}]:} \PY{n}{L}\PY{o}{*}\PY{n}{U} \PY{o}{\PYZhy{}} \PY{n}{A}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}50}]:} matrix([[0, 0, 0],
+                 [0, 0, 0],
+                 [0, 0, 0]])
+\end{Verbatim}
+            
+    \hypertarget{implementasi-solusi-dengan-matrix-l-dan-u-yang-sudah-dihitung}{%
+\subsubsection{Implementasi solusi dengan matrix L dan U yang sudah
+dihitung}\label{implementasi-solusi-dengan-matrix-l-dan-u-yang-sudah-dihitung}}
+
+    Substitusi maju \[
+y_{k} = b_{k} - \sum_{j=1}^{k-1} L_{kj} y_{j},\,\,\,k = 2,3,\ldots,N
+\]
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}51}]:} \PY{k}{def} \PY{n+nf}{LU\PYZus{}solve}\PY{p}{(}\PY{n}{L}\PY{p}{,} \PY{n}{U}\PY{p}{,} \PY{n}{b}\PY{p}{)}\PY{p}{:}
+             
+             \PY{n}{N} \PY{o}{=} \PY{n}{L}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+             
+             \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{N}\PY{p}{,}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{p}{)}
+             \PY{n}{y} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{N}\PY{p}{,}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{p}{)}
+             
+             \PY{c+c1}{\PYZsh{} Ly = b}
+             \PY{c+c1}{\PYZsh{} Substitusi maju}
+             \PY{n}{y}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{n}{b}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{/}\PY{n}{L}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}
+             \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+                 \PY{n}{ss} \PY{o}{=} \PY{l+m+mf}{0.0}
+                 \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{k}\PY{p}{)}\PY{p}{:}
+                     \PY{n}{ss} \PY{o}{=} \PY{n}{ss} \PY{o}{+} \PY{n}{L}\PY{p}{[}\PY{n}{k}\PY{p}{,}\PY{n}{j}\PY{p}{]}\PY{o}{*}\PY{n}{y}\PY{p}{[}\PY{n}{j}\PY{p}{]}
+                 \PY{n}{y}\PY{p}{[}\PY{n}{k}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{n}{b}\PY{p}{[}\PY{n}{k}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{ss}\PY{p}{)}\PY{o}{/}\PY{n}{L}\PY{p}{[}\PY{n}{k}\PY{p}{,}\PY{n}{k}\PY{p}{]}
+             
+             \PY{c+c1}{\PYZsh{} Ux = y}
+             \PY{c+c1}{\PYZsh{} Substitusi balik}
+             \PY{n}{x}\PY{p}{[}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{=} \PY{n}{y}\PY{p}{[}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{/}\PY{n}{U}\PY{p}{[}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+             \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{2}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+                 \PY{n}{ss} \PY{o}{=} \PY{l+m+mf}{0.0}
+                 \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{k}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+                     \PY{n}{ss} \PY{o}{=} \PY{n}{ss} \PY{o}{+} \PY{n}{U}\PY{p}{[}\PY{n}{k}\PY{p}{,}\PY{n}{j}\PY{p}{]}\PY{o}{*}\PY{n}{x}\PY{p}{[}\PY{n}{j}\PY{p}{]}
+                 \PY{n}{x}\PY{p}{[}\PY{n}{k}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{n}{y}\PY{p}{[}\PY{n}{k}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{ss}\PY{p}{)}\PY{o}{/}\PY{n}{U}\PY{p}{[}\PY{n}{k}\PY{p}{,}\PY{n}{k}\PY{p}{]}
+             
+             \PY{k}{return} \PY{n}{x}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}52}]:} \PY{n}{x} \PY{o}{=} \PY{n}{LU\PYZus{}solve}\PY{p}{(}\PY{n}{L}\PY{p}{,} \PY{n}{U}\PY{p}{,} \PY{n}{b}\PY{p}{)}
+\end{Verbatim}
+
+
+    Cek hasil:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}53}]:} \PY{n}{A}\PY{o}{*}\PY{n}{x} \PY{o}{\PYZhy{}} \PY{n}{b}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}53}]:} matrix([[0.],
+                 [0.],
+                 [0.]])
+\end{Verbatim}
+            
+    \hypertarget{latihan-1}{%
+\subsection{Latihan 1}\label{latihan-1}}
+
+    Selasaikan persamaan: \[
+\begin{bmatrix}
+6 & -4 & 1 \\
+4 & 6 & -4 \\
+1 & -4 & 6
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\
+x_2 \\
+x_3
+\end{bmatrix}
+= 
+\begin{bmatrix}
+-14 \\
+36 \\
+6
+\end{bmatrix}
+\]
+
+    \hypertarget{latihan-1-solusi}{%
+\subsubsection{Latihan 1 (Solusi)}\label{latihan-1-solusi}}
+
+    Menggunakan eliminasi Gauss:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}54}]:} \PY{n}{A} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{p}{[}
+             \PY{p}{[}\PY{l+m+mi}{6}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{]}\PY{p}{]}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{float64}\PY{p}{)}
+         \PY{n}{b} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{14}\PY{p}{,} \PY{l+m+mi}{36}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{]}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{float64}\PY{p}{)}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{p}{)}
+         \PY{n}{x} \PY{o}{=} \PY{n}{gauss\PYZus{}elim}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{n}{b}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solusi x=}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{x}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cek solusi: Ax \PYZhy{} b}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{A}\PY{o}{*}\PY{n}{x} \PY{o}{\PYZhy{}} \PY{n}{b}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Solusi x=
+ [[10.]
+ [22.]
+ [14.]]
+Cek solusi: Ax - b
+ [[1.77635684e-15]
+ [2.13162821e-14]
+ [0.00000000e+00]]
+
+    \end{Verbatim}
+
+    Menggunakan dekomposisi LU:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}55}]:} \PY{n}{A} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{p}{[}
+             \PY{p}{[}\PY{l+m+mi}{6}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{]}\PY{p}{]}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{float64}\PY{p}{)}
+         \PY{n}{b} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{14}\PY{p}{,} \PY{l+m+mi}{36}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{]}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{float64}\PY{p}{)}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{p}{)}
+         \PY{n}{L}\PY{p}{,} \PY{n}{U} \PY{o}{=} \PY{n}{LU\PYZus{}decomp}\PY{p}{(}\PY{n}{A}\PY{p}{)}
+         \PY{n}{x} \PY{o}{=} \PY{n}{LU\PYZus{}solve}\PY{p}{(}\PY{n}{L}\PY{p}{,} \PY{n}{U}\PY{p}{,} \PY{n}{b}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solusi x=}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{x}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cek solusi: Ax \PYZhy{} b}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{A}\PY{o}{*}\PY{n}{x} \PY{o}{\PYZhy{}} \PY{n}{b}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Solusi x=
+ [[10.]
+ [22.]
+ [14.]]
+Cek solusi: Ax - b
+ [[1.77635684e-15]
+ [2.13162821e-14]
+ [0.00000000e+00]]
+
+    \end{Verbatim}
+
+    \hypertarget{latihan-2}{%
+\subsection{Latihan 2}\label{latihan-2}}
+
+    Selasaikan persamaan: \[
+\begin{bmatrix}
+3 & 1 & -1 \\
+5 & 8 & 2 \\
+3 & 1 & 10
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\
+x_2 \\
+x_3
+\end{bmatrix}
+= 
+\begin{bmatrix}
+1 \\
+-4 \\
+5
+\end{bmatrix}
+\]
+
+    Menggunakan eliminasi Gauss:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}56}]:} \PY{n}{A} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(} \PY{p}{[}
+             \PY{p}{[}\PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{l+m+mi}{5}\PY{p}{,} \PY{l+m+mi}{8}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{]}
+         \PY{p}{]}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{float64}\PY{p}{)}
+         \PY{n}{b} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{]}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{float64}\PY{p}{)}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{p}{)}
+         \PY{n}{x} \PY{o}{=} \PY{n}{gauss\PYZus{}elim}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{n}{b}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solusi x=}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{x}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cek solusi: Ax \PYZhy{} b}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{A}\PY{o}{*}\PY{n}{x} \PY{o}{\PYZhy{}} \PY{n}{b}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Solusi x=
+ [[ 0.82296651]
+ [-1.10526316]
+ [ 0.36363636]]
+Cek solusi: Ax - b
+ [[-1.11022302e-16]
+ [-8.88178420e-16]
+ [ 0.00000000e+00]]
+
+    \end{Verbatim}
+
+    Menggunakan dekomposisi LU:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}57}]:} \PY{n}{A} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(} \PY{p}{[}
+             \PY{p}{[}\PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{l+m+mi}{5}\PY{p}{,} \PY{l+m+mi}{8}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{]}
+         \PY{p}{]}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{float64}\PY{p}{)}
+         \PY{n}{b} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{]}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{float64}\PY{p}{)}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{p}{)}
+         \PY{n}{L}\PY{p}{,} \PY{n}{U} \PY{o}{=} \PY{n}{LU\PYZus{}decomp}\PY{p}{(}\PY{n}{A}\PY{p}{)}
+         \PY{n}{x} \PY{o}{=} \PY{n}{LU\PYZus{}solve}\PY{p}{(}\PY{n}{L}\PY{p}{,} \PY{n}{U}\PY{p}{,} \PY{n}{b}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solusi x=}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{x}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cek solusi: Ax \PYZhy{} b}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{A}\PY{o}{*}\PY{n}{x} \PY{o}{\PYZhy{}} \PY{n}{b}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Solusi x=
+ [[ 0.82296651]
+ [-1.10526316]
+ [ 0.36363636]]
+Cek solusi: Ax - b
+ [[-1.11022302e-16]
+ [-8.88178420e-16]
+ [ 0.00000000e+00]]
+
+    \end{Verbatim}
+
+    \hypertarget{pivoting}{%
+\subsection{Pivoting}\label{pivoting}}
+
+    Metode eliminasi Gauss dan LU memiliki beberapa kekurangan. Salah satu
+yang sering ditemui adalah ketika elemen pivot yang ditemukan adalah 0.
+Misalkan pada persamaan berikut ini:
+
+\[
+\begin{bmatrix}
+0 & -3 & 7 \\
+1 & 2 & -1 \\
+5 & -2 & 0
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\
+x_2 \\
+x_3
+\end{bmatrix}
+= 
+\begin{bmatrix}
+2 \\
+3 \\
+4
+\end{bmatrix}
+\]
+
+    Jika kita langsung menggunakan fungsi \texttt{gauss\_elim} kita akan
+mendapatkan pesan peringatan sebagai berikut:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{A }\OperatorTok{=}\NormalTok{ np.matrix( [}
+\NormalTok{    [}\DecValTok{0}\NormalTok{, }\DecValTok{-3}\NormalTok{, }\DecValTok{7}\NormalTok{],}
+\NormalTok{    [}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{-1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{5}\NormalTok{, }\DecValTok{-2}\NormalTok{, }\DecValTok{0}\NormalTok{]}
+\NormalTok{], dtype}\OperatorTok{=}\NormalTok{np.float64)}
+\NormalTok{b }\OperatorTok{=}\NormalTok{ np.matrix([}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{], np.float64).transpose()}
+\NormalTok{x }\OperatorTok{=}\NormalTok{ gauss_elim(A, b)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+/home/efefer/miniconda3/lib/python3.7/site-packages/ipykernel_launcher.py:14: RuntimeWarning: divide by zero encountered in double_scalars
+  
+/home/efefer/miniconda3/lib/python3.7/site-packages/ipykernel_launcher.py:15: RuntimeWarning: invalid value encountered in multiply
+  from ipykernel import kernelapp as app
+/home/efefer/miniconda3/lib/python3.7/site-packages/ipykernel_launcher.py:14: RuntimeWarning: invalid value encountered in double_scalars
+\end{verbatim}
+
+    Solusi yang dapat digunakan adalah dengan cara menukar baris atau
+pivoting sedemikian rupa sehingga elemen pivot yang diperoleh tidak
+menjadi nol. Dalam kasus ini, kita dapat menukar baris pertama dengan
+baris ketiga:
+
+\[
+\begin{bmatrix}
+5 & -2 & 0 \\
+1 & 2 & -1 \\
+0 & -3 & 7
+\end{bmatrix}
+\begin{bmatrix}
+x_3 \\
+x_2 \\
+x_1
+\end{bmatrix}
+= 
+\begin{bmatrix}
+4 \\
+3 \\
+2
+\end{bmatrix}
+\]
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}58}]:} \PY{n}{A} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(} \PY{p}{[}
+             \PY{p}{[}\PY{l+m+mi}{5}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{7}\PY{p}{]}
+         \PY{p}{]}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{float64}\PY{p}{)}
+         \PY{n}{b} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{float64}\PY{p}{)}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{p}{)}
+         \PY{n}{x} \PY{o}{=} \PY{n}{gauss\PYZus{}elim}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{n}{b}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solusi x=}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{x}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cek solusi: Ax \PYZhy{} b}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{A}\PY{o}{*}\PY{n}{x} \PY{o}{\PYZhy{}} \PY{n}{b}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Solusi x=
+ [[1.30434783]
+ [1.26086957]
+ [0.82608696]]
+Cek solusi: Ax - b
+ [[ 0.0000000e+00]
+ [ 4.4408921e-16]
+ [-8.8817842e-16]]
+
+    \end{Verbatim}
+
+    Dapat dilihat bahwa pivoting pada dasarnya bertujuan untuk memperbaik
+sifat dominan diagonal dari matriks. Suatu matriks dikatakan dominan
+diagonal apabila nilai absolut dari elemen diagoanal matriks memiliki
+nilai yang terbesar bila dibandingkan dengan nilai-nilai elemen lainnya
+dalam satu baris.
+
+    Ada beberapa strategi yang dapat digunakan untuk pivoting, salah satu
+yang paling sederhana adalah dengan menggunakan pivoting terskala.
+Dengan metode ini, pertama kali kita mencari array \(\mathbf{s}\) dengan
+elemen sebagai berikut:
+
+\[
+s_{i} = \max\left|A_{ij}\right|,\,\,\,i=1,2,\ldots,N
+\]
+
+\(s_{i}\) akan disebut sebagai faktor skala dari baris ke-\(i\) yang
+merupakan elemen dengan nilai absolut terbesar dari baris ke-\(i\).
+Ukuran relatif dari elemen \(A_{ij}\) relatif terhadap elemen dengan
+nilai terbesar adalah: \[
+r_{ij} = \frac{\left|A_{ij}\right|}{s_{i}}
+\] Elemen pivot dari matriks \(\mathbf{A}\) akan ditentukan berdasarkan
+\(r_{ij}\). Elemen \(A_{kk}\) tidak secara otomatis menjadi elemen
+pivot, namun kita akan mencari elemen lain di bawah \(A_{kk}\) pada
+kolom ke-\(k\) untuk elemen pivot yang terbaik. Misalkan elemen terbaik
+ini ada pada baris ke-\(p\), yaitu \(A_{pk}\) yang memiliki ukuran
+relatif terbesar, yakni: \[
+r_{pk} = \max_{j} r_{jk},\,\,\, j \geq k
+\] Jika elemen tersebut ditemukan maka kita melakukan pertukaran baris
+antara baris ke-\(k\) dan ke-\(p\).
+
+    \hypertarget{kode-python-untuk-eliminasi-gauss-dengan-pivoting}{%
+\subsubsection{Kode Python untuk eliminasi Gauss dengan
+pivoting}\label{kode-python-untuk-eliminasi-gauss-dengan-pivoting}}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}59}]:} \PY{k}{def} \PY{n+nf}{tukar\PYZus{}baris}\PY{p}{(}\PY{n}{v}\PY{p}{,} \PY{n}{i}\PY{p}{,} \PY{n}{j}\PY{p}{)}\PY{p}{:}
+             \PY{k}{if} \PY{n+nb}{len}\PY{p}{(}\PY{n}{v}\PY{o}{.}\PY{n}{shape}\PY{p}{)} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{:} \PY{c+c1}{\PYZsh{} array satu dimensi atau vektor kolom}
+                 \PY{n}{v}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{v}\PY{p}{[}\PY{n}{j}\PY{p}{]} \PY{o}{=} \PY{n}{v}\PY{p}{[}\PY{n}{j}\PY{p}{]}\PY{p}{,} \PY{n}{v}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+             \PY{k}{else}\PY{p}{:}
+                 \PY{n}{v}\PY{p}{[}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{j}\PY{p}{]}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{v}\PY{p}{[}\PY{p}{[}\PY{n}{j}\PY{p}{,}\PY{n}{i}\PY{p}{]}\PY{p}{,}\PY{p}{:}\PY{p}{]}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}60}]:} \PY{k}{def} \PY{n+nf}{gauss\PYZus{}elim\PYZus{}pivot}\PY{p}{(}\PY{n}{A\PYZus{}}\PY{p}{,} \PY{n}{b\PYZus{}}\PY{p}{)}\PY{p}{:}
+             \PY{n}{N}\PY{p}{,} \PY{n}{Nrhs} \PY{o}{=} \PY{n}{b\PYZus{}}\PY{o}{.}\PY{n}{shape}
+             
+             \PY{k}{assert} \PY{n}{Nrhs} \PY{o}{==} \PY{l+m+mi}{1}
+         
+             \PY{n}{A} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{n}{A\PYZus{}}\PY{p}{)}
+             \PY{n}{b} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{n}{b\PYZus{}}\PY{p}{)}
+             
+             \PY{c+c1}{\PYZsh{} Faktor skala}
+             \PY{n}{s} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{N}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+             \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+                 \PY{n}{s}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{max}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{abs}\PY{p}{(}\PY{n}{A}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{p}{:}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+         
+             \PY{n}{SMALL} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{finfo}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{float64}\PY{p}{)}\PY{o}{.}\PY{n}{eps}
+             
+             \PY{c+c1}{\PYZsh{} Eliminasi maju}
+             \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+                 
+                 \PY{n}{r} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{abs}\PY{p}{(}\PY{n}{A}\PY{p}{[}\PY{n}{k}\PY{p}{:}\PY{n}{N}\PY{p}{,}\PY{n}{k}\PY{p}{]}\PY{p}{)}\PY{o}{/}\PY{n}{s}\PY{p}{[}\PY{n}{k}\PY{p}{:}\PY{n}{N}\PY{p}{]}
+                 \PY{n}{p} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{argmax}\PY{p}{(}\PY{n}{r}\PY{p}{)} \PY{o}{+} \PY{n}{k}
+                 \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{A}\PY{p}{[}\PY{n}{p}\PY{p}{,}\PY{n}{k}\PY{p}{]}\PY{p}{)} \PY{o}{\PYZlt{}} \PY{n}{SMALL}\PY{p}{:}
+                     \PY{k}{raise} \PY{n+ne}{RuntimeError}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Matriks A singular}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                 \PY{c+c1}{\PYZsh{} Tukar baris jika diperlukan}
+                 \PY{k}{if} \PY{n}{p} \PY{o}{!=} \PY{n}{k}\PY{p}{:}
+                     \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{INFO: tukar baris }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{ dengan }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{p}\PY{p}{,}\PY{n}{k}\PY{p}{)}\PY{p}{)}
+                     \PY{n}{tukar\PYZus{}baris}\PY{p}{(}\PY{n}{b}\PY{p}{,} \PY{n}{k}\PY{p}{,} \PY{n}{p}\PY{p}{)}
+                     \PY{n}{tukar\PYZus{}baris}\PY{p}{(}\PY{n}{s}\PY{p}{,} \PY{n}{k}\PY{p}{,} \PY{n}{p}\PY{p}{)}
+                     \PY{n}{tukar\PYZus{}baris}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{n}{k}\PY{p}{,} \PY{n}{p}\PY{p}{)}
+                 
+                 \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{k}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+                     \PY{k}{if} \PY{n}{A}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{k}\PY{p}{]} \PY{o}{!=} \PY{l+m+mf}{0.0}\PY{p}{:}
+                         \PY{n}{alpha} \PY{o}{=} \PY{n}{A}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{k}\PY{p}{]}\PY{o}{/}\PY{n}{A}\PY{p}{[}\PY{n}{k}\PY{p}{,}\PY{n}{k}\PY{p}{]}
+                         \PY{n}{A}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{A}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{alpha}\PY{o}{*}\PY{n}{A}\PY{p}{[}\PY{n}{k}\PY{p}{,}\PY{p}{:}\PY{p}{]}
+                         \PY{n}{b}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{b}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{alpha}\PY{o}{*}\PY{n}{b}\PY{p}{[}\PY{n}{k}\PY{p}{]}
+             
+             \PY{c+c1}{\PYZsh{} Alokasi mememori untuk solusi}
+             \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{N}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+             
+             \PY{c+c1}{\PYZsh{} Substitusi balik}
+             \PY{n}{x}\PY{p}{[}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{=} \PY{n}{b}\PY{p}{[}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{/}\PY{n}{A}\PY{p}{[}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+             \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{2}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+                 \PY{n}{ss} \PY{o}{=} \PY{l+m+mf}{0.0}
+                 \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{k}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+                     \PY{n}{ss} \PY{o}{=} \PY{n}{ss} \PY{o}{+} \PY{n}{A}\PY{p}{[}\PY{n}{k}\PY{p}{,}\PY{n}{j}\PY{p}{]}\PY{o}{*}\PY{n}{x}\PY{p}{[}\PY{n}{j}\PY{p}{]}
+                 \PY{n}{x}\PY{p}{[}\PY{n}{k}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{n}{b}\PY{p}{[}\PY{n}{k}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{ss}\PY{p}{)}\PY{o}{/}\PY{n}{A}\PY{p}{[}\PY{n}{k}\PY{p}{,}\PY{n}{k}\PY{p}{]}
+             
+             \PY{k}{return} \PY{n}{x}
+\end{Verbatim}
+
+
+    Contoh penggunaan:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}61}]:} \PY{n}{A} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(} \PY{p}{[}
+             \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{7}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{l+m+mi}{5}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}
+         \PY{p}{]}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{float64}\PY{p}{)}
+         \PY{n}{b} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{float64}\PY{p}{)}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{p}{)}
+         
+         \PY{n}{x} \PY{o}{=} \PY{n}{gauss\PYZus{}elim\PYZus{}pivot}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{n}{b}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solusi x=}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{x}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cek solusi: Ax \PYZhy{} b}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{A}\PY{o}{*}\PY{n}{x} \PY{o}{\PYZhy{}} \PY{n}{b}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+INFO: tukar baris 2 dengan 0
+Solusi x=
+ [[1.30434783]
+ [1.26086957]
+ [0.82608696]]
+Cek solusi: Ax - b
+ [[-8.8817842e-16]
+ [ 4.4408921e-16]
+ [ 0.0000000e+00]]
+
+    \end{Verbatim}
+
+    \hypertarget{kode-python-untuk-dekomposisi-lu-dengan-pivoting}{%
+\subsubsection{Kode Python untuk dekomposisi LU dengan
+pivoting}\label{kode-python-untuk-dekomposisi-lu-dengan-pivoting}}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}62}]:} \PY{k}{def} \PY{n+nf}{LU\PYZus{}decomp\PYZus{}pivot}\PY{p}{(}\PY{n}{A\PYZus{}}\PY{p}{)}\PY{p}{:}
+             
+             \PY{n}{Nrow}\PY{p}{,} \PY{n}{Ncol} \PY{o}{=} \PY{n}{A\PYZus{}}\PY{o}{.}\PY{n}{shape}
+             
+             \PY{k}{assert} \PY{n}{Nrow} \PY{o}{==} \PY{n}{Ncol}
+             
+             \PY{n}{N} \PY{o}{=} \PY{n}{Nrow}
+         
+             \PY{n}{A} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{n}{A\PYZus{}}\PY{p}{)}
+             
+             \PY{c+c1}{\PYZsh{} Faktor skala}
+             \PY{n}{s} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{N}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+             \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+                 \PY{n}{s}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{max}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{abs}\PY{p}{(}\PY{n}{A}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{p}{:}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+                 
+             \PY{n}{iperm} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{N}\PY{p}{)}
+         
+             \PY{n}{SMALL} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{finfo}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{float64}\PY{p}{)}\PY{o}{.}\PY{n}{eps}
+         
+             \PY{c+c1}{\PYZsh{} Eliminasi Gauss (maju)}
+             \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+                 
+                 \PY{n}{r} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{abs}\PY{p}{(}\PY{n}{A}\PY{p}{[}\PY{n}{k}\PY{p}{:}\PY{n}{N}\PY{p}{,}\PY{n}{k}\PY{p}{]}\PY{p}{)}\PY{o}{/}\PY{n}{s}\PY{p}{[}\PY{n}{k}\PY{p}{:}\PY{n}{N}\PY{p}{]}
+                 \PY{n}{p} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{argmax}\PY{p}{(}\PY{n}{r}\PY{p}{)} \PY{o}{+} \PY{n}{k}
+                 \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{A}\PY{p}{[}\PY{n}{p}\PY{p}{,}\PY{n}{k}\PY{p}{]}\PY{p}{)} \PY{o}{\PYZlt{}} \PY{n}{SMALL}\PY{p}{:}
+                     \PY{k}{raise} \PY{n+ne}{RuntimeError}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Matriks A singular}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                 \PY{c+c1}{\PYZsh{} Tukar baris jika diperlukan}
+                 \PY{k}{if} \PY{n}{p} \PY{o}{!=} \PY{n}{k}\PY{p}{:}
+                     \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{INFO: tukar baris }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{ dengan }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{p}\PY{p}{,}\PY{n}{k}\PY{p}{)}\PY{p}{)}
+                     \PY{n}{tukar\PYZus{}baris}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{n}{k}\PY{p}{,} \PY{n}{p}\PY{p}{)}
+                     \PY{n}{tukar\PYZus{}baris}\PY{p}{(}\PY{n}{s}\PY{p}{,} \PY{n}{k}\PY{p}{,} \PY{n}{p}\PY{p}{)}
+                     \PY{n}{tukar\PYZus{}baris}\PY{p}{(}\PY{n}{iperm}\PY{p}{,} \PY{n}{k}\PY{p}{,} \PY{n}{p}\PY{p}{)}
+                 
+                 \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{k}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+                     \PY{k}{if} \PY{n}{A}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{k}\PY{p}{]} \PY{o}{!=} \PY{l+m+mf}{0.0}\PY{p}{:}
+                         \PY{n}{alpha} \PY{o}{=} \PY{n}{A}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{k}\PY{p}{]}\PY{o}{/}\PY{n}{A}\PY{p}{[}\PY{n}{k}\PY{p}{,}\PY{n}{k}\PY{p}{]}
+                         \PY{n}{A}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{k}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{:}\PY{n}{N}\PY{p}{]} \PY{o}{=} \PY{n}{A}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{k}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{:}\PY{n}{N}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{alpha}\PY{o}{*}\PY{n}{A}\PY{p}{[}\PY{n}{k}\PY{p}{,}\PY{n}{k}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{:}\PY{n}{N}\PY{p}{]}
+                         \PY{n}{A}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{k}\PY{p}{]} \PY{o}{=} \PY{n}{alpha}
+             
+             \PY{n}{L} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(} \PY{n}{np}\PY{o}{.}\PY{n}{tril}\PY{p}{(}\PY{n}{A}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)} \PY{p}{)}
+             \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+                 \PY{n}{L}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{l+m+mf}{1.0} \PY{c+c1}{\PYZsh{} konstrain Doolittle}
+             \PY{n}{U} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(} \PY{n}{np}\PY{o}{.}\PY{n}{triu}\PY{p}{(}\PY{n}{A}\PY{p}{)} \PY{p}{)}
+             
+             \PY{k}{return} \PY{n}{L}\PY{p}{,} \PY{n}{U}\PY{p}{,} \PY{n}{iperm} \PY{c+c1}{\PYZsh{} kembalikan matriks L dan U serta vektor permutasi}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}63}]:} \PY{k}{def} \PY{n+nf}{LU\PYZus{}solve\PYZus{}pivot}\PY{p}{(}\PY{n}{L}\PY{p}{,} \PY{n}{U}\PY{p}{,} \PY{n}{iperm}\PY{p}{,} \PY{n}{b\PYZus{}}\PY{p}{)}\PY{p}{:}
+             
+             \PY{n}{N} \PY{o}{=} \PY{n}{L}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+             
+             \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{N}\PY{p}{,}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{p}{)}
+             \PY{n}{y} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{N}\PY{p}{,}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{p}{)}
+             
+             \PY{n}{b} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{n}{b\PYZus{}}\PY{p}{)}
+             \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+                 \PY{n}{b}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{b\PYZus{}}\PY{p}{[}\PY{n}{iperm}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{]}
+             
+             \PY{c+c1}{\PYZsh{} Ly = b}
+             \PY{c+c1}{\PYZsh{} Substitusi maju}
+             \PY{n}{y}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{n}{b}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{/}\PY{n}{L}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}
+             \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+                 \PY{n}{ss} \PY{o}{=} \PY{l+m+mf}{0.0}
+                 \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{k}\PY{p}{)}\PY{p}{:}
+                     \PY{n}{ss} \PY{o}{=} \PY{n}{ss} \PY{o}{+} \PY{n}{L}\PY{p}{[}\PY{n}{k}\PY{p}{,}\PY{n}{j}\PY{p}{]}\PY{o}{*}\PY{n}{y}\PY{p}{[}\PY{n}{j}\PY{p}{]}
+                 \PY{n}{y}\PY{p}{[}\PY{n}{k}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{n}{b}\PY{p}{[}\PY{n}{k}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{ss}\PY{p}{)}\PY{o}{/}\PY{n}{L}\PY{p}{[}\PY{n}{k}\PY{p}{,}\PY{n}{k}\PY{p}{]}
+             
+             \PY{c+c1}{\PYZsh{} Ux = y}
+             \PY{c+c1}{\PYZsh{} Substitusi balik}
+             \PY{n}{x}\PY{p}{[}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{=} \PY{n}{y}\PY{p}{[}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{/}\PY{n}{U}\PY{p}{[}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+             \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{N}\PY{o}{\PYZhy{}}\PY{l+m+mi}{2}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+                 \PY{n}{ss} \PY{o}{=} \PY{l+m+mf}{0.0}
+                 \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{k}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+                     \PY{n}{ss} \PY{o}{=} \PY{n}{ss} \PY{o}{+} \PY{n}{U}\PY{p}{[}\PY{n}{k}\PY{p}{,}\PY{n}{j}\PY{p}{]}\PY{o}{*}\PY{n}{x}\PY{p}{[}\PY{n}{j}\PY{p}{]}
+                 \PY{n}{x}\PY{p}{[}\PY{n}{k}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{n}{y}\PY{p}{[}\PY{n}{k}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{ss}\PY{p}{)}\PY{o}{/}\PY{n}{U}\PY{p}{[}\PY{n}{k}\PY{p}{,}\PY{n}{k}\PY{p}{]}
+             
+             \PY{k}{return} \PY{n}{x}
+\end{Verbatim}
+
+
+    Contoh penggunaan:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}64}]:} \PY{n}{A} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{p}{[}
+             \PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{8}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{]}
+         \PY{p}{]}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{float64}\PY{p}{)}
+         \PY{n}{b} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{16}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{p}{)}
+         \PY{n}{L}\PY{p}{,} \PY{n}{U}\PY{p}{,} \PY{n}{iperm} \PY{o}{=} \PY{n}{LU\PYZus{}decomp\PYZus{}pivot}\PY{p}{(}\PY{n}{A}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{L = }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{L}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{U = }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{U}\PY{p}{)}
+         \PY{n}{x} \PY{o}{=} \PY{n}{LU\PYZus{}solve\PYZus{}pivot}\PY{p}{(}\PY{n}{L}\PY{p}{,} \PY{n}{U}\PY{p}{,} \PY{n}{iperm}\PY{p}{,} \PY{n}{b}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solusi x = }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{x}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cek solusi A*x \PYZhy{} b =}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{A}\PY{o}{*}\PY{n}{x} \PY{o}{\PYZhy{}} \PY{n}{b}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+INFO: tukar baris 1 dengan 0
+INFO: tukar baris 2 dengan 1
+L = 
+ [[ 1.          0.          0.        ]
+ [ 0.5         1.          0.        ]
+ [-1.          0.33333333  1.        ]]
+U = 
+ [[-2.          4.          3.        ]
+ [ 0.          6.          2.5       ]
+ [ 0.          0.          8.16666667]]
+Solusi x = 
+ [[ 1.]
+ [-1.]
+ [ 2.]]
+Cek solusi A*x - b =
+ [[0.]
+ [0.]
+ [0.]]
+
+    \end{Verbatim}
+
+    Contoh lain:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}65}]:} \PY{n}{A} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{p}{[}
+             \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{2}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{]}
+         \PY{p}{]}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{float64}\PY{p}{)}
+         \PY{n}{b} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{p}{)}
+         \PY{n}{L}\PY{p}{,} \PY{n}{U}\PY{p}{,} \PY{n}{iperm} \PY{o}{=} \PY{n}{LU\PYZus{}decomp\PYZus{}pivot}\PY{p}{(}\PY{n}{A}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{L = }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{L}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{U = }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{U}\PY{p}{)}
+         \PY{n}{x} \PY{o}{=} \PY{n}{LU\PYZus{}solve\PYZus{}pivot}\PY{p}{(}\PY{n}{L}\PY{p}{,} \PY{n}{U}\PY{p}{,} \PY{n}{iperm}\PY{p}{,} \PY{n}{b}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Solusi x = }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{x}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cek solusi A*x \PYZhy{} b =}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{A}\PY{o}{*}\PY{n}{x} \PY{o}{\PYZhy{}} \PY{n}{b}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+INFO: tukar baris 3 dengan 0
+INFO: tukar baris 3 dengan 1
+INFO: tukar baris 3 dengan 2
+L = 
+ [[ 1.          0.          0.          0.        ]
+ [ 0.          1.          0.          0.        ]
+ [ 0.66666667 -0.5         1.          0.        ]
+ [-0.66666667  0.5        -0.02702703  1.        ]]
+U = 
+ [[ 3.          3.         -1.          2.        ]
+ [ 0.          2.          5.         -1.        ]
+ [ 0.          0.          6.16666667 -1.83333333]
+ [ 0.          0.          0.          2.78378378]]
+Solusi x = 
+ [[ 2.00000000e+00]
+ [-1.00000000e+00]
+ [ 3.60072332e-17]
+ [ 1.00000000e+00]]
+Cek solusi A*x - b =
+ [[0.]
+ [0.]
+ [0.]
+ [0.]]
+
+    \end{Verbatim}
+
+    \hypertarget{menggunakan-pustaka-pada-python}{%
+\subsection{Menggunakan pustaka pada
+Python}\label{menggunakan-pustaka-pada-python}}
+
+    Untuk berbagai aplikasi pada sains dan teknik, kita biasanya
+menyelesaikan sistem persamaan linear yang ditemui dengan menggunakan
+berbagai macam pustaka yang sudah tersedia.
+
+Python sudah memiliki beberapa fungsi yang terkait dengan sistem
+persamaan linear dan operasi terkait seperti menghitung determinan dan
+invers matriks.
+
+    Fungsi \texttt{np.linalg.solve} dapat digunakan untuk menyelesaikan
+sistem persamaan linear:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}66}]:} \PY{n}{A} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{p}{[}
+             \PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}
+             \PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+         \PY{p}{]}\PY{p}{)}
+         \PY{n}{B} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{9}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}67}]:} \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{solve}\PY{p}{(}\PY{n}{A}\PY{p}{,}\PY{n}{B}\PY{p}{)}
+         \PY{n}{x}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}67}]:} matrix([[3.00000000e+00],
+                 [1.00000000e+00],
+                 [1.73472348e-17]])
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}68}]:} \PY{n}{A}\PY{o}{*}\PY{n}{x} \PY{o}{\PYZhy{}} \PY{n}{B}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}68}]:} matrix([[0.],
+                 [0.],
+                 [0.]])
+\end{Verbatim}
+            
+    Fungsi \texttt{np.linalg.det} dapat digunakan untuk menghitung
+determinan dari suatu matriks
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}69}]:} \PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{det}\PY{p}{(}\PY{n}{A}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}69}]:} -8.000000000000002
+\end{Verbatim}
+            
+    Fungsi \texttt{np.linalg.inv} dapat digunakan untuk menghitung invers
+dari suatu matriks
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}70}]:} \PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{inv}\PY{p}{(}\PY{n}{A}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}70}]:} matrix([[ 0.5  ,  0.   ,  0.5  ],
+                 [-0.125,  0.25 , -0.375],
+                 [ 0.625, -0.25 , -0.125]])
+\end{Verbatim}
+            
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+    \end{document}
