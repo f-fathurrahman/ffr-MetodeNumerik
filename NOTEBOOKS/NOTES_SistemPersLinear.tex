@@ -1,19 +1,11 @@
-
 % Default to the notebook output style
-
-    
-
-
 % Inherit from the specified cell style.
+\documentclass[10pt]{article}
+
+\usepackage[a4paper]{geometry}    
+\geometry{verbose,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm}
 
 
-
-
-    
-\documentclass[11pt]{article}
-
-    
-    
     \usepackage[T1]{fontenc}
     % Nicer default font (+ math font) than Computer Modern for most use cases
     \usepackage{mathpazo}
@@ -750,12 +742,13 @@ menggunakannya dengan dengan sedikit modifikasi.
 \(\mathbf{b}\) akan ditransformasi sedemikian rupa sehingga diperoleh
 matriks dalam bentuk segitiga atas atau segitiga bawah.
 
-    Transformasi yang dilakukan adalah sebagai berikut. \[
+Transformasi yang dilakukan adalah sebagai berikut.
 \begin{align*}
 A_{ij} \leftarrow A_{ij} - \alpha A_{kj} \\
 b_{i} \leftarrow b_{i} - \alpha b_{k}
 \end{align*}
-\] Setelah matriks \(\mathbf{A}\) direduksi menjadi bentuk segitiga
+
+Setelah matriks \(\mathbf{A}\) direduksi menjadi bentuk segitiga
 atas, solusi persamaan linear yang dihasilkan dapat dicari dengan
 menggunakan substitusi mundur (\emph{backward substitution}). \[
 x_{k} = \left(
@@ -767,13 +760,17 @@ b_{k} - \sum_{j=k+1}^{N} A_{kj} x_{j}
 \subsubsection{Contoh penggunaan metode eliminasi
 Gauss}\label{contoh-penggunaan-metode-eliminasi-gauss}}
 
-    Perhatikan sistem persamaan linear berikut ini: \[
+    Perhatikan sistem persamaan linear berikut ini:
+
 \begin{align*}
 x_{1} + x_{2} + x_{3} & = 4 \\
 2x_{1} + 3x_{2} + x_{3} & = 9 \\
 x_{1} - x_{2} - x_{3} & = -2
 \end{align*}
-\] Persamaan di atas dapat diubah dalam bentuk matrix sebagai \[
+
+Persamaan di atas dapat diubah dalam bentuk matriks sebagai
+
+\[
 \begin{bmatrix}
 1 & 1 & 1 \\
 2 & 3 & 1 \\
@@ -783,8 +780,7 @@ x_{1} - x_{2} - x_{3} & = -2
 x_{1} \\
 x_{2} \\
 x_{3}
-\end{bmatrix}
-= 
+\end{bmatrix} =
 \begin{bmatrix}
 4 \\
 9 \\
@@ -909,7 +905,9 @@ b =
     \end{Verbatim}
 
     Sekarang \texttt{A} telah tereduksi menjadi bentuk matriks segitiga
-atas. Persamaan yang kita miliki sekarang adalah: \[
+atas. Persamaan yang kita miliki sekarang adalah:
+
+\[
 \begin{bmatrix}
 1 & 1 & 1 \\
 0 & 1 & -3 \\
@@ -919,8 +917,7 @@ atas. Persamaan yang kita miliki sekarang adalah: \[
 x_{1} \\
 x_{2} \\
 x_{3}
-\end{bmatrix}
-= 
+\end{bmatrix} =
 \begin{bmatrix}
 4 \\
 1 \\
@@ -1087,7 +1084,9 @@ Solusi \(\mathbf{x}\) dapat dicari dengan menggunakan substitusi balik
 
     Varian Doolittle untuk dekomposisi LU memiliki bentuk berikut untuk
 matriks \(\mathbf{L}\) dan \(\mathbf{U}\), misalnya untuk ukuran
-\(3\times3\) \[
+\(3\times3\)
+
+\[
 \mathbf{L} =
 \begin{bmatrix}
 1 & 0 & 0 \\
@@ -1100,7 +1099,11 @@ U_{11} & U_{12} & U_{13} \\
 0 & U_{22} & U_{23} \\
 0 & 0 & U_{33}
 \end{bmatrix}
-\] Dengan melakukan perkalian \(\mathbf{A} = \mathbf{LU}\) \[
+\]
+
+Dengan melakukan perkalian \(\mathbf{A} = \mathbf{LU}\)
+
+\[
 \mathbf{A} = \begin{bmatrix}
 U_{11} & U_{12} & U_{13} \\
 U_{11}L_{21} & U_{12}L_{21} + U_{22} & U_{13}L_{21} + U_{23} \\
@@ -1249,7 +1252,9 @@ y_{k} = b_{k} - \sum_{j=1}^{k-1} L_{kj} y_{j},\,\,\,k = 2,3,\ldots,N
     \hypertarget{latihan-1}{%
 \subsection{Latihan 1}\label{latihan-1}}
 
-    Selasaikan persamaan: \[
+    Selasaikan persamaan:
+
+\[
 \begin{bmatrix}
 6 & -4 & 1 \\
 4 & 6 & -4 \\
@@ -1259,8 +1264,7 @@ y_{k} = b_{k} - \sum_{j=1}^{k-1} L_{kj} y_{j},\,\,\,k = 2,3,\ldots,N
 x_1 \\
 x_2 \\
 x_3
-\end{bmatrix}
-= 
+\end{bmatrix} = 
 \begin{bmatrix}
 -14 \\
 36 \\
@@ -1327,7 +1331,9 @@ Cek solusi: Ax - b
     \hypertarget{latihan-2}{%
 \subsection{Latihan 2}\label{latihan-2}}
 
-    Selasaikan persamaan: \[
+    Selasaikan persamaan:
+
+\[
 \begin{bmatrix}
 3 & 1 & -1 \\
 5 & 8 & 2 \\
@@ -1337,8 +1343,7 @@ Cek solusi: Ax - b
 x_1 \\
 x_2 \\
 x_3
-\end{bmatrix}
-= 
+\end{bmatrix} =
 \begin{bmatrix}
 1 \\
 -4 \\
@@ -1418,8 +1423,7 @@ Misalkan pada persamaan berikut ini:
 x_1 \\
 x_2 \\
 x_3
-\end{bmatrix}
-= 
+\end{bmatrix} = 
 \begin{bmatrix}
 2 \\
 3 \\
@@ -1465,8 +1469,7 @@ baris ketiga:
 x_3 \\
 x_2 \\
 x_1
-\end{bmatrix}
-= 
+\end{bmatrix} =
 \begin{bmatrix}
 4 \\
 3 \\
