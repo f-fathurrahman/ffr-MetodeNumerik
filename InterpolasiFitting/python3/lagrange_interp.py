@@ -1,21 +1,15 @@
-def lagrange_interp(x,y)
-    """
-    Input : x=[x0 x1 ... xN], y=[y0 y1 ... yN]
-    Output:
-    
-    l = Lagrange polynomial coefficients of order N
-    L = Lagrange coefficient polynomial
-    """
-    N = len(x) - 1 # the order of polynomial
-    l = 0
-  
-    for m in range(1,N+2):
-        P = 1
-        for k = 1:N+1:
-            if k != m:
-                P = conv(P, poly(x(k)))/( x(m) - x(k))
-    L[m,:] = P # Lagrange coefficient polynomial
-    l = l + y[m]*P # Lagrange polynomial
-    return l, L
-
+def lagrange_interp(x, y, xx):
+    assert len(x) == len(y)
+    # Jumlah data adalah N + 1 dan derajat polynomial adalah N
+    # atau:
+    # Jumlah data adalah N dan derajat polynomial adalah N - 1
+    N = len(x) - 1
+    yy = 0.0
+    for i in range(N+1):
+        Li = 1.0 # inisialisasi ke ke 1.0
+        for j in range(N+1):
+            if i != j:
+                Li = Li * (xx - x[j])/(x[i] - x[j])
+        yy = yy + y[i]*Li
+    return yy
 

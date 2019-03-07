@@ -1,16 +1,16 @@
-def newton_interp(a,xData,x):
-    N = len(xData) - 1
-    # Degree of polynomial
-    p = a[n]
-    for k in range(1,n+1):
-        p = a[n-k] + (x -xData[n-k])*p
-    return p
+import numpy as np
 
-def coef_newton_poly(xData,yData):
-    m = len(xData)
-    # Number of data points
-    a = yData.copy()
-    for k in range(1,m):
-        a[k:m] = (a[k:m] - a[k-1])/(xData[k:m] - xData[k-1])
-    return a
+def create_newton_polynom(x, y):
+    Ndata = len(x) # jumlah data
+    coefs = np.copy(y)
+    for k in range(1,Ndata):
+        coefs[k:Ndata] = (coefs[k:Ndata] - coefs[k-1])/(x[k:Ndata] - x[k-1])
+    return coefs
+
+def eval_newton_polynom(coefs, x, xo):
+    N = len(x) - 1 # derajat polinom
+    p = coefs[N]
+    for k in range(1,N+1):
+        p = coefs[N-k] + (xo - x[N-k])*p
+    return p
 
