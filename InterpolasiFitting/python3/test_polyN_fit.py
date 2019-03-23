@@ -11,4 +11,7 @@ import matplotlib.pyplot as plt
 
 plt.clf()
 plt.plot(x, y, linewidth=0, marker="o", label="data")
-plt.plot()
+xplt = np.linspace(x[0], x[-1], 500)
+plt.plot(xplt, np.polyval(np.poly1d(coefs[::-1]), xplt), label="linreg" )
+plt.legend()
+plt.savefig("TEMP_test_polyN_fit_01.pdf")
