@@ -48,11 +48,8 @@ def chebyshev_fit(x, y, N):
                 Tj = chebyshev_poly_eval(j, z[k])
                 s = s + Ti*Tj
             A[i,j] = s
-    print("A = ", A)
-    print("b = ", b)
+    
     c = np.linalg.solve(A,b)
-
-    print("c = ", c)
 
     return c
 
