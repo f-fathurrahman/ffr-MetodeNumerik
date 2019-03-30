@@ -1,0 +1,1002 @@
+
+% Default to the notebook output style
+
+    
+
+
+% Inherit from the specified cell style.
+
+
+
+
+    
+\documentclass[11pt]{article}
+
+    
+    
+    \usepackage[T1]{fontenc}
+    % Nicer default font (+ math font) than Computer Modern for most use cases
+    \usepackage{mathpazo}
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % We will generate all images so they have a width \maxwidth. This means
+    % that they will get their normal width if they fit onto the page, but
+    % are scaled down if they would overflow the margins.
+    \makeatletter
+    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+    \else\Gin@nat@width\fi}
+    \makeatother
+    \let\Oldincludegraphics\includegraphics
+    % Set max figure width to be 80% of text width, for now hardcoded.
+    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionLabelFormat{nolabel}{}
+    \captionsetup{labelformat=nolabel}
+
+    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    
+
+    
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatability definitions
+    \def\gt{>}
+    \def\lt{<}
+    % Document parameters
+    \title{PengenalanSymPy}
+    
+    
+    
+
+    % Pygments definitions
+    
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+    \begin{document}
+    
+    
+    \maketitle
+    
+    
+
+    
+    Pengenalan SymPy
+
+Fadjar Fathurrahman
+
+    \hypertarget{pengenalan}{%
+\section{Pengenalan}\label{pengenalan}}
+
+    SymPy adalah pustaka Python yang dapat digunakan untuk melakukan
+perhitungan matematika simbolik seperti aljabar dan teori bilangan.
+SymPy dapat digunakan sebagai alternatif dari sistem aljabar komputer
+(\emph{computer algebra system}) komersial seperti Mathematica dan
+Maple.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}1}]:} \PY{k+kn}{import} \PY{n+nn}{sympy}
+        \PY{k+kn}{from} \PY{n+nn}{sympy} \PY{k}{import} \PY{o}{*}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}2}]:} \PY{n+nb}{print}\PY{p}{(}\PY{n}{sympy}\PY{o}{.}\PY{n}{\PYZus{}\PYZus{}version\PYZus{}\PYZus{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+1.3
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}3}]:} \PY{n}{init\PYZus{}printing}\PY{p}{(}\PY{n}{use\PYZus{}latex}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\end{Verbatim}
+
+
+    \hypertarget{operasi-dasar}{%
+\section{Operasi dasar}\label{operasi-dasar}}
+
+    Fungsi \texttt{symbols} dapat digunakan untuk membuat objek simbolik.
+Sebagai contoh, kita akan membuat suatu tiga objek simbolik \texttt{x},
+\texttt{y}, dan \texttt{z}:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} \PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{z} \PY{o}{=} \PY{n}{symbols}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{x y z}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    Jika kita menggunakan \texttt{init\_print(use\_latex=True)}, maka
+tampilan dari objek tersebut merupakan \(x\), \(y\), dan \(z\):
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}12}]:} \PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{z}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}12}]:}
+    
+    $$\left ( x, \quad y, \quad z\right )$$
+
+    
+
+    Tipe dari \texttt{x}, \texttt{y}, dan \texttt{z} adalah \texttt{Symbol}
+(lebih lengkapnya adalah \texttt{sympy.symbol.Symbol}).
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}16}]:} \PY{n+nb}{type}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{,} \PY{n+nb}{type}\PY{p}{(}\PY{n}{y}\PY{p}{)}\PY{p}{,} \PY{n+nb}{type}\PY{p}{(}\PY{n}{z}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}16}]:} (sympy.core.symbol.Symbol, sympy.core.symbol.Symbol, sympy.core.symbol.Symbol)
+\end{Verbatim}
+            
+    Mari kita mulai dengan perhitungan sederhana. Misalkan kita ingin
+menghitung hasil dari \[
+2x + \frac{3x}{5x^2} - 7x
+\]
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}5}]:} \PY{n}{expr} \PY{o}{=} \PY{l+m+mi}{2}\PY{o}{*}\PY{n}{x} \PY{o}{+} \PY{l+m+mi}{3}\PY{o}{*}\PY{n}{x}\PY{o}{/}\PY{p}{(}\PY{l+m+mi}{5}\PY{o}{*}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{l+m+mi}{7}\PY{o}{*}\PY{n}{x}
+        \PY{n}{expr}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}5}]:}
+    
+    $$- 5 x + \frac{3}{5 x}$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}13}]:} \PY{n}{factor}\PY{p}{(}\PY{n}{expr}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}13}]:}
+    
+    $$- \frac{25 x^{2} - 3}{5 x}$$
+
+    
+
+    \hypertarget{substitusi}{%
+\subsection{Substitusi}\label{substitusi}}
+
+    Salah satu operasi yang sering dilakukan adalah substitusi. Misalkan
+kita ingin melakukan substitusi \(x \rightarrow 3y\), maka kita dapat
+menggunakan metode \texttt{subs} dari suatu objek simbolik
+(\texttt{Symbol}).
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}15}]:} \PY{n}{expr}\PY{o}{.}\PY{n}{subs}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{l+m+mi}{3}\PY{o}{*}\PY{n}{y}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}15}]:}
+    
+    $$- 15 y + \frac{1}{5 y}$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}17}]:} \PY{n}{expr}\PY{o}{.}\PY{n}{subs}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}17}]:}
+    
+    $$- \frac{22}{5}$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}25}]:} \PY{n}{expr}\PY{o}{.}\PY{n}{subs}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{l+m+mi}{2}\PY{o}{/}\PY{l+m+mi}{3}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}25}]:}
+    
+    $$-2.43333333333333$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}26}]:} \PY{n}{expr}\PY{o}{.}\PY{n}{subs}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{Integer}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{)}\PY{o}{/}\PY{n}{Integer}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}26}]:}
+    
+    $$- \frac{73}{30}$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}30}]:} \PY{n+nb}{type}\PY{p}{(}\PY{n}{Integer}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{)}\PY{o}{/}\PY{n}{Integer}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n+nb}{type}\PY{p}{(}\PY{l+m+mi}{2}\PY{o}{/}\PY{l+m+mi}{3}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}30}]:} (sympy.core.numbers.Rational, float)
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}32}]:} \PY{n}{Rational}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}32}]:}
+    
+    $$\frac{2}{3}$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}33}]:} \PY{n}{expr}\PY{o}{.}\PY{n}{subs}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{Rational}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}33}]:}
+    
+    $$- \frac{73}{30}$$
+
+    
+
+    Untuk melakukan beberapa substitusi sekaligus, kita dapat memberikan
+list \texttt{(old,\ new)} ke metode \texttt{subs}. Sebagai contoh:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}40}]:} \PY{n}{expr} \PY{o}{=} \PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{3} \PY{o}{+} \PY{l+m+mi}{6}\PY{o}{*}\PY{n}{x}\PY{o}{*}\PY{n}{y} \PY{o}{\PYZhy{}} \PY{n}{z}
+         \PY{n}{expr}\PY{p}{,} \PY{n}{expr}\PY{o}{.}\PY{n}{subs}\PY{p}{(} \PY{p}{[}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{l+m+mi}{2}\PY{o}{*}\PY{n}{x}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n}{y}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{]} \PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}40}]:}
+    
+    $$\left ( x^{3} + 6 x y - z, \quad 8 x^{3} + 48 x\right )$$
+
+    
+
+    \hypertarget{mengubah-string-menjadi-ekspresi-sympy}{%
+\subsection{Mengubah string menjadi ekspresi
+SymPy}\label{mengubah-string-menjadi-ekspresi-sympy}}
+
+    Metode \texttt{sympify} dapat digunakan untuk mengubah suatu string
+menjadi ekspresi SymPy.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}42}]:} \PY{n}{str\PYZus{}expr} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{x**2 + 2*y + 4/5}\PY{l+s+s2}{\PYZdq{}}
+         \PY{n}{expr} \PY{o}{=} \PY{n}{sympify}\PY{p}{(}\PY{n}{str\PYZus{}expr}\PY{p}{)}
+         \PY{n}{expr}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}42}]:}
+    
+    $$x^{2} + 2 y + \frac{4}{5}$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}43}]:} \PY{n}{expr}\PY{o}{.}\PY{n}{subs}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{Rational}\PY{p}{(}\PY{l+m+mi}{4}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}43}]:}
+    
+    $$2 y + \frac{116}{45}$$
+
+    
+
+    \hypertarget{mengevaluasi-ekspresi-menjadi-nilai-numerik-float}{%
+\subsection{Mengevaluasi ekspresi menjadi nilai numerik
+float}\label{mengevaluasi-ekspresi-menjadi-nilai-numerik-float}}
+
+    Metode \texttt{evalf} dapat digunakan untuk mengevaluasi suatu ekspresi
+menjadi nilai numerik float.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}45}]:} \PY{n}{expr} \PY{o}{=} \PY{n}{sqrt}\PY{p}{(}\PY{n}{Rational}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{)}\PY{p}{)}
+         \PY{n}{expr}\PY{p}{,} \PY{n}{expr}\PY{o}{.}\PY{n}{evalf}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}45}]:}
+    
+    $$\left ( \frac{\sqrt{6}}{3}, \quad 0.816496580927726\right )$$
+
+    
+
+    Karena kita menggunakan \texttt{from\ sympy\ import\ *} maka beberapa
+konstanta dan fungsi dari modul standard Python \texttt{math} akan
+digantikan dengan konstanta dan fungsi dari SymPy yang lebih cocok untuk
+perhitungan simbolik. Salah satu konstanta tersebut adalah \texttt{pi}.
+Perhatikan bahwa \texttt{pi} di sini adalah \texttt{pi} dari modul
+\texttt{sympy} bukan dari \texttt{math}.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}52}]:} \PY{k+kn}{import} \PY{n+nn}{math}
+         \PY{n}{pi}\PY{p}{,} \PY{n}{math}\PY{o}{.}\PY{n}{pi}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}52}]:}
+    
+    $$\left ( \pi, \quad 3.141592653589793\right )$$
+
+    
+
+    Evaluasi nilai numerik dari \(\pi\) dalam 40 digit:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}49}]:} \PY{n}{pi}\PY{o}{.}\PY{n}{evalf}\PY{p}{(}\PY{l+m+mi}{40}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}49}]:}
+    
+    $$3.141592653589793238462643383279502884197$$
+
+    
+
+    Evaluasi nilai \(\pi\) dalam 1000 digit. Kita menggunakan fungsi
+\texttt{print} agar lebih mudah ditampilkan (tidak menggunakan LaTeX).
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}51}]:} \PY{n+nb}{print}\PY{p}{(}\PY{n}{pi}\PY{o}{.}\PY{n}{evalf}\PY{p}{(}\PY{l+m+mi}{1000}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450284102701938521105559644622948954930381964428810975665933446128475648233786783165271201909145648566923460348610454326648213393607260249141273724587006606315588174881520920962829254091715364367892590360011330530548820466521384146951941511609433057270365759591953092186117381932611793105118548074462379962749567351885752724891227938183011949129833673362440656643086021394946395224737190702179860943702770539217176293176752384674818467669405132000568127145263560827785771342757789609173637178721468440901224953430146549585371050792279689258923542019956112129021960864034418159813629774771309960518707211349999998372978049951059731732816096318595024459455346908302642522308253344685035261931188171010003137838752886587533208381420617177669147303598253490428755468731159562863882353787593751957781857780532171226806613001927876611195909216420198
+
+    \end{Verbatim}
+
+    Contoh lain:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}56}]:} \PY{n}{expr} \PY{o}{=} \PY{l+m+mi}{2}\PY{o}{*}\PY{n}{x}\PY{o}{/}\PY{n}{y}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}
+         \PY{n}{expr}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}56}]:}
+    
+    $$\frac{2 x}{y^{2}} - 1$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}59}]:} \PY{n}{expr1} \PY{o}{=} \PY{n}{expr}\PY{o}{.}\PY{n}{subs}\PY{p}{(}\PY{p}{[} \PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n}{y}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+         \PY{n}{expr1}\PY{p}{,} \PY{n}{expr1}\PY{o}{.}\PY{n}{evalf}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}59}]:}
+    
+    $$\left ( - \frac{7}{9}, \quad -0.777777777777778\right )$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}60}]:} \PY{n}{expr}\PY{o}{.}\PY{n}{evalf}\PY{p}{(}\PY{n}{subs}\PY{o}{=}\PY{p}{\PYZob{}}\PY{n}{x}\PY{p}{:} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{y}\PY{p}{:} \PY{l+m+mi}{3}\PY{p}{\PYZcb{}}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}60}]:}
+    
+    $$-0.777777777777778$$
+
+    
+
+    \hypertarget{kalkulus}{%
+\section{Kalkulus}\label{kalkulus}}
+
+    Turunan dapat dihitung dengan menggunakan perintah \texttt{diff}:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}9}]:} \PY{n}{eksp} \PY{o}{=} \PY{n}{cos}\PY{p}{(}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{3}\PY{p}{)}\PY{o}{*}\PY{n}{cos}\PY{p}{(}\PY{n}{y}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{4}\PY{p}{)}\PY{o}{*}\PY{n}{cos}\PY{p}{(}\PY{n}{z}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{)}
+        \PY{n}{eksp}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}9}]:}
+    
+    $$\cos{\left (x^{3} \right )} \cos{\left (y^{4} \right )} \cos{\left (z^{2} \right )}$$
+
+    
+
+    Turunan pertama terhadap \texttt{x}. Secara default \texttt{diff} akan
+menghitung turunan pertama.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}10}]:} \PY{n}{diff}\PY{p}{(}\PY{n}{eksp}\PY{p}{,} \PY{n}{x}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}10}]:}
+    
+    $$- 3 x^{2} \sin{\left (x^{3} \right )} \cos{\left (y^{4} \right )} \cos{\left (z^{2} \right )}$$
+
+    
+
+    Turunan kedua terhadap \texttt{y}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}11}]:} \PY{n}{diff}\PY{p}{(}\PY{n}{eksp}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}11}]:}
+    
+    $$- 4 y^{2} \left(4 y^{4} \cos{\left (y^{4} \right )} + 3 \sin{\left (y^{4} \right )}\right) \cos{\left (x^{3} \right )} \cos{\left (z^{2} \right )}$$
+
+    
+
+    Turunan keempat terhadap \texttt{z}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}13}]:} \PY{n}{diff}\PY{p}{(}\PY{n}{eksp}\PY{p}{,} \PY{n}{z}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}13}]:}
+    
+    $$4 \left(4 z^{4} \cos{\left (z^{2} \right )} + 12 z^{2} \sin{\left (z^{2} \right )} - 3 \cos{\left (z^{2} \right )}\right) \cos{\left (x^{3} \right )} \cos{\left (y^{4} \right )}$$
+
+    
+
+    Integral dapat dihitung dengan menggunakan fungsi \texttt{integrate}.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}17}]:} \PY{n}{eksp} \PY{o}{=} \PY{l+m+mi}{2}\PY{o}{*}\PY{n}{x}\PY{o}{/}\PY{p}{(}\PY{l+m+mi}{3}\PY{o}{*}\PY{n}{y}\PY{p}{)} \PY{o}{+} \PY{n}{z}
+         \PY{n}{eksp}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}17}]:}
+    
+    $$\frac{2 x}{3 y} + z$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}18}]:} \PY{n}{integrate}\PY{p}{(}\PY{n}{eksp}\PY{p}{,} \PY{n}{x}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}18}]:}
+    
+    $$\frac{x^{2}}{3 y} + x z$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}19}]:} \PY{n}{integrate}\PY{p}{(}\PY{n}{eksp}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}19}]:}
+    
+    $$\frac{2 x}{3} \log{\left (y \right )} + y z$$
+
+    
+
+    Ingat: Secara default fungsi \texttt{log} dihitung terhadap bilangan
+Euler \(e\) (logaritma natural)
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}22}]:} \PY{n}{exp}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{,} \PY{n}{log}\PY{p}{(}\PY{n}{exp}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}22}]:}
+    
+    $$\left ( e, \quad 1\right )$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}23}]:} \PY{n}{integrate}\PY{p}{(}\PY{n}{eksp}\PY{p}{,} \PY{n}{z}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}23}]:}
+    
+    $$\frac{2 x z}{3 y} + \frac{z^{2}}{2}$$
+
+    
+
+    Contoh integral definit (dengan batas atas dan bawah).
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}24}]:} \PY{n}{integrate}\PY{p}{(}\PY{n}{eksp}\PY{p}{,} \PY{p}{(}\PY{n}{z}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}24}]:}
+    
+    $$\frac{2 x}{3 y} + \frac{1}{2}$$
+
+    
+
+    Fungsi \texttt{Integral} dapat digunakan untuk membuat sebuah objek
+integral yang belum dievaluasi (berguna untuk menampilkan integral).
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}27}]:} \PY{n}{myinteg} \PY{o}{=} \PY{n}{Integral}\PY{p}{(}\PY{n}{eksp}\PY{p}{,} \PY{p}{(}\PY{n}{z}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+         \PY{n}{myinteg}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}27}]:}
+    
+    $$\int_{0}^{1} \left(\frac{2 x}{3 y} + z\right)\, dz$$
+
+    
+
+    Untuk mengevaluasi integral tersebut, kita dapat menggunakan metode
+\texttt{doit()}.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}28}]:} \PY{n}{myinteg}\PY{o}{.}\PY{n}{doit}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}28}]:}
+    
+    $$\frac{2 x}{3 y} + \frac{1}{2}$$
+
+    
+
+    Contoh lain, fungsi Gaussian:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}32}]:} \PY{n}{eksp} \PY{o}{=} \PY{n}{exp}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{)}
+         \PY{n}{eksp}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}32}]:}
+    
+    $$e^{- x^{2}}$$
+
+    
+
+    Tanda \texttt{oo} dapat digunakan untuk merepresentasikan tak hingga
+(\(\infty\))
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}33}]:} \PY{n}{myinteg} \PY{o}{=} \PY{n}{Integral}\PY{p}{(}\PY{n}{eksp}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{n}{oo}\PY{p}{,}\PY{n}{oo}\PY{p}{)}\PY{p}{)}
+         \PY{n}{myinteg}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}33}]:}
+    
+    $$\int_{-\infty}^{\infty} e^{- x^{2}}\, dx$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}34}]:} \PY{n}{myinteg}\PY{o}{.}\PY{n}{doit}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}34}]:}
+    
+    $$\sqrt{\pi}$$
+
+    
+
+    Fungsi Gaussian dikalikan dengan \(x^2\)
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}37}]:} \PY{n}{eksp} \PY{o}{=} \PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{exp}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{)}
+         \PY{n}{eksp}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}37}]:}
+    
+    $$x^{2} e^{- x^{2}}$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}38}]:} \PY{n}{myinteg} \PY{o}{=} \PY{n}{Integral}\PY{p}{(}\PY{n}{eksp}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{n}{oo}\PY{p}{,}\PY{n}{oo}\PY{p}{)}\PY{p}{)}
+         \PY{n}{myinteg}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}38}]:}
+    
+    $$\int_{-\infty}^{\infty} x^{2} e^{- x^{2}}\, dx$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}39}]:} \PY{n}{myinteg}\PY{o}{.}\PY{n}{doit}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}39}]:}
+    
+    $$\frac{\sqrt{\pi}}{2}$$
+
+    
+
+    Perhitungan integral secara simbolik sangat sulit. Tidak semua integral
+dapat diselesaikan secara analitik oleh SymPy.
+
+    \hypertarget{matriks}{%
+\section{Matriks}\label{matriks}}
+
+    Tipe \texttt{Matrix} dapat digunakan untuk merepresentasikan suatu
+matriks dan juga vektor (kolom atau baris).
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}62}]:} \PY{n}{mat} \PY{o}{=} \PY{n}{Matrix}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{l+m+mi}{4}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{l+m+mi}{7}\PY{p}{,}\PY{l+m+mi}{8}\PY{p}{,}\PY{l+m+mi}{9}\PY{p}{]}\PY{p}{]} \PY{p}{)}
+         \PY{n}{mat}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}62}]:}
+    
+    $$\left[\begin{matrix}1 & 2 & 3\\4 & 5 & 6\\7 & 8 & 9\end{matrix}\right]$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}63}]:} \PY{n}{mat}\PY{o}{.}\PY{n}{row}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}63}]:}
+    
+    $$\left[\begin{matrix}1 & 2 & 3\end{matrix}\right]$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}67}]:} \PY{n}{mat}\PY{o}{.}\PY{n}{col}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}67}]:}
+    
+    $$\left[\begin{matrix}2\\5\\8\end{matrix}\right]$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}71}]:} \PY{l+m+mi}{3}\PY{o}{*}\PY{n}{ones}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{mat}\PY{o}{.}\PY{n}{col}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}71}]:}
+    
+    $$\left[\begin{matrix}0\\-3\\-6\end{matrix}\right]$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}72}]:} \PY{n}{mat}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}72}]:}
+    
+    $$\left[\begin{matrix}1 & 2 & 3\\4 & 5 & 6\\7 & 8 & 9\end{matrix}\right]$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}77}]:} \PY{n}{mat} \PY{o}{=} \PY{n}{mat}\PY{o}{*}\PY{l+m+mi}{2}
+         \PY{n}{mat}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}77}]:}
+    
+    $$\left[\begin{matrix}4 & 8 & 12\\16 & 20 & 24\\28 & 32 & 36\end{matrix}\right]$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}78}]:} \PY{n}{mat1} \PY{o}{=} \PY{n}{mat}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}79}]:} \PY{n}{mat1}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}79}]:}
+    
+    $$\left[\begin{matrix}4 & 8 & 12\\16 & 20 & 24\\28 & 32 & 36\end{matrix}\right]$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}80}]:} \PY{n}{mat1} \PY{o}{=} \PY{n}{mat1}\PY{o}{*}\PY{l+m+mi}{3}
+         \PY{n}{mat1}\PY{p}{,} \PY{n}{mat}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}80}]:}
+    
+    $$\left ( \left[\begin{matrix}12 & 24 & 36\\48 & 60 & 72\\84 & 96 & 108\end{matrix}\right], \quad \left[\begin{matrix}4 & 8 & 12\\16 & 20 & 24\\28 & 32 & 36\end{matrix}\right]\right )$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}82}]:} \PY{n}{mat1}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{2}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}88}]:} \PY{n}{mat1}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{:}\PY{l+m+mi}{3}\PY{p}{]} \PY{o}{=} \PY{n}{Matrix}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}89}]:} \PY{n}{mat1}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}89}]:}
+    
+    $$\left[\begin{matrix}2 & 24 & 0\\48 & 60 & 0\\84 & 96 & 108\end{matrix}\right]$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}91}]:} \PY{n}{mat1}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{]} \PY{o}{=} \PY{n}{Matrix}\PY{p}{(}\PY{p}{[} \PY{p}{[}\PY{l+m+mi}{100}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{l+m+mi}{33}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{l+m+mi}{44}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+         \PY{n}{mat1}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}91}]:}
+    
+    $$\left[\begin{matrix}2 & 24 & 100\\48 & 60 & 33\\84 & 96 & 44\end{matrix}\right]$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}94}]:} \PY{n}{mat1}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{mat1}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{p}{:}\PY{p}{]}\PY{o}{/}\PY{l+m+mi}{2}
+         \PY{n}{mat1}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}94}]:}
+    
+    $$\left[\begin{matrix}1 & 12 & 50\\48 & 60 & 33\\84 & 96 & 44\end{matrix}\right]$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}95}]:} \PY{n}{mat1}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{mat1}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{l+m+mi}{48}\PY{o}{*}\PY{n}{mat1}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{p}{:}\PY{p}{]}
+         \PY{n}{mat1}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}95}]:}
+    
+    $$\left[\begin{matrix}1 & 12 & 50\\0 & -516 & -2367\\84 & 96 & 44\end{matrix}\right]$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}96}]:} \PY{n}{mat1}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{mat1}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}\PY{p}{:}\PY{p}{]}\PY{o}{/}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{516}\PY{p}{)}
+         \PY{n}{mat1}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}96}]:}
+    
+    $$\left[\begin{matrix}1 & 12 & 50\\0 & 1 & \frac{789}{172}\\84 & 96 & 44\end{matrix}\right]$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}97}]:} \PY{n}{mat1}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{mat1}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{l+m+mi}{84}\PY{o}{*}\PY{n}{mat1}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{p}{:}\PY{p}{]}
+         \PY{n}{mat1}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}97}]:}
+    
+    $$\left[\begin{matrix}1 & 12 & 50\\0 & 1 & \frac{789}{172}\\0 & -912 & -4156\end{matrix}\right]$$
+
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}98}]:} \PY{n}{mat1}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{mat1}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{mat1}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}\PY{p}{:}\PY{p}{]}\PY{o}{*}\PY{o}{\PYZhy{}}\PY{l+m+mi}{912}
+         \PY{n}{mat1}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}98}]:}
+    
+    $$\left[\begin{matrix}1 & 12 & 50\\0 & 1 & \frac{789}{172}\\0 & 0 & \frac{1184}{43}\end{matrix}\right]$$
+
+    
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+    \end{document}

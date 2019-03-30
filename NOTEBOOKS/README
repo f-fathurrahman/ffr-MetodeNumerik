@@ -1,0 +1,7 @@
+`%matplotlib notebook` tidak (belum?) bekerja pada JupyterLab
+
+```
+ipython nbconvert --to latex --SphinxTransformer.author='John Doe' file.ipynb
+```
+
+

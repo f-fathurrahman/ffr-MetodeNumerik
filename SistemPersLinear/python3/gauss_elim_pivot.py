@@ -26,7 +26,7 @@ def gauss_elim_pivot( A_, B_, TOL=1.0e-12 ):
     for i in range(N):
         s[i] = np.max(np.abs(A[i,:]))
     
-    # ubah s menjadi vektor colom
+    # ubah s menjadi vektor kolom
     s = np.matrix(s).transpose()
     
     for k in range(0,N-1):
