@@ -1,6 +1,5 @@
+ V = 3 // m^3
 
-
-V = 3 // m^3
 function f = soal_04(v)
   // Constants
   Ru = 0.518 // kJ/(kg K)
