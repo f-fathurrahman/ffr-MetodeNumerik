@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from fourier_fit import *
 
 x = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], dtype=np.float64)
-y = np.array([144, 188, 245, 311, 351, 359, 308, 287, 260, 211, 159, 131], dtype=np.float64)
+y = np.array([114, 188, 245, 311, 351, 359, 308, 287, 260, 211, 159, 131], dtype=np.float64)
 
 print("Ndata = ", len(x))
 
@@ -31,4 +31,8 @@ plt.xticks(np.arange(1,13), months)
 plt.legend()
 plt.grid()
 plt.savefig("TEMP_chapra_19_2.pdf")
+
+
+print("Pada pertengahan Agustus:")
+print(sinusoid_fit_eval(A0, A1, B1, omega, 8.5))
 
