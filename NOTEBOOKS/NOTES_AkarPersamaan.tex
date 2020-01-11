@@ -1,44 +1,32 @@
-
-% Default to the notebook output style
-
-    
-
-
-% Inherit from the specified cell style.
-
-
-
-
-    
 \documentclass[11pt]{article}
 
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
     
-    
-    \usepackage[T1]{fontenc}
-    % Nicer default font (+ math font) than Computer Modern for most use cases
-    \usepackage{mathpazo}
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
 
     % Basic figure setup, for now with no caption control since it's done
     % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
     \usepackage{graphicx}
-    % We will generate all images so they have a width \maxwidth. This means
-    % that they will get their normal width if they fit onto the page, but
-    % are scaled down if they would overflow the margins.
-    \makeatletter
-    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
-    \else\Gin@nat@width\fi}
-    \makeatother
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
     \let\Oldincludegraphics\includegraphics
-    % Set max figure width to be 80% of text width, for now hardcoded.
-    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
     % Ensure that by default, figures have no caption (until we provide a
     % proper Figure object with a Caption API and a way to capture that
     % in the conversion process - todo).
     \usepackage{caption}
-    \DeclareCaptionLabelFormat{nolabel}{}
-    \captionsetup{labelformat=nolabel}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
 
-    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
     \usepackage{xcolor} % Allow colors to be defined
     \usepackage{enumerate} % Needed for markdown enumerations to work
     \usepackage{geometry} % Used to adjust the document margins
@@ -52,22 +40,32 @@
     \usepackage{upquote} % Upright quotes for verbatim code
     \usepackage{eurosym} % defines \euro
     \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
-    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
     \usepackage{fancyvrb} % verbatim replacement that allows latex
     \usepackage{grffile} % extends the file name processing of package graphics 
-                         % to support a larger range 
+                         % to support a larger range
+    \makeatletter % fix for grffile with XeLaTeX
+    \def\Gread@@xetex#1{%
+      \IfFileExists{"\Gin@base".bb}%
+      {\Gread@eps{\Gin@base.bb}}%
+      {\Gread@@xetex@aux#1}%
+    }
+    \makeatother
+
     % The hyperref package gives us a pdf with properly built
     % internal navigation ('pdf bookmarks' for the table of contents,
     % internal cross-reference links, web links for URLs, etc.)
     \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
     \usepackage{longtable} % longtable support required by pandoc >1.10
     \usepackage{booktabs}  % table support for pandoc > 1.12.2
     \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
     \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
                                 % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
     
 
-    
     
     % Colors for the hyperref package
     \definecolor{urlcolor}{rgb}{0,.145,.698}
@@ -91,6 +89,8 @@
     \definecolor{ansi-cyan-intense}{HTML}{258F8F}
     \definecolor{ansi-white}{HTML}{C5C1B4}
     \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
 
     % commands and environments needed by pandoc snippets
     % extracted from the output of `pandoc -s`
@@ -137,17 +137,22 @@
     % Define a nice break command that doesn't care if a line doesn't already
     % exist.
     \def\br{\hspace*{\fill} \\* }
-    % Math Jax compatability definitions
+    % Math Jax compatibility definitions
     \def\gt{>}
     \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
     % Document parameters
+    % Document title
     \title{NOTES\_AkarPersamaan}
     
     
     
-
-    % Pygments definitions
     
+    
+% Pygments definitions
 \makeatletter
 \def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
     \let\PY@ul=\relax \let\PY@tc=\relax%
@@ -249,11 +254,97 @@
 \makeatother
 
 
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
     % Exact colors from NB
-    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
-    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
-
-
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        \ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}
+    }
+    
 
     
     % Prevent overflowing lines due to hard-to-break entities
@@ -272,8 +363,7 @@
     
     
 
-    \begin{document}
-    
+\begin{document}
     
     \maketitle
     
@@ -286,25 +376,31 @@ Nonlinear}\label{tf2202-teknik-komputasi---akar-persamaan-nonlinear}}
 
     Fadjar Fathurrahman
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}1}]:} \PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
-        \PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
 \end{Verbatim}
+\end{tcolorbox}
 
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}2}]:} \PY{k+kn}{from} \PY{n+nn}{IPython}\PY{n+nn}{.}\PY{n+nn}{display} \PY{k}{import} \PY{n}{set\PYZus{}matplotlib\PYZus{}formats}
-        \PY{n}{set\PYZus{}matplotlib\PYZus{}formats}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{svg}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-        \PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{IPython}\PY{n+nn}{.}\PY{n+nn}{display} \PY{k+kn}{import} \PY{n}{set\PYZus{}matplotlib\PYZus{}formats}
+\PY{n}{set\PYZus{}matplotlib\PYZus{}formats}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{svg}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline
 \end{Verbatim}
+\end{tcolorbox}
 
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}3}]:} \PY{k+kn}{import} \PY{n+nn}{matplotlib}
-        \PY{n}{matplotlib}\PY{o}{.}\PY{n}{style}\PY{o}{.}\PY{n}{use}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{dark\PYZus{}background}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-        \PY{c+c1}{\PYZsh{}matplotlib.style.use(\PYZdq{}default\PYZdq{})}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}
+\PY{n}{matplotlib}\PY{o}{.}\PY{n}{style}\PY{o}{.}\PY{n}{use}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{dark\PYZus{}background}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}matplotlib.style.use(\PYZdq{}default\PYZdq{})}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \hypertarget{metode-bisection}{%
 \subsection{Metode Bisection}\label{metode-bisection}}
@@ -318,22 +414,26 @@ f(x) = 5x^3 - 5x^2 + 6x - 2
 \] Untuk memperoleh gambaran mengenai akar dari persamaan \(f(x)=0\),
 kita akan membuat plot dari dari \(f(x)\) terlebih dahulu.
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}4}]:} \PY{k}{def} \PY{n+nf}{func\PYZus{}01}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
-            \PY{k}{return} \PY{l+m+mi}{5}\PY{o}{*}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{3} \PY{o}{\PYZhy{}} \PY{l+m+mi}{5}\PY{o}{*}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{+} \PY{l+m+mi}{6}\PY{o}{*}\PY{n}{x} \PY{o}{\PYZhy{}} \PY{l+m+mi}{2}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{func\PYZus{}01}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{l+m+mi}{5}\PY{o}{*}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{3} \PY{o}{\PYZhy{}} \PY{l+m+mi}{5}\PY{o}{*}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{+} \PY{l+m+mi}{6}\PY{o}{*}\PY{n}{x} \PY{o}{\PYZhy{}} \PY{l+m+mi}{2}
 \end{Verbatim}
+\end{tcolorbox}
 
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}7}]:} \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{100}\PY{p}{)}
-        \PY{n}{y} \PY{o}{=}  \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{x}\PY{p}{)}
-        \PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
-        \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{f(x)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-        \PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
-        \PY{n}{plt}\PY{o}{.}\PY{n}{ylim}\PY{p}{(}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
-        \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{100}\PY{p}{)}
+\PY{n}{y} \PY{o}{=}  \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{f(x)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylim}\PY{p}{(}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{center}
     \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{NOTES_AkarPersamaan_files/NOTES_AkarPersamaan_9_0.pdf}
@@ -347,77 +447,95 @@ menggunakan interval \(x_1 = 0\) dan \(x_2 = 1\).
     Mari kita cek bahwa tanda \(f(x_1)\) dan \(f(x_2)\) memiliki tanda yang
 berbeda, atau \(f(x_1)f(x_2) < 0\).
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}10}]:} \PY{n}{x1} \PY{o}{=} \PY{l+m+mf}{0.0}
-         \PY{n}{x2} \PY{o}{=} \PY{l+m+mf}{1.0}
-         \PY{n}{f1} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{x1}\PY{p}{)}
-         \PY{n}{f2} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{x2}\PY{p}{)}
-         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{f1 = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{f1}\PY{p}{)}
-         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{f2 = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{f2}\PY{p}{)}
-         \PY{n+nb}{print}\PY{p}{(}\PY{n}{f1}\PY{o}{*}\PY{n}{f2} \PY{o}{\PYZlt{}} \PY{l+m+mi}{0}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x1} \PY{o}{=} \PY{l+m+mf}{0.0}
+\PY{n}{x2} \PY{o}{=} \PY{l+m+mf}{1.0}
+\PY{n}{f1} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{x1}\PY{p}{)}
+\PY{n}{f2} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{x2}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{f1 = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{f1}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{f2 = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{f2}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{f1}\PY{o}{*}\PY{n}{f2} \PY{o}{\PYZlt{}} \PY{l+m+mi}{0}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
 f1 =  -2.0
 f2 =  4.0
 True
-
     \end{Verbatim}
 
     Fungsi \texttt{np.sign()} juga bisa digunakan untuk mengecek tanda
 positif atau negatif dari suatu bilangan.
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}11}]:} \PY{n}{np}\PY{o}{.}\PY{n}{sign}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mf}{2.0}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{sign}\PY{p}{(}\PY{l+m+mf}{2.1}\PY{p}{)}
-\end{Verbatim}
-
-
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}11}]:} (-1.0, 1.0)
+\PY{n}{np}\PY{o}{.}\PY{n}{sign}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mf}{2.0}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{sign}\PY{p}{(}\PY{l+m+mf}{2.1}\PY{p}{)}
 \end{Verbatim}
-            
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+(-1.0, 1.0)
+\end{Verbatim}
+\end{tcolorbox}
+        
     Sekarang, kita perlu menentukan tebakan akar dari selang \(x_1\) dan
 \(x_2\). Dengan metode bisection, tebakan akar dihitung tepat berada di
 tengah selang yaitu: \[
 x_{r} = \frac{x_1 + x_2}{2}
 \]
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}12}]:} \PY{n}{xr} \PY{o}{=} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{p}{(}\PY{n}{x1} \PY{o}{+} \PY{n}{x2}\PY{p}{)}
-         \PY{n}{xr}
-\end{Verbatim}
-
-
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}12}]:} 0.5
+\PY{n}{xr} \PY{o}{=} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{p}{(}\PY{n}{x1} \PY{o}{+} \PY{n}{x2}\PY{p}{)}
+\PY{n}{xr}
 \end{Verbatim}
-            
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+0.5
+\end{Verbatim}
+\end{tcolorbox}
+        
     OK, sepertinya kita sudah berada dekat di akar sebenarnya. Mari kita cek
 nilai \(f(x_r)\):
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}14}]:} \PY{n}{fxr} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{xr}\PY{p}{)}
-         \PY{n}{fxr}
-\end{Verbatim}
-
-
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}14}]:} 0.375
+\PY{n}{fxr} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{xr}\PY{p}{)}
+\PY{n}{fxr}
 \end{Verbatim}
-            
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+0.375
+\end{Verbatim}
+\end{tcolorbox}
+        
     Ternyata nilai dari \(f(x_r)\) tidak tepat pada 0. Mari buat plot
 \(f(x)\) pada domain (interval) yang lebih sempit.
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}15}]:} \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mf}{0.0}\PY{p}{,} \PY{l+m+mf}{1.0}\PY{p}{,} \PY{l+m+mi}{500}\PY{p}{)}
-         \PY{n}{y} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{x}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{xr}\PY{p}{,} \PY{n}{fxr}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{o}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{c+c1}{\PYZsh{} Tandai nilai fx pada xr, yaitu (xr,fxr)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mf}{0.0}\PY{p}{,} \PY{l+m+mf}{1.0}\PY{p}{,} \PY{l+m+mi}{500}\PY{p}{)}
+\PY{n}{y} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{xr}\PY{p}{,} \PY{n}{fxr}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{o}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{c+c1}{\PYZsh{} Tandai nilai fx pada xr, yaitu (xr,fxr)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{center}
     \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{NOTES_AkarPersamaan_files/NOTES_AkarPersamaan_20_0.pdf}
@@ -429,177 +547,228 @@ kita akan mengaplikasikan lagi metode bisection. Kita sekarang memiliki
 3 titik yaitu \(x_1\), \(x_2\), dan \(x_r\), dengan nilai fungsi pada
 titik-titik tersebut adalah:
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}16}]:} \PY{n}{f1}\PY{p}{,} \PY{n}{f2}\PY{p}{,} \PY{n}{fxr}
-\end{Verbatim}
-
-
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{16}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}16}]:} (-2.0, 4.0, 0.375)
+\PY{n}{f1}\PY{p}{,} \PY{n}{f2}\PY{p}{,} \PY{n}{fxr}
 \end{Verbatim}
-            
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+(-2.0, 4.0, 0.375)
+\end{Verbatim}
+\end{tcolorbox}
+        
     Dengan informasi tersebut, kita dapat menggunakan \(x_r\) sebagai
 pengganti dari \(x_2\) karena selang ini lebih kecil dan diharapkan
 nilai tebakan akar dapat menjadi lebih dekat dengan akar sebenarnya.
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}17}]:} \PY{n}{x2} \PY{o}{=} \PY{n}{xr}
-         \PY{n}{f2} \PY{o}{=} \PY{n}{fxr}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x2} \PY{o}{=} \PY{n}{xr}
+\PY{n}{f2} \PY{o}{=} \PY{n}{fxr}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     Cek apakah nilai fungsi pada interval baru ini berbeda tanda (hasil kali
 \(f_(x_{1})\) dan \(f(x_2)\) adalah negatif.
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}18}]:} \PY{n+nb}{print}\PY{p}{(}\PY{n}{f1}\PY{o}{*}\PY{n}{f2} \PY{o}{\PYZlt{}} \PY{l+m+mi}{0}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{18}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{f1}\PY{o}{*}\PY{n}{f2} \PY{o}{\PYZlt{}} \PY{l+m+mi}{0}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
 True
-
     \end{Verbatim}
 
     Kita hitung lagi tebakan akar \(x_r\) sebagai nilai tengah antara
 \(x_{1}\) dan \(x_2\):
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}19}]:} \PY{n}{xr} \PY{o}{=} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{p}{(}\PY{n}{x1} \PY{o}{+} \PY{n}{x2}\PY{p}{)}
-         \PY{n}{fxr} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{xr}\PY{p}{)}
-         \PY{n}{fxr}
-\end{Verbatim}
-
-
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{19}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}19}]:} -0.734375
+\PY{n}{xr} \PY{o}{=} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{p}{(}\PY{n}{x1} \PY{o}{+} \PY{n}{x2}\PY{p}{)}
+\PY{n}{fxr} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{xr}\PY{p}{)}
+\PY{n}{fxr}
 \end{Verbatim}
-            
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{19}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+-0.734375
+\end{Verbatim}
+\end{tcolorbox}
+        
     Sepertinya nilai akar yang kita dapatkan masih belum baik.
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}20}]:} \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{n}{x1}\PY{p}{,} \PY{n}{x2}\PY{p}{,} \PY{l+m+mi}{500}\PY{p}{)}
-         \PY{n}{y} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{x}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{xr}\PY{p}{,} \PY{n}{fxr}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{o}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{c+c1}{\PYZsh{} Tandai nilai fx pada xr, yaitu (xr,fxr)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{n}{x1}\PY{p}{,} \PY{n}{x2}\PY{p}{,} \PY{l+m+mi}{500}\PY{p}{)}
+\PY{n}{y} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{xr}\PY{p}{,} \PY{n}{fxr}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{o}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{c+c1}{\PYZsh{} Tandai nilai fx pada xr, yaitu (xr,fxr)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{center}
     \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{NOTES_AkarPersamaan_files/NOTES_AkarPersamaan_30_0.pdf}
     \end{center}
     { \hspace*{\fill} \\}
     
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}21}]:} \PY{n}{f1}\PY{p}{,} \PY{n}{f2}\PY{p}{,} \PY{n}{fxr}
-\end{Verbatim}
-
-
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{21}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}21}]:} (-2.0, 0.375, -0.734375)
+\PY{n}{f1}\PY{p}{,} \PY{n}{f2}\PY{p}{,} \PY{n}{fxr}
 \end{Verbatim}
-            
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{21}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+(-2.0, 0.375, -0.734375)
+\end{Verbatim}
+\end{tcolorbox}
+        
     Kita akan melakukan kembali prosedur bisection. Untuk interval baru kita
 akan ganti \(x_1\) dengan \(x_r\).
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}22}]:} \PY{n}{x1} \PY{o}{=} \PY{n}{xr}
-         \PY{n}{f1} \PY{o}{=} \PY{n}{fxr}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{22}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x1} \PY{o}{=} \PY{n}{xr}
+\PY{n}{f1} \PY{o}{=} \PY{n}{fxr}
 \end{Verbatim}
+\end{tcolorbox}
 
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}23}]:} \PY{n+nb}{print}\PY{p}{(}\PY{n}{f1}\PY{o}{*}\PY{n}{f2} \PY{o}{\PYZlt{}} \PY{l+m+mi}{0}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{23}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{f1}\PY{o}{*}\PY{n}{f2} \PY{o}{\PYZlt{}} \PY{l+m+mi}{0}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
 True
-
     \end{Verbatim}
 
     Hitung kembali tebakan akar pada selang \(x_1\) dan \(x_2\)
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}24}]:} \PY{n}{xr} \PY{o}{=} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{p}{(}\PY{n}{x1} \PY{o}{+} \PY{n}{x2}\PY{p}{)}
-         \PY{n}{fxr} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{xr}\PY{p}{)}
-         \PY{n}{fxr}
-\end{Verbatim}
-
-
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{24}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}24}]:} -0.189453125
+\PY{n}{xr} \PY{o}{=} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{p}{(}\PY{n}{x1} \PY{o}{+} \PY{n}{x2}\PY{p}{)}
+\PY{n}{fxr} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{xr}\PY{p}{)}
+\PY{n}{fxr}
 \end{Verbatim}
-            
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{24}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+-0.189453125
+\end{Verbatim}
+\end{tcolorbox}
+        
     Nilai ini sudah lebih dekat dari tebakan-tebakan kita sebelumnya.
 
 Untuk mendapatkan tebakan akar yang lebih baik kita akan lakukan sekali
 lagi metode bisection.
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}25}]:} \PY{n}{f1}\PY{p}{,} \PY{n}{f2}\PY{p}{,} \PY{n}{fxr}
-\end{Verbatim}
-
-
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{25}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}25}]:} (-0.734375, 0.375, -0.189453125)
+\PY{n}{f1}\PY{p}{,} \PY{n}{f2}\PY{p}{,} \PY{n}{fxr}
 \end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}26}]:} \PY{n}{x1} \PY{o}{=} \PY{n}{xr}
-         \PY{n}{f1} \PY{o}{=} \PY{n}{fxr}
-         \PY{n+nb}{print}\PY{p}{(}\PY{n}{f1}\PY{o}{*}\PY{n}{f2} \PY{o}{\PYZlt{}} \PY{l+m+mi}{0}\PY{p}{)}
-\end{Verbatim}
+\end{tcolorbox}
 
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{25}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+(-0.734375, 0.375, -0.189453125)
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{26}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x1} \PY{o}{=} \PY{n}{xr}
+\PY{n}{f1} \PY{o}{=} \PY{n}{fxr}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{f1}\PY{o}{*}\PY{n}{f2} \PY{o}{\PYZlt{}} \PY{l+m+mi}{0}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
 True
-
     \end{Verbatim}
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}27}]:} \PY{n}{xr} \PY{o}{=} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{p}{(}\PY{n}{x1} \PY{o}{+} \PY{n}{x2}\PY{p}{)}
-         \PY{n}{fxr} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{xr}\PY{p}{)}
-         \PY{n}{fxr}
-\end{Verbatim}
-
-
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{27}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}27}]:} 0.086669921875
+\PY{n}{xr} \PY{o}{=} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{p}{(}\PY{n}{x1} \PY{o}{+} \PY{n}{x2}\PY{p}{)}
+\PY{n}{fxr} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{xr}\PY{p}{)}
+\PY{n}{fxr}
 \end{Verbatim}
-            
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{27}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+0.086669921875
+\end{Verbatim}
+\end{tcolorbox}
+        
     Tebakan ini lebih baik dari tebakan sebelumnya karena \(f(x_r)\) yang
 diperoleh lebih dekat dengan 0. Kita dapat melakukan prosedur bisection
 sekali lagi.
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}28}]:} \PY{n}{f1}\PY{p}{,} \PY{n}{f2}\PY{p}{,} \PY{n}{fxr}
-\end{Verbatim}
-
-
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{28}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}28}]:} (-0.189453125, 0.375, 0.086669921875)
+\PY{n}{f1}\PY{p}{,} \PY{n}{f2}\PY{p}{,} \PY{n}{fxr}
 \end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}29}]:} \PY{n}{x2} \PY{o}{=} \PY{n}{xr}
-         \PY{n}{f2} \PY{o}{=} \PY{n}{fxr}
-\end{Verbatim}
+\end{tcolorbox}
 
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}30}]:} \PY{n}{xr} \PY{o}{=} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{p}{(}\PY{n}{x1} \PY{o}{+} \PY{n}{x2}\PY{p}{)}
-         \PY{n}{fxr} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{xr}\PY{p}{)}
-         \PY{n}{fxr}
-\end{Verbatim}
-
-
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{28}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}30}]:} -0.052459716796875
+(-0.189453125, 0.375, 0.086669921875)
 \end{Verbatim}
-            
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{29}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x2} \PY{o}{=} \PY{n}{xr}
+\PY{n}{f2} \PY{o}{=} \PY{n}{fxr}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{30}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xr} \PY{o}{=} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{p}{(}\PY{n}{x1} \PY{o}{+} \PY{n}{x2}\PY{p}{)}
+\PY{n}{fxr} \PY{o}{=} \PY{n}{func\PYZus{}01}\PY{p}{(}\PY{n}{xr}\PY{p}{)}
+\PY{n}{fxr}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{30}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+-0.052459716796875
+\end{Verbatim}
+\end{tcolorbox}
+        
     Setelah melakukan iterasi metode bisection secara manual, sekarang kita
 akan membuat prosedur bisection dalam suatu subrutin (fungsi). Fungsi
 ini menerima masukan \texttt{f} sebagai fungsi yang akan dicari akarnya,
@@ -609,46 +778,50 @@ dicari. Fungsi ini juga menggunakan \texttt{TOL} dengan nilai default
 \texttt{NiterMax} dengan nilai default \texttt{100} sebagai jumlah
 maksimum iterasi yang dilakukan.
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}22}]:} \PY{k}{def} \PY{n+nf}{bisection}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{x1}\PY{p}{,} \PY{n}{x2}\PY{p}{,} \PY{n}{TOL}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}10}\PY{p}{,} \PY{n}{NiterMax}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{)}\PY{p}{:}
-             
-             \PY{n}{f1} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{x1}\PY{p}{)}
-             \PY{n}{f2} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{x2}\PY{p}{)}
-             
-             \PY{k}{if} \PY{n}{f1}\PY{o}{*}\PY{n}{f2} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{:}
-                 \PY{k}{raise} \PY{n+ne}{RuntimeError}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{f1 dan f2 memiliki tanda yang sama}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-                 
-             \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{NiterMax}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
-                 
-                 \PY{n}{xr} \PY{o}{=} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{p}{(}\PY{n}{x1} \PY{o}{+} \PY{n}{x2}\PY{p}{)}
-                 \PY{n}{fxr} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{xr}\PY{p}{)}
-                 
-                 \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fxr}\PY{p}{)} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{TOL}\PY{p}{:}
-                     \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iterasi konvergen: akar ditemukan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-                     \PY{k}{return} \PY{n}{xr}
-                 
-                 \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iter = }\PY{l+s+si}{\PYZpc{}5d}\PY{l+s+s2}{, xr = }\PY{l+s+si}{\PYZpc{}18.10f}\PY{l+s+s2}{, abs(fxr) = }\PY{l+s+si}{\PYZpc{}15.5e}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{n}{xr}\PY{p}{,} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fxr}\PY{p}{)}\PY{p}{)}\PY{p}{)}
-             
-                 \PY{c+c1}{\PYZsh{} f1 dan fxr berbeda tanda}
-                 \PY{k}{if} \PY{n}{f1}\PY{o}{*}\PY{n}{fxr} \PY{o}{\PYZlt{}} \PY{l+m+mf}{0.0}\PY{p}{:}
-                     \PY{n}{x2} \PY{o}{=} \PY{n}{xr}
-                     \PY{n}{f2} \PY{o}{=} \PY{n}{fxr}
-                 \PY{k}{else}\PY{p}{:}
-                     \PY{n}{x1} \PY{o}{=} \PY{n}{xr}
-                     \PY{n}{f1} \PY{o}{=} \PY{n}{fxr}
-                 
-             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Konvergensi tidak diperleh setelah }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{ iterasi}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{n}{NiterMax}\PY{p}{)}
-             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Nilai tebakan akhir akan dikembalikan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-             \PY{k}{return} \PY{n}{xr}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{22}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{bisection}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{x1}\PY{p}{,} \PY{n}{x2}\PY{p}{,} \PY{n}{TOL}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}10}\PY{p}{,} \PY{n}{NiterMax}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{)}\PY{p}{:}
+    
+    \PY{n}{f1} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{x1}\PY{p}{)}
+    \PY{n}{f2} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{x2}\PY{p}{)}
+    
+    \PY{k}{if} \PY{n}{f1}\PY{o}{*}\PY{n}{f2} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{:}
+        \PY{k}{raise} \PY{n+ne}{RuntimeError}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{f1 dan f2 memiliki tanda yang sama}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{NiterMax}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+        
+        \PY{n}{xr} \PY{o}{=} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{p}{(}\PY{n}{x1} \PY{o}{+} \PY{n}{x2}\PY{p}{)}
+        \PY{n}{fxr} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{xr}\PY{p}{)}
+        
+        \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fxr}\PY{p}{)} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{TOL}\PY{p}{:}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iterasi konvergen: akar ditemukan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{k}{return} \PY{n}{xr}
+        
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iter = }\PY{l+s+si}{\PYZpc{}5d}\PY{l+s+s2}{, xr = }\PY{l+s+si}{\PYZpc{}18.10f}\PY{l+s+s2}{, abs(fxr) = }\PY{l+s+si}{\PYZpc{}15.5e}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{n}{xr}\PY{p}{,} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fxr}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+    
+        \PY{c+c1}{\PYZsh{} f1 dan fxr berbeda tanda}
+        \PY{k}{if} \PY{n}{f1}\PY{o}{*}\PY{n}{fxr} \PY{o}{\PYZlt{}} \PY{l+m+mf}{0.0}\PY{p}{:}
+            \PY{n}{x2} \PY{o}{=} \PY{n}{xr}
+            \PY{n}{f2} \PY{o}{=} \PY{n}{fxr}
+        \PY{k}{else}\PY{p}{:}
+            \PY{n}{x1} \PY{o}{=} \PY{n}{xr}
+            \PY{n}{f1} \PY{o}{=} \PY{n}{fxr}
+        
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Konvergensi tidak diperleh setelah }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{ iterasi}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{n}{NiterMax}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Nilai tebakan akhir akan dikembalikan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{k}{return} \PY{n}{xr}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     Contoh penggunaan:
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}37}]:} \PY{n}{xr} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{0.0}\PY{p}{,} \PY{l+m+mf}{1.0}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{37}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xr} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{0.0}\PY{p}{,} \PY{l+m+mf}{1.0}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
 Iter =     1, xr =       0.5000000000, abs(fxr) =     3.75000e-01
@@ -684,13 +857,14 @@ Iter =    30, xr =       0.4181006169, abs(fxr) =     1.59490e-09
 Iter =    31, xr =       0.4181006174, abs(fxr) =     4.73154e-10
 Iter =    32, xr =       0.4181006171, abs(fxr) =     5.60874e-10
 Iterasi konvergen: akar ditemukan
-
     \end{Verbatim}
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}38}]:} \PY{n}{xr} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{0.0}\PY{p}{,} \PY{l+m+mf}{0.5}\PY{p}{,} \PY{n}{TOL}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}9}\PY{p}{,} \PY{n}{NiterMax}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{38}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xr} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{0.0}\PY{p}{,} \PY{l+m+mf}{0.5}\PY{p}{,} \PY{n}{TOL}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}9}\PY{p}{,} \PY{n}{NiterMax}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
 Iter =     1, xr =       0.2500000000, abs(fxr) =     7.34375e-01
@@ -705,13 +879,14 @@ Iter =     9, xr =       0.4189453125, abs(fxr) =     3.75230e-03
 Iter =    10, xr =       0.4184570312, abs(fxr) =     1.58304e-03
 WARNING: Konvergensi tidak diperleh setelah 10 iterasi
 WARNING: Nilai tebakan akhir akan dikembalikan
-
     \end{Verbatim}
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}39}]:} \PY{n}{xr} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{0.0}\PY{p}{,} \PY{l+m+mf}{0.5}\PY{p}{,} \PY{n}{TOL}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}9}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{39}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xr} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{0.0}\PY{p}{,} \PY{l+m+mf}{0.5}\PY{p}{,} \PY{n}{TOL}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}9}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
 Iter =     1, xr =       0.2500000000, abs(fxr) =     7.34375e-01
@@ -744,13 +919,14 @@ Iter =    27, xr =       0.4181006141, abs(fxr) =     1.40032e-08
 Iter =    28, xr =       0.4181006160, abs(fxr) =     5.73101e-09
 Iter =    29, xr =       0.4181006169, abs(fxr) =     1.59490e-09
 Iterasi konvergen: akar ditemukan
-
     \end{Verbatim}
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}42}]:} \PY{n}{xr} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{0.3}\PY{p}{,} \PY{l+m+mf}{0.5}\PY{p}{,} \PY{n}{NiterMax}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{42}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xr} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{0.3}\PY{p}{,} \PY{l+m+mf}{0.5}\PY{p}{,} \PY{n}{NiterMax}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
 Iter =     1, xr =       0.4000000000, abs(fxr) =     8.00000e-02
@@ -783,13 +959,14 @@ Iter =    27, xr =       0.4181006178, abs(fxr) =     2.54121e-09
 Iter =    28, xr =       0.4181006171, abs(fxr) =     7.67679e-10
 Iter =    29, xr =       0.4181006175, abs(fxr) =     8.86765e-10
 Iterasi konvergen: akar ditemukan
-
     \end{Verbatim}
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}43}]:} \PY{n}{xr} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{0.3}\PY{p}{,} \PY{l+m+mf}{0.4}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{43}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xr} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{0.3}\PY{p}{,} \PY{l+m+mf}{0.4}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
 
@@ -820,23 +997,27 @@ persamaan tersebut dalam bentuk \(f(x) = 0\): \[
 f(x) = x^2 \left| \cos\left(\sqrt{x}\right) \right| - 5 = 0
 \]
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}44}]:} \PY{k}{def} \PY{n+nf}{func\PYZus{}02}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
-             \PY{k}{return} \PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{abs}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{cos}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{)}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{l+m+mi}{5}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{44}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{func\PYZus{}02}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{abs}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{cos}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{)}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{l+m+mi}{5}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     Kita perlu selang untuk tebakan awal akar. Untuk memperoleh informasi
 tersebut kita akan buat plot dari \(f(x)\) terlebih dahulu.
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}45}]:} \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{500}\PY{p}{)}
-         \PY{n}{y} \PY{o}{=} \PY{n}{func\PYZus{}02}\PY{p}{(}\PY{n}{x}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{45}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{500}\PY{p}{)}
+\PY{n}{y} \PY{o}{=} \PY{n}{func\PYZus{}02}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{center}
     \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{NOTES_AkarPersamaan_files/NOTES_AkarPersamaan_56_0.pdf}
@@ -845,10 +1026,12 @@ tersebut kita akan buat plot dari \(f(x)\) terlebih dahulu.
     
     Akar terletak antara \(x = 0\) dan \(x = 5\).
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}46}]:} \PY{n}{xr} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}02}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{46}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xr} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}02}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
 Iter =     1, xr =       2.5000000000, abs(fxr) =     4.93536e+00
@@ -888,18 +1071,19 @@ Iter =    34, xr =       3.7452621394, abs(fxr) =     1.16230e-09
 Iter =    35, xr =       3.7452621396, abs(fxr) =     2.81036e-10
 Iter =    36, xr =       3.7452621396, abs(fxr) =     1.59599e-10
 Iterasi konvergen: akar ditemukan
-
     \end{Verbatim}
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}47}]:} \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{500}\PY{p}{)}
-         \PY{n}{y} \PY{o}{=} \PY{n}{func\PYZus{}02}\PY{p}{(}\PY{n}{x}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{xr}\PY{p}{,} \PY{n}{func\PYZus{}02}\PY{p}{(}\PY{n}{xr}\PY{p}{)}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{o}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{47}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{500}\PY{p}{)}
+\PY{n}{y} \PY{o}{=} \PY{n}{func\PYZus{}02}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{xr}\PY{p}{,} \PY{n}{func\PYZus{}02}\PY{p}{(}\PY{n}{xr}\PY{p}{)}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{o}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{center}
     \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{NOTES_AkarPersamaan_files/NOTES_AkarPersamaan_59_0.pdf}
@@ -908,10 +1092,12 @@ Iterasi konvergen: akar ditemukan
     
     Mari kita coba gunakan selang \(x = 3\) dan \(x = 4\).
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}48}]:} \PY{n}{xr} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}02}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{48}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xr} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}02}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
 Iter =     1, xr =       3.5000000000, abs(fxr) =     1.37950e+00
@@ -949,7 +1135,6 @@ Iter =    32, xr =       3.7452621397, abs(fxr) =     6.00232e-10
 Iter =    33, xr =       3.7452621396, abs(fxr) =     1.04781e-10
 Iter =    34, xr =       3.7452621397, abs(fxr) =     2.47725e-10
 Iterasi konvergen: akar ditemukan
-
     \end{Verbatim}
 
     \hypertarget{metode-regula-falsi}{%
@@ -965,44 +1150,48 @@ garis interpolasi linear ini dengan sumbu \(x\). Hasil akhirnya adalah:
 x_r = x_2 - \frac{f(x_2)}{f(x_1) - f(x_2)}(x_1 - x_2)
 \]
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}24}]:} \PY{k}{def} \PY{n+nf}{regula\PYZus{}falsi}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{x1}\PY{p}{,} \PY{n}{x2}\PY{p}{,} \PY{n}{TOL}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}10}\PY{p}{,} \PY{n}{NiterMax}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{)}\PY{p}{:}
-             
-             \PY{n}{f1} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{x1}\PY{p}{)}
-             \PY{n}{f2} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{x2}\PY{p}{)}
-             
-             \PY{k}{if} \PY{n}{f1}\PY{o}{*}\PY{n}{f2} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{:}
-                 \PY{k}{raise} \PY{n+ne}{RuntimeError}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{f1 dan f2 memiliki tanda yang sama}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-                 
-             \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{NiterMax}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
-                 
-                 \PY{n}{xr} \PY{o}{=} \PY{n}{x2} \PY{o}{\PYZhy{}} \PY{n}{f2}\PY{o}{*}\PY{p}{(}\PY{n}{x1} \PY{o}{\PYZhy{}} \PY{n}{x2}\PY{p}{)}\PY{o}{/}\PY{p}{(}\PY{n}{f1} \PY{o}{\PYZhy{}} \PY{n}{f2}\PY{p}{)}
-                 \PY{n}{fxr} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{xr}\PY{p}{)}
-                 
-                 \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fxr}\PY{p}{)} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{TOL}\PY{p}{:}
-                     \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iterasi konvergen: akar ditemukan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-                     \PY{k}{return} \PY{n}{xr}
-                 
-                 \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iter = }\PY{l+s+si}{\PYZpc{}5d}\PY{l+s+s2}{, xr = }\PY{l+s+si}{\PYZpc{}18.10f}\PY{l+s+s2}{, abs(fxr) = }\PY{l+s+si}{\PYZpc{}15.5e}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{n}{xr}\PY{p}{,} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fxr}\PY{p}{)}\PY{p}{)}\PY{p}{)}
-             
-                 \PY{c+c1}{\PYZsh{} f1 dan fxr berbeda tanda}
-                 \PY{k}{if} \PY{n}{f1}\PY{o}{*}\PY{n}{fxr} \PY{o}{\PYZlt{}} \PY{l+m+mf}{0.0}\PY{p}{:}
-                     \PY{n}{x2} \PY{o}{=} \PY{n}{xr}
-                     \PY{n}{f2} \PY{o}{=} \PY{n}{fxr}
-                 \PY{k}{else}\PY{p}{:}
-                     \PY{n}{x1} \PY{o}{=} \PY{n}{xr}
-                     \PY{n}{f1} \PY{o}{=} \PY{n}{fxr}
-                 
-             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Konvergensi tidak diperleh setelah }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{ iterasi}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{n}{NiterMax}\PY{p}{)}
-             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Nilai tebakan akhir akan dikembalikan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-             \PY{k}{return} \PY{n}{xr}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{24}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{regula\PYZus{}falsi}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{x1}\PY{p}{,} \PY{n}{x2}\PY{p}{,} \PY{n}{TOL}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}10}\PY{p}{,} \PY{n}{NiterMax}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{)}\PY{p}{:}
+    
+    \PY{n}{f1} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{x1}\PY{p}{)}
+    \PY{n}{f2} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{x2}\PY{p}{)}
+    
+    \PY{k}{if} \PY{n}{f1}\PY{o}{*}\PY{n}{f2} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{:}
+        \PY{k}{raise} \PY{n+ne}{RuntimeError}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{f1 dan f2 memiliki tanda yang sama}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{NiterMax}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+        
+        \PY{n}{xr} \PY{o}{=} \PY{n}{x2} \PY{o}{\PYZhy{}} \PY{n}{f2}\PY{o}{*}\PY{p}{(}\PY{n}{x1} \PY{o}{\PYZhy{}} \PY{n}{x2}\PY{p}{)}\PY{o}{/}\PY{p}{(}\PY{n}{f1} \PY{o}{\PYZhy{}} \PY{n}{f2}\PY{p}{)}
+        \PY{n}{fxr} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{xr}\PY{p}{)}
+        
+        \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fxr}\PY{p}{)} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{TOL}\PY{p}{:}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iterasi konvergen: akar ditemukan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{k}{return} \PY{n}{xr}
+        
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iter = }\PY{l+s+si}{\PYZpc{}5d}\PY{l+s+s2}{, xr = }\PY{l+s+si}{\PYZpc{}18.10f}\PY{l+s+s2}{, abs(fxr) = }\PY{l+s+si}{\PYZpc{}15.5e}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{n}{xr}\PY{p}{,} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fxr}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+    
+        \PY{c+c1}{\PYZsh{} f1 dan fxr berbeda tanda}
+        \PY{k}{if} \PY{n}{f1}\PY{o}{*}\PY{n}{fxr} \PY{o}{\PYZlt{}} \PY{l+m+mf}{0.0}\PY{p}{:}
+            \PY{n}{x2} \PY{o}{=} \PY{n}{xr}
+            \PY{n}{f2} \PY{o}{=} \PY{n}{fxr}
+        \PY{k}{else}\PY{p}{:}
+            \PY{n}{x1} \PY{o}{=} \PY{n}{xr}
+            \PY{n}{f1} \PY{o}{=} \PY{n}{fxr}
+        
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Konvergensi tidak diperleh setelah }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{ iterasi}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{n}{NiterMax}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Nilai tebakan akhir akan dikembalikan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{k}{return} \PY{n}{xr}
 \end{Verbatim}
+\end{tcolorbox}
 
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}50}]:} \PY{n}{xr} \PY{o}{=} \PY{n}{regula\PYZus{}falsi}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{0.0}\PY{p}{,} \PY{l+m+mf}{1.0}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{50}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xr} \PY{o}{=} \PY{n}{regula\PYZus{}falsi}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{0.0}\PY{p}{,} \PY{l+m+mf}{1.0}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
 Iter =     1, xr =       0.3333333333, abs(fxr) =     3.70370e-01
@@ -1028,13 +1217,14 @@ Iter =    20, xr =       0.4181006170, abs(fxr) =     9.28374e-10
 Iter =    21, xr =       0.4181006172, abs(fxr) =     3.28579e-10
 Iter =    22, xr =       0.4181006172, abs(fxr) =     1.16294e-10
 Iterasi konvergen: akar ditemukan
-
     \end{Verbatim}
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}51}]:} \PY{n}{xr} \PY{o}{=} \PY{n}{regula\PYZus{}falsi}\PY{p}{(}\PY{n}{func\PYZus{}02}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{51}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xr} \PY{o}{=} \PY{n}{regula\PYZus{}falsi}\PY{p}{(}\PY{n}{func\PYZus{}02}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
 Iter =     1, xr =       3.6819027315, abs(fxr) =     3.76606e-01
@@ -1047,7 +1237,6 @@ Iter =     7, xr =       3.7452621322, abs(fxr) =     4.49024e-08
 Iter =     8, xr =       3.7452621391, abs(fxr) =     3.13140e-09
 Iter =     9, xr =       3.7452621396, abs(fxr) =     2.18379e-10
 Iterasi konvergen: akar ditemukan
-
     \end{Verbatim}
 
     \hypertarget{metode-fixed-point}{%
@@ -1066,219 +1255,357 @@ persamaan \(f(x) = 0\).
 
 Perhatikan bahwa metode ini tidak selalu konvergen.
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}52}]:} \PY{c+c1}{\PYZsh{} definisi fungsi g(x) = exp(\PYZhy{}x)}
-         \PY{k}{def} \PY{n+nf}{func\PYZus{}03}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
-             \PY{k}{return} \PY{n}{np}\PY{o}{.}\PY{n}{exp}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{x}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{52}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} definisi fungsi g(x) = exp(\PYZhy{}x)}
+\PY{k}{def} \PY{n+nf}{func\PYZus{}03}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{n}{np}\PY{o}{.}\PY{n}{exp}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{x}\PY{p}{)}
 \end{Verbatim}
+\end{tcolorbox}
 
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}53}]:} \PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
-         \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{500}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdl{}f(x) = x\PYZdl{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{func\PYZus{}03}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdl{}g(x) = exp(\PYZhy{}x)\PYZdl{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{53}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
+\PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{500}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdl{}f(x) = x\PYZdl{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{func\PYZus{}03}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdl{}g(x) = exp(\PYZhy{}x)\PYZdl{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{center}
     \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{NOTES_AkarPersamaan_files/NOTES_AkarPersamaan_70_0.pdf}
     \end{center}
     { \hspace*{\fill} \\}
     
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}14}]:} \PY{k}{def} \PY{n+nf}{fixed\PYZus{}point}\PY{p}{(}\PY{n}{g}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n}{TOL}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}10}\PY{p}{,} \PY{n}{NiterMax}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{)}\PY{p}{:}
-             
-             \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{NiterMax}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
-                 \PY{n}{gx} \PY{o}{=} \PY{n}{g}\PY{p}{(}\PY{n}{x}\PY{p}{)}
-                 \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iter = }\PY{l+s+si}{\PYZpc{}5d}\PY{l+s+s2}{, x = }\PY{l+s+si}{\PYZpc{}18.10f}\PY{l+s+s2}{, g(x) = }\PY{l+s+si}{\PYZpc{}18.10f}\PY{l+s+s2}{ abs(x\PYZhy{}g(x)) }\PY{l+s+si}{\PYZpc{}15.5e}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n}{g}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{,} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{x}\PY{o}{\PYZhy{}}\PY{n}{gx}\PY{p}{)}\PY{p}{)}\PY{p}{)}
-                 \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{x} \PY{o}{\PYZhy{}} \PY{n}{gx}\PY{p}{)} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{TOL}\PY{p}{:}
-                     \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iterasi konvergen: akar ditemukan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-                     \PY{k}{return} \PY{n}{x}
-                 \PY{n}{x} \PY{o}{=} \PY{n}{gx}
-             
-             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Konvergensi tidak diperleh setelah }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{ iterasi}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{n}{NiterMax}\PY{p}{)}
-             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Nilai tebakan akhir akan dikembalikan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-             \PY{k}{return} \PY{n}{x}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{fixed\PYZus{}point}\PY{p}{(}\PY{n}{g}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n}{TOL}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}10}\PY{p}{,} \PY{n}{NiterMax}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{)}\PY{p}{:}
+    
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{NiterMax}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+        \PY{n}{gx} \PY{o}{=} \PY{n}{g}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iter = }\PY{l+s+si}{\PYZpc{}5d}\PY{l+s+s2}{, x = }\PY{l+s+si}{\PYZpc{}18.10f}\PY{l+s+s2}{, g(x) = }\PY{l+s+si}{\PYZpc{}18.10f}\PY{l+s+s2}{ abs(x\PYZhy{}g(x)) }\PY{l+s+si}{\PYZpc{}15.5e}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n}{g}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{,} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{x}\PY{o}{\PYZhy{}}\PY{n}{gx}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+        \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{x} \PY{o}{\PYZhy{}} \PY{n}{gx}\PY{p}{)} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{TOL}\PY{p}{:}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iterasi konvergen: akar ditemukan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{k}{return} \PY{n}{x}
+        \PY{n}{x} \PY{o}{=} \PY{n}{gx}
+    
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Konvergensi tidak diperleh setelah }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{ iterasi}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{n}{NiterMax}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Nilai tebakan akhir akan dikembalikan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{k}{return} \PY{n}{x}
 \end{Verbatim}
+\end{tcolorbox}
 
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}57}]:} \PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{0.0}
-         \PY{n}{xr} \PY{o}{=} \PY{n}{fixed\PYZus{}point}\PY{p}{(}\PY{n}{func\PYZus{}03}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{57}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{0.0}
+\PY{n}{xr} \PY{o}{=} \PY{n}{fixed\PYZus{}point}\PY{p}{(}\PY{n}{func\PYZus{}03}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-Iter =     1, x =       0.0000000000, g(x) =       1.0000000000 abs(x-g(x))     1.00000e+00
-Iter =     2, x =       1.0000000000, g(x) =       0.3678794412 abs(x-g(x))     6.32121e-01
-Iter =     3, x =       0.3678794412, g(x) =       0.6922006276 abs(x-g(x))     3.24321e-01
-Iter =     4, x =       0.6922006276, g(x) =       0.5004735006 abs(x-g(x))     1.91727e-01
-Iter =     5, x =       0.5004735006, g(x) =       0.6062435351 abs(x-g(x))     1.05770e-01
-Iter =     6, x =       0.6062435351, g(x) =       0.5453957860 abs(x-g(x))     6.08477e-02
-Iter =     7, x =       0.5453957860, g(x) =       0.5796123355 abs(x-g(x))     3.42165e-02
-Iter =     8, x =       0.5796123355, g(x) =       0.5601154614 abs(x-g(x))     1.94969e-02
-Iter =     9, x =       0.5601154614, g(x) =       0.5711431151 abs(x-g(x))     1.10277e-02
-Iter =    10, x =       0.5711431151, g(x) =       0.5648793474 abs(x-g(x))     6.26377e-03
-Iter =    11, x =       0.5648793474, g(x) =       0.5684287250 abs(x-g(x))     3.54938e-03
-Iter =    12, x =       0.5684287250, g(x) =       0.5664147331 abs(x-g(x))     2.01399e-03
-Iter =    13, x =       0.5664147331, g(x) =       0.5675566373 abs(x-g(x))     1.14190e-03
-Iter =    14, x =       0.5675566373, g(x) =       0.5669089119 abs(x-g(x))     6.47725e-04
-Iter =    15, x =       0.5669089119, g(x) =       0.5672762322 abs(x-g(x))     3.67320e-04
-Iter =    16, x =       0.5672762322, g(x) =       0.5670678984 abs(x-g(x))     2.08334e-04
-Iter =    17, x =       0.5670678984, g(x) =       0.5671860501 abs(x-g(x))     1.18152e-04
-Iter =    18, x =       0.5671860501, g(x) =       0.5671190401 abs(x-g(x))     6.70100e-05
-Iter =    19, x =       0.5671190401, g(x) =       0.5671570440 abs(x-g(x))     3.80039e-05
-Iter =    20, x =       0.5671570440, g(x) =       0.5671354902 abs(x-g(x))     2.15538e-05
-Iter =    21, x =       0.5671354902, g(x) =       0.5671477143 abs(x-g(x))     1.22241e-05
-Iter =    22, x =       0.5671477143, g(x) =       0.5671407815 abs(x-g(x))     6.93280e-06
-Iter =    23, x =       0.5671407815, g(x) =       0.5671447133 abs(x-g(x))     3.93189e-06
-Iter =    24, x =       0.5671447133, g(x) =       0.5671424834 abs(x-g(x))     2.22995e-06
-Iter =    25, x =       0.5671424834, g(x) =       0.5671437481 abs(x-g(x))     1.26470e-06
-Iter =    26, x =       0.5671437481, g(x) =       0.5671430308 abs(x-g(x))     7.17265e-07
-Iter =    27, x =       0.5671430308, g(x) =       0.5671434376 abs(x-g(x))     4.06792e-07
-Iter =    28, x =       0.5671434376, g(x) =       0.5671432069 abs(x-g(x))     2.30709e-07
-Iter =    29, x =       0.5671432069, g(x) =       0.5671433378 abs(x-g(x))     1.30845e-07
-Iter =    30, x =       0.5671433378, g(x) =       0.5671432636 abs(x-g(x))     7.42080e-08
-Iter =    31, x =       0.5671432636, g(x) =       0.5671433056 abs(x-g(x))     4.20866e-08
-Iter =    32, x =       0.5671433056, g(x) =       0.5671432818 abs(x-g(x))     2.38691e-08
-Iter =    33, x =       0.5671432818, g(x) =       0.5671432953 abs(x-g(x))     1.35372e-08
-Iter =    34, x =       0.5671432953, g(x) =       0.5671432876 abs(x-g(x))     7.67754e-09
-Iter =    35, x =       0.5671432876, g(x) =       0.5671432920 abs(x-g(x))     4.35427e-09
-Iter =    36, x =       0.5671432920, g(x) =       0.5671432895 abs(x-g(x))     2.46949e-09
-Iter =    37, x =       0.5671432895, g(x) =       0.5671432909 abs(x-g(x))     1.40056e-09
-Iter =    38, x =       0.5671432909, g(x) =       0.5671432901 abs(x-g(x))     7.94316e-10
-Iter =    39, x =       0.5671432901, g(x) =       0.5671432906 abs(x-g(x))     4.50491e-10
-Iter =    40, x =       0.5671432906, g(x) =       0.5671432903 abs(x-g(x))     2.55493e-10
-Iter =    41, x =       0.5671432903, g(x) =       0.5671432905 abs(x-g(x))     1.44901e-10
-Iter =    42, x =       0.5671432905, g(x) =       0.5671432904 abs(x-g(x))     8.21796e-11
+Iter =     1, x =       0.0000000000, g(x) =       1.0000000000 abs(x-g(x))
+1.00000e+00
+Iter =     2, x =       1.0000000000, g(x) =       0.3678794412 abs(x-g(x))
+6.32121e-01
+Iter =     3, x =       0.3678794412, g(x) =       0.6922006276 abs(x-g(x))
+3.24321e-01
+Iter =     4, x =       0.6922006276, g(x) =       0.5004735006 abs(x-g(x))
+1.91727e-01
+Iter =     5, x =       0.5004735006, g(x) =       0.6062435351 abs(x-g(x))
+1.05770e-01
+Iter =     6, x =       0.6062435351, g(x) =       0.5453957860 abs(x-g(x))
+6.08477e-02
+Iter =     7, x =       0.5453957860, g(x) =       0.5796123355 abs(x-g(x))
+3.42165e-02
+Iter =     8, x =       0.5796123355, g(x) =       0.5601154614 abs(x-g(x))
+1.94969e-02
+Iter =     9, x =       0.5601154614, g(x) =       0.5711431151 abs(x-g(x))
+1.10277e-02
+Iter =    10, x =       0.5711431151, g(x) =       0.5648793474 abs(x-g(x))
+6.26377e-03
+Iter =    11, x =       0.5648793474, g(x) =       0.5684287250 abs(x-g(x))
+3.54938e-03
+Iter =    12, x =       0.5684287250, g(x) =       0.5664147331 abs(x-g(x))
+2.01399e-03
+Iter =    13, x =       0.5664147331, g(x) =       0.5675566373 abs(x-g(x))
+1.14190e-03
+Iter =    14, x =       0.5675566373, g(x) =       0.5669089119 abs(x-g(x))
+6.47725e-04
+Iter =    15, x =       0.5669089119, g(x) =       0.5672762322 abs(x-g(x))
+3.67320e-04
+Iter =    16, x =       0.5672762322, g(x) =       0.5670678984 abs(x-g(x))
+2.08334e-04
+Iter =    17, x =       0.5670678984, g(x) =       0.5671860501 abs(x-g(x))
+1.18152e-04
+Iter =    18, x =       0.5671860501, g(x) =       0.5671190401 abs(x-g(x))
+6.70100e-05
+Iter =    19, x =       0.5671190401, g(x) =       0.5671570440 abs(x-g(x))
+3.80039e-05
+Iter =    20, x =       0.5671570440, g(x) =       0.5671354902 abs(x-g(x))
+2.15538e-05
+Iter =    21, x =       0.5671354902, g(x) =       0.5671477143 abs(x-g(x))
+1.22241e-05
+Iter =    22, x =       0.5671477143, g(x) =       0.5671407815 abs(x-g(x))
+6.93280e-06
+Iter =    23, x =       0.5671407815, g(x) =       0.5671447133 abs(x-g(x))
+3.93189e-06
+Iter =    24, x =       0.5671447133, g(x) =       0.5671424834 abs(x-g(x))
+2.22995e-06
+Iter =    25, x =       0.5671424834, g(x) =       0.5671437481 abs(x-g(x))
+1.26470e-06
+Iter =    26, x =       0.5671437481, g(x) =       0.5671430308 abs(x-g(x))
+7.17265e-07
+Iter =    27, x =       0.5671430308, g(x) =       0.5671434376 abs(x-g(x))
+4.06792e-07
+Iter =    28, x =       0.5671434376, g(x) =       0.5671432069 abs(x-g(x))
+2.30709e-07
+Iter =    29, x =       0.5671432069, g(x) =       0.5671433378 abs(x-g(x))
+1.30845e-07
+Iter =    30, x =       0.5671433378, g(x) =       0.5671432636 abs(x-g(x))
+7.42080e-08
+Iter =    31, x =       0.5671432636, g(x) =       0.5671433056 abs(x-g(x))
+4.20866e-08
+Iter =    32, x =       0.5671433056, g(x) =       0.5671432818 abs(x-g(x))
+2.38691e-08
+Iter =    33, x =       0.5671432818, g(x) =       0.5671432953 abs(x-g(x))
+1.35372e-08
+Iter =    34, x =       0.5671432953, g(x) =       0.5671432876 abs(x-g(x))
+7.67754e-09
+Iter =    35, x =       0.5671432876, g(x) =       0.5671432920 abs(x-g(x))
+4.35427e-09
+Iter =    36, x =       0.5671432920, g(x) =       0.5671432895 abs(x-g(x))
+2.46949e-09
+Iter =    37, x =       0.5671432895, g(x) =       0.5671432909 abs(x-g(x))
+1.40056e-09
+Iter =    38, x =       0.5671432909, g(x) =       0.5671432901 abs(x-g(x))
+7.94316e-10
+Iter =    39, x =       0.5671432901, g(x) =       0.5671432906 abs(x-g(x))
+4.50491e-10
+Iter =    40, x =       0.5671432906, g(x) =       0.5671432903 abs(x-g(x))
+2.55493e-10
+Iter =    41, x =       0.5671432903, g(x) =       0.5671432905 abs(x-g(x))
+1.44901e-10
+Iter =    42, x =       0.5671432905, g(x) =       0.5671432904 abs(x-g(x))
+8.21796e-11
 Iterasi konvergen: akar ditemukan
-
     \end{Verbatim}
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}58}]:} \PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
-         \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{500}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdl{}f(x) = x\PYZdl{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{func\PYZus{}03}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdl{}g(x) = exp(\PYZhy{}x)\PYZdl{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{xr}\PY{p}{,} \PY{n}{func\PYZus{}03}\PY{p}{(}\PY{n}{xr}\PY{p}{)}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{o}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{58}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
+\PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{500}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdl{}f(x) = x\PYZdl{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{func\PYZus{}03}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdl{}g(x) = exp(\PYZhy{}x)\PYZdl{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{xr}\PY{p}{,} \PY{n}{func\PYZus{}03}\PY{p}{(}\PY{n}{xr}\PY{p}{)}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{o}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{center}
     \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{NOTES_AkarPersamaan_files/NOTES_AkarPersamaan_73_0.pdf}
     \end{center}
     { \hspace*{\fill} \\}
     
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}59}]:} \PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{1.0}
-         \PY{n}{xr} \PY{o}{=} \PY{n}{fixed\PYZus{}point}\PY{p}{(}\PY{n}{func\PYZus{}03}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{59}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{1.0}
+\PY{n}{xr} \PY{o}{=} \PY{n}{fixed\PYZus{}point}\PY{p}{(}\PY{n}{func\PYZus{}03}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-Iter =     1, x =       1.0000000000, g(x) =       0.3678794412 abs(x-g(x))     6.32121e-01
-Iter =     2, x =       0.3678794412, g(x) =       0.6922006276 abs(x-g(x))     3.24321e-01
-Iter =     3, x =       0.6922006276, g(x) =       0.5004735006 abs(x-g(x))     1.91727e-01
-Iter =     4, x =       0.5004735006, g(x) =       0.6062435351 abs(x-g(x))     1.05770e-01
-Iter =     5, x =       0.6062435351, g(x) =       0.5453957860 abs(x-g(x))     6.08477e-02
-Iter =     6, x =       0.5453957860, g(x) =       0.5796123355 abs(x-g(x))     3.42165e-02
-Iter =     7, x =       0.5796123355, g(x) =       0.5601154614 abs(x-g(x))     1.94969e-02
-Iter =     8, x =       0.5601154614, g(x) =       0.5711431151 abs(x-g(x))     1.10277e-02
-Iter =     9, x =       0.5711431151, g(x) =       0.5648793474 abs(x-g(x))     6.26377e-03
-Iter =    10, x =       0.5648793474, g(x) =       0.5684287250 abs(x-g(x))     3.54938e-03
-Iter =    11, x =       0.5684287250, g(x) =       0.5664147331 abs(x-g(x))     2.01399e-03
-Iter =    12, x =       0.5664147331, g(x) =       0.5675566373 abs(x-g(x))     1.14190e-03
-Iter =    13, x =       0.5675566373, g(x) =       0.5669089119 abs(x-g(x))     6.47725e-04
-Iter =    14, x =       0.5669089119, g(x) =       0.5672762322 abs(x-g(x))     3.67320e-04
-Iter =    15, x =       0.5672762322, g(x) =       0.5670678984 abs(x-g(x))     2.08334e-04
-Iter =    16, x =       0.5670678984, g(x) =       0.5671860501 abs(x-g(x))     1.18152e-04
-Iter =    17, x =       0.5671860501, g(x) =       0.5671190401 abs(x-g(x))     6.70100e-05
-Iter =    18, x =       0.5671190401, g(x) =       0.5671570440 abs(x-g(x))     3.80039e-05
-Iter =    19, x =       0.5671570440, g(x) =       0.5671354902 abs(x-g(x))     2.15538e-05
-Iter =    20, x =       0.5671354902, g(x) =       0.5671477143 abs(x-g(x))     1.22241e-05
-Iter =    21, x =       0.5671477143, g(x) =       0.5671407815 abs(x-g(x))     6.93280e-06
-Iter =    22, x =       0.5671407815, g(x) =       0.5671447133 abs(x-g(x))     3.93189e-06
-Iter =    23, x =       0.5671447133, g(x) =       0.5671424834 abs(x-g(x))     2.22995e-06
-Iter =    24, x =       0.5671424834, g(x) =       0.5671437481 abs(x-g(x))     1.26470e-06
-Iter =    25, x =       0.5671437481, g(x) =       0.5671430308 abs(x-g(x))     7.17265e-07
-Iter =    26, x =       0.5671430308, g(x) =       0.5671434376 abs(x-g(x))     4.06792e-07
-Iter =    27, x =       0.5671434376, g(x) =       0.5671432069 abs(x-g(x))     2.30709e-07
-Iter =    28, x =       0.5671432069, g(x) =       0.5671433378 abs(x-g(x))     1.30845e-07
-Iter =    29, x =       0.5671433378, g(x) =       0.5671432636 abs(x-g(x))     7.42080e-08
-Iter =    30, x =       0.5671432636, g(x) =       0.5671433056 abs(x-g(x))     4.20866e-08
-Iter =    31, x =       0.5671433056, g(x) =       0.5671432818 abs(x-g(x))     2.38691e-08
-Iter =    32, x =       0.5671432818, g(x) =       0.5671432953 abs(x-g(x))     1.35372e-08
-Iter =    33, x =       0.5671432953, g(x) =       0.5671432876 abs(x-g(x))     7.67754e-09
-Iter =    34, x =       0.5671432876, g(x) =       0.5671432920 abs(x-g(x))     4.35427e-09
-Iter =    35, x =       0.5671432920, g(x) =       0.5671432895 abs(x-g(x))     2.46949e-09
-Iter =    36, x =       0.5671432895, g(x) =       0.5671432909 abs(x-g(x))     1.40056e-09
-Iter =    37, x =       0.5671432909, g(x) =       0.5671432901 abs(x-g(x))     7.94316e-10
-Iter =    38, x =       0.5671432901, g(x) =       0.5671432906 abs(x-g(x))     4.50491e-10
-Iter =    39, x =       0.5671432906, g(x) =       0.5671432903 abs(x-g(x))     2.55493e-10
-Iter =    40, x =       0.5671432903, g(x) =       0.5671432905 abs(x-g(x))     1.44901e-10
-Iter =    41, x =       0.5671432905, g(x) =       0.5671432904 abs(x-g(x))     8.21796e-11
+Iter =     1, x =       1.0000000000, g(x) =       0.3678794412 abs(x-g(x))
+6.32121e-01
+Iter =     2, x =       0.3678794412, g(x) =       0.6922006276 abs(x-g(x))
+3.24321e-01
+Iter =     3, x =       0.6922006276, g(x) =       0.5004735006 abs(x-g(x))
+1.91727e-01
+Iter =     4, x =       0.5004735006, g(x) =       0.6062435351 abs(x-g(x))
+1.05770e-01
+Iter =     5, x =       0.6062435351, g(x) =       0.5453957860 abs(x-g(x))
+6.08477e-02
+Iter =     6, x =       0.5453957860, g(x) =       0.5796123355 abs(x-g(x))
+3.42165e-02
+Iter =     7, x =       0.5796123355, g(x) =       0.5601154614 abs(x-g(x))
+1.94969e-02
+Iter =     8, x =       0.5601154614, g(x) =       0.5711431151 abs(x-g(x))
+1.10277e-02
+Iter =     9, x =       0.5711431151, g(x) =       0.5648793474 abs(x-g(x))
+6.26377e-03
+Iter =    10, x =       0.5648793474, g(x) =       0.5684287250 abs(x-g(x))
+3.54938e-03
+Iter =    11, x =       0.5684287250, g(x) =       0.5664147331 abs(x-g(x))
+2.01399e-03
+Iter =    12, x =       0.5664147331, g(x) =       0.5675566373 abs(x-g(x))
+1.14190e-03
+Iter =    13, x =       0.5675566373, g(x) =       0.5669089119 abs(x-g(x))
+6.47725e-04
+Iter =    14, x =       0.5669089119, g(x) =       0.5672762322 abs(x-g(x))
+3.67320e-04
+Iter =    15, x =       0.5672762322, g(x) =       0.5670678984 abs(x-g(x))
+2.08334e-04
+Iter =    16, x =       0.5670678984, g(x) =       0.5671860501 abs(x-g(x))
+1.18152e-04
+Iter =    17, x =       0.5671860501, g(x) =       0.5671190401 abs(x-g(x))
+6.70100e-05
+Iter =    18, x =       0.5671190401, g(x) =       0.5671570440 abs(x-g(x))
+3.80039e-05
+Iter =    19, x =       0.5671570440, g(x) =       0.5671354902 abs(x-g(x))
+2.15538e-05
+Iter =    20, x =       0.5671354902, g(x) =       0.5671477143 abs(x-g(x))
+1.22241e-05
+Iter =    21, x =       0.5671477143, g(x) =       0.5671407815 abs(x-g(x))
+6.93280e-06
+Iter =    22, x =       0.5671407815, g(x) =       0.5671447133 abs(x-g(x))
+3.93189e-06
+Iter =    23, x =       0.5671447133, g(x) =       0.5671424834 abs(x-g(x))
+2.22995e-06
+Iter =    24, x =       0.5671424834, g(x) =       0.5671437481 abs(x-g(x))
+1.26470e-06
+Iter =    25, x =       0.5671437481, g(x) =       0.5671430308 abs(x-g(x))
+7.17265e-07
+Iter =    26, x =       0.5671430308, g(x) =       0.5671434376 abs(x-g(x))
+4.06792e-07
+Iter =    27, x =       0.5671434376, g(x) =       0.5671432069 abs(x-g(x))
+2.30709e-07
+Iter =    28, x =       0.5671432069, g(x) =       0.5671433378 abs(x-g(x))
+1.30845e-07
+Iter =    29, x =       0.5671433378, g(x) =       0.5671432636 abs(x-g(x))
+7.42080e-08
+Iter =    30, x =       0.5671432636, g(x) =       0.5671433056 abs(x-g(x))
+4.20866e-08
+Iter =    31, x =       0.5671433056, g(x) =       0.5671432818 abs(x-g(x))
+2.38691e-08
+Iter =    32, x =       0.5671432818, g(x) =       0.5671432953 abs(x-g(x))
+1.35372e-08
+Iter =    33, x =       0.5671432953, g(x) =       0.5671432876 abs(x-g(x))
+7.67754e-09
+Iter =    34, x =       0.5671432876, g(x) =       0.5671432920 abs(x-g(x))
+4.35427e-09
+Iter =    35, x =       0.5671432920, g(x) =       0.5671432895 abs(x-g(x))
+2.46949e-09
+Iter =    36, x =       0.5671432895, g(x) =       0.5671432909 abs(x-g(x))
+1.40056e-09
+Iter =    37, x =       0.5671432909, g(x) =       0.5671432901 abs(x-g(x))
+7.94316e-10
+Iter =    38, x =       0.5671432901, g(x) =       0.5671432906 abs(x-g(x))
+4.50491e-10
+Iter =    39, x =       0.5671432906, g(x) =       0.5671432903 abs(x-g(x))
+2.55493e-10
+Iter =    40, x =       0.5671432903, g(x) =       0.5671432905 abs(x-g(x))
+1.44901e-10
+Iter =    41, x =       0.5671432905, g(x) =       0.5671432904 abs(x-g(x))
+8.21796e-11
 Iterasi konvergen: akar ditemukan
-
     \end{Verbatim}
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}61}]:} \PY{n}{x0} \PY{o}{=} \PY{o}{\PYZhy{}}\PY{l+m+mf}{10.0}
-         \PY{n}{xr} \PY{o}{=} \PY{n}{fixed\PYZus{}point}\PY{p}{(}\PY{n}{func\PYZus{}03}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{61}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x0} \PY{o}{=} \PY{o}{\PYZhy{}}\PY{l+m+mf}{10.0}
+\PY{n}{xr} \PY{o}{=} \PY{n}{fixed\PYZus{}point}\PY{p}{(}\PY{n}{func\PYZus{}03}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-Iter =     1, x =     -10.0000000000, g(x) =   22026.4657948067 abs(x-g(x))     2.20365e+04
-Iter =     2, x =   22026.4657948067, g(x) =       0.0000000000 abs(x-g(x))     2.20265e+04
-Iter =     3, x =       0.0000000000, g(x) =       1.0000000000 abs(x-g(x))     1.00000e+00
-Iter =     4, x =       1.0000000000, g(x) =       0.3678794412 abs(x-g(x))     6.32121e-01
-Iter =     5, x =       0.3678794412, g(x) =       0.6922006276 abs(x-g(x))     3.24321e-01
-Iter =     6, x =       0.6922006276, g(x) =       0.5004735006 abs(x-g(x))     1.91727e-01
-Iter =     7, x =       0.5004735006, g(x) =       0.6062435351 abs(x-g(x))     1.05770e-01
-Iter =     8, x =       0.6062435351, g(x) =       0.5453957860 abs(x-g(x))     6.08477e-02
-Iter =     9, x =       0.5453957860, g(x) =       0.5796123355 abs(x-g(x))     3.42165e-02
-Iter =    10, x =       0.5796123355, g(x) =       0.5601154614 abs(x-g(x))     1.94969e-02
-Iter =    11, x =       0.5601154614, g(x) =       0.5711431151 abs(x-g(x))     1.10277e-02
-Iter =    12, x =       0.5711431151, g(x) =       0.5648793474 abs(x-g(x))     6.26377e-03
-Iter =    13, x =       0.5648793474, g(x) =       0.5684287250 abs(x-g(x))     3.54938e-03
-Iter =    14, x =       0.5684287250, g(x) =       0.5664147331 abs(x-g(x))     2.01399e-03
-Iter =    15, x =       0.5664147331, g(x) =       0.5675566373 abs(x-g(x))     1.14190e-03
-Iter =    16, x =       0.5675566373, g(x) =       0.5669089119 abs(x-g(x))     6.47725e-04
-Iter =    17, x =       0.5669089119, g(x) =       0.5672762322 abs(x-g(x))     3.67320e-04
-Iter =    18, x =       0.5672762322, g(x) =       0.5670678984 abs(x-g(x))     2.08334e-04
-Iter =    19, x =       0.5670678984, g(x) =       0.5671860501 abs(x-g(x))     1.18152e-04
-Iter =    20, x =       0.5671860501, g(x) =       0.5671190401 abs(x-g(x))     6.70100e-05
-Iter =    21, x =       0.5671190401, g(x) =       0.5671570440 abs(x-g(x))     3.80039e-05
-Iter =    22, x =       0.5671570440, g(x) =       0.5671354902 abs(x-g(x))     2.15538e-05
-Iter =    23, x =       0.5671354902, g(x) =       0.5671477143 abs(x-g(x))     1.22241e-05
-Iter =    24, x =       0.5671477143, g(x) =       0.5671407815 abs(x-g(x))     6.93280e-06
-Iter =    25, x =       0.5671407815, g(x) =       0.5671447133 abs(x-g(x))     3.93189e-06
-Iter =    26, x =       0.5671447133, g(x) =       0.5671424834 abs(x-g(x))     2.22995e-06
-Iter =    27, x =       0.5671424834, g(x) =       0.5671437481 abs(x-g(x))     1.26470e-06
-Iter =    28, x =       0.5671437481, g(x) =       0.5671430308 abs(x-g(x))     7.17265e-07
-Iter =    29, x =       0.5671430308, g(x) =       0.5671434376 abs(x-g(x))     4.06792e-07
-Iter =    30, x =       0.5671434376, g(x) =       0.5671432069 abs(x-g(x))     2.30709e-07
-Iter =    31, x =       0.5671432069, g(x) =       0.5671433378 abs(x-g(x))     1.30845e-07
-Iter =    32, x =       0.5671433378, g(x) =       0.5671432636 abs(x-g(x))     7.42080e-08
-Iter =    33, x =       0.5671432636, g(x) =       0.5671433056 abs(x-g(x))     4.20866e-08
-Iter =    34, x =       0.5671433056, g(x) =       0.5671432818 abs(x-g(x))     2.38691e-08
-Iter =    35, x =       0.5671432818, g(x) =       0.5671432953 abs(x-g(x))     1.35372e-08
-Iter =    36, x =       0.5671432953, g(x) =       0.5671432876 abs(x-g(x))     7.67754e-09
-Iter =    37, x =       0.5671432876, g(x) =       0.5671432920 abs(x-g(x))     4.35427e-09
-Iter =    38, x =       0.5671432920, g(x) =       0.5671432895 abs(x-g(x))     2.46949e-09
-Iter =    39, x =       0.5671432895, g(x) =       0.5671432909 abs(x-g(x))     1.40056e-09
-Iter =    40, x =       0.5671432909, g(x) =       0.5671432901 abs(x-g(x))     7.94316e-10
-Iter =    41, x =       0.5671432901, g(x) =       0.5671432906 abs(x-g(x))     4.50491e-10
-Iter =    42, x =       0.5671432906, g(x) =       0.5671432903 abs(x-g(x))     2.55493e-10
-Iter =    43, x =       0.5671432903, g(x) =       0.5671432905 abs(x-g(x))     1.44901e-10
-Iter =    44, x =       0.5671432905, g(x) =       0.5671432904 abs(x-g(x))     8.21796e-11
+Iter =     1, x =     -10.0000000000, g(x) =   22026.4657948067 abs(x-g(x))
+2.20365e+04
+Iter =     2, x =   22026.4657948067, g(x) =       0.0000000000 abs(x-g(x))
+2.20265e+04
+Iter =     3, x =       0.0000000000, g(x) =       1.0000000000 abs(x-g(x))
+1.00000e+00
+Iter =     4, x =       1.0000000000, g(x) =       0.3678794412 abs(x-g(x))
+6.32121e-01
+Iter =     5, x =       0.3678794412, g(x) =       0.6922006276 abs(x-g(x))
+3.24321e-01
+Iter =     6, x =       0.6922006276, g(x) =       0.5004735006 abs(x-g(x))
+1.91727e-01
+Iter =     7, x =       0.5004735006, g(x) =       0.6062435351 abs(x-g(x))
+1.05770e-01
+Iter =     8, x =       0.6062435351, g(x) =       0.5453957860 abs(x-g(x))
+6.08477e-02
+Iter =     9, x =       0.5453957860, g(x) =       0.5796123355 abs(x-g(x))
+3.42165e-02
+Iter =    10, x =       0.5796123355, g(x) =       0.5601154614 abs(x-g(x))
+1.94969e-02
+Iter =    11, x =       0.5601154614, g(x) =       0.5711431151 abs(x-g(x))
+1.10277e-02
+Iter =    12, x =       0.5711431151, g(x) =       0.5648793474 abs(x-g(x))
+6.26377e-03
+Iter =    13, x =       0.5648793474, g(x) =       0.5684287250 abs(x-g(x))
+3.54938e-03
+Iter =    14, x =       0.5684287250, g(x) =       0.5664147331 abs(x-g(x))
+2.01399e-03
+Iter =    15, x =       0.5664147331, g(x) =       0.5675566373 abs(x-g(x))
+1.14190e-03
+Iter =    16, x =       0.5675566373, g(x) =       0.5669089119 abs(x-g(x))
+6.47725e-04
+Iter =    17, x =       0.5669089119, g(x) =       0.5672762322 abs(x-g(x))
+3.67320e-04
+Iter =    18, x =       0.5672762322, g(x) =       0.5670678984 abs(x-g(x))
+2.08334e-04
+Iter =    19, x =       0.5670678984, g(x) =       0.5671860501 abs(x-g(x))
+1.18152e-04
+Iter =    20, x =       0.5671860501, g(x) =       0.5671190401 abs(x-g(x))
+6.70100e-05
+Iter =    21, x =       0.5671190401, g(x) =       0.5671570440 abs(x-g(x))
+3.80039e-05
+Iter =    22, x =       0.5671570440, g(x) =       0.5671354902 abs(x-g(x))
+2.15538e-05
+Iter =    23, x =       0.5671354902, g(x) =       0.5671477143 abs(x-g(x))
+1.22241e-05
+Iter =    24, x =       0.5671477143, g(x) =       0.5671407815 abs(x-g(x))
+6.93280e-06
+Iter =    25, x =       0.5671407815, g(x) =       0.5671447133 abs(x-g(x))
+3.93189e-06
+Iter =    26, x =       0.5671447133, g(x) =       0.5671424834 abs(x-g(x))
+2.22995e-06
+Iter =    27, x =       0.5671424834, g(x) =       0.5671437481 abs(x-g(x))
+1.26470e-06
+Iter =    28, x =       0.5671437481, g(x) =       0.5671430308 abs(x-g(x))
+7.17265e-07
+Iter =    29, x =       0.5671430308, g(x) =       0.5671434376 abs(x-g(x))
+4.06792e-07
+Iter =    30, x =       0.5671434376, g(x) =       0.5671432069 abs(x-g(x))
+2.30709e-07
+Iter =    31, x =       0.5671432069, g(x) =       0.5671433378 abs(x-g(x))
+1.30845e-07
+Iter =    32, x =       0.5671433378, g(x) =       0.5671432636 abs(x-g(x))
+7.42080e-08
+Iter =    33, x =       0.5671432636, g(x) =       0.5671433056 abs(x-g(x))
+4.20866e-08
+Iter =    34, x =       0.5671433056, g(x) =       0.5671432818 abs(x-g(x))
+2.38691e-08
+Iter =    35, x =       0.5671432818, g(x) =       0.5671432953 abs(x-g(x))
+1.35372e-08
+Iter =    36, x =       0.5671432953, g(x) =       0.5671432876 abs(x-g(x))
+7.67754e-09
+Iter =    37, x =       0.5671432876, g(x) =       0.5671432920 abs(x-g(x))
+4.35427e-09
+Iter =    38, x =       0.5671432920, g(x) =       0.5671432895 abs(x-g(x))
+2.46949e-09
+Iter =    39, x =       0.5671432895, g(x) =       0.5671432909 abs(x-g(x))
+1.40056e-09
+Iter =    40, x =       0.5671432909, g(x) =       0.5671432901 abs(x-g(x))
+7.94316e-10
+Iter =    41, x =       0.5671432901, g(x) =       0.5671432906 abs(x-g(x))
+4.50491e-10
+Iter =    42, x =       0.5671432906, g(x) =       0.5671432903 abs(x-g(x))
+2.55493e-10
+Iter =    43, x =       0.5671432903, g(x) =       0.5671432905 abs(x-g(x))
+1.44901e-10
+Iter =    44, x =       0.5671432905, g(x) =       0.5671432904 abs(x-g(x))
+8.21796e-11
 Iterasi konvergen: akar ditemukan
-
     \end{Verbatim}
 
     \hypertarget{metode-newton-raphson}{%
@@ -1311,113 +1638,137 @@ x_{i+1} = x_{i} - \frac{f(x_{i})}{f'(x_{i})}
     Sebagai contoh, kita akan menghitung akar dari persamaan
 \(f(x) = x^3 - 35\)
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor} }]:} \PY{k}{def} \PY{n+nf}{func\PYZus{}04}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
-            \PY{k}{return} \PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{3} \PY{o}{\PYZhy{}} \PY{l+m+mf}{35.0}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{func\PYZus{}04}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{3} \PY{o}{\PYZhy{}} \PY{l+m+mf}{35.0}
+
+\PY{k}{def} \PY{n+nf}{dfunc\PYZus{}04}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{l+m+mi}{3}\PY{o}{*}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
+\PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{,}\PY{l+m+mi}{500}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{func\PYZus{}04}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{df}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n}{TOL}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}10}\PY{p}{,} \PY{n}{NiterMax}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{)}\PY{p}{:}
+    
+    \PY{n}{SMALL} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{finfo}\PY{p}{(}\PY{n+nb}{float}\PY{p}{)}\PY{o}{.}\PY{n}{eps}
+    
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{NiterMax}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+        \PY{n}{fx} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+        \PY{n}{dfx} \PY{o}{=} \PY{n}{df}\PY{p}{(}\PY{n}{x}\PY{p}{)}
         
-        \PY{k}{def} \PY{n+nf}{dfunc\PYZus{}04}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
-            \PY{k}{return} \PY{l+m+mi}{3}\PY{o}{*}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}
+        \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{dfx}\PY{p}{)} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{SMALL}\PY{p}{:}
+            \PY{k}{raise} \PY{n+ne}{RuntimeError}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Turunan f(x) sangat kecil}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            
+        \PY{n}{xr} \PY{o}{=} \PY{n}{x} \PY{o}{\PYZhy{}} \PY{n}{fx}\PY{o}{/}\PY{n}{dfx}
+        
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iter = }\PY{l+s+si}{\PYZpc{}5d}\PY{l+s+s2}{, x = }\PY{l+s+si}{\PYZpc{}18.10f}\PY{l+s+s2}{, abs(f(x)) }\PY{l+s+si}{\PYZpc{}15.5e}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fx}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+        \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fx}\PY{p}{)} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{TOL}\PY{p}{:}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iterasi konvergen: akar ditemukan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{k}{return} \PY{n}{x}
+        
+        \PY{n}{x} \PY{o}{=} \PY{n}{xr}
+    
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Konvergensi tidak diperleh setelah }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{ iterasi}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{n}{NiterMax}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Nilai tebakan akhir akan dikembalikan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{k}{return} \PY{n}{x}
 \end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor} }]:} \PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
-        \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{,}\PY{l+m+mi}{500}\PY{p}{)}
-        \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{func\PYZus{}04}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{)}
-        \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}15}]:} \PY{k}{def} \PY{n+nf}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{df}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n}{TOL}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}10}\PY{p}{,} \PY{n}{NiterMax}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{)}\PY{p}{:}
-             
-             \PY{n}{SMALL} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{finfo}\PY{p}{(}\PY{n+nb}{float}\PY{p}{)}\PY{o}{.}\PY{n}{eps}
-             
-             \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{NiterMax}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
-                 \PY{n}{fx} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{x}\PY{p}{)}
-                 \PY{n}{dfx} \PY{o}{=} \PY{n}{df}\PY{p}{(}\PY{n}{x}\PY{p}{)}
-                 
-                 \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{dfx}\PY{p}{)} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{SMALL}\PY{p}{:}
-                     \PY{k}{raise} \PY{n+ne}{RuntimeError}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Turunan f(x) sangat kecil}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-                     
-                 \PY{n}{xr} \PY{o}{=} \PY{n}{x} \PY{o}{\PYZhy{}} \PY{n}{fx}\PY{o}{/}\PY{n}{dfx}
-                 
-                 \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iter = }\PY{l+s+si}{\PYZpc{}5d}\PY{l+s+s2}{, x = }\PY{l+s+si}{\PYZpc{}18.10f}\PY{l+s+s2}{, abs(f(x)) }\PY{l+s+si}{\PYZpc{}15.5e}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fx}\PY{p}{)}\PY{p}{)}\PY{p}{)}
-                 \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fx}\PY{p}{)} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{TOL}\PY{p}{:}
-                     \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iterasi konvergen: akar ditemukan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-                     \PY{k}{return} \PY{n}{x}
-                 
-                 \PY{n}{x} \PY{o}{=} \PY{n}{xr}
-             
-             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Konvergensi tidak diperleh setelah }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{ iterasi}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{n}{NiterMax}\PY{p}{)}
-             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Nilai tebakan akhir akan dikembalikan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-             \PY{k}{return} \PY{n}{x}
-\end{Verbatim}
-
+\end{tcolorbox}
 
     Kita akan coba mencari akar persamaan \texttt{func\_04} dengan beberapa
 tebakan awal.
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor} }]:} \PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{3.0}
-        \PY{n}{xr} \PY{o}{=} \PY{n}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{func\PYZus{}04}\PY{p}{,} \PY{n}{dfunc\PYZus{}04}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{3.0}
+\PY{n}{xr} \PY{o}{=} \PY{n}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{func\PYZus{}04}\PY{p}{,} \PY{n}{dfunc\PYZus{}04}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
 \end{Verbatim}
+\end{tcolorbox}
 
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor} }]:} \PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{4.0}
-        \PY{n}{xr} \PY{o}{=} \PY{n}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{func\PYZus{}04}\PY{p}{,} \PY{n}{dfunc\PYZus{}04}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{4.0}
+\PY{n}{xr} \PY{o}{=} \PY{n}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{func\PYZus{}04}\PY{p}{,} \PY{n}{dfunc\PYZus{}04}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
 \end{Verbatim}
+\end{tcolorbox}
 
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor} }]:} \PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{10.0}
-        \PY{n}{xr} \PY{o}{=} \PY{n}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{func\PYZus{}04}\PY{p}{,} \PY{n}{dfunc\PYZus{}04}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{10.0}
+\PY{n}{xr} \PY{o}{=} \PY{n}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{func\PYZus{}04}\PY{p}{,} \PY{n}{dfunc\PYZus{}04}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     Kita coba mencari akar dari \texttt{func\_01}. Kita perlu mendefinisikan
 dulu turunan dari \texttt{func\_01}.
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor} }]:} \PY{k}{def} \PY{n+nf}{dfunc\PYZus{}01}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
-            \PY{k}{return} \PY{l+m+mi}{15}\PY{o}{*}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{\PYZhy{}} \PY{l+m+mi}{10}\PY{o}{*}\PY{n}{x} \PY{o}{+} \PY{l+m+mi}{6}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{dfunc\PYZus{}01}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{l+m+mi}{15}\PY{o}{*}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{\PYZhy{}} \PY{l+m+mi}{10}\PY{o}{*}\PY{n}{x} \PY{o}{+} \PY{l+m+mi}{6}
 \end{Verbatim}
+\end{tcolorbox}
 
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor} }]:} \PY{n}{xr} \PY{o}{=} \PY{n}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{n}{dfunc\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{0.0}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xr} \PY{o}{=} \PY{n}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{n}{dfunc\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{0.0}\PY{p}{)}
 \end{Verbatim}
+\end{tcolorbox}
 
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor} }]:} \PY{n}{xr} \PY{o}{=} \PY{n}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{n}{dfunc\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{1.0}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xr} \PY{o}{=} \PY{n}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{n}{dfunc\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{1.0}\PY{p}{)}
 \end{Verbatim}
+\end{tcolorbox}
 
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor} }]:} \PY{n}{xr} \PY{o}{=} \PY{n}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{n}{dfunc\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{10.0}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xr} \PY{o}{=} \PY{n}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{n}{dfunc\PYZus{}01}\PY{p}{,} \PY{l+m+mf}{10.0}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     Sebagai perbandingan dengan metode fixed-point, kita akan menghitung
 akar dari persamaan \(f(x) = e^{-x} - x\). Turunan pertama dari fungsi
 ini adalah \(f'(x) = -e^{-x} - 1\)
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor} }]:} \PY{k}{def} \PY{n+nf}{func\PYZus{}05}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
-            \PY{k}{return} \PY{n}{np}\PY{o}{.}\PY{n}{exp}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{x}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{x}
-        
-        \PY{k}{def} \PY{n+nf}{dfunc\PYZus{}05}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
-            \PY{k}{return} \PY{o}{\PYZhy{}}\PY{n}{np}\PY{o}{.}\PY{n}{exp}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{x}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{func\PYZus{}05}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{n}{np}\PY{o}{.}\PY{n}{exp}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{x}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{x}
+
+\PY{k}{def} \PY{n+nf}{dfunc\PYZus{}05}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{o}{\PYZhy{}}\PY{n}{np}\PY{o}{.}\PY{n}{exp}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{x}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}
 \end{Verbatim}
+\end{tcolorbox}
 
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor} }]:} \PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{0.0}
-        \PY{n}{xr} \PY{o}{=} \PY{n}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{func\PYZus{}05}\PY{p}{,} \PY{n}{dfunc\PYZus{}05}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{0.0}
+\PY{n}{xr} \PY{o}{=} \PY{n}{newton\PYZus{}raphson}\PY{p}{(}\PY{n}{func\PYZus{}05}\PY{p}{,} \PY{n}{dfunc\PYZus{}05}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     Dapat diamati bahwa metode Newton-Raphson konvergen dengan cepat
 dibandingkan dengan metode fixed-point.
@@ -1431,57 +1782,65 @@ turunan pertama dari \(f(x)\). \[
 f'(x) \approx \frac{f(x_{i-1}) - f(x_{i})}{x_{i-1} - x_{i}}
 \]
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}16}]:} \PY{k}{def} \PY{n+nf}{secant}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n}{TOL}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}10}\PY{p}{,} \PY{n}{NiterMax}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{,} \PY{n}{DELTA}\PY{o}{=}\PY{l+m+mf}{0.001}\PY{p}{)}\PY{p}{:}
-             
-             \PY{n}{SMALL} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{finfo}\PY{p}{(}\PY{n+nb}{float}\PY{p}{)}\PY{o}{.}\PY{n}{eps}
-             
-             \PY{c+c1}{\PYZsh{} Untuk aproksimasi turunan pertama}
-             \PY{n}{x\PYZus{}old} \PY{o}{=} \PY{n}{x} \PY{o}{+} \PY{n}{DELTA}
-                 
-             \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{NiterMax}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
-                 
-                 \PY{n}{fx} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{x}\PY{p}{)}
-                 \PY{n}{fx\PYZus{}old} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{x\PYZus{}old}\PY{p}{)}
-         
-                 \PY{n}{dfx} \PY{o}{=} \PY{p}{(}\PY{n}{fx\PYZus{}old} \PY{o}{\PYZhy{}} \PY{n}{fx}\PY{p}{)}\PY{o}{/}\PY{p}{(}\PY{n}{x\PYZus{}old} \PY{o}{\PYZhy{}} \PY{n}{x}\PY{p}{)}
-                 
-                 \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{dfx}\PY{p}{)} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{SMALL}\PY{p}{:}
-                     \PY{k}{raise} \PY{n+ne}{RuntimeError}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Turunan f(x) sangat kecil}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-                     
-                 \PY{n}{xr} \PY{o}{=} \PY{n}{x} \PY{o}{\PYZhy{}} \PY{n}{fx}\PY{o}{/}\PY{n}{dfx}
-                 
-                 \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iter = }\PY{l+s+si}{\PYZpc{}5d}\PY{l+s+s2}{, x = }\PY{l+s+si}{\PYZpc{}18.10f}\PY{l+s+s2}{, abs(f(x)) }\PY{l+s+si}{\PYZpc{}15.5e}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fx}\PY{p}{)}\PY{p}{)}\PY{p}{)}
-                 \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fx}\PY{p}{)} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{TOL}\PY{p}{:}
-                     \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iterasi konvergen: akar ditemukan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-                     \PY{k}{return} \PY{n}{x}
-                 
-                 \PY{n}{x\PYZus{}old} \PY{o}{=} \PY{n}{x}
-                 \PY{n}{x} \PY{o}{=} \PY{n}{xr}
-             
-             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Konvergensi tidak diperleh setelah }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{ iterasi}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{n}{NiterMax}\PY{p}{)}
-             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Nilai tebakan akhir akan dikembalikan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-             \PY{k}{return} \PY{n}{x}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{secant}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n}{TOL}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}10}\PY{p}{,} \PY{n}{NiterMax}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{,} \PY{n}{DELTA}\PY{o}{=}\PY{l+m+mf}{0.001}\PY{p}{)}\PY{p}{:}
+    
+    \PY{n}{SMALL} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{finfo}\PY{p}{(}\PY{n+nb}{float}\PY{p}{)}\PY{o}{.}\PY{n}{eps}
+    
+    \PY{c+c1}{\PYZsh{} Untuk aproksimasi turunan pertama}
+    \PY{n}{x\PYZus{}old} \PY{o}{=} \PY{n}{x} \PY{o}{+} \PY{n}{DELTA}
+        
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{NiterMax}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+        
+        \PY{n}{fx} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+        \PY{n}{fx\PYZus{}old} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{x\PYZus{}old}\PY{p}{)}
+
+        \PY{n}{dfx} \PY{o}{=} \PY{p}{(}\PY{n}{fx\PYZus{}old} \PY{o}{\PYZhy{}} \PY{n}{fx}\PY{p}{)}\PY{o}{/}\PY{p}{(}\PY{n}{x\PYZus{}old} \PY{o}{\PYZhy{}} \PY{n}{x}\PY{p}{)}
+        
+        \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{dfx}\PY{p}{)} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{SMALL}\PY{p}{:}
+            \PY{k}{raise} \PY{n+ne}{RuntimeError}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Turunan f(x) sangat kecil}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            
+        \PY{n}{xr} \PY{o}{=} \PY{n}{x} \PY{o}{\PYZhy{}} \PY{n}{fx}\PY{o}{/}\PY{n}{dfx}
+        
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iter = }\PY{l+s+si}{\PYZpc{}5d}\PY{l+s+s2}{, x = }\PY{l+s+si}{\PYZpc{}18.10f}\PY{l+s+s2}{, abs(f(x)) }\PY{l+s+si}{\PYZpc{}15.5e}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fx}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+        \PY{k}{if} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{fx}\PY{p}{)} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{TOL}\PY{p}{:}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iterasi konvergen: akar ditemukan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{k}{return} \PY{n}{x}
+        
+        \PY{n}{x\PYZus{}old} \PY{o}{=} \PY{n}{x}
+        \PY{n}{x} \PY{o}{=} \PY{n}{xr}
+    
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Konvergensi tidak diperleh setelah }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{ iterasi}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{n}{NiterMax}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{WARNING: Nilai tebakan akhir akan dikembalikan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{k}{return} \PY{n}{x}
 \end{Verbatim}
+\end{tcolorbox}
 
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor} }]:} \PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{0.0}
-        \PY{n}{xr} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{func\PYZus{}05}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{0.0}
+\PY{n}{xr} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{func\PYZus{}05}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
 \end{Verbatim}
+\end{tcolorbox}
 
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor} }]:} \PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{0.0}
-        \PY{n}{xr} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{0.0}
+\PY{n}{xr} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{func\PYZus{}01}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
 \end{Verbatim}
+\end{tcolorbox}
 
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor} }]:} \PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{1.0}
-        \PY{n}{xr} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{func\PYZus{}04}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x0} \PY{o}{=} \PY{l+m+mf}{1.0}
+\PY{n}{xr} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{func\PYZus{}04}\PY{p}{,} \PY{n}{x0}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \hypertarget{latihan-soal}{%
 \section{Latihan Soal}\label{latihan-soal}}
@@ -1500,30 +1859,37 @@ sekitar 160)
     \hypertarget{jawaban-soal-1}{%
 \subsection{Jawaban Soal 1}\label{jawaban-soal-1}}
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}7}]:} \PY{k}{def} \PY{n+nf}{func\PYZus{}soal\PYZus{}01}\PY{p}{(}\PY{n}{omega}\PY{p}{)}\PY{p}{:}
-            \PY{n}{Z} \PY{o}{=} \PY{l+m+mf}{75.0}
-            \PY{n}{R} \PY{o}{=} \PY{l+m+mf}{225.0}
-            \PY{n}{C} \PY{o}{=} \PY{l+m+mf}{0.6e\PYZhy{}6}
-            \PY{n}{L} \PY{o}{=} \PY{l+m+mf}{0.5}
-            \PY{n}{term1} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(} \PY{l+m+mi}{1}\PY{o}{/}\PY{n}{R}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{+} \PY{p}{(}\PY{n}{omega}\PY{o}{*}\PY{n}{C} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}\PY{o}{/}\PY{p}{(}\PY{n}{omega}\PY{o}{*}\PY{n}{L}\PY{p}{)}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{p}{)}
-            \PY{k}{return} \PY{n}{term1} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}\PY{o}{/}\PY{n}{Z}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}10}]:} \PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
-         \PY{n}{omega} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{100}\PY{p}{,}\PY{l+m+mi}{200}\PY{p}{,}\PY{l+m+mi}{1000}\PY{p}{)}
-         \PY{n}{f} \PY{o}{=} \PY{n}{func\PYZus{}soal\PYZus{}01}\PY{p}{(}\PY{n}{omega}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{omega}\PY{p}{,} \PY{n}{f}\PY{p}{)}
-\end{Verbatim}
-
-
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}10}]:} [<matplotlib.lines.Line2D at 0x7f19d17cd160>]
+\PY{k}{def} \PY{n+nf}{func\PYZus{}soal\PYZus{}01}\PY{p}{(}\PY{n}{omega}\PY{p}{)}\PY{p}{:}
+    \PY{n}{Z} \PY{o}{=} \PY{l+m+mf}{75.0}
+    \PY{n}{R} \PY{o}{=} \PY{l+m+mf}{225.0}
+    \PY{n}{C} \PY{o}{=} \PY{l+m+mf}{0.6e\PYZhy{}6}
+    \PY{n}{L} \PY{o}{=} \PY{l+m+mf}{0.5}
+    \PY{n}{term1} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(} \PY{l+m+mi}{1}\PY{o}{/}\PY{n}{R}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{+} \PY{p}{(}\PY{n}{omega}\PY{o}{*}\PY{n}{C} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}\PY{o}{/}\PY{p}{(}\PY{n}{omega}\PY{o}{*}\PY{n}{L}\PY{p}{)}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{p}{)}
+    \PY{k}{return} \PY{n}{term1} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}\PY{o}{/}\PY{n}{Z}
 \end{Verbatim}
-            
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
+\PY{n}{omega} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{100}\PY{p}{,}\PY{l+m+mi}{200}\PY{p}{,}\PY{l+m+mi}{1000}\PY{p}{)}
+\PY{n}{f} \PY{o}{=} \PY{n}{func\PYZus{}soal\PYZus{}01}\PY{p}{(}\PY{n}{omega}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{omega}\PY{p}{,} \PY{n}{f}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+[<matplotlib.lines.Line2D at 0x7f19d17cd160>]
+\end{Verbatim}
+\end{tcolorbox}
+        
     \begin{center}
     \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{NOTES_AkarPersamaan_files/NOTES_AkarPersamaan_106_1.pdf}
     \end{center}
@@ -1533,10 +1899,12 @@ sekitar 160)
 \subsubsection{Solusi dengan metode
 bisection}\label{solusi-dengan-metode-bisection}}
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}12}]:} \PY{n}{omega\PYZus{}root} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}soal\PYZus{}01}\PY{p}{,}\PY{l+m+mi}{150}\PY{p}{,}\PY{l+m+mi}{170}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{omega\PYZus{}root} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}soal\PYZus{}01}\PY{p}{,}\PY{l+m+mi}{150}\PY{p}{,}\PY{l+m+mi}{170}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
 Iter =     1, xr =     160.0000000000, abs(fxr) =     1.57131e-04
@@ -1562,17 +1930,18 @@ Iter =    20, xr =     157.9088783264, abs(fxr) =     2.27334e-10
 Iter =    21, xr =     157.9088687897, abs(fxr) =     4.99236e-10
 Iter =    22, xr =     157.9088735580, abs(fxr) =     1.35951e-10
 Iterasi konvergen: akar ditemukan
-
     \end{Verbatim}
 
     \hypertarget{solusi-dengan-metode-regula-falsi}{%
 \subsubsection{Solusi dengan metode regula
 falsi}\label{solusi-dengan-metode-regula-falsi}}
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}17}]:} \PY{n}{omega\PYZus{}root} \PY{o}{=} \PY{n}{regula\PYZus{}falsi}\PY{p}{(}\PY{n}{func\PYZus{}soal\PYZus{}01}\PY{p}{,}\PY{l+m+mi}{150}\PY{p}{,}\PY{l+m+mi}{170}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{omega\PYZus{}root} \PY{o}{=} \PY{n}{regula\PYZus{}falsi}\PY{p}{(}\PY{n}{func\PYZus{}soal\PYZus{}01}\PY{p}{,}\PY{l+m+mi}{150}\PY{p}{,}\PY{l+m+mi}{170}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
 Iter =     1, xr =     158.5447406311, abs(fxr) =     4.82405e-05
@@ -1581,17 +1950,18 @@ Iter =     3, xr =     157.9106229293, abs(fxr) =     1.33141e-07
 Iter =     4, xr =     157.9089669512, abs(fxr) =     6.97933e-09
 Iter =     5, xr =     157.9088801446, abs(fxr) =     3.65857e-10
 Iterasi konvergen: akar ditemukan
-
     \end{Verbatim}
 
     \hypertarget{solusi-dengan-metode-secant}{%
 \subsubsection{Solusi dengan metode
 secant}\label{solusi-dengan-metode-secant}}
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}18}]:} \PY{n}{omega\PYZus{}root} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{func\PYZus{}soal\PYZus{}01}\PY{p}{,} \PY{l+m+mi}{150}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{18}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{omega\PYZus{}root} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{func\PYZus{}soal\PYZus{}01}\PY{p}{,} \PY{l+m+mi}{150}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
 Iter =     1, x =     150.0000000000, abs(f(x))     6.35882e-04
@@ -1600,18 +1970,22 @@ Iter =     3, x =     157.8871942885, abs(f(x))     1.65204e-06
 Iter =     4, x =     157.9088157744, abs(f(x))     4.53828e-09
 Iter =     5, x =     157.9088753339, abs(f(x))     6.53620e-13
 Iterasi konvergen: akar ditemukan
-
     \end{Verbatim}
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}19}]:} \PY{n}{func\PYZus{}soal\PYZus{}01}\PY{p}{(}\PY{n}{omega\PYZus{}root}\PY{p}{)}
-\end{Verbatim}
-
-
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{19}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}19}]:} 6.536195196193972e-13
+\PY{n}{func\PYZus{}soal\PYZus{}01}\PY{p}{(}\PY{n}{omega\PYZus{}root}\PY{p}{)}
 \end{Verbatim}
-            
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{19}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+6.536195196193972e-13
+\end{Verbatim}
+\end{tcolorbox}
+        
     \hypertarget{soal-6}{%
 \subsection{Soal 6}\label{soal-6}}
 
@@ -1630,51 +2004,64 @@ F = \frac{Qq}{2\epsilon_{0}}\left(
     \hypertarget{jawaban-soal-6}{%
 \subsection{Jawaban Soal 6}\label{jawaban-soal-6}}
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}55}]:} \PY{k}{def} \PY{n+nf}{func\PYZus{}soal\PYZus{}06}\PY{p}{(}\PY{n}{z}\PY{p}{)}\PY{p}{:}
-             \PY{n}{F} \PY{o}{=} \PY{l+m+mf}{0.3}
-             \PY{n}{Q} \PY{o}{=} \PY{l+m+mf}{9.4e\PYZhy{}6}
-             \PY{n}{q} \PY{o}{=} \PY{l+m+mf}{2.4e\PYZhy{}5}
-             \PY{n}{R} \PY{o}{=} \PY{l+m+mf}{0.1}
-             \PY{n}{ϵ0} \PY{o}{=} \PY{l+m+mf}{0.885e\PYZhy{}12}
-             \PY{n}{RHS} \PY{o}{=} \PY{n}{Q}\PY{o}{*}\PY{n}{q}\PY{o}{/}\PY{p}{(}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{ϵ0}\PY{p}{)}\PY{o}{*}\PY{p}{(}\PY{l+m+mi}{1} \PY{o}{\PYZhy{}} \PY{n}{z}\PY{o}{/}\PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(}\PY{n}{z}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{+} \PY{n}{R}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{)}
-             \PY{k}{return} \PY{n}{F} \PY{o}{\PYZhy{}} \PY{n}{RHS}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}56}]:} \PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
-         \PY{n}{z} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mf}{0.5}\PY{p}{,}\PY{l+m+mf}{10.0}\PY{p}{,}\PY{l+m+mi}{1000}\PY{p}{)}
-         \PY{n}{ff} \PY{o}{=} \PY{n}{func\PYZus{}soal\PYZus{}06}\PY{p}{(}\PY{n}{z}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{ff}\PY{p}{)}
-\end{Verbatim}
-
-
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{55}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}56}]:} [<matplotlib.lines.Line2D at 0x7f84076e72e8>]
+\PY{k}{def} \PY{n+nf}{func\PYZus{}soal\PYZus{}06}\PY{p}{(}\PY{n}{z}\PY{p}{)}\PY{p}{:}
+    \PY{n}{F} \PY{o}{=} \PY{l+m+mf}{0.3}
+    \PY{n}{Q} \PY{o}{=} \PY{l+m+mf}{9.4e\PYZhy{}6}
+    \PY{n}{q} \PY{o}{=} \PY{l+m+mf}{2.4e\PYZhy{}5}
+    \PY{n}{R} \PY{o}{=} \PY{l+m+mf}{0.1}
+    \PY{n}{ϵ0} \PY{o}{=} \PY{l+m+mf}{0.885e\PYZhy{}12}
+    \PY{n}{RHS} \PY{o}{=} \PY{n}{Q}\PY{o}{*}\PY{n}{q}\PY{o}{/}\PY{p}{(}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{ϵ0}\PY{p}{)}\PY{o}{*}\PY{p}{(}\PY{l+m+mi}{1} \PY{o}{\PYZhy{}} \PY{n}{z}\PY{o}{/}\PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(}\PY{n}{z}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{+} \PY{n}{R}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{)}
+    \PY{k}{return} \PY{n}{F} \PY{o}{\PYZhy{}} \PY{n}{RHS}
 \end{Verbatim}
-            
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{56}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{n}{z} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mf}{0.5}\PY{p}{,}\PY{l+m+mf}{10.0}\PY{p}{,}\PY{l+m+mi}{1000}\PY{p}{)}
+\PY{n}{ff} \PY{o}{=} \PY{n}{func\PYZus{}soal\PYZus{}06}\PY{p}{(}\PY{n}{z}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{ff}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{56}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+[<matplotlib.lines.Line2D at 0x7f84076e72e8>]
+\end{Verbatim}
+\end{tcolorbox}
+        
     \begin{center}
     \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{NOTES_AkarPersamaan_files/NOTES_AkarPersamaan_118_1.pdf}
     \end{center}
     { \hspace*{\fill} \\}
     
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}57}]:} \PY{n}{func\PYZus{}soal\PYZus{}06}\PY{p}{(}\PY{l+m+mf}{4.0}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{57}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{func\PYZus{}soal\PYZus{}06}\PY{p}{(}\PY{l+m+mf}{4.0}\PY{p}{)}
 \end{Verbatim}
-
-\texttt{\color{outcolor}Out[{\color{outcolor}57}]:}
+\end{tcolorbox}
+ 
+            
+\prompt{Out}{outcolor}{57}{}
     
     $$0.26018815235731824$$
 
     
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}23}]:} \PY{n}{xroot} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}soal\PYZus{}06}\PY{p}{,} \PY{l+m+mf}{0.5}\PY{p}{,} \PY{l+m+mf}{1.5}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{23}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xroot} \PY{o}{=} \PY{n}{bisection}\PY{p}{(}\PY{n}{func\PYZus{}soal\PYZus{}06}\PY{p}{,} \PY{l+m+mf}{0.5}\PY{p}{,} \PY{l+m+mf}{1.5}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
 Iter =     1, xr =       1.0000000000, abs(fxr) =     3.32548e-01
@@ -1705,13 +2092,14 @@ Iter =    25, xr =       1.4549215734, abs(fxr) =     7.59991e-09
 Iter =    26, xr =       1.4549215585, abs(fxr) =     1.47643e-09
 Iter =    27, xr =       1.4549215510, abs(fxr) =     1.58530e-09
 Iterasi konvergen: akar ditemukan
-
     \end{Verbatim}
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}25}]:} \PY{n}{xroot} \PY{o}{=} \PY{n}{regula\PYZus{}falsi}\PY{p}{(}\PY{n}{func\PYZus{}soal\PYZus{}06}\PY{p}{,} \PY{l+m+mf}{0.5}\PY{p}{,} \PY{l+m+mf}{1.5}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{25}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xroot} \PY{o}{=} \PY{n}{regula\PYZus{}falsi}\PY{p}{(}\PY{n}{func\PYZus{}soal\PYZus{}06}\PY{p}{,} \PY{l+m+mf}{0.5}\PY{p}{,} \PY{l+m+mf}{1.5}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
 Iter =     1, xr =       1.4919276117, abs(fxr) =     1.46486e-02
@@ -1810,13 +2198,14 @@ Iter =    93, xr =       1.4549215553, abs(fxr) =     1.72311e-10
 Iter =    94, xr =       1.4549215553, abs(fxr) =     1.41208e-10
 Iter =    95, xr =       1.4549215552, abs(fxr) =     1.15751e-10
 Iterasi konvergen: akar ditemukan
-
     \end{Verbatim}
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}21}]:} \PY{n}{xroot} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{func\PYZus{}soal\PYZus{}06}\PY{p}{,} \PY{l+m+mf}{1.0}\PY{p}{)}
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{21}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xroot} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{func\PYZus{}soal\PYZus{}06}\PY{p}{,} \PY{l+m+mf}{1.0}\PY{p}{)}
 \end{Verbatim}
-
+\end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
 Iter =     1, x =       1.0000000000, abs(f(x))     3.32548e-01
@@ -1828,88 +2217,836 @@ Iter =     6, x =       1.4549014568, abs(f(x))     8.25927e-06
 Iter =     7, x =       1.4549215286, abs(f(x))     1.08043e-08
 Iter =     8, x =       1.4549215549, abs(f(x))     2.27263e-13
 Iterasi konvergen: akar ditemukan
-
     \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
 
     \hypertarget{spherical-bessel}{%
 \subsection{Spherical Bessel}\label{spherical-bessel}}
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}26}]:} \PY{k+kn}{import} \PY{n+nn}{sympy}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}40}]:} \PY{n}{sympy}\PY{o}{.}\PY{n}{init\PYZus{}printing}\PY{p}{(}\PY{n}{use\PYZus{}latex}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}41}]:} \PY{n}{x} \PY{o}{=} \PY{n}{sympy}\PY{o}{.}\PY{n}{symbols}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{x}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}42}]:} \PY{n}{j0} \PY{o}{=} \PY{n}{sympy}\PY{o}{.}\PY{n}{sin}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{o}{/}\PY{n}{x}
-         \PY{n}{j0}
-\end{Verbatim}
-
-\texttt{\color{outcolor}Out[{\color{outcolor}42}]:}
-    
-    $$\frac{1}{x} \sin{\left (x \right )}$$
-
-    
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}49}]:} \PY{n}{j1} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{1}\PY{o}{/}\PY{n}{x}\PY{p}{)}\PY{o}{*}\PY{n}{sympy}\PY{o}{.}\PY{n}{diff}\PY{p}{(}\PY{n}{j0}\PY{p}{,}\PY{n}{x}\PY{p}{)}\PY{o}{*}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{x}\PY{p}{)}
-         \PY{n}{j1}
-\end{Verbatim}
-
-\texttt{\color{outcolor}Out[{\color{outcolor}49}]:}
-    
-    $$- \frac{1}{x} \cos{\left (x \right )} + \frac{1}{x^{2}} \sin{\left (x \right )}$$
-
-    
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}51}]:} \PY{n}{j2} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{1}\PY{o}{/}\PY{n}{x}\PY{p}{)}\PY{o}{*}\PY{n}{sympy}\PY{o}{.}\PY{n}{diff}\PY{p}{(}\PY{n}{j1}\PY{p}{,}\PY{n}{x}\PY{p}{)}\PY{o}{*}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{)}
-         \PY{n}{sympy}\PY{o}{.}\PY{n}{simplify}\PY{p}{(}\PY{n}{j2}\PY{p}{)}
-\end{Verbatim}
-
-\texttt{\color{outcolor}Out[{\color{outcolor}51}]:}
-    
-    $$- \sin{\left (x \right )} - \frac{2}{x} \cos{\left (x \right )} + \frac{2}{x^{2}} \sin{\left (x \right )}$$
-
-    
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor} }]:} \PY{n}{j1\PYZus{}v2} \PY{o}{=} 
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}58}]:} \PY{n}{j3\PYZus{}v2} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{15}\PY{o}{/}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{3} \PY{o}{\PYZhy{}} \PY{l+m+mi}{6}\PY{o}{/}\PY{n}{x}\PY{p}{)}\PY{o}{*}\PY{n}{sympy}\PY{o}{.}\PY{n}{sin}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{o}{/}\PY{n}{x} \PY{o}{\PYZhy{}} \PY{p}{(}\PY{l+m+mi}{15}\PY{o}{/}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}\PY{p}{)}\PY{o}{*}\PY{n}{sympy}\PY{o}{.}\PY{n}{cos}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{o}{/}\PY{n}{x}
-         \PY{n}{j3\PYZus{}v2}
-\end{Verbatim}
-
-\texttt{\color{outcolor}Out[{\color{outcolor}58}]:}
-    
-    $$- \frac{1}{x} \left(-1 + \frac{15}{x^{2}}\right) \cos{\left (x \right )} + \frac{1}{x} \left(- \frac{6}{x} + \frac{15}{x^{3}}\right) \sin{\left (x \right )}$$
-
-    
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}39}]:} \PY{n}{j3} \PY{o}{\PYZhy{}} \PY{n}{j3\PYZus{}v2}
-\end{Verbatim}
-
-
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{27}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}39}]:} (-1 + 15/x**2)*cos(x)/x - (-6/x + 15/x**3)*sin(x)/x + (-x**3*cos(x) + 3*x**2*sin(x) + 6*x*cos(x) - 6*sin(x))/x**10
+\PY{k+kn}{import} \PY{n+nn}{sympy}
 \end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{28}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{sympy}\PY{o}{.}\PY{n}{init\PYZus{}printing}\PY{p}{(}\PY{n}{use\PYZus{}latex}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{29}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x} \PY{o}{=} \PY{n}{sympy}\PY{o}{.}\PY{n}{symbols}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{x}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{30}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{diff\PYZus{}and\PYZus{}divide\PYZus{}by\PYZus{}x}\PY{p}{(}\PY{n}{f}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{p}{(}\PY{l+m+mi}{1}\PY{o}{/}\PY{n}{x}\PY{p}{)}\PY{o}{*}\PY{n}{sympy}\PY{o}{.}\PY{n}{diff}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{x}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{j_1x}{%
+\subsubsection{\texorpdfstring{\(j_{1}(x)\)}{j\_\{1\}(x)}}\label{j_1x}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{31}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{s1} \PY{o}{=} \PY{n}{diff\PYZus{}and\PYZus{}divide\PYZus{}by\PYZus{}x}\PY{p}{(}\PY{n}{sympy}\PY{o}{.}\PY{n}{sin}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{o}{/}\PY{n}{x}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{32}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{j1} \PY{o}{=} \PY{o}{\PYZhy{}}\PY{n}{x}\PY{o}{*}\PY{n}{s1}
+\PY{n}{sympy}\PY{o}{.}\PY{n}{simplify}\PY{p}{(}\PY{n}{j1}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+ 
             
+\prompt{Out}{outcolor}{32}{}
+    
+    $$\frac{- x \cos{\left (x \right )} + \sin{\left (x \right )}}{x^{2}}$$
+
+    
+
+    \hypertarget{j_2}{%
+\subsubsection{\texorpdfstring{\(j_{2}\)}{j\_\{2\}}}\label{j_2}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{33}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{s2} \PY{o}{=} \PY{n}{diff\PYZus{}and\PYZus{}divide\PYZus{}by\PYZus{}x}\PY{p}{(}\PY{n}{s1}\PY{p}{)}
+\PY{n}{s2} \PY{o}{=} \PY{n}{sympy}\PY{o}{.}\PY{n}{simplify}\PY{p}{(}\PY{n}{s2}\PY{p}{)}
+\PY{n}{s2}
+\end{Verbatim}
+\end{tcolorbox}
+ 
+            
+\prompt{Out}{outcolor}{33}{}
+    
+    $$\frac{- x^{2} \sin{\left (x \right )} - 3 x \cos{\left (x \right )} + 3 \sin{\left (x \right )}}{x^{5}}$$
+
+    
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{34}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{j2} \PY{o}{=} \PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{x}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{*} \PY{n}{s2}
+\PY{n}{sympy}\PY{o}{.}\PY{n}{simplify}\PY{p}{(}\PY{n}{j2}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+ 
+            
+\prompt{Out}{outcolor}{34}{}
+    
+    $$\frac{- x^{2} \sin{\left (x \right )} - 3 x \cos{\left (x \right )} + 3 \sin{\left (x \right )}}{x^{3}}$$
+
+    
+
+    \(j_{3}(x)\)
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{37}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{s1} \PY{o}{=} \PY{n}{diff\PYZus{}and\PYZus{}divide\PYZus{}by\PYZus{}x}\PY{p}{(}\PY{n}{sympy}\PY{o}{.}\PY{n}{sin}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{o}{/}\PY{n}{x}\PY{p}{)}
+\PY{n}{s2} \PY{o}{=} \PY{n}{diff\PYZus{}and\PYZus{}divide\PYZus{}by\PYZus{}x}\PY{p}{(}\PY{n}{s1}\PY{p}{)}
+\PY{n}{s3} \PY{o}{=} \PY{n}{diff\PYZus{}and\PYZus{}divide\PYZus{}by\PYZus{}x}\PY{p}{(}\PY{n}{s2}\PY{p}{)}
+\PY{n}{s3} \PY{o}{=} \PY{n}{sympy}\PY{o}{.}\PY{n}{simplify}\PY{p}{(}\PY{n}{s3}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{40}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{s3}
+\end{Verbatim}
+\end{tcolorbox}
+ 
+            
+\prompt{Out}{outcolor}{40}{}
+    
+    $$\frac{- x^{3} \cos{\left (x \right )} + 6 x^{2} \sin{\left (x \right )} + 15 x \cos{\left (x \right )} - 15 \sin{\left (x \right )}}{x^{7}}$$
+
+    
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{39}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{j3} \PY{o}{=} \PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{x}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{3} \PY{o}{*} \PY{n}{s3}
+\PY{n}{sympy}\PY{o}{.}\PY{n}{simplify}\PY{p}{(}\PY{n}{j3}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+ 
+            
+\prompt{Out}{outcolor}{39}{}
+    
+    $$\frac{x^{3} \cos{\left (x \right )} - 6 x^{2} \sin{\left (x \right )} - 15 x \cos{\left (x \right )} + 15 \sin{\left (x \right )}}{x^{4}}$$
+
+    
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{mencari-akar-dari-j_2x-metode-numerik}{%
+\subsubsection{\texorpdfstring{Mencari akar dari \(j_{2}(x)\) metode
+numerik}{Mencari akar dari j\_\{2\}(x) metode numerik}}\label{mencari-akar-dari-j_2x-metode-numerik}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{sph\PYZus{}bessel\PYZus{}2}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{p}{(}\PY{l+m+mi}{3}\PY{o}{/}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}\PY{p}{)}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{sin}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{o}{/}\PY{n}{x} \PY{o}{\PYZhy{}} \PY{l+m+mi}{3}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{cos}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{o}{/}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} 
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
+\PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mf}{1e\PYZhy{}10}\PY{p}{,}\PY{l+m+mf}{20.0}\PY{p}{,}\PY{l+m+mi}{500}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{sph\PYZus{}bessel\PYZus{}2}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{NOTES_AkarPersamaan_files/NOTES_AkarPersamaan_142_0.pdf}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{50}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xroot} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{sph\PYZus{}bessel\PYZus{}2}\PY{p}{,} \PY{l+m+mf}{5.0}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =       5.0000000000, abs(f(x))     1.34731e-01
+Iter =     2, x =       5.7657613403, abs(f(x))     3.80962e-04
+Iter =     3, x =       5.7636022035, abs(f(x))     2.36738e-05
+Iter =     4, x =       5.7634591397, abs(f(x))     9.47465e-09
+Iter =     5, x =       5.7634591969, abs(f(x))     2.35076e-13
+Iterasi konvergen: akar ditemukan
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{51}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xroot} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{sph\PYZus{}bessel\PYZus{}2}\PY{p}{,} \PY{l+m+mf}{8.0}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =       8.0000000000, abs(f(x))     1.11052e-01
+Iter =     2, x =       9.4741777247, abs(f(x))     3.84195e-02
+Iter =     3, x =       9.0952626682, abs(f(x))     2.71288e-05
+Iter =     4, x =       9.0949949191, abs(f(x))     1.77146e-06
+Iter =     5, x =       9.0950113309, abs(f(x))     4.89698e-11
+Iterasi konvergen: akar ditemukan
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{52}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xroot} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{sph\PYZus{}bessel\PYZus{}2}\PY{p}{,} \PY{l+m+mf}{12.0}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =      12.0000000000, abs(f(x))     2.62026e-02
+Iter =     2, x =      12.3250784500, abs(f(x))     1.71704e-04
+Iter =     3, x =      12.3229620953, abs(f(x))     1.69725e-06
+Iter =     4, x =      12.3229409669, abs(f(x))     2.95651e-10
+Iter =     5, x =      12.3229409706, abs(f(x))     4.78784e-16
+Iterasi konvergen: akar ditemukan
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{53}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xroot} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{sph\PYZus{}bessel\PYZus{}2}\PY{p}{,} \PY{l+m+mf}{15.0}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =      15.0000000000, abs(f(x))     3.26453e-02
+Iter =     2, x =      15.5433915763, abs(f(x))     1.84032e-03
+Iter =     3, x =      15.5143936181, abs(f(x))     1.34123e-05
+Iter =     4, x =      15.5146034275, abs(f(x))     2.66841e-08
+Iter =     5, x =      15.5146030109, abs(f(x))     3.59907e-13
+Iterasi konvergen: akar ditemukan
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{54}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xroot} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{sph\PYZus{}bessel\PYZus{}2}\PY{p}{,} \PY{l+m+mf}{18.0}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =      18.0000000000, abs(f(x))     3.52212e-02
+Iter =     2, x =      18.7846610594, abs(f(x))     5.06108e-03
+Iter =     3, x =      18.6860759123, abs(f(x))     1.57748e-04
+Iter =     4, x =      18.6890558258, abs(f(x))     1.03733e-06
+Iter =     5, x =      18.6890363584, abs(f(x))     1.62839e-10
+Iter =     6, x =      18.6890363554, abs(f(x))     1.26635e-16
+Iterasi konvergen: akar ditemukan
+    \end{Verbatim}
+
+    \hypertarget{mencari-akar-dari-j_3x-dengan-metode-numerik}{%
+\subsubsection{\texorpdfstring{Mencari akar dari \(j_{3}(x)\) dengan
+metode
+numerik}{Mencari akar dari j\_\{3\}(x) dengan metode numerik}}\label{mencari-akar-dari-j_3x-dengan-metode-numerik}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{sph\PYZus{}bessel\PYZus{}3}\PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+7.64785941100854e-05
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{sph\PYZus{}bessel\PYZus{}3}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{p}{(}\PY{l+m+mi}{15}\PY{o}{/}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{3} \PY{o}{\PYZhy{}} \PY{l+m+mi}{6}\PY{o}{/}\PY{n}{x}\PY{p}{)}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{sin}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{o}{/}\PY{n}{x} \PY{o}{\PYZhy{}} \PY{p}{(}\PY{l+m+mi}{15}\PY{o}{/}\PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}\PY{p}{)}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{cos}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{o}{/}\PY{n}{x}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
+\PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mf}{0.1}\PY{p}{,}\PY{l+m+mf}{20.0}\PY{p}{,}\PY{l+m+mi}{500}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{sph\PYZus{}bessel\PYZus{}3}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+[<matplotlib.lines.Line2D at 0x7f7e69cf27f0>]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{NOTES_AkarPersamaan_files/NOTES_AkarPersamaan_151_1.pdf}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{77}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xroot} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{sph\PYZus{}bessel\PYZus{}3}\PY{p}{,} \PY{l+m+mf}{0.05}\PY{p}{,} \PY{n}{TOL}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}14}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =       0.0500000000, abs(f(x))     1.19029e-06
+Iter =     2, x =       0.0336669329, abs(f(x))     3.63390e-07
+Iter =     3, x =       0.0264891673, abs(f(x))     1.77068e-07
+Iter =     4, x =       0.0196679356, abs(f(x))     7.26432e-08
+Iter =     5, x =       0.0149227308, abs(f(x))     3.16650e-08
+Iter =     6, x =       0.0112559817, abs(f(x))     1.30385e-08
+Iter =     7, x =       0.0086892574, abs(f(x))     7.45058e-09
+Iter =     8, x =       0.0052669582, abs(f(x))     0.00000e+00
+Iterasi konvergen: akar ditemukan
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{63}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xroot} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{sph\PYZus{}bessel\PYZus{}3}\PY{p}{,} \PY{l+m+mf}{6.0}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =       6.0000000000, abs(f(x))     1.36685e-01
+Iter =     2, x =       7.0639188799, abs(f(x))     1.00514e-02
+Iter =     3, x =       6.9910410916, abs(f(x))     4.15853e-04
+Iter =     4, x =       6.9878958069, abs(f(x))     4.84321e-06
+Iter =     5, x =       6.9879320166, abs(f(x))     2.16067e-09
+Iter =     6, x =       6.9879320005, abs(f(x))     1.12271e-14
+Iterasi konvergen: akar ditemukan
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{61}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xroot} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{sph\PYZus{}bessel\PYZus{}3}\PY{p}{,} \PY{l+m+mf}{10.0}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =      10.0000000000, abs(f(x))     3.94958e-02
+Iter =     2, x =      10.4212956554, abs(f(x))     3.89445e-04
+Iter =     3, x =      10.4171820755, abs(f(x))     5.92528e-06
+Iter =     4, x =      10.4171185217, abs(f(x))     2.39153e-09
+Iter =     5, x =      10.4171185474, abs(f(x))     1.46202e-14
+Iterasi konvergen: akar ditemukan
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{67}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xroot} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{sph\PYZus{}bessel\PYZus{}3}\PY{p}{,} \PY{l+m+mf}{13.0}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =      13.0000000000, abs(f(x))     4.89115e-02
+Iter =     2, x =      13.7773245496, abs(f(x))     5.65690e-03
+Iter =     3, x =      13.6967422273, abs(f(x))     9.20017e-05
+Iter =     4, x =      13.6980318136, abs(f(x))     6.21968e-07
+Iter =     5, x =      13.6980231541, abs(f(x))     5.80032e-11
+Iterasi konvergen: akar ditemukan
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{68}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xroot} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{sph\PYZus{}bessel\PYZus{}3}\PY{p}{,} \PY{l+m+mf}{15.0}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =      15.0000000000, abs(f(x))     6.44178e-02
+Iter =     2, x =      10.8267039199, abs(f(x))     3.58455e-02
+Iter =     3, x =      12.3187154662, abs(f(x))     8.04538e-02
+Iter =     4, x =       9.6277776757, abs(f(x))     7.25727e-02
+Iter =     5, x =      10.9039527381, abs(f(x))     4.18636e-02
+Iter =     6, x =      10.4370962830, abs(f(x))     1.85966e-03
+Iter =     7, x =      10.4153935705, abs(f(x))     1.60916e-04
+Iter =     8, x =      10.4171219489, abs(f(x))     3.17265e-07
+Iter =     9, x =      10.4171185479, abs(f(x))     5.23965e-11
+Iterasi konvergen: akar ditemukan
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{69}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xroot} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{sph\PYZus{}bessel\PYZus{}3}\PY{p}{,} \PY{l+m+mf}{17.5}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =      17.5000000000, abs(f(x))     3.08835e-02
+Iter =     2, x =      16.8282943059, abs(f(x))     5.59661e-03
+Iter =     3, x =      16.9313441813, abs(f(x))     4.51299e-04
+Iter =     4, x =      16.9236545345, abs(f(x))     1.94387e-06
+Iter =     5, x =      16.9236212697, abs(f(x))     9.05667e-10
+Iter =     6, x =      16.9236212852, abs(f(x))     1.73125e-15
+Iterasi konvergen: akar ditemukan
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{72}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xroot} \PY{o}{=} \PY{n}{secant}\PY{p}{(}\PY{n}{sph\PYZus{}bessel\PYZus{}3}\PY{p}{,} \PY{l+m+mf}{19.0}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iter =     1, x =      19.0000000000, abs(f(x))     4.74011e-02
+Iter =     2, x =      20.8203312433, abs(f(x))     3.07309e-02
+Iter =     3, x =      20.1043581498, abs(f(x))     8.61353e-04
+Iter =     4, x =      20.1238789300, abs(f(x))     1.02231e-04
+Iter =     5, x =      20.1218078819, abs(f(x))     8.42232e-08
+Iter =     6, x =      20.1218061743, abs(f(x))     8.73437e-12
+Iterasi konvergen: akar ditemukan
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{using-mpmath}{%
+\subsubsection{Using mpmath}\label{using-mpmath}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{42}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{mpmath}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{j2} \PY{o}{=} \PY{k}{lambda} \PY{n}{x}\PY{p}{:} \PY{n}{mpmath}\PY{o}{.}\PY{n}{besselj}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,}\PY{n}{x}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{45}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{j3} \PY{o}{=} \PY{k}{lambda} \PY{n}{x}\PY{p}{:} \PY{n}{mpmath}\PY{o}{.}\PY{n}{besselj}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{,}\PY{n}{x}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{48}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{j3}\PY{p}{(}\PY{l+m+mf}{1.0}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{48}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+mpf('0.019563353982668406')
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{52}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{scipy}\PY{n+nn}{.}\PY{n+nn}{special}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{57}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{scipy}\PY{n+nn}{.}\PY{n+nn}{optimize}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{79}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{scipy}\PY{o}{.}\PY{n}{optimize}\PY{o}{.}\PY{n}{root}\PY{p}{(}\PY{n}{sph\PYZus{}bessel\PYZus{}3}\PY{p}{,} \PY{l+m+mf}{0.5}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{79}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+    fjac: array([[-1.]])
+     fun: array([0.])
+ message: 'The solution converged.'
+    nfev: 22
+     qtf: array([-3.7252903e-09])
+       r: array([-168.46474576])
+  status: 1
+ success: True
+       x: array([0.00890394])
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{80}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{sph\PYZus{}bessel\PYZus{}3}\PY{p}{(}\PY{l+m+mf}{0.00890394}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+ 
+            
+\prompt{Out}{outcolor}{80}{}
+    
+    $$7.450580596923828e-09$$
+
+    
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{81}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{scipy}\PY{o}{.}\PY{n}{optimize}\PY{o}{.}\PY{n}{root}\PY{p}{(}\PY{n}{sph\PYZus{}bessel\PYZus{}3}\PY{p}{,} \PY{l+m+mf}{6.9}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{81}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+    fjac: array([[-1.]])
+     fun: array([3.05311332e-16])
+ message: 'The solution converged.'
+    nfev: 6
+     qtf: array([-1.96596614e-10])
+       r: array([0.13381364])
+  status: 1
+ success: True
+       x: array([6.987932])
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{82}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{scipy}\PY{o}{.}\PY{n}{optimize}\PY{o}{.}\PY{n}{root}\PY{p}{(}\PY{n}{sph\PYZus{}bessel\PYZus{}3}\PY{p}{,} \PY{l+m+mf}{10.41}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{82}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+    fjac: array([[-1.]])
+     fun: array([-1.11022302e-16])
+ message: 'The solution converged.'
+    nfev: 5
+     qtf: array([2.99897211e-10])
+       r: array([-0.09327074])
+  status: 1
+ success: True
+       x: array([10.41711855])
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{83}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{scipy}\PY{o}{.}\PY{n}{optimize}\PY{o}{.}\PY{n}{root}\PY{p}{(}\PY{n}{sph\PYZus{}bessel\PYZus{}3}\PY{p}{,} \PY{l+m+mf}{13.698}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{83}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+    fjac: array([[-1.]])
+     fun: array([6.9388939e-18])
+ message: 'The solution converged.'
+    nfev: 4
+     qtf: array([-2.77932191e-12])
+       r: array([0.07181777])
+  status: 1
+ success: True
+       x: array([13.69802315])
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{84}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{scipy}\PY{o}{.}\PY{n}{optimize}\PY{o}{.}\PY{n}{root}\PY{p}{(}\PY{n}{sph\PYZus{}bessel\PYZus{}3}\PY{p}{,} \PY{l+m+mf}{13.6}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{84}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+    fjac: array([[-1.]])
+     fun: array([6.9388939e-18])
+ message: 'The solution converged.'
+    nfev: 6
+     qtf: array([-5.00766095e-12])
+       r: array([0.07181766])
+  status: 1
+ success: True
+       x: array([13.69802315])
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{85}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{scipy}\PY{o}{.}\PY{n}{optimize}\PY{o}{.}\PY{n}{root}\PY{p}{(}\PY{n}{sph\PYZus{}bessel\PYZus{}3}\PY{p}{,} \PY{l+m+mf}{16.92}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{85}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+    fjac: array([[-1.]])
+     fun: array([6.9388939e-17])
+ message: 'The solution converged.'
+    nfev: 5
+     qtf: array([9.41061118e-12])
+       r: array([-0.05846366])
+  status: 1
+ success: True
+       x: array([16.92362129])
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{scipy}\PY{o}{.}\PY{n}{special}\PY{o}{.}\PY{n}{spherical\PYZus{}jn}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{53}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{clf}\PY{p}{(}\PY{p}{)}
+\PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mf}{0.1}\PY{p}{,}\PY{l+m+mf}{20.0}\PY{p}{,}\PY{l+m+mi}{500}\PY{p}{)}
+\PY{n}{y} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{l+m+mi}{500}\PY{p}{)}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{500}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{}y[i] = np.float64(j3(x[i]))}
+    \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{scipy}\PY{o}{.}\PY{n}{special}\PY{o}{.}\PY{n}{spherical\PYZus{}jn}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{,}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{scipy}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{sph\PYZus{}bessel\PYZus{}3}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mine}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{53}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+<matplotlib.legend.Legend at 0x7f7e69d30da0>
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{NOTES_AkarPersamaan_files/NOTES_AkarPersamaan_178_1.pdf}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{56}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{o}{?}mpmath.besselj
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{34}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{p}{[}\PY{n}{mpmath}\PY{o}{.}\PY{n}{findroot}\PY{p}{(}\PY{n}{j2}\PY{p}{,} \PY{n}{k}\PY{p}{)} \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[mpf('4.4698855504258213e-7')]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{35}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{p}{[}\PY{n}{mpmath}\PY{o}{.}\PY{n}{findroot}\PY{p}{(}\PY{n}{j2}\PY{p}{,} \PY{n}{k}\PY{p}{)} \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[mpf('3.1321751575233402e-7')]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{36}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{p}{[}\PY{n}{mpmath}\PY{o}{.}\PY{n}{findroot}\PY{p}{(}\PY{n}{j2}\PY{p}{,} \PY{n}{k}\PY{p}{)} \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[mpf('27.420573549984557')]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{37}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{p}{[}\PY{n}{mpmath}\PY{o}{.}\PY{n}{findroot}\PY{p}{(}\PY{n}{j2}\PY{p}{,} \PY{n}{k}\PY{p}{)} \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{p}{[}\PY{l+m+mf}{3.5}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[mpf('5.1356223018406826')]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{39}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{p}{[}\PY{n}{mpmath}\PY{o}{.}\PY{n}{findroot}\PY{p}{(}\PY{n}{j2}\PY{p}{,} \PY{n}{k}\PY{p}{)} \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[mpf('5.1356223018406826')]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{23}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{p}{[}\PY{n}{mpmath}\PY{o}{.}\PY{n}{findroot}\PY{p}{(}\PY{n}{j2}\PY{p}{,} \PY{n}{k}\PY{p}{)} \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[mpf('5.1356223018406826')]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{25}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{p}{[}\PY{n}{mpmath}\PY{o}{.}\PY{n}{findroot}\PY{p}{(}\PY{n}{j2}\PY{p}{,} \PY{n}{k}\PY{p}{)} \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[mpf('5.1356223018406826')]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{27}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{p}{[}\PY{n}{mpmath}\PY{o}{.}\PY{n}{findroot}\PY{p}{(}\PY{n}{j2}\PY{p}{,} \PY{n}{k}\PY{p}{)} \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{p}{[}\PY{l+m+mi}{7}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[mpf('8.4172441403998649')]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{33}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{p}{[}\PY{n}{mpmath}\PY{o}{.}\PY{n}{findroot}\PY{p}{(}\PY{n}{j2}\PY{p}{,} \PY{n}{k}\PY{p}{)} \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{p}{[}\PY{l+m+mi}{10}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[mpf('46.297996677236919')]
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
 
     % Add a bibliography block to the postdoc
     
     
     
-    \end{document}
+\end{document}
