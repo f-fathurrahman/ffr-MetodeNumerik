@@ -1,0 +1,14 @@
+Test term=True
+
+<<term=True>>=
+from sympy import *
+x, y = symbols("x y")
+f = 2*x*y + x*y + 3*x*y**2
+f
+simplify(f)
+
+I1 = Integral(exp(-x**2), (x,-oo,oo))
+I1
+
+I1.doit()
+@
