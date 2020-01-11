@@ -1,0 +1,142 @@
+<<>>=
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use("classic")
+@
+
+\section{Metode segiempat}
+
+Asumsi: data diberikan dalam bentuk tabular dengan selang $\Delta x$ yang sama.
+<<>>=
+def integ_rectangular(f, x):
+    N = len(f)
+    assert N == len(x)
+    a = x[0]
+    b = x[-1]
+    s = 0.0
+    for i in range(N):
+        s = s + f[i]
+    return s*(b-a)/N
+@
+
+Contoh 1
+
+Hitung integral berikut secara numerik dengan metode segi empat
+
+$$
+\int_{0}^{\pi}\sin(x)\,\mathrm{d}x
+$$
+
+
+<<>>=
+def my_func(x):
+    return np.sin(x)
+
+a = 0.0
+b = np.pi
+Npts = 500
+x = np.linspace(a,b,Npts)
+f_array = np.zeros(Npts)
+for i in range(Npts):
+    f_array[i] = my_func(x[i])
+    
+integ_result = integ_rectangular(f_array, x)
+print("integ_result = ", integ_result)
+@
+
+Contoh 2
+
+Hitung integral berikut secara numerik dengan metode segi empat
+
+$$
+\int_{-\pi/2}^{\pi/2}\cos(x)\,\mathrm{d}x
+$$
+
+
+<<>>=
+def my_func(x):
+    return np.cos(x)
+
+a = -np.pi/2
+b = np.pi/2
+Npts = 500
+x = np.linspace(a,b,Npts)
+f_array = np.zeros(Npts)
+for i in range(Npts):
+    f_array[i] = my_func(x[i])
+    
+integ_result = integ_rectangular(f_array, x)
+print("integ_result = ", integ_result)
+@
+
+
+\section{Metode Trapesium}
+
+Asumsi: data diberikan dalam bentuk tabular dengan selang $\Delta x$ yang sama.
+<<>>=
+def integ_trapezoid(f, x):
+    N = len(f)
+    assert N == len(x)
+    a = x[0]
+    b = x[-1]
+    s = f[0] + f[-1]
+    for i in range(1,N-1):
+        s = s + 2*f[i]
+    return 0.5*s*(b-a)/(N-1)
+@
+
+Contoh 1
+
+Hitung integral berikut secara numerik dengan metode trapesium.
+
+$$
+\int_{0}^{\pi}\sin(x)\,\mathrm{d}x
+$$
+
+
+<<>>=
+def my_func(x):
+    return np.sin(x)
+
+a = 0.0
+b = np.pi
+Npts = 500
+x = np.linspace(a,b,Npts)
+f_array = np.zeros(Npts)
+for i in range(Npts):
+    f_array[i] = my_func(x[i])
+    
+integ_result = integ_trapezoid(f_array, x)
+print("integ_result = ", integ_result)
+@
+
+Contoh 2
+
+Hitung integral berikut secara numerik dengan metode trapesium.
+
+$$
+\int_{-pi/2}^{\pi/2}\cos(x)\,\mathrm{d}x
+$$
+
+
+<<>>=
+def my_func(x):
+    return np.cos(x)
+
+a = -np.pi/2
+b = np.pi/2
+Npts = 500
+x = np.linspace(a,b,Npts)
+f_array = np.zeros(Npts)
+for i in range(Npts):
+    f_array[i] = my_func(x[i])
+    
+integ_result = integ_trapezoid(f_array, x)
+print("integ_result = ", integ_result)
+@
+
+
+\section{Metode Simpson}
+
+TODO

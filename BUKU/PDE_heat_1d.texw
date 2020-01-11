@@ -1,0 +1,648 @@
+\section{Persamaan Kalor 1d}
+
+<<>>=
+import numpy as np
+import matplotlib.pyplot as plt
+@
+
+Dalam satu dimensi spasial (misalkan x):
+$$
+\alpha \frac{\partial^{2}}{\partial x^2} u(x,t) = \frac{\partial}{\partial t} u(x,t)
+$$
+
+Domain:
+- spasial: $0 \leq x \leq x_{f}$
+- temporal: $0 \leq t \leq t_{f}$.
+
+Syarat batas:
+- $u(0,t) = b_{0}(t)$
+- $u(x_{f},t) = b_{x_f}(t)$
+
+Syarat awal:
+- $u(x,0) = u_{0}(x)$ 
+
+Catatan: persamaan yang sama juga digunakan untuk menjelaskan fenomena difusi.
+
+\subsection{Metode Euler Eksplisit}
+
+Domain spasial dibagi menjadi $N_{x}$ segmen dengan $\Delta x = x_{f}/N_{x}$.
+
+Domain temporal dibagi menjadi $N_{t}$ segmen dengan $\Delta t = t_{f}/N_{t}$.
+
+Turunan parsial kedua terhadap $x$ diaproksimasi dengan menggunakan central difference.
+
+Turunan parsial pertama terhadap $t$ diaproksimasi dengan forward difference.
+
+Dengan menggunakan notasi berikut:
+\begin{itemize}
+\item $u(x,t) = u^{k}_{i}$
+\item $u(x+\Delta x,t) = u^{k}_{i+1}$
+\item $u(x-\Delta x,t) = u^{k}_{i-1}$
+\item $u(x,t+\Delta t) = u^{k+1}_{i}$
+\item $u(x,t-\Delta t) = u^{k-1}_{i}$
+\end{itemize}
+
+dapat dituliskan:
+
+$$
+\alpha \frac{u^{k}_{i+1} - 2u^{k}_{i} + u^{k}_{i-1}}{(\Delta x)^2} =
+\frac{u^{k+1}_{i} - u^{k}_{i}}{\Delta t}
+$$
+
+Dengan menggunakan defisi:
+
+$$
+r = \alpha \frac{\Delta t}{(\Delta x)^2}
+$$
+
+Persamaan ini dapat dipecahkan untuk mendapatkan $u^{k+1}_{i}$
+
+$$
+u^{k+1}_{i} = r \left( u^{k}_{i+1} + u^{k}_{i-1} \right) + (1 - 2r) u^{k}_{i} 
+$$
+
+untuk $i = 1, 2, \ldots, N_{x}-1$.
+
+Dapat ditunjukkan bahwa skema ini akan stabil jika:
+
+$$
+r = \alpha \frac{\Delta t}{(\Delta x)^2} \leq \frac{1}{2}
+$$
+
+Implementasi
+<<>>=
+def heat_1d_euler_exp( alpha, xf, tf, u0x, bx0, bxf, Nx, Nt ):
+    dx = xf/Nx
+    x = np.linspace(0.0, xf, Nx+1)
+    dt = tf/Nt
+    t = np.linspace(0.0, tf, Nt+1)
+    u = np.zeros( (Nx+1, Nt+1) )
+    # Aplikasi syarat awal
+    for i in range(Nx+1):
+        u[i,0] = u0x( x[i] )
+    # Syarat batas
+    for k in range(Nt+1):
+        u[0,k] = bx0( t[k] )
+        u[Nx,k] = bxf( t[k] )
+    r = alpha*dt/dx**2
+    if r > 0.5:
+        print("heat_1d_euler_exp:")
+        print("WARNING: r lebih besar dari 0.5: %f\n" % r)
+        print("WARNING: solusi tidak stabil !!")
+    else:
+        print("heat_1d_euler_exp:")
+        print("r = %f >= 0.5\n" % r)
+        print("Solusi seharusnya stabil")
+    for k in range(0,Nt):
+        for i in range(1,Nx):
+            u[i,k+1] = r*( u[i+1,k] + u[i-1,k] ) + (1 - 2*r)*u[i,k]
+    
+    return u, x, t
+@
+
+Contoh
+
+Cari solusi numerik persamaan kalor:
+$$
+\frac{\partial^{2}}{\partial x^2} u(x,t) = \frac{\partial}{\partial t} u(x,t)
+$$
+
+pada domain:
+- spasial: $0 \leq x \leq 1$
+- temporal: $0 \leq t \leq 0.1$.
+
+Syarat batas:
+- $u(0,t) = 0$
+- $u(1,t) = 0$
+
+Syarat awal:
+- $u(x,0) = \sin(\pi x)$ 
+
+Bandingkan dengan solusi analitik:
+$$
+u(x,t) = \sin(\pi x) \exp(-\pi^2 t)
+$$
+
+
+<<>>=
+# Syarat awal
+def initial_temp( x ):
+    return np.sin(np.pi*x)
+# Syarat batas kiri
+def bx0( t ):
+    return 0.0
+# Syarat batas kanan
+def bxf( t ):
+    return 0.0
+@
+
+
+<<>>=
+def sol_01_analitik(x,t):
+    return np.sin(np.pi*x)*np.exp(-np.pi**2 * t)
+@
+
+Kasus solusi stabil
+
+<<>>=
+# Dari soal atau masalah yang diberikan
+alpha = 1.0; xf = 1.0; tf = 0.1
+# ditentukan pengguna
+Nx = 25; Nt = 200
+#
+u_exp, x_exp, t_exp = \
+heat_1d_euler_exp( alpha, xf, tf, initial_temp, bx0, bxf, Nx, Nt )
+@
+
+Plot hasilnya untuk beberapa nilai t.
+<<fig=False, include=False>>=
+plt.clf()
+plt.plot(x_exp, u_exp[:,0], label="t="+str(t_exp[0]))
+plt.plot(x_exp, u_exp[:,4], label="t="+str(t_exp[4]))
+plt.plot(x_exp, u_exp[:,-1], label="t="+str(t_exp[-1]))
+plt.legend();
+@
+
+Perbandingan dengan solusi analitik.
+<<fig=False, include=False>>=
+plt.clf()
+plt.plot(x_exp, u_exp[:,-1], label="numerik t="+str(t_exp[-1]), marker="o")
+plt.plot(x_exp, sol_01_analitik(x_exp, t_exp[-1]), label="analitik t="+str(t_exp[-1]))
+plt.legend();
+@
+
+Animasi
+\begin{pythoncode}
+anim = create_anim_2d(u_exp, x_exp, t_exp, 0.0, 1.1)
+IPython.display.HTML( anim.to_html5_video() )
+\end{pythoncode}
+
+Alternatif, tulis ke file:
+\begin{pythoncode}
+for k in range(Nt+1):
+    plt.clf()
+    plt.plot( x_exp, u_exp[:,k], label="t="+format("%.5f" % t_exp[k]))
+    plt.legend();
+    plt.ylim(0.0, 1.05)
+    plt.savefig(format("TEMP_%04d.png" % (k)))
+\end{pythoncode}
+
+Kasus solusi tidak stabil
+
+<<>>=
+# Dari soal atau masalah yang diberikan
+alpha = 1.0
+xf = 1.0
+tf = 0.1
+# ditentukan pengguna
+Nx = 50
+Nt = 200
+
+u_exp, x_exp, t_exp = \
+heat_1d_euler_exp( alpha, xf, tf, initial_temp, bx0, bxf, Nx, Nt )
+@
+
+Plot untuk beberapa nilai t (paling awal dan paling akhir) 
+
+<<fig=False, include=False>>=
+plt.clf()
+plt.plot( x_exp, u_exp[:,0], label="t="+str(t_exp[0]))
+plt.plot( x_exp, u_exp[:,-1], label="t="+str(t_exp[-1]))
+plt.legend();
+@
+
+Perhatikan bahwa pada kasus ini solusi numerik yang diperoleh tidak stabil (kesalahan semakin membesar).
+
+
+\subsection{Metode Euler implisit}
+
+Domain spasial dibagi menjadi $N_{x}$ segmen dengan $\Delta x = x_{f}/N_{x}$.
+
+Domain temporal dibagi menjadi $N_{t}$ segmen dengan $\Delta t = t_{f}/N_{t}$.
+
+Turunan parsial kedua terhadap $x$ diaproksimasi dengan menggunakan central difference.
+
+Turunan parsial pertama terhadap $t$ diaproksimasi dengan backward difference.
+
+$$
+\alpha \frac{u^{k}_{i+1} - 2u^{k}_{i} + u^{k}_{i-1}}{(\Delta x)^2} = \frac{u^{k}_{i} - u^{k-1}_{i}}{\Delta t}
+$$
+
+Dengan menggunakan notasi:
+$$
+r = \alpha \frac{\Delta t}{(\Delta x)^2}
+$$
+
+Diperoleh persamaan implisit:
+$$
+-ru^{k}_{i-1}+ (1 + 2r)u^{k}_{i} - ru^{k}_{i+1} = u^{k-1}_{i}
+$$
+untuk $i = 1, 2, \ldots, N_{x}-1$.
+
+Dalam bentuk matriks:
+
+$$
+\begin{bmatrix}
+1 + 2r & -r & 0 & \cdot & 0 & 0 \\
+-r & 1 + 2r & -r & \cdot & 0 & 0 \\
+0 & -r & 1 + 2r & \cdot & 0 & 0 \\
+\cdot & \cdot & \cdot & \cdot & \cdot & \cdot \\
+0 & 0 & 0 & \cdot & 1 + 2r & -r \\
+0 & 0 & 0 & \cdot & -r & 1 + 2r
+\end{bmatrix}
+\begin{bmatrix}
+u^{k}_{1} \\
+u^{k}_{2} \\
+u^{k}_{3} \\
+\cdots \\
+u^{k}_{N_{x}-2} \\
+u^{k}_{N_{x}-1}
+\end{bmatrix} = 
+\begin{bmatrix}
+u^{k-1}_{1} + ru^{k}_{0} \\
+u^{k-1}_{2} \\
+u^{k-1}_{3} \\
+\cdots \\
+u^{k-1}_{N_{x}-2} \\
+u^{k-1}_{N_{x}-1} + ru^{k}_{N_{x}}
+\end{bmatrix}
+$$
+
+Implementasi
+
+Dalam kode di bawah ini akan didefinisikan matriks $\mathbf{A}$ sebagai matriks koefisien
+pada ruas kiri dan vektor $\mathbf{b}$ pada ruas kanan.
+
+<<>>=
+def heat_1d_euler_imp( alpha, xf, tf, u0x, bx0, bxf, Nx, Nt ):
+    
+    dx = xf/Nx
+    x = np.linspace(0.0, xf, Nx+1)
+    
+    dt = tf/Nt
+    t = np.linspace(0.0, tf, Nt+1)
+
+    u = np.zeros( (Nx+1, Nt+1) ) 
+
+    # Aplikasi syarat awal
+    for i in range(Nx+1):
+        u[i,0] = u0x( x[i] )
+    
+    # Syarat batas
+    for k in range(Nt+1):
+        u[0,k] = bx0( t[k] )
+        u[Nx,k] = bxf( t[k] )
+    
+    r = alpha*dt/dx**2
+    
+    # Bangun matriks A
+    A = np.zeros( (Nx-1,Nx-1) )
+    for i in range(Nx-1):
+        A[i,i] = 1 + 2*r
+        if i > 0:
+            A[i-1,i] = -r
+            A[i,i-1] = -r
+    
+    # Bangun vektor b
+    b = np.zeros(Nx-1)
+    for k in range(1,Nt+1):
+        b = np.copy(u[1:Nx,k-1])
+        b[0] = b[0] + r*u[0,k]
+        b[Nx-2] = b[Nx-2] + r*u[Nx,k]
+        # Selesaikan sistem persamaan linear
+        u[1:Nx,k] = np.linalg.solve(A, b)
+    
+    return u, x, t
+@
+
+Contoh
+
+Untuk parameter-parameter berikut, metode eksplisit stabil.
+<<>>=
+alpha = 1.0
+xf = 1.0; tf = 0.1
+Nx = 25; Nt = 200
+u_imp, x_imp, t_imp = \
+heat_1d_euler_imp( alpha, xf, tf, initial_temp, bx0, bxf, Nx, Nt )
+@
+
+Plot hasilnya untuk beberapa nilai t.
+<<fig=False, include=False>>=
+plt.clf()
+plt.plot(x_imp, u_imp[:,0], label="t="+str(t_imp[0]))
+plt.plot(x_imp, u_imp[:,4], label="t="+str(t_imp[4]))
+plt.plot(x_imp, u_imp[:,-1], label="t="+str(t_imp[-1]))
+plt.legend();
+@
+
+Untuk parameter-parameter berikut ini, metode eksplisit tidak stabil.
+
+Bagaimana untuk metode implisit?
+
+<<>>=
+alpha = 1.0
+xf = 1.0; tf = 0.1
+Nx = 50; Nt = 200
+u_imp, x_imp, t_imp = \
+heat_1d_euler_imp( alpha, xf, tf, initial_temp, bx0, bxf, Nx, Nt )
+@
+
+Plot hasilnya untuk beberapa nilai t.
+
+
+<<fig=False, include=False>>=
+plt.clf()
+plt.plot(x_imp, u_imp[:,0], label="t="+str(t_imp[0]))
+plt.plot(x_imp, u_imp[:,4], label="t="+str(t_exp[4]))
+plt.plot(x_imp, u_imp[:,-1], label="t="+str(t_imp[-1]))
+plt.legend();
+@
+
+Dapat dilihat bahwa solusi numerik yang dihasikan oleh metode implisit bersifat stabil.
+Dapat ditunjukkan dengan menggunakan analisis numerik bahwa metode implisit bersifat stabil tanpa syarat.
+
+Sekarang akan kita coba mencari solusi untuk nilai $t_f$ yang lebih besar.
+
+<<>>=
+alpha = 1.0
+
+xf = 1.0
+tf = 0.2
+
+Nx = 50
+Nt = 200
+
+u_imp, x_imp, t_imp = \
+heat_1d_euler_imp( alpha, xf, tf, initial_temp, bx0, bxf, Nx, Nt )
+@
+
+Plot hasilnya untuk beberapa nilai t.
+
+<<fig=False, include=False>>=
+plt.clf()
+plt.plot(x_imp, u_imp[:,0], label="t="+str(t_imp[0]))
+plt.plot(x_imp, u_imp[:,100], label="t="+str(t_imp[100]))
+plt.plot(x_imp, u_imp[:,-1], label="t="+str(t_imp[-1]))
+plt.legend();
+@
+
+
+\begin{pythoncode}
+anim = create_anim_2d(u_imp, x_imp, t_imp, 0.0, 1.1)
+IPython.display.HTML(anim.to_html5_video())
+\end{pythoncode}
+
+
+Bagaimana jika kita menggunakan metode eksplisit ?
+
+<<>>=
+alpha = 1.0
+xf = 1.0; tf = 0.2
+Nx = 50; Nt = 200
+u_exp, x_exp, t_exp = \
+heat_1d_euler_exp( alpha, xf, tf, initial_temp, bx0, bxf, Nx, Nt )
+@
+
+
+<<fig=False, include=False>>=
+plt.clf()
+plt.plot(x_exp, u_exp[:,0], label="t="+str(t_exp[0]))
+plt.plot(x_exp, u_exp[:,10], label="t="+str(t_exp[10]))
+plt.plot(x_exp, u_exp[:,15], label="t="+str(t_exp[15]))
+plt.plot(x_exp, u_exp[:,16], label="t="+str(t_exp[16]))
+plt.ylim(0.0, 1.0)
+plt.legend();
+@
+
+Dapat dilihat bahwa solusi ini tidak stabil.
+
+
+\begin{pythoncode}
+anim = create_anim_2d(u_exp, x_exp, t_exp, 0.0, 1.1)
+IPython.display.HTML(anim.to_html5_video())
+\end{pythoncode}
+
+
+\subsection{Metode Crank-Nicholson}
+
+Metode Crank-Nicholson diperoleh dengan menggunakan rata-rata aproksimasi central difference
+antara titik waktu $k + 1$ dan $k$ sehingga diperoleh:
+
+$$
+\frac{\alpha}{2} \left(
+\frac{u^{k+1}_{i+1} - 2u^{k+1}_{i} + u^{k+1}_{i-1}}{(\Delta x)^2} +
+\frac{u^{k}_{i+1} - 2u^{k}_{i} + u^{k}_{i-1}}{(\Delta x)^2}
+\right) = 
+\frac{u^{k+1}_{i} - u^{k}_{i}}{\Delta t}
+$$
+
+atau:
+$$
+ru^{k+1}_{i+1} - 2ru^{k+1}_{i} + ru^{k+1}_{i-1} + ru^{k}_{i+1} - 2ru^{k}_{i} + ru^{k}_{i-1} = 2u^{k+1}_{i} - 2u^{k}_{i}
+$$
+
+$$
+-ru^{k+1}_{i+1} + 2(1 + r)u^{k+1}_{i} - ru^{k+1}_{i-1} = ru^{k}_{i+1} + 2(1 - r)u^{k}_{i} + ru^{k}_{i-1}
+$$
+
+Dalam bentuk matriks:
+$$
+\mathbf{A}\mathbf{u}^{k+1} = \mathbf{B}\mathbf{u}^{k}
+$$
+
+dengan matriks sebagai berikut.
+
+$$
+\mathbf{A} = 
+\begin{bmatrix}
+2(1 + r) & -r & 0 & \cdots & 0 & 0 \\
+-r & 2(1 + r) & -r & \cdots & 0 & 0 \\
+0 & -r & 2(1 + r) & \cdots & 0 & 0 \\
+\cdots & \cdots & \cdots & \cdots & \cdots & \cdots \\
+0 & 0 & 0 & \cdots & 2(1 + r) & -r \\
+0 & 0 & 0 & \cdots & -r & 2(1 + r)
+\end{bmatrix}
+$$
+
+$$
+\mathbf{B} = 
+\begin{bmatrix}
+2(1 - r) & r & 0 & \cdots & 0 & 0 \\
+r & 2(1 - r) & r & \cdots & 0 & 0 \\
+0 & r & 2(1 - r) & \cdots & 0 & 0 \\
+\cdots & \cdots & \cdots & \cdots & \cdots & \cdots \\
+0 & 0 & 0 & \cdot & 2(1 - r) & r \\
+0 & 0 & 0 & \cdot & r & 2(1 - r)
+\end{bmatrix}
+$$
+
+$$
+\mathbf{u}^{k} =
+\begin{bmatrix}
+u^{k}_{1} \\
+u^{k}_{2} \\
+u^{k}_{3} \\
+\cdot \\
+u^{k}_{M-1} \\
+u^{k}_{M}
+\end{bmatrix}
+$$
+
+Implementasi
+
+<<>>=
+def heat_1d_CN( alpha, xf, tf, u0x, bx0, bxf, Nx, Nt ):
+    
+    dx = xf/Nx
+    x = np.linspace(0.0, xf, Nx+1)
+    
+    dt = tf/Nt
+    t = np.linspace(0.0, tf, Nt+1)
+
+    u = np.zeros( (Nx+1, Nt+1) ) 
+
+    # Aplikasi syarat awal
+    for i in range(Nx+1):
+        u[i,0] = u0x( x[i] )
+    
+    # Syarat batas
+    for k in range(Nt+1):
+        u[0,k] = bx0( t[k] )
+        u[Nx,k] = bxf( t[k] )
+    
+    r = alpha*dt/dx**2
+    
+    A = np.zeros( (Nx-1,Nx-1) )
+    for i in range(Nx-1):
+        A[i,i] = 2*(1 + r)
+        if i > 0:
+            A[i-1,i] = -r
+            A[i,i-1] = -r
+
+    B = np.zeros( (Nx-1,Nx-1) )
+    for i in range(Nx-1):
+        B[i,i] = 2*(1 - r)
+        if i > 0:
+            B[i-1,i] = r
+            B[i,i-1] = r
+    
+    for k in range(1,Nt+1):
+        b = np.matmul(B, u[1:Nx,k-1] )
+        u[1:Nx,k] = np.linalg.solve(A, b)
+    
+    return u, x, t
+@
+
+Contoh
+<<>>=
+alpha = 1.0
+xf = 1.0; tf = 0.2
+Nx = 50; Nt = 200
+u_CN, x_CN, t_CN = \
+heat_1d_CN( alpha, xf, tf, initial_temp, bx0, bxf, Nx, Nt )
+@
+
+<<fig=False, include=False>>=
+plt.clf()
+plt.plot(x_CN, u_CN[:,0], label="t="+str(t_CN[0]))
+plt.plot(x_CN, u_CN[:,4], label="t="+str(t_CN[4]))
+plt.plot(x_CN, u_CN[:,10], label="t="+str(t_CN[10]))
+plt.plot(x_CN, u_CN[:,50], label="t="+str(t_CN[50]))
+plt.plot(x_CN, u_CN[:,-1], label="t="+str(t_CN[-1]))
+plt.legend();
+@
+
+Perbandingan antara metode implisit dan Crank-Nicholson pada waktu terakhir simulasi $t_f$.
+
+<<fig=False, include=False>>=
+plt.clf()
+plt.plot(x_imp, u_imp[:,-1], label="imp t="+str(t_imp[-1]))
+plt.plot(x_CN, u_CN[:,-1], label="CN t="+str(t_CN[-1]))
+plt.legend();
+@
+
+Perbandingan antara solusi numerik dengan Crank-Nicholson dengan solusi analitik.
+
+<<fig=False, include=False>>=
+plt.clf()
+plt.plot(x_CN, u_CN[:,-1], label="numerik t="+str(t_CN[-1]), marker="o")
+plt.plot(x_CN, sol_01_analitik(x_CN, t_CN[-1]), label="analitik t="+str(t_CN[-1]))
+plt.legend();
+@
+
+
+Latihan 1
+
+Mirip dengan soal sebelumnya, hanya saja dengan syarat awal:
+
+$$
+u(x,0) = e^{-50(x-0.5)^2}
+$$
+
+Kita akan gunakan metode implisit untuk mencari solusi numeriknya.
+
+
+<<>>=
+# Syarat awal
+def initial_temp( x ):
+    return np.exp( -50*(x-0.5)**2 )
+
+# Syarat batas kiri
+def bx0( t ):
+    return 0.0
+
+# Syarat batas kanan
+def bxf( t ):
+    return 0.0
+
+alpha = 1.0
+
+xf = 1.0
+Nx = 50
+
+tf = 0.1
+Nt = 200
+
+u_imp, x_imp, t_imp = \
+heat_1d_euler_imp( alpha, xf, tf, initial_temp, bx0, bxf, Nx, Nt )
+@
+
+
+<<fig=False, include=False>>=
+plt.clf()
+plt.plot( x_imp, u_imp[:,0], label="t="+str(t_imp[0]) )
+plt.plot( x_imp, u_imp[:,-1], label="t="+str(t_imp[-1]) )
+plt.legend()
+@
+
+
+Latihan 2
+
+<<fig=False, include=False>>=
+# Syarat awal
+def initial_temp( x ):
+    if x > 0.4 and x < 0.6:
+        return 1.0
+    else:
+        return 0.0
+
+# Syarat batas kiri
+def bx0( t ):
+    return 0.0
+
+# Syarat batas kanan
+def bxf( t ):
+    return 0.0
+
+alpha = 1.0
+xf = 1.0; Nx = 50
+tf = 0.1; Nt = 200
+u_imp, x_imp, t_imp = \
+heat_1d_euler_imp( alpha, xf, tf, initial_temp, bx0, bxf, Nx, Nt )
+
+plt.clf()
+plt.plot( x_imp, u_imp[:,0], label="t="+str(t_imp[0]) )
+plt.plot( x_imp, u_imp[:,-1], label="t="+str(t_imp[-1]) )
+plt.legend()
+plt.savefig("figures/heat_imp_lat2.pdf")
+@
