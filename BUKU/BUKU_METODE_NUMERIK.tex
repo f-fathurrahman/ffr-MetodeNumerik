@@ -1,9 +1,26 @@
-\documentclass[a4paper,bahasa]{extbook}
+\documentclass[a4paper,bahasa,10pt]{extbook}
 
 \usepackage{fancyvrb, color, graphicx, hyperref, amsmath, url}
 \usepackage[a4paper,text={16.5cm,25.2cm},centering]{geometry}
 
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+
 \usepackage{minted}
+\newminted{python}{breaklines,fontsize=\small}
+\newminted{bash}{breaklines,fontsize=\small}
+\newminted{text}{breaklines,fontsize=\small}
+
+\newcommand{\txtinline}[1]{\mintinline{text}{#1}}
+\newcommand{\pyinline}[1]{\mintinline{python}{#1}}
+
+\definecolor{mintedbg}{rgb}{0.90,0.90,0.90}
+\usepackage{mdframed}
+
+\BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=mintedbg,%
+  rightline=false,leftline=false,topline=false,bottomline=false]}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+
 
 \usepackage{babel}
 
@@ -14,7 +31,7 @@
 
 \chapter{Test pweave}
 
-\input{GEN_Test1}
-\input{GEN_Test2}
+%\input{GEN_Test1}
+%\input{GEN_Test2}
 
 \end{document}

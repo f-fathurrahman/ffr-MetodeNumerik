@@ -1,0 +1,85 @@
+\section{Metode fixed-point}
+
+<<echo=False>>=
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.style
+matplotlib.style.use("classic")
+@
+
+Pada metode ini, persamaan $f(x)$ yang ingin kita cari akarnya diubah menjadi $x = g(x)$. Contoh: untuk mencari akar dari persamaan $f(x) = e^{-x} - x = 0$ kita mengubah persamaan tersebut menjadi $x = g(x) = e^{-x}$.
+
+Iterasi dimulai dengan suatu tebakan awal $x_0$. Nilai tebakan akar berikutnya dihitung dengan persamaan
+$$
+x_{i+1} = g(x_{i})
+$$
+Jika iterasi ini konvergen, maka $x_{i+1}$ adalah akar dari persamaan $f(x) = 0$.
+
+Perhatikan bahwa metode ini tidak selalu konvergen.
+
+
+<<>>=
+# definisi fungsi g(x) = exp(-x)
+def func_03(x):
+    return np.exp(-x)
+@
+
+<<fig=False, include=False>>=
+plt.clf()
+x = np.linspace(0,1,500)
+plt.plot(x, x, label="$f(x) = x$")
+plt.plot(x, func_03(x), label="$g(x) = exp(-x)$")
+plt.legend()
+plt.grid()
+plt.savefig("figures/func_03_1.pdf")
+@
+{\centering
+\includegraphics[scale=0.75]{figures/func_03_1.pdf}
+\par}
+
+<<>>=
+def fixed_point(g, x, TOL=1e-10, NiterMax=100):
+    
+    for i in range(1,NiterMax+1):
+        gx = g(x)
+        print("Iter = %5d, x = %18.10f, g(x) = %18.10f abs(x-g(x)) %15.5e" % (i, x, g(x), abs(x-gx)))
+        if abs(x - gx) <= TOL:
+            print("Iterasi konvergen: akar ditemukan")
+            return x
+        x = gx
+    
+    print("WARNING: Konvergensi tidak diperleh setelah %d iterasi" % NiterMax)
+    print("WARNING: Nilai tebakan akhir akan dikembalikan")
+    return x
+@
+
+
+<<>>=
+x0 = 0.0
+xr = fixed_point(func_03, x0)
+@
+
+
+<<fig=False, include=False>>=
+plt.clf()
+x = np.linspace(0,1,500)
+plt.plot(x, x, label="$f(x) = x$")
+plt.plot(x, func_03(x), label="$g(x) = exp(-x)$")
+plt.plot(xr, func_03(xr), marker="o")
+plt.legend()
+plt.grid()
+plt.savefig("figures/func_03_2.pdf")
+@
+{\centering
+\includegraphics[scale=0.75]{figures/func_03_2.pdf}
+\par}
+
+<<>>=
+x0 = 1.0
+xr = fixed_point(func_03, x0)
+@
+
+<<>>=
+x0 = -10.0
+xr = fixed_point(func_03, x0)
+@

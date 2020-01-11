@@ -1,0 +1,311 @@
+\section{Metode bisection}
+
+<<echo=False>>=
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.style
+matplotlib.style.use("classic")
+@
+
+Metode bisection sering juga disebut metode bagi-dua atau metode setengah-selang.
+
+Ide dari metode bisection fakta bahwa jika tanda dari $f(x_{1})$ dan $f(x_{2})$ berbeda,
+maka setidaknya ada satu akar dari persamaan $f(x) = 0$ ada dalam selang $(x_1,x_2)$.
+
+Misalkan kita ingin mencari akar dari fungsi berikut:
+$$
+f(x) = 5x^3 - 5x^2 + 6x - 2
+$$
+Untuk memperoleh gambaran mengenai akar dari persamaan $f(x)=0$,
+kita akan membuat plot dari dari $f(x)$ terlebih dahulu.
+
+<<fig=False,include=False>>=
+def func_01(x):
+    return 5*x**3 - 5*x**2 + 6*x - 2
+
+x = np.linspace(0,1,100)
+y =  func_01(x)
+plt.clf()
+plt.plot(x, y, label="f(x)")
+plt.legend()
+plt.grid()
+plt.savefig("figures/bisection_01_1.pdf")
+@
+
+{\centering
+\includegraphics[scale=0.75]{figures/bisection_01_1.pdf}
+\par}
+
+Dari plot di atas dapat dilihat bahwa akar dari $f(x)$ terletak di sekitar $x = 0.5$.
+Sebagai ilustrasi untuk metode bisection kita akan menggunakan interval $x_1 = 0$ dan $x_2 = 1$.
+
+Mari kita cek bahwa tanda $f(x_1)$ dan $f(x_2)$ memiliki tanda yang berbeda, atau $f(x_1)f(x_2) < 0$.
+
+<<>>=
+x1 = 0.0
+x2 = 1.0
+f1 = func_01(x1)
+f2 = func_01(x2)
+print("f1 = ", f1)
+print("f2 = ", f2)
+print("f1*f2 is negative = ", f1*f2 < 0)
+@
+
+Fungsi \txtinline{np.sign()} juga bisa digunakan untuk mengecek tanda positif atau negatif dari suatu bilangan.
+
+<<term=True>>=
+np.sign(-2.0), np.sign(2.1)
+@
+
+Sekarang, kita perlu menentukan tebakan akar dari selang $x_1$ dan $x_2$.
+Dengan metode bisection, tebakan akar dihitung tepat berada di tengah selang yaitu:
+$$
+x_{r} = \frac{x_1 + x_2}{2}
+$$
+
+<<term=True>>=
+xr = 0.5*(x1 + x2)
+xr
+@
+
+OK, sepertinya kita sudah berada dekat di akar sebenarnya. Mari kita cek nilai $f(x_r)$:
+
+<<term=True>>=
+fxr = func_01(xr)
+fxr
+@
+
+Ternyata nilai dari $f(x_r)$ tidak tepat pada 0. Mari buat plot $f(x)$ pada domain (interval) yang lebih sempit.
+
+<<fig=False, include=False>>=
+x = np.linspace(0.0, 1.0, 500)
+y = func_01(x)
+plt.clf()
+plt.plot(x, y)
+plt.plot(xr, fxr, marker="o") # Tandai nilai fx pada xr, yaitu (xr,fxr)
+plt.grid()
+plt.savefig("figures/bisection_01_2.pdf")
+@
+{\centering
+\includegraphics[scale=0.75]{figures/bisection_01_2.pdf}
+\par}
+
+
+Kita dapat memperbaiki tebakan akar dengan memilih rentang baru di mana kita akan
+mengaplikasikan lagi metode bisection. Kita sekarang memiliki 3 titik yaitu
+$x_1$, $x_2$, dan $x_r$, dengan nilai fungsi pada titik-titik tersebut adalah:
+
+<<term=True>>=
+f1, f2, fxr
+@
+
+Dengan informasi tersebut, kita dapat menggunakan $x_r$ sebagai pengganti dari
+$x_2$ karena selang ini lebih kecil dan diharapkan nilai tebakan akar
+dapat menjadi lebih dekat dengan akar sebenarnya.
+
+<<>>=
+x2 = xr
+f2 = fxr
+@
+
+Cek apakah nilai fungsi pada interval baru ini berbeda tanda (hasil kali
+$f_(x_{1})$ dan $f(x_2)$ adalah negatif.
+<<term=True>>=
+print(f1*f2 < 0)
+@
+
+
+Kita hitung lagi tebakan akar $x_r$ sebagai nilai tengah antara $x_{1}$ dan $x_2$:
+<<term=True>>=
+xr = 0.5*(x1 + x2)
+fxr = func_01(xr)
+fxr
+@
+
+Sepertinya nilai akar yang kita dapatkan masih belum baik.
+
+<<fig=False, include=False>>=
+x = np.linspace(x1, x2, 500)
+y = func_01(x)
+plt.clf()
+plt.plot(x, y)
+plt.plot(xr, fxr, marker="o") # Tandai nilai fx pada xr, yaitu (xr,fxr)
+plt.grid()
+plt.savefig("figures/bisection_01_3.pdf")
+@
+{\centering
+\includegraphics[scale=0.75]{figures/bisection_01_3.pdf}
+\par}
+
+<<term=True>>=
+f1, f2, fxr
+@
+
+Kita akan melakukan kembali prosedur bisection. Untuk interval baru kita akan ganti $x_1$ dengan $x_r$.
+<<term=True>>=
+x1 = xr
+f1 = fxr
+print(f1*f2 < 0)
+@
+
+Hitung kembali tebakan akar pada selang $x_1$ dan $x_2$
+<<term=True>>=
+xr = 0.5*(x1 + x2)
+fxr = func_01(xr)
+fxr
+@
+
+Nilai ini sudah lebih dekat dari tebakan-tebakan kita sebelumnya.
+Untuk mendapatkan tebakan akar yang lebih baik kita akan lakukan sekali lagi metode bisection.
+<<term=True>>=
+f1, f2, fxr
+@
+
+<<>>=
+x1 = xr
+f1 = fxr
+print(f1*f2 < 0)
+@
+
+<<term=True>>=
+xr = 0.5*(x1 + x2)
+fxr = func_01(xr)
+fxr
+@
+
+Tebakan ini lebih baik dari tebakan sebelumnya karena $f(x_r)$ yang diperoleh
+lebih dekat dengan 0. Kita dapat melakukan prosedur bisection sekali lagi.
+<<term=True>>=
+f1, f2, fxr
+@
+
+<<term=True>>=
+x2 = xr
+f2 = fxr
+xr = 0.5*(x1 + x2)
+fxr = func_01(xr)
+fxr
+@
+
+Setelah melakukan iterasi metode bisection secara manual, sekarang kita akan membuat
+prosedur bisection dalam suatu subrutin (fungsi). Fungsi ini menerima masukan \txtinline{f}
+sebagai fungsi yang akan dicari akarnya, \txtinline{x1} dan \txtinline{x2} sebagai input
+selang di mana akar akan dicari. Fungsi ini juga menggunakan \txtinline{TOL} dengan
+nilai default \txtinline{1e-10} untuk menentukan akurasi hasil
+yang diperoleh dan juga \txtinline{NiterMax} dengan nilai default \txtinline{100}
+sebagai jumlah maksimum iterasi yang dilakukan.
+
+<<>>=
+def bisection(f, x1, x2, TOL=1e-10, NiterMax=100):
+    
+    f1 = f(x1)
+    f2 = f(x2)
+    
+    if f1*f2 > 0:
+        raise RuntimeError("f1 dan f2 memiliki tanda yang sama")
+        
+    for i in range(1,NiterMax+1):
+        
+        xr = 0.5*(x1 + x2)
+        fxr = f(xr)
+        
+        if abs(fxr) <= TOL:
+            print("Iterasi konvergen: akar ditemukan")
+            return xr
+        
+        print("Iter = %5d, xr = %18.10f, abs(fxr) = %15.5e" % (i, xr, abs(fxr)))
+    
+        # f1 dan fxr berbeda tanda
+        if f1*fxr < 0.0:
+            x2 = xr
+            f2 = fxr
+        else:
+            x1 = xr
+            f1 = fxr
+        
+    print("WARNING: Konvergensi tidak diperleh setelah %d iterasi" % NiterMax)
+    print("WARNING: Nilai tebakan akhir akan dikembalikan")
+    return xr
+@
+
+
+Contoh penggunaan:
+
+Cari akar pada selang $[0.0, 1.0]$
+<<>>=
+xr = bisection(func_01, 0.0, 1.0)
+@
+
+Cari akar pada selang $[0.0, 1.0]$, dengan toleransi $10^{-9}$ dan
+jumlah iterasi maksimum 10.
+<<>>=
+xr = bisection(func_01, 0.0, 0.5, TOL=1e-9, NiterMax=10)
+@
+
+Sama seperti sebelumnya namun menggunakan nilai iterasi maksimum default.
+<<>>=
+xr = bisection(func_01, 0.0, 0.5, TOL=1e-9)
+@
+
+Cari akar pada selang $[0.3, 0.5]$,
+<<>>=
+xr = bisection(func_01, 0.3, 0.5, NiterMax=100)
+@
+
+Contoh yang akan menghasilkan error:
+<<>>=
+xr = bisection(func_01, 0.3, 0.4)
+@
+
+
+\subsection{Contoh 2}
+
+Contoh dengan fungsi yang berbeda:
+$$
+f = x^2 \left| \cos(\sqrt(x)) \right| - 5
+$$
+
+<<>>=
+def func_02(x):
+    return x**2 * np.abs(np.cos(np.sqrt(x))) - 5
+@
+
+Kita perlu selang untuk tebakan awal akar. Untuk memperoleh informasi tersebut
+kita akan buat plot dari $f(x)$ terlebih dahulu.
+
+<<fig=False,include=False>>=
+x = np.linspace(0,5,500)
+y = func_02(x)
+plt.clf()
+plt.plot(x, y)
+plt.grid()
+plt.savefig("figures/func_02_1.pdf")
+@
+{\centering
+\includegraphics[scale=0.75]{figures/func_02_1.pdf}
+\par}
+
+Akar terletak antara $x = 0$ dan $x = 5$.
+
+<<>>=
+xr = bisection(func_02, 0, 5)
+@
+
+<<fig=False,include=False>>=
+x = np.linspace(0,5,500)
+y = func_02(x)
+plt.clf()
+plt.plot(x, y)
+plt.plot(xr, func_02(xr), marker="o")
+plt.grid()
+plt.savefig("figures/func_02_2.pdf")
+@
+{\centering
+\includegraphics[scale=0.75]{figures/func_02_2.pdf}
+\par}
+
+
+Mari kita coba gunakan selang $x = 3$ dan $x = 4$.
+<<>>=
+xr = bisection(func_02, 3, 4)
+@
