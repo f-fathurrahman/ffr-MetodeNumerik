@@ -1,0 +1,195 @@
+\section{Dekomposisi LU}
+
+<<echo=False>>=
+import numpy as np
+@
+
+Pada dekomposisi LU, matriks persegi $\mathbf{A}$ dapat dinyatakan sebagai
+hasil kali dari matriks segitiga bawah $\mathbf{L}$ dan matriks segitiga atas $\mathbf{U}$:
+$$
+\mathbf{A} = \mathbf{LU}
+$$
+%
+Proses untuk mendapatkan matriks $\mathbf{L}$ dan $\mathbf{U}$ dari matriks $\mathbf{A}$ disebut
+dengan dekomposisi LU atau faktorisasi LU.
+Dekomposisi LU tidak unik, artinya bisa terdapat banyak kombinasi $\mathbf{L}$ dan
+$\mathbf{U}$ yang mungkin untuk suatu matriks $\mathbf{A}$ yang diberikan.
+Untuk mendapatkan pasangan $\mathbf{L}$ dan $\mathbf{U}$ yang unik, kita perlu memberikan
+batasan atau konstrain terhadap proses dekomposisi LU. Terdapat beberapa varian dekomposisi LU:
+
+\begin{table}[H]
+{\centering
+\begin{tabular}{|c|c|}
+\hline
+Nama & Konstrain \\
+\hline
+\hline
+Dekomposisi Doolittle & $L_{ii} = 1$ \\
+Dekomposisi Crout     & $U_{ii} = 1$ \\
+Dekomposisi Cholesky  & $\mathbf{L} = \mathbf{U}^{T}$ (untuk matriks $\mathbf{A}$ simetrik dan definit positif \\
+\hline
+\end{tabular}
+\par}
+\end{table}
+
+Dengan dekomposisi LU kita dapat menuliskan sistem persamaan linear
+$$
+\mathbf{Ax} = \mathbf{b}
+$$
+menjadi:
+$$
+\mathbf{LUx} = \mathbf{b}
+$$
+Dengan menggunakan $\mathbf{y} = \mathbf{Ux}$ kita dapat menuliskan:
+$$
+\mathbf{Ly} = \mathbf{b}
+$$
+Persamaan ini dapat diselesaikan dengan menggunakan substitusi maju.
+Solusi $\mathbf{x}$ dapat dicari dengan menggunakan substitusi balik (mundur).
+
+Varian Doolittle untuk dekomposisi LU memiliki bentuk berikut untuk matriks $\mathbf{L}$ dan $\mathbf{U}$, misalnya untuk ukuran $3\times3$ 
+
+$$
+\mathbf{L} =
+\begin{bmatrix}
+1 & 0 & 0 \\
+L_{21} & 1 & 0 \\
+L_{31} & L_{32} & 1
+\end{bmatrix},\,\,\,
+\mathbf{U} =
+\begin{bmatrix}
+U_{11} & U_{12} & U_{13} \\
+0 & U_{22} & U_{23} \\
+0 & 0 & U_{33}
+\end{bmatrix}
+$$
+
+Dengan melakukan perkalian $\mathbf{A} = \mathbf{LU}$
+
+$$
+\mathbf{A} = \begin{bmatrix}
+U_{11} & U_{12} & U_{13} \\
+U_{11}L_{21} & U_{12}L_{21} + U_{22} & U_{13}L_{21} + U_{23} \\
+U_{11}L_{31} & U_{12}L_{31} + U_{22}L_{32} & U_{13}L_{31} + U_{23}L_{32} + U_{33}
+\end{bmatrix}
+$$
+
+Dapat ditunjukkan bahwa matriks $\mathbf{U}$ adalah matriks segitiga atas hasil dari eliminasi
+Gauss pada matriks $\mathbf{A}$. Elemen *off-diagonal* dari matriks $\mathbf{L}$
+adalah pengali $\alpha$, atau $L_{ij}$ adalah pengali yang mengelimisasi $A_{ij}$.
+
+\subsection*{Kode Python untuk dekomposisi LU (varian Doolittle)}
+
+<<>>=
+def LU_decomp(A_):
+    Nrow, Ncol = A_.shape
+    assert Nrow == Ncol
+    N = Nrow
+    A = np.matrix.copy(A_)
+    # Eliminasi Gauss (maju)
+    for k in range(0,N-1):
+        for i in range(k+1,N):
+            if A[i,k] != 0.0:
+                alpha = A[i,k]/A[k,k]
+                A[i,k+1:N] = A[i,k+1:N] - alpha*A[k,k+1:N]
+                A[i,k] = alpha
+    L = np.matrix( np.tril(A,-1) )
+    for i in range(N):
+        L[i,i] = 1.0 # konstrain Doolittle
+    U = np.matrix( np.triu(A) )
+    
+    return L, U # kembalikan matriks L dan U
+@
+
+Definisikan lagi matriks dan vektor yang ada pada contoh sebelumnya.
+<<>>=
+A = np.matrix([
+    [1, 1, 1],
+    [2, 3, 1],
+    [1, -1, -1]
+])
+b = np.matrix([4, 9, -2]).transpose()
+@
+
+Lakukan dekomposisi LU:
+<<>>=
+L, U = LU_decomp(A)
+print("L = \n", L)
+print("U = \n", U)
+@
+
+Periksa bahwa $\mathbf{A} = \mathbf{LU}$:
+<<>>=
+L*U - A
+@
+
+
+\subsection*{Implementasi solusi dengan matrix L dan U yang sudah dihitung}
+
+Substitusi maju
+$$
+y_{k} = b_{k} - \sum_{j=1}^{k-1} L_{kj} y_{j},\,\,\,k = 2,3,\ldots,N
+$$
+
+<<>>=
+def LU_solve(L, U, b):
+    N = L.shape[0]
+    x = np.matrix(np.zeros((N,))).transpose()
+    y = np.matrix(np.zeros((N,))).transpose()
+    # Ly = b
+    # Substitusi maju
+    y[0] = b[0]/L[0,0]
+    for k in range(1,N):
+        ss = 0.0
+        for j in range(k):
+            ss = ss + L[k,j]*y[j]
+        y[k] = (b[k] - ss)/L[k,k]
+    # Ux = y
+    # Substitusi balik
+    x[N-1] = y[N-1]/U[N-1,N-1]
+    for k in range(N-2,-1,-1):
+        ss = 0.0
+        for j in range(k+1,N):
+            ss = ss + U[k,j]*x[j]
+        x[k] = (y[k] - ss)/U[k,k]   
+    return x
+@
+
+
+<<>>=
+x = LU_solve(L, U, b)
+@
+
+Cek hasil:
+<<>>=
+A*x - b
+@
+
+Contoh:
+
+Menggunakan dekomposisi LU:
+<<<>>=
+A = np.matrix( [
+    [3, 1, -1],
+    [5, 8, 2],
+    [3, 1, 10]
+], dtype=np.float64)
+b = np.matrix([1, -4, 5], np.float64).transpose()
+L, U = LU_decomp(A)
+x = LU_solve(L, U, b)
+print("Solusi x=\n", x)
+print("Cek solusi: Ax - b\n", A*x - b)
+@
+
+Menggunakan dekomposisi LU:
+<<>>=
+A = np.matrix([
+    [6, -4, 1],
+    [-4, 6, -4],
+    [1, -4, 6]], dtype=np.float64)
+b = np.matrix([-14, 36, 6], dtype=np.float64).transpose()
+L, U = LU_decomp(A)
+x = LU_solve(L, U, b)
+print("Solusi x=\n", x)
+print("Cek solusi: Ax - b\n", A*x - b)
+@

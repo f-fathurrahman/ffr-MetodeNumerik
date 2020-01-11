@@ -1,0 +1,313 @@
+\section{Pivoting}
+
+<<echo=False>>=
+import numpy as np
+def gauss_elim(A_, b_):
+    N, Nrhs = b_.shape
+    assert Nrhs == 1
+    A = np.matrix.copy(A_)
+    b = np.matrix.copy(b_)
+    # Eliminasi maju
+    for k in range(0,N-1):
+        for i in range(k+1,N):
+            if A[i,k] != 0.0:
+                alpha = A[i,k]/A[k,k]
+                A[i,:] = A[i,:] - alpha*A[k,:]
+                b[i] = b[i] - alpha*b[k]
+    # Alokasi mememori untuk solusi
+    x = np.matrix(np.zeros((N,1)))
+    # Substitusi balik
+    x[N-1] = b[N-1]/A[N-1,N-1]
+    for k in range(N-2,-1,-1):
+        ss = 0.0
+        for j in range(k+1,N):
+            ss = ss + A[k,j]*x[j]
+        x[k] = (b[k] - ss)/A[k,k]
+    return x
+@
+
+Metode eliminasi Gauss dan LU memiliki beberapa kekurangan. Salah satu yang sering 4
+ditemui adalah ketika elemen pivot yang ditemukan adalah 0. Misalkan pada persamaan berikut ini:
+
+$$
+\begin{bmatrix}
+0 & -3 & 7 \\
+1 & 2 & -1 \\
+5 & -2 & 0
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\
+x_2 \\
+x_3
+\end{bmatrix} = 
+\begin{bmatrix}
+2 \\
+3 \\
+4
+\end{bmatrix}
+$$
+
+Jika kita langsung menggunakan fungsi \txtinline{gauss_elim} kita akan mendapatkan
+pesan peringatan sebagai berikut:
+<<>>=
+A = np.matrix( [
+    [0, -3, 7],
+    [1, 2, -1],
+    [5, -2, 0]
+], dtype=np.float64)
+b = np.matrix([2, 3, 4], np.float64).transpose()
+x = gauss_elim(A, b)
+@
+
+
+Solusi yang dapat digunakan adalah dengan cara menukar baris atau pivoting sedemikian
+rupa sehingga elemen pivot yang diperoleh tidak menjadi nol. Dalam kasus ini, kita dapat
+menukar baris pertama dengan baris ketiga:
+$$
+\begin{bmatrix}
+5 & -2 & 0 \\
+1 & 2 & -1 \\
+0 & -3 & 7
+\end{bmatrix}
+\begin{bmatrix}
+x_3 \\
+x_2 \\
+x_1
+\end{bmatrix} =
+\begin{bmatrix}
+4 \\
+3 \\
+2
+\end{bmatrix}
+$$
+
+
+<<>>=
+A = np.matrix( [
+    [5, -2, 0],
+    [1, 2, -1],
+    [0, -3, 7]
+], dtype=np.float64)
+b = np.matrix([4, 3, 2], np.float64).transpose()
+x = gauss_elim(A, b)
+print("Solusi x=\n", x)
+print("Cek solusi: Ax - b\n", A*x - b)
+@
+
+Dapat dilihat bahwa pivoting pada dasarnya bertujuan untuk memperbaik sifat dominan
+diagonal dari matriks. Suatu matriks dikatakan dominan diagonal apabila nilai absolut
+dari elemen diagoanal matriks memiliki nilai yang terbesar bila dibandingkan dengan 
+ilai-nilai elemen lainnya dalam satu baris.
+
+Ada beberapa strategi yang dapat digunakan untuk pivoting, salah satu yang
+paling sederhana adalah dengan menggunakan pivoting terskala. Dengan metode ini,
+pertama kali kita mencari array $\mathbf{s}$ dengan elemen sebagai berikut:
+
+$$
+s_{i} = \max\left|A_{ij}\right|,\,\,\,i=1,2,\ldots,N
+$$
+
+$s_{i}$ akan disebut sebagai faktor skala dari baris ke-$i$ yang merupakan elemen
+dengan nilai absolut terbesar dari baris ke-$i$.
+Ukuran relatif dari elemen $A_{ij}$ relatif terhadap elemen dengan nilai terbesar adalah:
+$$
+r_{ij} = \frac{\left|A_{ij}\right|}{s_{i}}
+$$
+Elemen pivot dari matriks $\mathbf{A}$ akan ditentukan berdasarkan $r_{ij}$.
+Elemen $A_{kk}$ tidak secara otomatis menjadi elemen pivot, namun kita akan mencari
+elemen lain di bawah $A_{kk}$ pada kolom ke-$k$ untuk elemen pivot yang terbaik.
+Misalkan elemen terbaik ini ada pada baris ke-$p$, yaitu $A_{pk}$ yang memiliki ukuran relatif terbesar, yakni:
+$$
+r_{pk} = \max_{j} r_{jk},\,\,\, j \geq k
+$$
+Jika elemen tersebut ditemukan maka kita melakukan pertukaran baris antara baris ke-$k$ dan ke-$p$.
+
+\subsection*{Kode Python untuk eliminasi Gauss dengan pivoting}
+
+<<>>=
+def tukar_baris(v, i, j):
+    if len(v.shape) == 1: # array satu dimensi atau vektor kolom
+        v[i], v[j] = v[j], v[i]
+    else:
+        v[[i,j],:] = v[[j,i],:]
+
+def gauss_elim_pivot(A_, b_):
+    N, Nrhs = b_.shape
+    
+    assert Nrhs == 1
+
+    A = np.matrix.copy(A_)
+    b = np.matrix.copy(b_)
+    
+    # Faktor skala
+    s = np.matrix(np.zeros((N,1)))
+    for i in range(N):
+        s[i] = np.max(np.abs(A[i,:]))
+
+    SMALL = np.finfo(np.float64).eps
+    
+    # Eliminasi maju
+    for k in range(0,N-1):
+        
+        r = np.abs(A[k:N,k])/s[k:N]
+        p = np.argmax(r) + k
+        if abs(A[p,k]) < SMALL:
+            raise RuntimeError("Matriks A singular")
+        # Tukar baris jika diperlukan
+        if p != k:
+            print("INFO: tukar baris %d dengan %d" % (p,k))
+            tukar_baris(b, k, p)
+            tukar_baris(s, k, p)
+            tukar_baris(A, k, p)
+        
+        for i in range(k+1,N):
+            if A[i,k] != 0.0:
+                alpha = A[i,k]/A[k,k]
+                A[i,:] = A[i,:] - alpha*A[k,:]
+                b[i] = b[i] - alpha*b[k]
+    
+    # Alokasi mememori untuk solusi
+    x = np.matrix(np.zeros((N,1)))
+    
+    # Substitusi balik
+    x[N-1] = b[N-1]/A[N-1,N-1]
+    for k in range(N-2,-1,-1):
+        ss = 0.0
+        for j in range(k+1,N):
+            ss = ss + A[k,j]*x[j]
+        x[k] = (b[k] - ss)/A[k,k]
+    
+    return x
+@
+
+Contoh penggunaan:
+<<>>=
+A = np.matrix( [
+    [0, -3, 7],
+    [1, 2, -1],
+    [5, -2, 0]
+], dtype=np.float64)
+b = np.matrix([2, 3, 4], np.float64).transpose()
+
+x = gauss_elim_pivot(A, b)
+print("Solusi x=\n", x)
+print("Cek solusi: Ax - b\n", A*x - b)
+@
+
+\subsection*{Kode Python untuk dekomposisi LU dengan pivoting}
+
+<<>>=
+def LU_decomp_pivot(A_):
+    
+    Nrow, Ncol = A_.shape
+    
+    assert Nrow == Ncol
+    
+    N = Nrow
+
+    A = np.matrix.copy(A_)
+    
+    # Faktor skala
+    s = np.matrix(np.zeros((N,1)))
+    for i in range(N):
+        s[i] = np.max(np.abs(A[i,:]))
+        
+    iperm = np.arange(N)
+
+    SMALL = np.finfo(np.float64).eps
+
+    # Eliminasi Gauss (maju)
+    for k in range(0,N-1):
+        
+        r = np.abs(A[k:N,k])/s[k:N]
+        p = np.argmax(r) + k
+        if abs(A[p,k]) < SMALL:
+            raise RuntimeError("Matriks A singular")
+        # Tukar baris jika diperlukan
+        if p != k:
+            print("INFO: tukar baris %d dengan %d" % (p,k))
+            tukar_baris(A, k, p)
+            tukar_baris(s, k, p)
+            tukar_baris(iperm, k, p)
+        
+        for i in range(k+1,N):
+            if A[i,k] != 0.0:
+                alpha = A[i,k]/A[k,k]
+                A[i,k+1:N] = A[i,k+1:N] - alpha*A[k,k+1:N]
+                A[i,k] = alpha
+    
+    L = np.matrix( np.tril(A,-1) )
+    for i in range(N):
+        L[i,i] = 1.0 # konstrain Doolittle
+    U = np.matrix( np.triu(A) )
+    
+    return L, U, iperm # kembalikan matriks L dan U serta vektor permutasi
+@
+
+
+<<>>=
+def LU_solve_pivot(L, U, iperm, b_):
+    
+    N = L.shape[0]
+    
+    x = np.matrix(np.zeros((N,))).transpose()
+    y = np.matrix(np.zeros((N,))).transpose()
+    
+    b = np.matrix.copy(b_)
+    for i in range(N):
+        b[i] = b_[iperm[i]]
+    
+    # Ly = b
+    # Substitusi maju
+    y[0] = b[0]/L[0,0]
+    for k in range(1,N):
+        ss = 0.0
+        for j in range(k):
+            ss = ss + L[k,j]*y[j]
+        y[k] = (b[k] - ss)/L[k,k]
+    
+    # Ux = y
+    # Substitusi balik
+    x[N-1] = y[N-1]/U[N-1,N-1]
+    for k in range(N-2,-1,-1):
+        ss = 0.0
+        for j in range(k+1,N):
+            ss = ss + U[k,j]*x[j]
+        x[k] = (y[k] - ss)/U[k,k]
+    
+    return x
+@
+
+Contoh penggunaan:
+<<>>=
+A = np.matrix([
+    [2, -2, 6],
+    [-2, 4, 3],
+    [-1, 8, 4]
+], dtype=np.float64)
+b = np.matrix([16, 0, -1]).transpose()
+L, U, iperm = LU_decomp_pivot(A)
+print("L = \n", L)
+print("U = \n", U)
+x = LU_solve_pivot(L, U, iperm, b)
+print("Solusi x = \n", x)
+print("Cek solusi A*x - b =\n", A*x - b)
+@
+
+Contoh lain:
+<<>>=
+A = np.matrix([
+    [0, 2, 5, -1],
+    [2, 1, 3, 0],
+    [-2, -1, 3, 1],
+    [3, 3, -1, 2]
+], dtype=np.float64)
+b = np.matrix([-3, 3, -2, 5]).transpose()
+L, U, iperm = LU_decomp_pivot(A)
+print("L = \n", L)
+print("U = \n", U)
+x = LU_solve_pivot(L, U, iperm, b)
+print("Solusi x = \n", x)
+print("Cek solusi A*x - b =\n", A*x - b)
+@
+

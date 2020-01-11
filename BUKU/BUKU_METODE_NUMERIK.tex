@@ -1,7 +1,14 @@
 \documentclass[a4paper,bahasa,10pt]{extbook}
 
-\usepackage{fancyvrb, color, graphicx, hyperref, amsmath, url}
-\usepackage[a4paper,text={16.5cm,25.2cm},centering]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{libertine}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancyvrb, color, graphicx, hyperref, url}
+%\usepackage[a4paper,text={16.5cm,25.2cm},centering]{geometry}
+\usepackage{geometry}
+\geometry{verbose,tmargin=2.0cm,bmargin=2.0cm,lmargin=2.0cm,rmargin=2.0cm}
 
 \setlength{\parskip}{\smallskipamount}
 \setlength{\parindent}{0pt}
@@ -28,9 +35,13 @@
 
 \input{AkarPersamaan}
 
+\input{SistemPersLinear}
 
-\chapter{Test pweave}
+%
+% For testing pweave
+%
 
+%\chapter{Test pweave}
 %\input{GEN_Test1}
 %\input{GEN_Test2}
 

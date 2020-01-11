@@ -32,3 +32,6 @@ Let's include the figure manually:
 \centering
 \includegraphics[scale=0.75]{figures/IMG_sin_cos.pdf}
 \end{figure}
+
+
+Test using source="filename.py" option.

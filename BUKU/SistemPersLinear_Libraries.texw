@@ -1,0 +1,43 @@
+\section{Pustaka terkait sistem persamaan linear}
+
+<<echo=True>>=
+import numpy as np
+@
+
+Untuk berbagai aplikasi pada sains dan teknik, kita biasanya menyelesaikan sistem persamaan
+linear yang ditemui dengan menggunakan berbagai macam pustaka yang sudah tersedia.
+
+Python sudah memiliki beberapa fungsi yang terkait dengan sistem persamaan linear dan
+operasi terkait seperti menghitung determinan dan invers matriks.
+
+Fungsi \txtinline{np.linalg.solve} dapat digunakan untuk menyelesaikan sistem persamaan linear:
+<<>>=
+A = np.matrix([
+    [1, 1, 1],
+    [2, 3, -1],
+    [1, -1, -1]
+])
+B = np.matrix([4, 9, 2]).transpose()
+@
+
+
+<<>>=
+x = np.linalg.solve(A,B)
+x
+@
+
+
+<<>>=
+A*x - B
+@
+
+Fungsi \txtinline{np.linalg.det} dapat digunakan untuk menghitung determinan dari suatu matriks
+<<>>=
+np.linalg.det(A)
+@
+
+Fungsi \txtinline{np.linalg.inv} dapat digunakan untuk menghitung invers dari suatu matriks
+<<>>=
+np.linalg.inv(A)
+@
+
