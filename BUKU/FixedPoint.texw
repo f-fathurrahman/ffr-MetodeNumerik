@@ -4,7 +4,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.style
-matplotlib.style.use("classic")
+matplotlib.style.use("seaborn")
 @
 
 Pada metode ini, persamaan $f(x)$ yang ingin kita cari akarnya diubah menjadi $x = g(x)$. Contoh: untuk mencari akar dari persamaan $f(x) = e^{-x} - x = 0$ kita mengubah persamaan tersebut menjadi $x = g(x) = e^{-x}$.

@@ -1,0 +1,225 @@
+# Persamaan adveksi (konveksi)
+
+$$
+\frac{\partial}{\partial t} u(x,t) + v \frac{\partial}{\partial x} u(x,t) = 0
+$$
+
+Domain:
+- $0 \leq x \leq x_{f}$
+- $0 \leq t \leq t_{f}$
+
+Syarat batas (hanya pada bagian kiri):
+- $u(0,t) = U_{0}$
+
+Syarat awal:
+- $u(x,0) = u^{0}(x)$
+
+## Metode eksplisit
+
+$$
+\frac{u^{k+1}_{i} - u^{k}_{i}}{\Delta t} + v \frac{ u^{k}_{i+1} - u^{k}_{i-1} }{2\Delta x} = 0
+$$
+
+$$
+u^{k+1}_{i} - u^{k}_{i} + v \frac{\Delta t}{2\Delta x} \left( u^{k}_{i+1} - u^{k}_{i-1} \right) = 0
+$$
+
+$$
+u^{k+1}_{i} = u^{k}_{i} - \frac{1}{2} C \left( u^{k}_{i+1} - u^{k}_{i-1} \right)
+$$
+
+$$
+C = v \frac{\Delta t}{\Delta x}
+$$
+
+### Implementasi
+
+
+<<>>=
+def advect_1d_exp(v, xf, tf, u0, bx0, Nx, Nt ):
+
+    dx = xf/Nx
+    x = np.linspace(0.0, xf, Nx+1)
+
+    dt = tf/Nt
+    t = np.linspace(0.0, tf, Nt+1)
+
+    # bilangan Courant
+    C = v*dt/dx
+
+    print("C = %f" % C)
+
+    u = np.zeros( (Nx+1,Nt+1) )
+
+    # Syarat awal
+    for i in range(Nx+1):
+        u[i,0] = u0( x[i] )
+
+    # Syarat batas
+    for k in range(Nt+1):
+        u[0,k] = bx0( t[k] )
+
+    for k in range(Nt):
+        for i in range(1,Nx):
+            u[i,k+1] = u[i,k] - 0.5*C*( u[i+1,k] - u[i-1,k] )
+            #print("u = %d %d %18.10f" % (i, k+1, u[i,k+1]))
+
+    return u, x, t
+@
+
+### Contoh
+
+
+<<>>=
+def u0(x):
+    return np.exp( -150*(x-0.2)**2 )
+
+def bx0(t):
+    return 0.0
+
+v = 1.0
+xf = 1.0
+tf = 0.2
+Nx = 50
+Nt = 1500
+
+u, x, t = advect_1d_exp(v, xf, tf, u0, bx0, Nx, Nt )
+@
+
+
+<<>>=
+plt.clf()
+for k in [0, 1000, -1]:
+    plt.plot(x, u[:,k], label="t="+format("%f"%t[k]));
+plt.legend()
+@
+
+
+<<>>=
+anim = create_anim_2d(u, x, t, -0.1, 1.0)
+@
+
+
+<<>>=
+IPython.display.HTML(anim.to_html5_video())
+@
+
+Metode ini tidak stabil. Error dari solusi numerik akan terus terakumulasi. Pada solusi diatas dapat kita lihat bahwa akan ada perubahan bentuk dari pulsa awal.
+
+Berikut ini adalah contoh untuk kasus sampling waktu yang kita gunakan jauh lebih kecil.
+
+
+<<>>=
+def u0(x):
+    return np.exp( -150*(x-0.2)**2 )
+
+def bx0(t):
+    return 0.0
+
+v = 1.0
+xf = 1.0
+tf = 0.2
+Nx = 50
+Nt = 50
+
+u, x, t = advect_1d_exp(v, xf, tf, u0, bx0, Nx, Nt )
+@
+
+
+<<>>=
+plt.clf()
+for k in [0, -1]:
+    plt.plot(x, u[:,k], label="t="+format("%f"%t[k]));
+plt.legend()
+@
+
+
+<<>>=
+anim = create_anim_2d(u, x, t, -0.05, 1.0)
+@
+
+
+<<>>=
+IPython.display.HTML(anim.to_html5_video())
+@
+
+
+<<>>=
+
+@
+
+## Metode Leapfrog
+
+$$
+\frac{u^{k+1}_{i} - u^{k-1}_{i}}{2\Delta t} + v \frac{u^{k}_{i+1} - u^{k}_{i-1}}{2\Delta x} = 0
+$$
+
+$$
+u^{k+1}_{i} = u^{k-1}_{i} - C \left( u^{k}_{i+1} - u^{k}_{i-1} \right)
+$$
+
+Kondisi untuk stabilitas:
+$$
+C \leq 1
+$$
+
+atau
+$$
+\Delta t \leq \frac{\Delta x}{v}
+$$
+
+
+<<>>=
+def advect_1d_leapfrog(v, xf, tf, u0, bx0, Nx, Nt ):
+    dx = xf/Nx
+    x = np.linspace(0.0, xf, Nx+1)
+    dt = tf/Nt
+    t = np.linspace(0.0, tf, Nt+1)
+    # bilangan Courant
+    C = v*dt/dx
+    print("dt = ", dt)
+    print("dx = ", dx)
+    print("C = %f" % C)
+    u = np.zeros( (Nx+1,Nt+1) )
+    # Syarat awal
+    for i in range(Nx+1):
+        u[i,0] = u0( x[i] )
+    for i in range(1,Nx):
+        u[i,1] = u[i,0] + v*dt/dx*( u[i+1,0] - u[i,0] )
+    for k in range(1,Nt):
+        for i in range(1,Nx):
+            u[i,k+1] = u[i,k-1] - C*( u[i+1,k] - u[i-1,k] )
+    return u, x, t
+@
+
+Contoh
+<<>>=
+def u0(x):
+    return np.exp( -150*(x-0.2)**2 )
+
+def bx0(t):
+    return 0.0
+
+v = 1.0
+xf = 1.0
+tf = 0.4
+Nx = 100
+Nt = 1000
+
+u, x, t = advect_1d_leapfrog(v, xf, tf, u0, bx0, Nx, Nt )
+@
+
+
+<<>>=
+plt.clf()
+for k in [0, 1, 2, 4, -1]:
+    plt.plot(x, u[:,k], label="t="+format("%.4f"%t[k]))
+plt.legend();
+@
+
+\begin{pythoncode}
+anim = create_anim_2d(u, x, t, -0.05, 1.0)
+IPython.display.HTML(anim.to_html5_video())
+\end{pythoncode}
+
+Metode leapfrog sudah lebih baik daripada metode eksplisit, namun solusi yang dihasilnya meninggalkan ripple.

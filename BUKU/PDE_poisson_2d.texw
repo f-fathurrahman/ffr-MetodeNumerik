@@ -1,0 +1,48 @@
+# Persamaan Laplace dan Poisson
+
+Biasanya hanya bergantung pada variable spasial.
+
+Persamaan Poisson:
+$$
+\nabla^2 u(x,y) = f(x,y)
+$$
+
+Persamaan Laplace:
+$$
+\nabla^2 u(x,y) = 0
+$$
+
+Untuk dua dimensi (spasial):
+
+$$
+\frac{\partial^2}{\partial x^2} u(x,y) +
+\frac{\partial^2}{\partial y^2} u(x,y)
+= f(x,y)
+$$
+
+Gunakan notasi:
+
+- $u(x,y) = u_{i,j}$
+
+- $u(x+\Delta x, y) = u_{i+1,j}$
+
+- $u(x-\Delta x, y) = u_{i-1,j}$
+
+- $u(x, y + \Delta y) = u_{i,j+1}$
+
+- $u(x, y - \Delta y) = u_{i,j-1}$
+
+
+Aproksimasi centered difference untuk turunan kedua:
+
+$$
+\frac{ u_{i+1,j} - 2u_{i,j} + u_{i-1,j} }{\Delta x^2} +
+\frac{ u_{i,j+1} - 2u_{i,j} + u_{i,j-1} }{\Delta y^2} =
+f_{i,j}
+$$
+
+Persamaan ini dapat dituliskan menjadi sistem persamaan linear:
+
+$$
+\mathbf{A} \mathbf{u} = \mathbf{f}
+$$

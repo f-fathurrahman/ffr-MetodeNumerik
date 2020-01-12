@@ -1,0 +1,274 @@
+\section{Persamaan Gelombang 1d}
+
+<<echo=False>>=
+import numpy as np
+import matplotlib.pyplot as plt
+@
+
+$$
+c^2
+\frac{\partial^2}{\partial x^2} u(x,t) =
+\frac{\partial^2}{\partial t^2} u(x,t)
+$$
+
+
+$$
+\frac{\partial^2}{\partial x^2} u(x,t) =
+\frac{1}{c^2} \frac{\partial^2}{\partial t^2} u(x,t)
+$$
+
+Metode eksplisit untuk persamaan gelombang 1d
+
+Persamaan gelombang:
+
+$$
+c^2 \frac{\partial^2}{\partial x^2} u(x,t) = \frac{\partial^2}{\partial t^2} u(x,t)
+$$
+
+Domain:
+- $0 \leq x \leq x_{f}$
+- $0 \leq t \leq t_{f}$
+
+Syarat batas:
+- $u(0,t) = b_{0}(t)$
+- $u(x_{f},t) = b_{x_{f}}(t)$
+
+Syarat awal:
+- $u(x,0) = u_{0}(x)$
+- $\left.\dfrac{\partial}{\partial t}u(x,t)\right|_{t=0} = u'_{0}(x)$
+
+Gunakan centered difference untuk turuan kedua terhadap $x$ dan $t$:
+
+$$
+c^2 \frac{u^{k}_{i+1} - 2u^{k}_{i} + u^{k}_{i-1}}{(\Delta x)^2} =
+\frac{u^{k+1}_{i} - 2u^{k}_{i} + u^{k-1}_{i}}{(\Delta t)^2}
+$$
+
+Dengan menggunakan definisi:
+
+$$
+r = c^2 \frac{(\Delta x)^2}{(\Delta t)^2}
+$$
+
+dapat dituliskan:
+
+$$
+u^{k+1}_{i} = r \left( u^{k}_{i+1} + u^{k}_{i-1} \right) +
+2(1 - r)u^{k}_{i} - u^{k-1}_{i}
+$$
+
+Untuk $k = 0$, kita memerlukan nilai untuk $u^{-1}_{i} = u(x_{i},-\Delta t)$:
+
+$$
+u^{1}_{i} = r \left( u^{0}_{i+1} + u^{0}_{i-1} \right) +
+2(1 - r)u^{0}_{i} - u^{-1}_{i}
+$$
+
+Dengan menggunakan aproksimasi centered diference untuk syarat awal:
+
+$$
+\frac{u^{1}_{i} - u^{-1}_{i}}{2\Delta t} = u'_{0}(x_{i})
+$$
+
+dapat diperoleh:
+
+$$
+u^{-1}_{i} = u^{1}_{i} - 2u'_{0}(x_{i}) \Delta t
+$$
+
+Sehingga untuk $k = 0$, kita peroleh:
+\begin{align*}
+u^{1}_{i} & = r \left( u^{0}_{i+1} + u^{0}_{i-1} \right) +
+2(1 - r)u^{0}_{i} - \left( u^{1}_{i} - 2u'_{0}(x_{i}) \Delta t \right) \\
+u^{1}_{i} & = \frac{1}{2} r \left( u^{0}_{i+1} + u^{0}_{i-1} \right) +
+(1 - r)u^{0}_{i} + u'_{0}(x_{i}) \Delta t
+\end{align*}
+
+Kondisi untuk stabilitas:
+$$
+r = c^2 \frac{(\Delta t)^2}{(\Delta x)^2} \leq 1
+$$
+
+Implementasi
+
+<<>>=
+def wave_1d_exp(c2, xf, tf, u0, u0p, bx0, bxf, Nx, Nt ):
+
+    dx = xf/Nx
+    x = np.linspace(0.0, xf, Nx+1)
+
+    dt = tf/Nt
+    t = np.linspace(0.0, tf, Nt+1)
+
+    r = c2*(dt/dx)**2
+
+    if r > 1.0:
+        print("WARNING: propagasi tidak stabil")
+        print("r = %f > 1\n" % r)
+
+    u = np.zeros( (Nx+1,Nt+1) )
+
+    # Syarat awal
+    for i in range(Nx+1):
+        u[i,0] = u0( x[i] )
+
+    # Syarat batas
+    for k in range(Nt+1):
+        u[0,k]  = bx0( t[k] )
+        u[Nx,k] = bxf( t[k] )
+
+    for i in range(1,Nx):
+        u[i,1] = 0.5*r*( u[i+1,0] + u[i-1,0] ) + (1.0 - r)*u[i,0] + dt*u0p( x[i] )
+
+    for k in range(1,Nt):
+        for i in range(1,Nx):
+            u[i,k+1] = r*( u[i+1,k] + u[i-1,k] ) + 2*(1 - r)*u[i,k] - u[i,k-1]
+
+    return u, x, t
+@
+
+
+Contoh 1
+
+
+<<>>=
+def u0(x):
+    return x*(1.0 - x)
+
+def u0p(x):
+    return 0.0
+
+def bx0(t):
+    return 0.0
+
+def bxf(t):
+    return 0.0
+
+c2 = 1.0
+xf = 1.0
+Nx = 100
+tf = 4.0
+Nt = 400
+u, x, t = wave_1d_exp(c2, xf, tf, u0, u0p, bx0, bxf, Nx, Nt)
+@
+
+
+<<>>=
+plt.clf()
+for k in [0, -1, 100, 70]:
+    plt.plot(x, u[:,k], label="t="+format("%f"%t[k]));
+plt.legend();
+@
+
+
+\begin{pythoncode}
+anim = create_anim_2d( u, x, t, -0.5, 0.5 )
+IPython.display.HTML( anim.to_html5_video() )
+\end{pythoncode}
+
+Contoh 2
+
+<<>>=
+def u0(x):
+    return np.sin(5.0*np.pi*x)
+
+def u0p(x):
+    return 0.0
+
+def bx0(t):
+    return 0.0
+
+def bxf(t):
+    return 0.0
+
+c2 = 1.0
+xf = 1.0
+Nx = 100
+tf = 2.0
+Nt = 200
+u, x, t = wave_1d_exp(c2, xf, tf, u0, u0p, bx0, bxf, Nx, Nt)
+@
+
+
+<<>>=
+plt.clf()
+for k in [0, 5, 11]:
+    plt.plot(x, u[:,k], label="t="+format("%f"%t[k]));
+plt.legend();
+@
+
+
+\begin{pythoncode}
+anim = create_anim_2d(u, x, t, -1.1, 1.1)
+IPython.display.HTML(anim.to_html5_video())
+\end{pythoncode}
+
+
+
+Contoh 3
+
+
+<<>>=
+def u0(x):
+    return np.exp(-200*(x-0.5)**2)
+
+def u0p(x):
+    return 0.0
+
+def bx0(t):
+    return 0.0
+
+def bxf(t):
+    return 0.0
+
+c2 = 1.0
+xf = 1.0
+Nx = 100
+tf = 2.0
+Nt = 200
+u, x, t = wave_1d_exp(c2, xf, tf, u0, u0p, bx0, bxf, Nx, Nt)
+@
+
+
+<<>>=
+plt.clf()
+for k in [0, 5, 11]:
+    plt.plot(x, u[:,k], label="t="+format("%f"%t[k]));
+plt.legend();
+@
+
+
+\begin{pythoncode}
+anim = create_anim_2d(u, x, t, -1.0, 1.0)
+IPython.display.HTML(anim.to_html5_video())
+\end{pythoncode}
+
+
+
+Travelling wave
+
+
+\begin{pythoncode}
+def travel_wave(A, k, omega, x, t):
+    return A*np.cos(omega*t - k*x)
+
+x0 = 0.0
+xf = 2.0
+x = np.linspace(x0, xf, 500)
+A = 1.0
+lambda_ = 1.0
+k = 2*np.pi/\lambda_
+T = 1.0
+omega = 2*np.pi/T
+
+t0 = 0.0
+Nt = 200
+delta_t = 0.01
+for i in range(Nt):
+    plt.clf()
+    t = t0 + i*delta_t
+    plt.plot(x, travel_wave(A, k, omega, x, t), label="t="+format("%.2f" % t))
+    plt.ylim(-1.0, 1.0)
+    plt.legend(loc="upper right")
+    plt.savefig("TEMP_" + str(i) + ".png")
+\end{pythoncode}

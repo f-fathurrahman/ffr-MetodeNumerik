@@ -1,0 +1,16 @@
+\section{Persamaan Kalor 2d}
+
+$$
+\alpha \left( \frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2} \right) u(x,y,t)
+= \frac{\partial}{\partial t} u(x,y,t)
+$$
+
+$$
+\alpha \left(
+\frac{u^{k}_{i,j+1} - 2u^{k}_{i,j} + u^{k}_{i-1,j}}{(\Delta x)^2} +
+\frac{u^{k}_{i,j+1} - 2u^{k}_{i,j} + u^{k}_{i,j-1}}{(\Delta y)^2}
+\right) = 
+\frac{u^{k+1}_{i} - u^{k}_{i}}{\Delta t}
+$$
+
+ADI = alternating direction implicit
