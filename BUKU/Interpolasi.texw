@@ -11,28 +11,26 @@ import scipy.interpolate
 \subsection*{Teori polinomial Lagrange}
 
 Polinomial Lagrange didefinisikan sebagai:
-$$
+\begin{equation}
 P_n(x) = \sum_{i=0}^{n} y_{i} L_{i}(x)
-$$
+\end{equation}
 Polinomial ini adalah interpolant yang memiliki derajat $n$ dan melewati $(n+1)$ titik data
 atau pasangan $(x_{i},y_{i})$ dan $L_{i}(x)$ adalah fungsi polinomial dengan bentuk:
-$$
+\begin{equation}
 L_{i}(x) = \prod_{\substack{j=0 \\ j \neq i}}^{n}
 \frac{x - x_{j}}{x_{i} - x_{j}}
-$$
+\label{eq:polinom_lagrange_kardinal}
+\end{equation}
 
 \subsection*{Implementasi interpolasi Lagrange}
 
 <<>>=
 def lagrange_interp(x, y, xx):
-    
     assert len(x) == len(y)
-    
     # Jumlah data adalah N + 1 dan derajat polynomial adalah N
     # atau:
-    # Jumlah data adalah N dan derajat polynomial adalah N - 1
+    # Jumlah data adalah N dan derajat polynomial adalah $N - 1$
     N = len(x) - 1
-
     yy = 0.0
     for i in range(N+1):
         # Evaluasi fungsi kardinal
@@ -140,19 +138,13 @@ def eval_newton_polynom(coefs, x, xo):
 <<>>=
 x = np.array([1.0, 4.0, 6.0])
 y = np.array([0, 1.386294, 1.791760])
-@
-
-<<>>=
 coefs = create_newton_polynom(x, y)
 coefs
-@
-
-<<>>=
 eval_newton_polynom(coefs, x, 2.0)
 @
 
 
-<<>>=
+<<fig=False, include=False>>=
 NptsPlot = 1000
 xx = np.linspace(x[0], x[-1], NptsPlot)
 yy = np.zeros(NptsPlot)
@@ -164,42 +156,34 @@ for i in range(NptsPlot):
 plt.clf()
 plt.plot(x, y, marker="o", label="data")
 plt.plot(xx, yy, label="Interpolasi Newton (orde-2)")
-plt.grid()
-plt.legend();
+plt.legend(); plt.savefig("figures/interp_newton_1.pdf")
 @
+
+{\centering
+\includegraphics[scale=0.75]{figures/interp_newton_1.pdf}
+\par}
 
 \subsection{Aplikasi interpolasi Newton pada fungsi $\cos$}
 
-
-<<>>=
+<<fig=False, include=False>>=
 def func_01(x):
     return np.cos(2*x)
-@
 
-
-<<>>=
 N = 5
 A = 0.0
 B = 2*np.pi
 x_sample = np.linspace(A, B, N)
 y_sample = func_01(x_sample)
-@
-
-
-<<>>=
 x_sample
-@
-
-
-<<>>=
 y_sample
-@
-
-
-<<fig=False, include=False>>=
 plt.clf()
 plt.plot(x_sample, y_sample);
+plt.savefig("figures/interp_newton_2.pdf")
 @
+
+{\centering
+\includegraphics[scale=0.75]{figures/interp_newton_2.pdf}
+\par}
 
 
 <<fig=False, include=False>>=
@@ -216,19 +200,20 @@ x_interp_plt = np.linspace(A,B,NptsPlot)
 y_interp_plt = np.zeros(NptsPlot)
 for i in range(NptsPlot):
     y_interp_plt[i] = eval_newton_polynom(coefs, x_interp, x_interp_plt[i])
-@
 
-
-<<fig=False, include=False>>=
 plt.clf()
 plt.plot(x_sample, y_sample, marker="o", label="sampled")
 plt.plot(x_dense, y_dense, label="exact")
 plt.plot(x_interp_plt, y_interp_plt, label="interp")
-plt.legend()
+plt.legend(); plt.savefig("figures/interp_newton_3.pdf")
 @
 
-\subsection*{Latihan dengan fungsi yang lain}
+{\centering
+\includegraphics[scale=0.75]{figures/interp_newton_3.pdf}
+\par}
 
+
+\subsection*{Latihan dengan fungsi yang lain}
 
 <<>>=
 def func_02(x):
@@ -476,7 +461,7 @@ B = 1.5
 Nsample = 5
 x_sample = np.linspace(A, B, Nsample)
 y_sample = func_02(x_sample)
-    
+
 NptsPlot = 100
 x_plot = np.linspace(A, B, NptsPlot)
 y_exact = func_02(x_plot)
@@ -508,7 +493,7 @@ B = 1.5
 Nsample = 10
 x_sample = np.linspace(A, B, Nsample)
 y_sample = func_03(x_sample)
-    
+
 NptsPlot = 100
 x_plot = np.linspace(A, B, NptsPlot)
 y_exact = func_03(x_plot)
@@ -539,7 +524,7 @@ Informasi lebih lengkap dapat dilihat pada dokumentasinya
 
 Beberapa fungsi yang sering dipakai adalah:
 \begin{itemize}
-\item fungsi `interp1d` 
+\item fungsi `interp1d`
 \item `splrep` dan `splev` (menggunakan metode B-spline)
 \end{itemize}
 
@@ -579,4 +564,3 @@ plt.plot(x_plot, y_quadratic, label="squadratic")
 plt.plot(x_plot, y_cubic, label="cubic")
 plt.legend();
 @
-
