@@ -1,4 +1,5 @@
 IMG_*
+ORIG_*
 
 .ipynb_checkpoints
 __pycache__
