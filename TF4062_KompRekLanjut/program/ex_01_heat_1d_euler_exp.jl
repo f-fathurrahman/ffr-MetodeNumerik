@@ -25,18 +25,18 @@ function sol_01_analitik(x, t)
     return sin(pi*x) * exp(-pi^2 * t)
 end
 
-function plot_all(u_exp, x_exp, t_exp; prefix="IMG_")
-    
-    Nt = size(t_exp,1) - 1
+function plot_all(u, x, t)
+
+    Nt = size(t,1)
     
     println("Plotting the solution, please wait ...")    
     
-    for i in 1:Nt+1
+    for i in 1:Nt
         plt.clf()
-        label_t = @sprintf("t=%f", t_exp[i])
+        label_t = @sprintf("t=%f", t[i])
         println(label_t)
-        plt.plot(x_exp, u_exp[:,i], marker="o", label=label_t)
-        plt.plot(x_exp, sol_01_analitik.(x_exp, t_exp[i]), label="exact")
+        plt.plot(x, u[:,i], marker="o", label=label_t)
+        plt.plot(x, sol_01_analitik.(x, t[i]), label="exact")
         plt.ylim(0.0, 1.1)
         plt.legend()
         filename = @sprintf("IMG_ex01_heat_1d_euler_exp_%04d.png", i)
@@ -52,14 +52,12 @@ function main()
     α = 1.0
     xf = 1.0
     tf = 0.1
-
     Nx = 25
     Nt = 200
 
     u_exp, x_exp, t_exp = heat_1d_euler_exp( α, xf, tf, initial_temp, bx0, bxf, Nx, Nt )
 
     plot_all( u_exp, x_exp, t_exp )
-
 end
 
 main()
