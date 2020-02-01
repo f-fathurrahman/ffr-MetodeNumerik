@@ -1,0 +1,338 @@
+\documentclass[9pt]{beamer}
+
+\usepackage{amsmath, amssymb}
+\usepackage{fancyvrb, color, graphicx, hyperref, url}
+
+\setbeamersize{text margin left=5pt, text margin right=5pt}
+
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+
+\usepackage{fontspec}
+\setmonofont{DejaVu Sans Mono}
+
+\usefonttheme[onlymath]{serif}
+
+\usepackage{minted}
+\newminted{python}{breaklines}
+\newminted{julia}{breaklines}
+\newminted{bash}{breaklines}
+\newminted{text}{breaklines}
+
+\newcommand{\txtinline}[1]{\mintinline{text}{#1}}
+\newcommand{\pyinline}[1]{\mintinline{python}{#1}}
+\newcommand{\jlinline}[1]{\mintinline{julia}{#1}}
+
+\definecolor{mintedbg}{rgb}{0.90,0.90,0.90}
+\usepackage{mdframed}
+
+\BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=mintedbg,%
+  rightline=false,leftline=false,topline=false,bottomline=false]}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+
+
+\begin{document}
+
+\title{Persamaan Difusi}
+\subtitle{TF4062: Komputasi Rekayasa Lanjut}
+\author{Iwan Prasetyo\\
+Fadjar Fathurrahman}
+\institute{
+Teknik Fisika \\
+Institut Teknologi Bandung
+}
+\date{}
+
+
+\frame{\titlepage}
+
+
+\begin{frame}
+\frametitle{Persamaan Difusi Kalor 1d}
+
+Pada satu dimensi spasial, misalkan $x$, dapat dituliskan
+%
+\begin{equation}
+\alpha \frac{\partial^{2}}{\partial x^2} u(x,t) = \frac{\partial}{\partial t} u(x,t)
+\end{equation}
+
+Solusi $x(x,t)$ akan dicari pada domain spasial: $0 \leq x \leq x_{f}$
+dan domain temporal: $0 \leq t \leq t_{f}$.
+dengan syarat batas: $u(0,t) = b_{0}(t)$ and $u(x_{f},t) = b_{x_f}(t)$
+dan syarat awal: $u(x,0) = u_{0}(x)$
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Metode Euler Eksplisit}
+
+Domain spasial dibagi menjadi $N_{x}$ segmen dengan $\Delta x = x_{f}/(N_{x}-1)$.
+Domain temporal dibagi menjadi $N_{t}$ segmen dengan $\Delta t = t_{f}/(N_{t}-1)$.
+Turunan parsial kedua terhadap $x$ diaproksimasi dengan menggunakan central difference.
+Turunan parsial pertama terhadap $t$ diaproksimasi dengan forward difference.
+
+Dengan menggunakan notasi berikut: $u(x,t) = u^{k}_{i}$, $u(x+\Delta x,t) = u^{k}_{i+1}$
+$u(x-\Delta x,t) = u^{k}_{i-1}$, $u(x,t+\Delta t) = u^{k+1}_{i}$,
+and $u(x,t-\Delta t) = u^{k-1}_{i}$
+%
+dapat dituliskan:
+\begin{equation}
+\alpha \frac{u^{k}_{i+1} - 2u^{k}_{i} + u^{k}_{i-1}}{(\Delta x)^2} =
+\frac{u^{k+1}_{i} - u^{k}_{i}}{\Delta t}
+\end{equation}
+
+Dengan menggunakan definisi:
+\begin{equation}
+r = \alpha \frac{\Delta t}{(\Delta x)^2}
+\end{equation}
+Persamaan ini dapat dipecahkan untuk mendapatkan $u^{k+1}_{i}$
+\begin{equation}
+u^{k+1}_{i} = r \left( u^{k}_{i+1} + u^{k}_{i-1} \right) + (1 - 2r) u^{k}_{i}
+\end{equation}
+untuk $i = 1, 2, \ldots, N_{x}-1$.
+
+Dapat ditunjukkan bahwa skema ini akan stabil jika:
+\begin{equation}
+r = \alpha \frac{\Delta t}{(\Delta x)^2} \leq \frac{1}{2}
+\end{equation}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{An example}
+
+Cari solusi numerik persamaan kalor:
+\begin{equation*}
+\frac{\partial^{2}}{\partial x^2} u(x,t) = \frac{\partial}{\partial t} u(x,t)
+\end{equation*}
+pada domain spasial: $0 \leq x \leq 1$ and $0 \leq t \leq 0.1$.
+
+Syarat batas: $u(0,t) = 0$ $u(1,t) = 0$
+
+Syarat awal: $u(x,0) = \sin(\pi x)$
+
+%
+Bandingkan dengan solusi analitik:
+\begin{equation}
+u(x,t) = \sin(\pi x) \exp(-\pi^2 t)
+\end{equation}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Metode Euler implisit}
+
+Turunan parsial kedua terhadap $x$ diaproksimasi dengan menggunakan central difference.
+Turunan parsial pertama terhadap $t$ diaproksimasi dengan backward difference.
+
+\begin{equation}
+\alpha \frac{u^{k}_{i+1} - 2u^{k}_{i} + u^{k}_{i-1}}{(\Delta x)^2} = \frac{u^{k}_{i} - u^{k-1}_{i}}{\Delta t}
+\end{equation}
+
+Dengan menggunakan definisi
+\begin{equation}
+r = \alpha \frac{\Delta t}{(\Delta x)^2}
+\end{equation}
+Diperoleh persamaan implisit untuk $i = 2, 3, \ldots, N_{x}-2$:
+\begin{equation}
+-ru^{k}_{i-1}+ (1 + 2r)u^{k}_{i} - ru^{k}_{i+1} = u^{k-1}_{i}
+\end{equation}
+
+Dalam bentuk matriks:
+\begin{equation}
+\begin{bmatrix}
+1 + 2r & -r & 0 & \cdots & 0 & 0 \\
+-r & 1 + 2r & -r & \cdots & 0 & 0 \\
+0 & -r & 1 + 2r & \cdots & 0 & 0 \\
+\cdots & \cdots & \cdots & \cdots & \cdots & \cdots \\
+0 & 0 & 0 & \cdots & 1 + 2r & -r \\
+0 & 0 & 0 & \cdots & -r & 1 + 2r
+\end{bmatrix}
+\begin{bmatrix}
+u^{k}_{1} \\
+u^{k}_{2} \\
+u^{k}_{3} \\
+\cdots \\
+u^{k}_{N_{x}-2} \\
+u^{k}_{N_{x}-1}
+\end{bmatrix} =
+\begin{bmatrix}
+u^{k-1}_{1} + ru^{k}_{0} \\
+u^{k-1}_{2} \\
+u^{k-1}_{3} \\
+\cdots \\
+u^{k-1}_{N_{x}-2} \\
+u^{k-1}_{N_{x}-1} + ru^{k}_{N_{x}}
+\end{bmatrix}
+\end{equation}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Metode Crank-Nicholson}
+
+Metode Crank-Nicholson diperoleh dengan menggunakan rata-rata aproksimasi central difference
+antara titik waktu $k + 1$ dan $k$ sehingga diperoleh:
+\begin{equation}
+\frac{\alpha}{2} \left(
+\frac{u^{k+1}_{i+1} - 2u^{k+1}_{i} + u^{k+1}_{i-1}}{(\Delta x)^2} +
+\frac{u^{k}_{i+1} - 2u^{k}_{i} + u^{k}_{i-1}}{(\Delta x)^2}
+\right) =
+\frac{u^{k+1}_{i} - u^{k}_{i}}{\Delta t}
+\end{equation}
+atau:
+\begin{equation}
+ru^{k+1}_{i+1} - 2ru^{k+1}_{i} + ru^{k+1}_{i-1} + ru^{k}_{i+1} - 2ru^{k}_{i} + ru^{k}_{i-1} = 2u^{k+1}_{i} - 2u^{k}_{i}
+\end{equation}
+
+\begin{equation}
+-ru^{k+1}_{i+1} + 2(1 + r)u^{k+1}_{i} - ru^{k+1}_{i-1} = ru^{k}_{i+1} + 2(1 - r)u^{k}_{i} + ru^{k}_{i-1}
+\end{equation}
+
+Dalam bentuk matriks:
+\begin{equation}
+\mathbf{A}\mathbf{u}^{k+1} = \mathbf{B}\mathbf{u}^{k}
+\end{equation}
+
+dengan matriks sebagai berikut.
+
+$$
+\mathbf{A} =
+\begin{bmatrix}
+2(1 + r) & -r & 0 & \cdots & 0 & 0 \\
+-r & 2(1 + r) & -r & \cdots & 0 & 0 \\
+0 & -r & 2(1 + r) & \cdots & 0 & 0 \\
+\cdots & \cdots & \cdots & \cdots & \cdots & \cdots \\
+0 & 0 & 0 & \cdots & 2(1 + r) & -r \\
+0 & 0 & 0 & \cdots & -r & 2(1 + r)
+\end{bmatrix}
+$$
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Metode Crank-Nicolson}
+
+$$
+\mathbf{B} =
+\begin{bmatrix}
+2(1 - r) & r & 0 & \cdots & 0 & 0 \\
+r & 2(1 - r) & r & \cdots & 0 & 0 \\
+0 & r & 2(1 - r) & \cdots & 0 & 0 \\
+\cdots & \cdots & \cdots & \cdots & \cdots & \cdots \\
+0 & 0 & 0 & \cdot & 2(1 - r) & r \\
+0 & 0 & 0 & \cdot & r & 2(1 - r)
+\end{bmatrix}
+$$
+
+$$
+\mathbf{u}^{k} =
+\begin{bmatrix}
+u^{k}_{1} \\
+u^{k}_{2} \\
+u^{k}_{3} \\
+\cdot \\
+u^{k}_{M-1} \\
+u^{k}_{M}
+\end{bmatrix}
+$$
+
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Metode eksplisit}
+
+\begin{equation}
+\frac{\partial u}{\partial t} = \alpha \frac{\partial^2 u}{\partial x^2} + f
+\end{equation}
+%
+pada domain: $x \in (0,L)$ dan $t \in (0,T]$
+
+Syarat batas: $x(x,0) = I(x)$, $x \in [0,L]$
+
+$u(0,t) = 0$ dan $u(L,t) = 0$ pada $t > 0$
+
+Diskritisasi
+\begin{equation}
+x_{i} = (i-1)\Delta x,\,\,\, i = 1,\ldots,N_{x}
+\end{equation}
+
+\begin{equation}
+t_{n} = (n-1)\Delta t,\,\,\, n= 1,\ldots,N_{t}
+\end{equation}
+
+\end{frame}
+
+
+\begin{frame}
+
+\begin{equation}
+\frac{\partial}{\partial t} u(x_{i}, t_{n}) =
+\alpha \frac{\partial^2}{\partial x^2} u(x_{i}, t_{n}) + f(x_{i}, t_{n})
+\end{equation}
+
+Forward difference in time and central difference in space:
+\begin{equation}
+\frac{u^{n+1}_{i} - u^{n}_{i}}{\Delta t} = 
+\alpha \frac{u^{n}_{i+1} - 2u^{n}_{i} + u^{n}_{i-1}}{(\Delta x)^2} + f^{n}_{i}
+\end{equation}
+
+\begin{equation*}
+u^{n+1}_{i} = u^{n}_{i} +
+F \left(
+u^{n}_{i+1} - 2u^{n}_{i} + u^{n}_{i-1}
+\right) + f^{n}_{i} \Delta t
+\end{equation*}
+
+\begin{equation}
+F = \alpha \frac{\Delta t}{(\Delta x)^2}
+\end{equation}
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Aturan $\theta$}
+
+\begin{equation}
+\frac{\partial u}{\partial t} = G(u)
+\end{equation}
+di mana $G(u)$ adalah suatu operator diferensial spasial
+
+\begin{equation}
+\frac{u_{i}^{n+1} - u_{i}^{n}}{\Delta t} = \theta G(u_{i}^{n+1}) + (1 - \theta) G(u_{i}^{n})
+\end{equation}
+
+Untuk persamaan difusi:
+\begin{multline}
+\frac{u_{i}^{n+1} - u_{i}^{n}}{\Delta t} = \\
+\alpha \left(
+\theta \frac{u_{i+1}^{n+1} - 2u_{i}^{n+1} + u_{i-1}^{n+1}}{(\Delta x)^2} +
+(1 - \theta) \frac{u_{i+1}^{n} - 2u_{i}^{n} + u_{i-1}^{n}}{(\Delta x)^2}
+\right) +
+\theta f_{i}^{n+1} + (1 - \theta)f_{i}^{n}
+\end{multline}
+
+Sistem matriks:
+\begin{equation}
+A_{i,i-1} = -F\theta, \,\, A_{i,i} = 1 + 2F\theta, \,\, A_{i,i+1} = -F\theta
+\end{equation}
+
+
+
+\end{frame}
+
+
+
+
+\end{document}
