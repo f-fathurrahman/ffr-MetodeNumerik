@@ -27,11 +27,11 @@ end
 
 function plot_all(u, x, t; prefix="IMG_")
     
-    Nt = size(t,1) - 1
+    Nt = size(t,1)
     
     println("Plotting the solution, please wait ...")    
     
-    for i in 1:Nt+1
+    for i in 1:Nt
         plt.clf()
         label_t = @sprintf("t=%f", t[i])
         println(label_t)
@@ -56,17 +56,9 @@ function main()
     Nx = 25
     Nt = 200
 
-    u_imp, x_imp, t_imp = heat_1d_CN( α, xf, tf, initial_temp, bx0, bxf, Nx, Nt )
+    u, x, t = heat_1d_CN( α, xf, tf, initial_temp, bx0, bxf, Nx, Nt )
 
-    #plt.clf()
-    #lbl_str = @sprintf("t=%f", t_imp[1])
-    #plt.plot(x_imp, u_imp[:,1], marker="o", label=lbl_str)
-    #lbl_str = @sprintf("t=%f", t_imp[end])
-    #plt.plot(x_imp, u_imp[:,end], marker="o", label=lbl_str)
-    #plt.legend()
-    #plt.savefig("IMG_ex01_heat_1d_euler_imp.png", dpi=150)
-
-    plot_all( u_imp, x_imp, t_imp )
+    plot_all( u, x, t )
 
 end
 

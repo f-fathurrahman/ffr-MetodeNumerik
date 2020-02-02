@@ -41,8 +41,8 @@ function heat_1d_CN( α, xf, tf, u0x, bx0, bxf, Nx, Nt )
 
     b = zeros(Float64, Nx-2)
     for k in 2:Nt
-        b = B*u[2:Nx,k-1]
-        u[2:Nx,k] = A\b
+        b = B*u[2:Nx-1,k-1]
+        u[2:Nx-1,k] = A\b
     end
 
     return u, x, t
