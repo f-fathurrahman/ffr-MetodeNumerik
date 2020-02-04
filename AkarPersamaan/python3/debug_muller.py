@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from math import sqrt
 
 # Chapra 7th ed. halaman 200
 
@@ -9,26 +10,47 @@ def quadratic_poly(a, b, c, x2, x):
 def f(x):
     return x**3 - 13*x - 12
 
+
+TOL = 1e-10
+
 # Tebakan akar
-x0 = 4.5
-x1 = 5.5
-x2 = 5.0
+x0 = 1.0 #4.5
+x1 = 3.0 #5.5
+x2 = 2.0 #5.0
 
-h0 = x1 - x0
-h1 = x2 - x1
+for i in range(1,10):
 
-d0 = ( f(x1) - f(x0) ) / h0
-d1 = ( f(x2) - f(x1) ) / h1
+    h0 = x1 - x0
+    h1 = x2 - x1
 
-# Koefisien parabola
-a = (d1 - d0) / (h1 + h0)
-b = a*h1 + d1
-c = f(x2)
+    d0 = ( f(x1) - f(x0) ) / h0
+    d1 = ( f(x2) - f(x1) ) / h1
 
-print("a = ", a)
-print("b = ", b)
-print("c = ", c)
+    # Koefisien parabola
+    a = (d1 - d0) / (h1 + h0)
+    b = a*h1 + d1
+    c = f(x2)
 
+    D = sqrt(b*b - 4*a*c)
+    if abs(b + D) > abs(b - D):
+        denum = b + D
+    else:
+        denum = b - D
+
+    dx_r = -2*c/denum
+    x_r = x2 + dx_r
+
+    print("iteration = %3d    x_r = %18.10f    %18.10e" % (i, x_r, abs(f(x_r))))
+
+    if abs(f(x_r)) <= abs(TOL):
+        break
+
+    x0 = x1
+    x1 = x2
+    x2 = x_r
+
+
+"""
 xmin = 0.0
 xmax = 6.0
 x_plot = np.linspace(xmin, xmax, 500)
@@ -56,3 +78,4 @@ plt.ylim(-39, 120)
 #
 plt.grid()
 plt.savefig("IMG_muller.png", dpi=150)
+"""
