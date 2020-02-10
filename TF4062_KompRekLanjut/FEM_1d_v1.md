@@ -67,3 +67,37 @@ u_{h}^{e}(x_a) = u_{1}^{e},\,\,\, u_{h}^{e}(x_b) = u_{2}^{e} \\
 \left(-a \frac{\mathrm{d}u}{\mathrm{d}x}\right)_{x=x_{a}} = Q_{1}^{e},\,\,\,
 \left(a \frac{\mathrm{d}u}{\mathrm{d}x}\right)_{x=x_{b}} = Q_{2}^{e}
 $$
+Notasi:
+$$
+0 = \int_{x_a}^{x_b} \left(
+a \frac{\mathrm{d}w}{\mathrm{d}x} \frac{\mathrm{d}u}{\mathrm{d}x} +
+cwu - wf \right)\,\mathrm{d}x -
+w(x_a) Q_1 - w(x_b) Q_2
+$$
+Blinear form and bilinear form:
+$$
+B^{e}(w,u) = \int_{x_a}^{x_b}\left(
+a \frac{\mathrm{d}w}{\mathrm{d}x} \frac{\mathrm{d}u}{\mathrm{d}x} + cwu
+\right)\,\mathrm{d}x \\
+l^{e}(w) = \int_{x_a}^{x_b} w\,f\,\mathrm{d}x + w(x_{a})Q_{1} + w(x_{b})Q_{2}
+$$
+Weak form:
+$$
+B^{e}(w,u) = l^{e}(w)
+$$
+Quadratic functional:
+$$
+\begin{align}
+I^{e}(u) & = \frac{1}{2}B^{e}(u,u) - l^{e}(u) \\
+& = \frac{1}{2}\int_{x_a}^{x_b}\left[
+a\left(\frac{\mathrm{d}u}{\mathrm{d}x}\right)^2 + cu^2
+\right]\,\mathrm{d}x - \int_{x_a}^{x_b} u\,f\,\mathrm{d}x - u(x_a)Q_1 - u(x_b)Q_2
+\end{align}
+$$
+
+## Aproksimasi solusi
+
+Minimum polinomial orde 1:
+$$
+u_{h}^{e}(x) = c_1^{e} + c_2^{e}x
+$$
