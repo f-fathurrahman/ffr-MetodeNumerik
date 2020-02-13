@@ -1,0 +1,27 @@
+PR
+
+- Chapra (Ed. 7) soal Bab. 8, Latihan, pilih 5 soal.
+
+atau:
+
+- Latihan Akar Nonlinear (10 soal)
+
+Kerjakan pada satu file Jupyter Notebook.
+
+Buat penjelasan mengenai persamaan yang akan diselesaikan.
+
+Buat plot dari persamaan yang akan dicari akarnya.
+
+Gunakan minimal 4 metode untuk mencari akar
+
+Kumpulkan file *.ipynb ke: fadjar@tf.itb.ac.id
+Sertakan informasi nama dan NIM.
+
+Konvergensi cepat: (jumlah iterasi lebih sedikit)
+- Newton-Raphson (kalau tebakannya tidak bermasalah)
+- Muller
+- Ridder
+
+
+
+
