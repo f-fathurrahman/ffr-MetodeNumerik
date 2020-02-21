@@ -4,25 +4,22 @@ import PyPlot
 const plt = PyPlot
 plt.rc("text", usetex=true)
 
-include("heat_1d_euler_exp.jl")
+include("diffusion_1d_explicit.jl")
 
 function initial_temp(x)
-    return sin(pi*x)
+    return sin(π*x)
 end
 
-# Syarat batas kiri
 function bx0( t )
     return 0.0
 end
 
-# Syarat batas kanan
 function bxf( t )
     return 0.0
 end
 
-# Solusi analitik
-function sol_01_analitik(x, t)
-    return sin(pi*x) * exp(-pi^2 * t)
+function analytic_solution(x, t)
+    return sin(π*x) * exp(-π^2 * t)
 end
 
 function plot_all(u, x, t)
@@ -36,10 +33,10 @@ function plot_all(u, x, t)
         label_t = @sprintf("t=%f", t[i])
         println(label_t)
         plt.plot(x, u[:,i], marker="o", label=label_t)
-        plt.plot(x, sol_01_analitik.(x, t[i]), label="exact")
+        plt.plot(x, analytic_solution.(x, t[i]), label="exact")
         plt.ylim(0.0, 1.1)
         plt.legend()
-        filename = @sprintf("IMG_ex01_heat_1d_euler_exp_%04d.png", i)
+        filename = @sprintf("IMG_ex01_diffusion_1d_explicit_%04d.png", i)
         plt.savefig(filename, dpi=150)
     end
     
@@ -55,9 +52,16 @@ function main()
     Nx = 25
     Nt = 200
 
-    u_exp, x_exp, t_exp = heat_1d_euler_exp( α, xf, tf, initial_temp, bx0, bxf, Nx, Nt )
+    u, x, t = diffusion_1d_explicit( α, xf, tf, initial_temp, bx0, bxf, Nx, Nt )
 
-    plot_all( u_exp, x_exp, t_exp )
+    #plot_all( u, x, t )
+
+    u_a = analytic_solution.(x, t[end])
+    u_n = u[:,end]
+    rmse = sqrt( sum((u_a - u_n).^2)/Nx )
+    mean_abs_diff = sum( abs.(u_a - u_n) )/Nx
+    @printf("RMS error            = %15.10e\n", rmse)
+    @printf("Means abs diff error = %15.10e\n", mean_abs_diff)
 end
 
 main()
