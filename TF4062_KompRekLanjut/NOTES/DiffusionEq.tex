@@ -1,0 +1,99 @@
+\documentclass[a4paper]{article}
+
+\usepackage[a4paper]{geometry}
+\geometry{verbose,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm}
+
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+
+\usepackage{fontspec}
+\setmonofont{FreeMono}
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{minted}
+\newminted{julia}{breaklines,fontsize=\small}
+\newminted{bash}{breaklines,fontsize=\small}
+\newminted{text}{breaklines,fontsize=\small}
+
+\newcommand{\txtinline}[1]{\mintinline{text}{#1}}
+\newcommand{\jlinline}[1]{\mintinline{julia}{#1}}
+
+\newmintedfile[juliafile]{julia}{breaklines,fontsize=\small}
+
+\definecolor{mintedbg}{rgb}{0.90,0.90,0.90}
+\usepackage{mdframed}
+
+\BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=mintedbg]}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+
+
+\usepackage{appendix}
+
+
+\begin{document}
+
+\title{TF4062: Diffusion Equation with Finite Difference Method}
+\author{Iwan Prasetyo \\
+Fadjar Fathurrahman}
+\date{}
+\maketitle
+
+
+\section{Explicit method for 1d diffusion equation}
+
+
+\subsection{Initial-boundary value problem for 1d diffusion}
+
+1d diffusion equation:
+\begin{equation}
+\frac{\partial u}{\partial t} = \alpha \frac{\partial^2 u}{\partial t^2} + f(x,t)
+\end{equation}
+
+Initial condition:
+\begin{equation}
+u(x,0) = I(x), \qquad x \in [0,L]
+\end{equation}
+
+Boundary condition:
+\begin{equation}
+u(0,t) = 0, \qquad u(L,t) = 0, \qquad t > 0
+\end{equation}
+
+
+\subsection{Forward Euler scheme}
+
+\begin{equation}
+x_{i} = (i-1)\Delta x, i = 1, \ldots, N_{x} \\
+t_{n} = (n-1)\Delta t, n = 1, \ldots, N_{t}
+\end{equation}
+
+\begin{equation}
+\frac{u_{i}^{n+1} - u_{i}^{n}}{\Delta t} = \alpha \frac{u_{i+1}^{n} -2u_{i}^{n} + u_{i-1}^{n}}{\Delta x^2} + f_{i}^{n}
+\end{equation}
+
+\begin{equation}
+u_{i}^{n+1} = u_{i}
+\end{equation}
+
+
+\appendix
+
+\appendixpage
+
+\section{Conjugate gradient for system of linear equations}
+
+
+\bibliographystyle{unsrt}
+\bibliography{BIBLIO}
+
+
+\end{document}
