@@ -15,6 +15,21 @@ u = np.ones(Nx)
 u[int(0.5/dx):int(1/dx+1)] = 2.0
 
 x = np.linspace(0.0, 2.0, Nx)
+
 plt.clf()
 plt.plot(x, u)
+plt.ylim(0.9, 2.1)
 plt.savefig("IMG_Step_01_IC.png", dpi=150)
+
+un = np.ones(Nx)
+
+for n in range(Nt):
+    un = u.copy()
+    for i in range(1,Nx):
+        u[i] = un[i] - c*dt/dx*(un[i] - un[i-1])
+    plt.clf()
+    plt.plot(x, u)
+    plt.ylim(0.9, 2.1)
+    filename = "IMG_Step_01_{:04d}.png".format(n)
+    plt.savefig(filename, dpi=150)
+
