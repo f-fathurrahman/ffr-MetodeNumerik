@@ -1,10 +1,11 @@
-function diffusion_1d_explicit( α, xf, tf, u0x, bx0, bxf, Nx, Nt )
+function diffusion_1d_explicit( L::Float64, Nx::Int64, T::Float64, Nt::Int64,
+    α::Float64, u0x, bx0, bxf, source_term )
     
-    Δx = xf/(Nx-1)
-    x = collect(range(0.0, stop=xf, length=Nx))
+    Δx = L/(Nx-1)
+    x = collect(range(0.0, stop=L, length=Nx))
     
-    Δt = tf/(Nt-1)
-    t = collect(range(0.0, stop=tf, length=Nt))
+    Δt = T/(Nt-1)
+    t = collect(range(0.0, stop=T, length=Nt))
 
     u = zeros(Float64, Nx, Nt)
     
@@ -24,7 +25,7 @@ function diffusion_1d_explicit( α, xf, tf, u0x, bx0, bxf, Nx, Nt )
     
     if F >= 0.5
         @printf("diffusion_1d_explicit:\n")
-        @printf("WARNING: F is greater than 0.5%f\n", F)
+        @printf("WARNING: F is greater than 0.5: %f\n", F)
         @printf("WARNING: The solution is not guaranteed to be stable !!\n")
     else
         @printf("diffusion_1d_explicit:\n")
@@ -34,7 +35,7 @@ function diffusion_1d_explicit( α, xf, tf, u0x, bx0, bxf, Nx, Nt )
 
     for n in 1:Nt-1
         for i in 2:Nx-1
-            u[i,n+1] = F*( u[i+1,n] + u[i-1,n] ) + (1 - 2*F)*u[i,n]
+            u[i,n+1] = F*( u[i+1,n] + u[i-1,n] ) + (1 - 2*F)*u[i,n] + source_term(x[i], t[n])*Δt
         end
     end
     
