@@ -36,18 +36,13 @@ plt.savefig("IMG_Step_05_0000.png", dpi=150)
 for n in range(Nt + 1):
     #for n in range(2):
     un = u.copy()
-    row, col = u.shape
-    for j in range(1, row):
-        for i in range(1, col):
-            u[j, i] = (un[j, i] - (c*Δt/Δx * (un[j, i] - un[j, i - 1])) - (c*Δt/Δy * (un[j, i] - un[j - 1, i])))
-            u[0, :] = 1.0
-            u[-1, :] = 1.0
-            u[:, 0] = 1.0
-            u[:, -1] = 1.0
+    u[1:, 1:] = (un[1:, 1:] - (c*Δt/Δx * (un[1:, 1:] - un[1:, :-1])) - (c*Δt/Δy * (un[1:, 1:] - un[:-1, 1:])))
+
     #fig.clf()
     #ax = fig.gca(projection="3d")
     #X, Y = np.meshgrid(x,y)
     #surf = ax.plot_surface(X, Y, u[:], cmap=cm.jet)
+    #ax.set_zlim(1.0, 2.1)
     #filename = "IMG_Step_05_{:04d}.png".format(n + 1)
     #fig.savefig(filename, dpi=150)
     #print("Done: ", n)
