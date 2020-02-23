@@ -27,7 +27,6 @@ vn = np.ones( (Nx,Ny) )
 
 # Initial condition
 # set hat function I.C. : u(.5<=x<=1 && .5<=y<=1 ) is 2
-# set hat function I.C. : v(.5<=x<=1 && .5<=y<=1 ) is 2
 idx_xi = int(0.5/Δx)
 idx_xf = int(1.0/Δx + 1)
 idx_yi = int(0.5/Δy)
@@ -68,7 +67,6 @@ for n in range(Nt + 1):
 
     fig.clf()
     ax = fig.gca(projection="3d")
-    X, Y = np.meshgrid(x,y)
     surf = ax.plot_surface(X, Y, u, cmap=cm.jet)
     ax.set_xlabel("$x$")
     ax.set_xlabel("$y$")

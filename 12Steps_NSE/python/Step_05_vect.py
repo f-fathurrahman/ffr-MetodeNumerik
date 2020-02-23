@@ -40,7 +40,6 @@ for n in range(Nt + 1):
 
     #fig.clf()
     #ax = fig.gca(projection="3d")
-    #X, Y = np.meshgrid(x,y)
     #surf = ax.plot_surface(X, Y, u[:], cmap=cm.jet)
     #ax.set_zlim(1.0, 2.1)
     #filename = "IMG_Step_05_{:04d}.png".format(n + 1)
