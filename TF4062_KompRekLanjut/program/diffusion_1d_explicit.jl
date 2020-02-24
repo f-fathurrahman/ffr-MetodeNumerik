@@ -1,5 +1,7 @@
-function diffusion_1d_explicit( L::Float64, Nx::Int64, T::Float64, Nt::Int64,
-    α::Float64, u0x, bx0, bxf, source_term )
+function diffusion_1d_explicit(
+    L::Float64, Nx::Int64, T::Float64, Nt::Int64,
+    α::Float64, u0x, bx0, bxf, f
+)
     
     Δx = L/(Nx-1)
     x = collect(range(0.0, stop=L, length=Nx))
@@ -9,12 +11,10 @@ function diffusion_1d_explicit( L::Float64, Nx::Int64, T::Float64, Nt::Int64,
 
     u = zeros(Float64, Nx, Nt)
     
-    # Aplikasi syarat awal
     for i in 1:Nx
         u[i,1] = u0x(x[i])
     end
     
-    # Syarat batas
     for k in 1:Nt
         u[1,k] = bx0(t[k])
         u[Nx,k] = bxf(t[k])
@@ -35,7 +35,7 @@ function diffusion_1d_explicit( L::Float64, Nx::Int64, T::Float64, Nt::Int64,
 
     for n in 1:Nt-1
         for i in 2:Nx-1
-            u[i,n+1] = F*( u[i+1,n] + u[i-1,n] ) + (1 - 2*F)*u[i,n] + source_term(x[i], t[n])*Δt
+            u[i,n+1] = F*( u[i+1,n] + u[i-1,n] ) + (1 - 2*F)*u[i,n] + f(x[i], t[n])*Δt
         end
     end
     
