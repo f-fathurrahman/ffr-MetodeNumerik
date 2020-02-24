@@ -1,4 +1,4 @@
-\documentclass[a4paper]{article}
+\documentclass[a4paper,12pt]{article}
 
 \usepackage[a4paper]{geometry}
 \geometry{verbose,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm}
@@ -41,7 +41,8 @@
 
 \begin{document}
 
-\title{TF4062: Diffusion Equation with Finite Difference Method}
+\title{Diffusion Equation with Finite Difference Method \\
+TF4062}
 \author{Iwan Prasetyo \\
 Fadjar Fathurrahman}
 \date{}
@@ -68,28 +69,130 @@ Boundary condition:
 u(0,t) = 0, \qquad u(L,t) = 0, \qquad t > 0
 \end{equation}
 
-
-\subsection{Forward Euler scheme}
-
+Spatial grid:
 \begin{equation}
-x_{i} = (i-1)\Delta x, i = 1, \ldots, N_{x} \\
-t_{n} = (n-1)\Delta t, n = 1, \ldots, N_{t}
+x_{i} = (i-1)\Delta x, \qquad i = 1, \ldots, N_{x}
 \end{equation}
+Temporal grid:
+\begin{equation}
+t_{n} = (n-1)\Delta t, \qquad n = 1, \ldots, N_{t}
+\end{equation}
+
+
+\subsection{Explicit or forward Euler scheme}
 
 \begin{equation}
 \frac{u_{i}^{n+1} - u_{i}^{n}}{\Delta t} = \alpha \frac{u_{i+1}^{n} -2u_{i}^{n} + u_{i-1}^{n}}{\Delta x^2} + f_{i}^{n}
+\label{eq:expl_forward_01}
+\end{equation}
+
+By using the following definition of \textit{mesh Fourier number}:
+\begin{equation}
+F = \alpha \frac{\Delta t}{\Delta x^2}
+\end{equation}
+we can rearrange the equation \eqref{eq:expl_forward_01} to:
+\begin{equation}
+u_{i}^{n+1} = u_{i} + F\left( u_{i+1}^{n} - 2u_{i}^{n} + u_{i+1}^{n} \right) +
+f_{i}^{n}\Delta t
+\label{eq:expl_forward}
+\end{equation}
+The equation \eqref{eq:expl_forward} can be used 
+
+
+\subsection{Implicit or backward Euler scheme}
+
+\begin{equation}
+\frac{u_{i}^{n} - u_{i}^{n-1}}{\Delta t} = \alpha
+\frac{u^{n}_{i+1} - 2u^{n}_{i} + u^{n}_{i-1}}{\Delta x^2} + f_{i}^{n}
 \end{equation}
 
 \begin{equation}
-u_{i}^{n+1} = u_{i}
+-Fu_{i-1}^{n} + (1 + 2F)u_{i}^{n} - F u_{i+1}^{n} = u^{n-1}_{i-1} + f^{n}_{i}
+\end{equation}
+
+\begin{equation}
+\mathbf{A}\mathbf{u} = \mathbf{b}
 \end{equation}
 
 
-\appendix
+\begin{equation}
+\begin{bmatrix}
+A_{1,1} & A_{1,2} & 0       & \cdots  & \cdots    & \cdots  & \cdots    & \cdots        & \cdots \\
+A_{1,2} & A_{2,2} & A_{2,3} & \cdots  & \cdots    & \cdots  &           &               & \vdots \\
+0       & A_{3,2} & A_{3,3} & A_{3,4} & \cdots    & \cdots  &           &               & \vdots \\
+\vdots  & \ddots  &         & \ddots  &           &  0      &           &               & \vdots \\
+\vdots  &         &         & \ddots  & \ddots    & \ddots  & \ddots    &               & \vdots \\
+\vdots  &         &         & 0       & A_{i,j-1} & A_{i,j} & A_{i,j+1} & \ddots        & \vdots \\
+\vdots  &         &         &         & \ddots    & \ddots  & \ddots    & \ddots        & 0 \\
+\vdots  &         &         &         &           & \ddots  & \ddots    & \ddots        & A_{N_x-1,N_x} \\
+0       & \cdots  & \cdots  & \cdots  & \cdots    & \cdots  & \cdots    & A_{N_x,N_x-1} & A_{N_x,N_x} \\
+\end{bmatrix}
+\end{equation}
 
-\appendixpage
+\begin{align*}
+A_{i,i-1} & = -F \\
+A_{i,i}   & = 1 + 2F \\
+A_{i,i+1} & = -F
+\end{align*}
 
-\section{Conjugate gradient for system of linear equations}
+\begin{align*}
+A_{1,1} = 1 \\
+A_{1,2} = 0 \\
+A_{N_x-1,N_x-1} = 0 \\
+A_{N_x,N_x} 1
+\end{align*}
+
+\begin{equation}
+\mathbf{b} = \begin{bmatrix}
+b_{1} \\
+b_{2} \\
+\vdots \\
+b_{i} \\
+\vdots \\
+b_{N_x}
+\end{bmatrix}
+\end{equation}
+
+Right-hand side $b_{1} = 0$ and $b_{N_x} = 0$
+\begin{equation}
+b_{i} = u^{n-1}_{i} + f_{i}^{n-1} \Delta t, \qquad i = 2, \ldots, N_{x}-1
+\end{equation}
+
+
+
+\subsection{Crank-Nicolson}
+
+\begin{equation}
+u_{i}^{n+1} - \frac{1}{2} F \left( u_{i-1}^{n+1} - 2u^{n+1}_{i} + u^{n+1}_{i+1} \right) =
+u_{i}^{n} + \frac{1}{2} F \left( u_{i-1}^{n} - 2u^{n}_{i} + u^{n}_{i+1} \right) +
+\frac{1}{2} f_{i}^{n+1} + \frac{1}{2} f_{i}^{n}
+\end{equation}
+
+
+\begin{equation}
+\mathbf{A}\mathbf{u} = \mathbf{b}
+\end{equation}
+
+\begin{align*}
+A_{i,i-1} & = -\frac{1}{2}F \\
+A_{i,i}   & = 1 + F \\
+A_{i,i+1} & = -\frac{1}{2}F
+\end{align*}
+
+Right-hand side $b_{1} = 0$ and $b_{N_x} = 0$
+\begin{equation}
+b_{i} = u^{n}_{i} + \frac{1}{2}F \left( u^{n}_{i+1} -2u^{n}_{i} + u^{n}_{i-1} \right) +
+\frac{1}{2} \left( f_{i}^{n+1} + f_{i}^{n} \right) \Delta t
+\qquad i = 2, \ldots, N_{x}-1
+\end{equation}
+
+
+
+%\appendix
+
+%\appendixpage
+
+%\section{Conjugate gradient for system of linear equations}
 
 
 \bibliographystyle{unsrt}
