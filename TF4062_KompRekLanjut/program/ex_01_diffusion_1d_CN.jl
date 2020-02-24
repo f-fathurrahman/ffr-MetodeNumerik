@@ -18,6 +18,10 @@ function bxf( t )
     return 0.0
 end
 
+function source_term(x, t)
+    return 0.0
+end
+
 function analytic_solution(x, t)
     return sin(π*x) * exp(-π^2 * t)
 end
@@ -47,13 +51,12 @@ end
 
 function main()
     α = 1.0
-    xf = 1.0
-    tf = 0.2
-
+    L = 1.0
+    T = 0.2
     Nx = 25
-    Nt = 200
+    Nt = 400
 
-    u, x, t = diffusion_1d_CN( α, xf, tf, initial_temp, bx0, bxf, Nx, Nt )
+    u, x, t = diffusion_1d_CN( L, Nx, T, Nt, α, initial_temp, bx0, bxf, source_term )
 
     #plot_all( u, x, t )
     u_a = analytic_solution.(x, t[end])
