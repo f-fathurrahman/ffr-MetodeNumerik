@@ -48,11 +48,7 @@ Fadjar Fathurrahman}
 \date{}
 \maketitle
 
-
-\section{Explicit method for 1d diffusion equation}
-
-
-\subsection{Initial-boundary value problem for 1d diffusion}
+\section{Initial-boundary value problem for 1d diffusion}
 
 1d diffusion equation:
 \begin{equation}
@@ -79,7 +75,7 @@ t_{n} = (n-1)\Delta t, \qquad n = 1, \ldots, N_{t}
 \end{equation}
 
 
-\subsection{Explicit or forward Euler scheme}
+\section{Forward Euler scheme}
 
 \begin{equation}
 \frac{u_{i}^{n+1} - u_{i}^{n}}{\Delta t} = \alpha \frac{u_{i+1}^{n} -2u_{i}^{n} + u_{i-1}^{n}}{\Delta x^2} + f_{i}^{n}
@@ -99,7 +95,7 @@ f_{i}^{n}\Delta t
 The equation \eqref{eq:expl_forward} can be used 
 
 
-\subsection{Implicit or backward Euler scheme}
+\section{Backward Euler scheme}
 
 \begin{equation}
 \frac{u_{i}^{n} - u_{i}^{n-1}}{\Delta t} = \alpha
@@ -160,31 +156,75 @@ b_{i} = u^{n-1}_{i} + f_{i}^{n-1} \Delta t, \qquad i = 2, \ldots, N_{x}-1
 
 
 
-\subsection{Crank-Nicolson}
+\section{Crank-Nicolson (CN) method}
 
+In the Crank-Nicolson method we require the PDE to be satisfied at the spatial
+mesh point $x_{i}$ but midway between the points in the time mesh ($t_{n+\frac{1}{2}})$:
+\begin{equation}
+\frac{\partial}{\partial t} u_{i}^{n+\frac{1}{2}} =
+\alpha\frac{\partial^2}{\partial x^2} u_{i}^{n+\frac{1}{2}} + 
+f_{i}^{n+\frac{1}{2}}
+\end{equation}
+%
+Using centered difference in space and time:
+%
+\begin{equation}
+\frac{u_{i}^{n+1} - u_{i}^{n}}{\Delta t} = 
+\frac{1}{\Delta x^2} \left(
+u_{i+1}^{n+\frac{1}{2}} - 2u_{i}^{n+\frac{1}{2}} + u_{i-1}^{n+\frac{1}{2}}
+\right) + f_{i}^{n+\frac{1}{2}}
+\end{equation}
+%
+Because $u_{i}^{n+\frac{1}{2}}$ is not the quantity that we want to calculate,
+we must approximate it.
+We can approximate it by an average between the value at $t_n$ and $t_{n+1}$:
+\begin{equation}
+u_{i}^{n+\frac{1}{2}} \approx \frac{1}{2}( u_{i}^{n} + u_{i}^{n+1} )
+\end{equation}
+We also can use the same approximation for $f_{i}^{n+\frac{1}{2}}$:
+\begin{equation}
+f_{i}^{n+\frac{1}{2}} \approx \frac{1}{2}( f_{i}^{n} + f_{i}^{n+1} )
+\end{equation}
+%
+Substituting these approximations we obtain:
+%
 \begin{equation}
 u_{i}^{n+1} - \frac{1}{2} F \left( u_{i-1}^{n+1} - 2u^{n+1}_{i} + u^{n+1}_{i+1} \right) =
 u_{i}^{n} + \frac{1}{2} F \left( u_{i-1}^{n} - 2u^{n}_{i} + u^{n}_{i+1} \right) +
 \frac{1}{2} f_{i}^{n+1} + \frac{1}{2} f_{i}^{n}
+\label{eq:CN_v1}
 \end{equation}
-
-
+%
+We notice that the equation \eqref{eq:CN_v1} has similar structure as the one we obtained
+for backward Euler method:
+%
 \begin{equation}
 \mathbf{A}\mathbf{u} = \mathbf{b}
 \end{equation}
-
+%
+The element of the matrix $\mathbf{A}$ are:
+%
 \begin{align*}
 A_{i,i-1} & = -\frac{1}{2}F \\
 A_{i,i}   & = 1 + F \\
 A_{i,i+1} & = -\frac{1}{2}F
 \end{align*}
-
-Right-hand side $b_{1} = 0$ and $b_{N_x} = 0$
+%
+for internal points $i = 2,\ldots,N_{x}-1$. For boundary points we have:
+%
+\begin{align*}
+A_{1,1} & = 1 \\
+A_{1,2} & = 0 \\
+A_{N_{x},N_{x}-1} & = 0 \\
+A_{N_{x},N_{x}} & = 1 \\
+\end{align*}
+%
+For the right-hand side vector $\mathbf{b}$ we have $b_{1} = 0$ and $b_{N_x} = 0$ and
 \begin{equation}
 b_{i} = u^{n}_{i} + \frac{1}{2}F \left( u^{n}_{i+1} -2u^{n}_{i} + u^{n}_{i-1} \right) +
 \frac{1}{2} \left( f_{i}^{n+1} + f_{i}^{n} \right) \Delta t
-\qquad i = 2, \ldots, N_{x}-1
 \end{equation}
+for internal points $i = 2, \ldots, N_{x}-1$.
 
 
 
