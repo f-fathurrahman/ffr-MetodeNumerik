@@ -1,0 +1,14 @@
+Regresi linear untuk fungsi nonlinear yang dapat ditransformasi
+menjadi fungsi linear.
+
+- Fungsi eksponensial
+- Fungsi pangkat (power)
+- Fungsi rasional
+
+Jelaskan transformasi apa yang harus dilakukan.
+Buat visualisasi dari x dan y, dan juga variabel-variable
+yang ditransformasikan.
+Cari parameter α dan β (dalam persamaan asli).
+
+Apakah pengaruh sampling data (x_sample) berpengaruh terhadap
+hasil regresi?
