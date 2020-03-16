@@ -1,16 +1,9 @@
-# ref: Kiusalaas
-def integ_trapezeoid_recursive( f, a, b, Iold, k ):
-    if k == 1:
-        Inew = (f(a) - f(b))*(b - a)/2.0
-    else:
-        # number of new points
-        N = 2**(k-2)
-        # 
-        h = (b-a)/N
-        x = a + h/2.0
-        s = 0.0
-        for i in range(N):
-            s = s + f(x)
-            x = x + h
-        Inew = (Iold + h*s)/2.0
-    return Inew
+def integ_trapezoid(f, x):
+    N = len(f)
+    assert N == len(x)
+    a = x[0]
+    b = x[-1]
+    s = f[0] + f[-1]
+    for i in range(1,N-1):
+        s = s + 2*f[i]
+    return 0.5*s*(b-a)/(N-1)
