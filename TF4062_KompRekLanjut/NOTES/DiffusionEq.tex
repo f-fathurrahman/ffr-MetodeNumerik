@@ -50,9 +50,10 @@ Fadjar Fathurrahman}
 
 \section{Initial-boundary value problem for 1d diffusion}
 
-1d diffusion equation:
+We consider 1d diffusion (or heat) equation:
 \begin{equation}
 \frac{\partial u}{\partial t} = \alpha \frac{\partial^2 u}{\partial t^2} + f(x,t)
+\label{eq:PDE_heat}
 \end{equation}
 
 Initial condition:
@@ -63,6 +64,7 @@ u(x,0) = I(x), \qquad x \in [0,L]
 Boundary condition:
 \begin{equation}
 u(0,t) = 0, \qquad u(L,t) = 0, \qquad t > 0
+\label{eq:bc_dirichlet}
 \end{equation}
 
 Spatial grid:
@@ -77,40 +79,60 @@ t_{n} = (n-1)\Delta t, \qquad n = 1, \ldots, N_{t}
 
 \section{Forward Euler scheme}
 
+In forward Euler scheme, forward difference to approximate time derivative and second order
+central difference for spatial derivative are used to discretize the PDE \eqref{eq:PDE_heat}:
 \begin{equation}
-\frac{u_{i}^{n+1} - u_{i}^{n}}{\Delta t} = \alpha \frac{u_{i+1}^{n} -2u_{i}^{n} + u_{i-1}^{n}}{\Delta x^2} + f_{i}^{n}
+\frac{u_{i}^{n+1} - u_{i}^{n}}{\Delta t} = \alpha \frac{u_{i+1}^{n} -2u_{i}^{n} + u_{i-1}^{n}}{\Delta x^2} + f_{i}^{n}.
 \label{eq:expl_forward_01}
 \end{equation}
-
+%
 By using the following definition of \textit{mesh Fourier number}:
+%
 \begin{equation}
-F = \alpha \frac{\Delta t}{\Delta x^2}
+F = \alpha \frac{\Delta t}{\Delta x^2},
 \end{equation}
-we can rearrange the equation \eqref{eq:expl_forward_01} to:
+%
+we can rearrange the equation \eqref{eq:expl_forward_01} to
+%
 \begin{equation}
 u_{i}^{n+1} = u_{i} + F\left( u_{i+1}^{n} - 2u_{i}^{n} + u_{i+1}^{n} \right) +
-f_{i}^{n}\Delta t
+f_{i}^{n}\Delta t.
 \label{eq:expl_forward}
 \end{equation}
-The equation \eqref{eq:expl_forward} can be used 
+%
+Because the RHS of the equation \eqref{eq:expl_forward} is known, it can be used used to advance
+the solution $u^{n}_{i}$ directly for a given initial and boundary conditions.
+I can be shown that this scheme is conditionally stable. For a stable solution the following
+condition must be satisfied:
+\begin{equation}
+F \leq \frac{1}{2}
+\end{equation}
 
 
 \section{Backward Euler scheme}
 
+In backward Euler scheme, forward difference to approximate time derivative and second order
+central difference for spatial derivative are used to discretize the PDE \eqref{eq:PDE_heat}:
 \begin{equation}
 \frac{u_{i}^{n} - u_{i}^{n-1}}{\Delta t} = \alpha
 \frac{u^{n}_{i+1} - 2u^{n}_{i} + u^{n}_{i-1}}{\Delta x^2} + f_{i}^{n}
 \end{equation}
-
+%
+which can be rearranged to
+%
 \begin{equation}
--Fu_{i-1}^{n} + (1 + 2F)u_{i}^{n} - F u_{i+1}^{n} = u^{n-1}_{i-1} + f^{n}_{i}
+-Fu_{i-1}^{n} + (1 + 2F)u_{i}^{n} - F u_{i+1}^{n} = u^{n-1}_{i} + f^{n}_{i}
 \end{equation}
-
+for $i = 1, 2, \ldots, N_{x}$.
+We cannot write $u^{n}_{i}$ directly in terms of known quantities. We have
+to solve a system of linear equations to find $u^{n}_{i}$. This linear system
+can be written as:
 \begin{equation}
 \mathbf{A}\mathbf{u} = \mathbf{b}
 \end{equation}
-
-
+%
+The matrix $\mathbf{A}$ has the following tridiagonal structure:
+%
 \begin{equation}
 \begin{bmatrix}
 A_{1,1} & A_{1,2} & 0       & \cdots  & \cdots    & \cdots  & \cdots    & \cdots        & \cdots \\
@@ -124,42 +146,37 @@ A_{1,2} & A_{2,2} & A_{2,3} & \cdots  & \cdots    & \cdots  &           &       
 0       & \cdots  & \cdots  & \cdots  & \cdots    & \cdots  & \cdots    & A_{N_x,N_x-1} & A_{N_x,N_x} \\
 \end{bmatrix}
 \end{equation}
-
+where the matrix elements for inner points ($i = 2,3,\ldots,N_{x}-1$ are:
 \begin{align*}
 A_{i,i-1} & = -F \\
 A_{i,i}   & = 1 + 2F \\
 A_{i,i+1} & = -F
 \end{align*}
-
+%
+For boundary points, due to the boundary conditions defined in
+\eqref{eq:bc_dirichlet} we have
+%
 \begin{align*}
 A_{1,1} = 1 \\
 A_{1,2} = 0 \\
 A_{N_x-1,N_x-1} = 0 \\
 A_{N_x,N_x} 1
 \end{align*}
-
-\begin{equation}
-\mathbf{b} = \begin{bmatrix}
-b_{1} \\
-b_{2} \\
-\vdots \\
-b_{i} \\
-\vdots \\
-b_{N_x}
-\end{bmatrix}
-\end{equation}
-
-Right-hand side $b_{1} = 0$ and $b_{N_x} = 0$
+For RHS, the elements of column vector $\mathbf{b}$ are $b_{1} = 0$ and $b_{N_x} = 0$ and
 \begin{equation}
 b_{i} = u^{n-1}_{i} + f_{i}^{n-1} \Delta t, \qquad i = 2, \ldots, N_{x}-1
 \end{equation}
 
+Because we have to solve a system of linear equations backward Euler scheme is
+categorized as an implicit scheme. It can be shown that this scheme is unconditionally
+stable.
 
 
 \section{Crank-Nicolson (CN) method}
 
 In the Crank-Nicolson method we require the PDE to be satisfied at the spatial
 mesh point $x_{i}$ but midway between the points in the time mesh ($t_{n+\frac{1}{2}})$:
+%
 \begin{equation}
 \frac{\partial}{\partial t} u_{i}^{n+\frac{1}{2}} =
 \alpha\frac{\partial^2}{\partial x^2} u_{i}^{n+\frac{1}{2}} + 
@@ -175,7 +192,7 @@ u_{i+1}^{n+\frac{1}{2}} - 2u_{i}^{n+\frac{1}{2}} + u_{i-1}^{n+\frac{1}{2}}
 \right) + f_{i}^{n+\frac{1}{2}}
 \end{equation}
 %
-Because $u_{i}^{n+\frac{1}{2}}$ is not the quantity that we want to calculate,
+$u_{i}^{n+\frac{1}{2}}$ is not the quantity that we want to calculate so
 we must approximate it.
 We can approximate it by an average between the value at $t_n$ and $t_{n+1}$:
 \begin{equation}
@@ -226,14 +243,40 @@ b_{i} = u^{n}_{i} + \frac{1}{2}F \left( u^{n}_{i+1} -2u^{n}_{i} + u^{n}_{i-1} \r
 \end{equation}
 for internal points $i = 2, \ldots, N_{x}-1$.
 
+Because we have to solve a system of linear equations, Crank-Nicolson scheme is also
+categorized as an implicit scheme. It can be shown that this scheme is unconditionally
+stable.
+
+
 
 \section{Implementation}
+
+In this section we provide simple implementations of the following schemes:
+\begin{itemize}
+\item forward Euler (\jlinline{diffusion_1d_explicit}),
+\item backward Euler (\jlinline{diffusion_1d_implicit}),
+\item backward Euler (\jlinline{diffusion_1d_CN})
+\end{itemize}
+
+The following arguments are used:
+\begin{itemize}
+\item \jlinline{L}: coordinate of the rightmost point. The leftmost point is taken to be 0.
+\item \jlinline{T}: the final time when the solution must be computed.
+\item \jlinline{Nx} and \jlinline{Nt}: number of points in spatial and temporal grid, respectively.
+\item \jlinline{α}: the coefficient $\alpha$ in the diffusion equation, taken to be a constant.
+\item \jlinline{u0x}: a function describing initial condition $I(x)$.
+\item \jlinline{bx0} and \jlinline{bxL}: two functions describing boundary conditions at $x=0$ and
+$x=L$, respectively. In general these functions may take time as an argument, however for our present case
+they simply return a number (zero).
+\item \jlinline{f}: a function describing the source term. It takes spatial coordinate and time as the
+arguments.
+\end{itemize}
 
 
 \begin{juliacode}
 function diffusion_1d_explicit(
     L::Float64, Nx::Int64, T::Float64, Nt::Int64,
-    α::Float64, u0x, bx0, bxf, f
+    α::Float64, u0x, bx0, bxL, f
 )
     
     Δx = L/(Nx-1)
@@ -250,7 +293,7 @@ function diffusion_1d_explicit(
     
     for k in 1:Nt
         u[1,k] = bx0(t[k])
-        u[Nx,k] = bxf(t[k])
+        u[Nx,k] = bxL(t[k])
     end
     
     F = α*Δt/Δx^2
@@ -280,7 +323,7 @@ end
 \begin{juliacode}
 function diffusion_1d_implicit(
     L::Float64, Nx::Int64, T::Float64, Nt::Int64,
-    α::Float64, u0x, bx0, bxf, f
+    α::Float64, u0x, bx0, bxL, f
 )
     Δx = L/(Nx-1)
     x = collect(range(0.0, stop=L, length=Nx))
@@ -296,7 +339,7 @@ function diffusion_1d_implicit(
 
     for k in 1:Nt
         u[1,k] = bx0(t[k])
-        u[Nx,k] = bxf(t[k])
+        u[Nx,k] = bxL(t[k])
     end
 
     F = α*Δt/Δx^2
@@ -329,7 +372,7 @@ end
 \begin{juliacode}
 function diffusion_1d_CN(
     L::Float64, Nx::Int64, T::Float64, Nt::Int64,
-    α::Float64, u0x, bx0, bxf, f
+    α::Float64, u0x, bx0, bxL, f
 )
 
     Δx = L/(Nx-1)
@@ -346,7 +389,7 @@ function diffusion_1d_CN(
 
     for k in 1:Nt
         u[1,k] = bx0(t[k])
-        u[Nx,k] = bxf(t[k])
+        u[Nx,k] = bxL(t[k])
     end
 
     F = α*Δt/Δx^2
@@ -374,6 +417,110 @@ function diffusion_1d_CN(
 
 end
 \end{juliacode}
+
+
+\section{Verification}
+
+\begin{juliacode}
+using Printf
+
+import PyPlot
+const plt = PyPlot
+plt.rc("text", usetex=true)
+
+include("diffusion_1d_explicit.jl")
+include("diffusion_1d_implicit.jl")
+include("diffusion_1d_CN.jl")
+
+const L =  1.0
+const α = 1.0
+
+function analytic_solution(x, t)
+    return 5*t*x*(L - x)
+end
+
+function source_term(x, t)
+    return 10*α*t + 5*x*(L - x)
+end
+
+function initial_cond(x)
+    return analytic_solution(x, 0.0)
+end
+
+function bx0(t)
+    return 0.0
+end
+
+function bxL(t)
+    return 0.0
+end
+
+function main()
+    
+    T = 0.1
+    Nx = 21
+    F = 0.5
+    dx = L/(Nx-1)
+    Δt = F*dx^2/α
+    Nt = round(Int64,T/Δt) + 1
+
+    # Please change accordingly (or use loop)
+    u, x, t = diffusion_1d_explicit(L, Nx, T, Nt, α, initial_cond, bx0, bxL, source_term)
+
+    u_e = analytic_solution.(x, t[end])
+    diff_u = maximum(abs.(u_e - u[:,end]))
+    println("diff_u = ", diff_u)
+
+end
+
+main()
+\end{juliacode}
+
+\section{Example 1}
+
+Only import parts are included. The remaining is similar to the verification program.
+
+\begin{juliacode}
+function initial_temp(x)
+    return sin(π*x)
+end
+
+function bx0( t )
+    return 0.0
+end
+
+function bxf( t )
+    return 0.0
+end
+
+function source_term(x, t)
+    return 0.0
+end
+
+function analytic_solution(x, t)
+    return sin(π*x) * exp(-π^2 * t)
+end
+
+function main()
+    α = 1.0
+    L = 1.0
+    T = 0.2
+    Nx = 25
+    Nt = 400
+
+    u, x, t = diffusion_1d_explicit( L, Nx, T, Nt, α, initial_temp, bx0, bxf, source_term )
+
+    u_a = analytic_solution.(x, t[end])
+    u_n = u[:,end]
+    rmse = sqrt( sum((u_a - u_n).^2)/Nx )
+    mean_abs_diff = sum( abs.(u_a - u_n) )/Nx
+    @printf("RMS error            = %15.10e\n", rmse)
+    @printf("Means abs diff error = %15.10e\n", mean_abs_diff)
+end
+
+main()
+\end{juliacode}
+
 
 
 %\appendix
