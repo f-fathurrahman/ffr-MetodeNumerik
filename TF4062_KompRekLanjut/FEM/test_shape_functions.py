@@ -59,7 +59,7 @@ for i in range(Npoints):
         yplt[ip] = N[i].subs( {x: xplt[ip]} )
     plt.plot(xplt, yplt, label="N_"+str(i+1))
 plt.legend()
-plt.savefig("ShapeFunctions.pdf")
+plt.savefig("IMG_ShapeFunctions.pdf")
 
 #print(N[0].subs({x: 0.0}))
 
