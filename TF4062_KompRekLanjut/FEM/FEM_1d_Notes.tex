@@ -1,0 +1,278 @@
+%\documentclass[a4paper,11pt]{article} % print setting
+\documentclass[a4paper,12pt]{article} % screen setting
+
+\usepackage[a4paper]{geometry}
+\geometry{verbose,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm}
+
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+
+\usepackage{cmbright}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{fontspec}
+\setmonofont{FreeMono}
+
+%\usepackage{sfmath}
+%\usepackage{mathptmx}
+%\usepackage{mathpazo}
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{minted}
+\newminted{julia}{breaklines,fontsize=\small}
+\newminted{bash}{breaklines,fontsize=\small}
+\newminted{text}{breaklines,fontsize=\small}
+
+\newcommand{\txtinline}[1]{\mintinline{text}{#1}}
+\newcommand{\jlinline}[1]{\mintinline{julia}{#1}}
+
+\newmintedfile[juliafile]{julia}{breaklines,fontsize=\small}
+
+\definecolor{mintedbg}{rgb}{0.90,0.90,0.90}
+\usepackage{mdframed}
+
+\BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=mintedbg]}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+
+\usepackage{setspace}
+
+\onehalfspacing
+
+\usepackage{appendix}
+
+
+\begin{document}
+
+
+\title{Diffusion Equation with Finite Element Method \\
+TF4062}
+\author{Iwan Prasetyo \\
+Fadjar Fathurrahman}
+\date{}
+\maketitle
+
+
+\section{Steady heat equation}
+
+Consider steady heat equation:
+\begin{equation}
+-k \frac{\mathrm{d}^2 T}{\mathrm{d}x^2} = Q
+\end{equation}
+for $0 < x < L$ and boundary conditions:
+\begin{equation}
+-k\frac{\mathrm{d}T}{\mathrm{d}x} = q \quad \text{at} \, x = 0
+\end{equation}
+and
+\begin{equation}
+T = T_{L} \quad \text{at} \, x = L
+\end{equation}
+
+\subsection{Discretization and approximation}
+
+The FEM procedure start by discretizing the spatial domain into elements $e_{i}$
+where:
+\begin{equation}
+e_{i}: \left\{ x_{i} \leq x \leq x_{i+1} \right\},\quad i=1,2,\ldots,n
+\end{equation}
+The points $x_{i}$ are also called \textit{nodes}. If we have $n$ elements then we
+have $n+1$ nodes (or nodal points).
+The solution to the PDE can be approximated as:
+\begin{equation}
+T(x) \approx \sum_{i}^{n+1} T_{i} N_{i}(x)
+\end{equation}
+where $T_i$ are (unknown) nodal values of $T(x)$ and $N_{i}(x)$ are \textit{shape functions}
+(also called \textit{trial functions} or \textit{basis functions}) associated with each node.
+
+
+\subsection{Linear shape functions}
+The shape functions are defined such that $N_{i}(x_{i}) = 1$ and $N_{i}(x_{j})=0$
+if $j \neq i$. In FEM, they are usually chosen to be low order, piecewise polynomials.
+As an example, we will consider the case of one element, $n=1$, or two nodes. The shape functions
+can be defined as:
+\begin{align}
+N_{1}(x) & = 1 - \frac{x}{L} \\
+N_{2}(x) & = \frac{x}{L}
+\end{align}
+An illustration of this case is shows in Figure \ref{fig:Simpson_2_2}.
+
+\begin{figure}[H]
+{\centering
+\includegraphics[scale=1.0]{images/Simpson_Fig_2_2.pdf}
+\par}
+\caption{The case of one element with linear shape functions. (from \cite{Simpson2017})}
+\label{fig:Simpson_2_2}
+\end{figure}
+
+For general case of linear elements we have the following shape functions. For left
+boundary points:
+\begin{equation}
+N_{1}(x) = \begin{cases}
+\dfrac{x_{2} - x}{h_1} & x_{1} \leq x \leq x_{2} \\[10pt]
+0                     & \text{otherwise}
+\end{cases}
+\end{equation}
+%
+For interior points:
+%
+\begin{equation}
+N_{i}(x) = \begin{cases}
+\dfrac{x - x}{h_{i-1}} & x_{i-1} \leq x \leq x_{i} \\[10pt]
+\dfrac{x_{i+1} - x}{h_{i}} & x_{i} \leq x \leq x_{i+1},\quad i=2,3,\ldots,n \\[10pt]
+0                     & \text{otherwise}
+\end{cases}
+\end{equation}
+%
+And for right boundary points:
+%
+\begin{equation}
+N_{n+1}(x) = \begin{cases}
+\dfrac{x - x_{n}}{h_{n}} & x_{n} \leq x \leq x_{n+1} \\[10pt]
+0                     & \text{otherwise}
+\end{cases}
+\end{equation}
+%
+where $h_{i}$ are the spacings between nodal points.
+%
+\begin{equation}
+h_{i} = x_{i+1} - x_{i}
+\end{equation}
+
+\subsection{Weighted residuals}
+
+When we approximate the solution as ??ref??, in general, we cannot obtain the true
+solution to the differential equation. So, we will not get an exact equality but
+some \textit{residual} associated with the error in the approximation. This residual
+can be defined as:
+\begin{equation}
+R(T,x) \equiv -k \frac{\mathrm{d}^2 T}{\mathrm{d}x^2} - Q
+\end{equation}
+where $T$ in the above equation is the approximation to the true solution $T^{*}$
+for which we have:
+\begin{equation}
+R(T^{*},x) \equiv 0
+\end{equation}
+However, for any $T \neq T^{\mathrm{*}}$, we cannot force the residual
+to vanish at every
+point $x$, no matter how small we make the grid or long the series expansion.
+The idea of the \textit{weighted residuals method} is that we can multiply
+the residual by a \textit{weighting function} and force the integral of the weighted
+expression to vanish:
+\begin{equation}
+\int_{0}^{L} w(x) R(T,x) \mathrm{d}x = 0
+\end{equation}
+where $w(x)$ is the weighting function.
+Choosing different weighting functions and replacing each of them in
+??ref??, we can then generate a system
+of linear equations in the unknown parameters $T_{i}$ that will determine an
+approximation T of the form of the finite series given in Equation ??ref??.
+This will satisfy the differential equation in an "average" or "integral" sense.
+The type of weighting function chosen depends on the type of weighted
+residual technique selected. In the \textit{Galerkin procedure}, the weights are set
+equal to the shape functions $N_{i}$, that is
+\begin{equation}
+w_{i}(x) = N_{i}(x)
+\end{equation}
+So we have:
+\begin{equation}
+\int_{0}^{L} N_{i} \left[
+-k\frac{\mathrm{d}^2 T}{\mathrm{d}x^2} - Q
+\right]\,\mathrm{d}x = 0
+\end{equation}
+
+Since the temperature distribution must be a continuous function of $x$,
+the simplest way to approximate it would be to use piecewise polynomial
+interpolation over each element, in particular, piecewise linear approxi-
+mation (by using linear shape functions as in ??ref??)
+provides the simplest approximation with a continuous function.
+Unfortunately, the first derivatives of such functions are not continuous
+at the elements' ends and, hence, second derivatives do not exist there;
+furthermore, the second derivative of $T$ would vanish inside each element.
+However, to require the second-order derivatives to exist everywhere is
+too restrictive.
+We can weaken this requirement by application of integration by parts to
+the second derivative:
+\begin{equation}
+\int_{0}^{L} N_{i} \left[ -k\frac{\mathrm{d}^2 T}{\mathrm{d}x^2} \right]\,\mathrm{d}x =
+\int_{0}^{L} k \frac{\mathrm{d} N_{i}}{\mathrm{d}x}
+\frac{\mathrm{d} T}{\mathrm{d}x} \mathrm{d}x -
+\left[ k N_{i} \frac{\mathrm{d}T}{\mathrm{d}x} \right]_{0}^{L}
+\end{equation}
+
+Substituting the Equation ??ref?? to the integral term at the RHS:
+\begin{align}
+\int_{0}^{L} k \frac{\mathrm{d} N_{i}}{\mathrm{d}x}
+\frac{\mathrm{d}}{\mathrm{d}x}\, \left( \sum_{j=1}^{n+1} T_{j} N_{j} \right) \mathrm{d}x & =
+\int_{0}^{L} k \frac{\mathrm{d} N_{i}}{\mathrm{d}x}
+\left( \sum_{j=1}^{n+1} \frac{\mathrm{d}N_{j}}{\mathrm{d}x} T_{j} \right)\, \mathrm{d}x \\
+& = \int_{0}^{L} k
+\left( \sum_{j=1}^{n+1}
+\frac{\mathrm{d} N_{i}}{\mathrm{d}x}
+\frac{\mathrm{d}N_{j}}{\mathrm{d}x} T_{j} \right)\, \mathrm{d}x
+\end{align}
+
+The Equation ??ref?? can be rewritten as
+\begin{equation}
+\int_{0}^{L} k
+\left( \sum_{j=1}^{n+1}
+\frac{\mathrm{d} N_{i}}{\mathrm{d}x}
+\frac{\mathrm{d}N_{j}}{\mathrm{d}x} T_{j} \right)\, \mathrm{d}x -
+\int_{0}^{L} N_{i} Q\, \mathrm{d}x -
+\left[ k N_{i} \frac{\mathrm{d}T}{\mathrm{d}x} \right]_{0}^{L} = 0
+\end{equation}
+for $i=1,2,\ldots,n+1$. The quantities $k$, $Q$, $N_{i}$ are known.
+The terms containing $T_{i}$ can be isolated to the LHS and the
+the known quantities can be moved to the RHS. This is a system
+of linear equations with $T_{i}$ as the unknown variables. These linear equations
+can be solved by standard method such as Gaussian elimination and LU decomposition.
+
+In practice, the integral in Equation ??ref?? can be calculated analytically or
+by numerical methods such as Gaussian quadrature. The integral over all spatial
+domain can be divided into integral over elements:
+\begin{equation}
+\int_{0}^{L} = \int_{x_{1}=0}^{x_{2}} + \int_{x_{2}}^{x_{3}} + \cdots +
+\int_{x_{n}}^{x_{n+1}=L}
+\end{equation}
+
+For simplicity, let's consider two elements with equal spacing:
+
+
+\section{Time-dependent problem}
+
+Consider the unsteady heat PDE in one spatial dimension $x$:
+\begin{equation}
+\frac{\partial T}{\partial t} = k \frac{\partial^2 T}{\partial t^2} + Q
+\end{equation}
+where $k$ is thermal diffusivity constant and $Q$ is a constant heat source.
+%
+The initial conditions is
+\begin{equation}
+T(x,t=0) = 0,\qquad \forall \, x \in [0,L]
+\end{equation}
+and the boundary conditions are
+\begin{equation}
+T(x=0,t) = 0 \qquad \text{and} \qquad T(x=L,t) = 0
+\end{equation}
+
+
+\section{Test}
+
+Test cite: \cite{Heinrich2017}
+
+Test code:
+\begin{juliacode}
+α + β
+\end{juliacode}
+
+\bibliographystyle{unsrt}
+\bibliography{BIBLIO}
+
+\end{document}
