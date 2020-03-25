@@ -69,11 +69,22 @@ Consider steady heat equation:
 \end{equation}
 for $0 < x < L$ and boundary conditions:
 \begin{equation}
--k\frac{\mathrm{d}T}{\mathrm{d}x} = q \quad \text{at} \, x = 0
+-k\frac{\mathrm{d}T}{\mathrm{d}x} = q \quad \text{at } x = 0
 \end{equation}
 and
 \begin{equation}
-T = T_{L} \quad \text{at} \, x = L
+T = T_{L} \quad \text{at } x = L
+\end{equation}
+
+The analytical solution to this problem can be expressed as \cite{Heinrich2017}:
+\begin{equation}
+T(x) = T_{L} + \frac{q}{k}(L - x) + \frac{1}{k} \int_{x}^{L}
+\left( \int_{0}^{y} Q(z)\,\mathrm{d}z \right)\,\mathrm{d}y
+\end{equation}
+%
+For constant $Q$, this equation reduces to
+\begin{equation}
+T(x) = T_{L} + \frac{q}{k}(L - x) + \frac{Q}{2k}(L^2 - x^2)
 \end{equation}
 
 \subsection{Discretization and approximation}
@@ -231,18 +242,133 @@ The Equation ??ref?? can be rewritten as
 for $i=1,2,\ldots,n+1$. The quantities $k$, $Q$, $N_{i}$ are known.
 The terms containing $T_{i}$ can be isolated to the LHS and the
 the known quantities can be moved to the RHS. This is a system
-of linear equations with $T_{i}$ as the unknown variables. These linear equations
+of linear equations with $T_{i}$ as the unknown variables. In matrix form:
+\begin{equation}
+\mathbf{K} \mathbf{u} = \mathbf{f}
+\end{equation}
+where $\mathbf{K}$ is a matrix arising from the integral terms, $\mathbf{f}$ are
+column vector whose elements arise from
+the integrals of source term and boundary terms,
+and $\mathbf{u}$ is column vector of the the unknown $T_{i}$.
+These linear equations
 can be solved by standard method such as Gaussian elimination and LU decomposition.
 
 In practice, the integral in Equation ??ref?? can be calculated analytically or
-by numerical methods such as Gaussian quadrature. The integral over all spatial
-domain can be divided into integral over elements:
+by numerical methods such as Gaussian quadrature.
+In the present case, the integral can be calculated analytically.
+The integral over all spatial
+domain can be divided into integrals over elements:
 \begin{equation}
 \int_{0}^{L} = \int_{x_{1}=0}^{x_{2}} + \int_{x_{2}}^{x_{3}} + \cdots +
 \int_{x_{n}}^{x_{n+1}=L}
 \end{equation}
 
-For simplicity, let's consider two elements with equal spacing:
+For simplicity, let's consider two elements with equal spacing
+$h_{1} = h_{2}$ with nodes
+\begin{equation}
+x_{1} = 0, x_{2} = L/2, x_{3} = L
+\end{equation}
+The first integral is done over the first element. In the first element, only
+$N_{1}$ and $N_{2}$ contributes to the integrals because $N_{3}$ is zero in
+this interval. So the index $i$ and $j$ are limited to 1 and 2 only.
+This also applies to other elements.
+
+These integrals can be written as a matrix:
+\begin{equation}
+\mathbf{K}^{e_{1}} = \int_{0}^{L/2} k \begin{bmatrix}
+\dfrac{\mathrm{d}N_{1}}{\mathrm{d}x} \dfrac{\mathrm{d}N_{1}}{\mathrm{d}x} &
+\dfrac{\mathrm{d}N_{1}}{\mathrm{d}x} \dfrac{\mathrm{d}N_{2}}{\mathrm{d}x} \\[10pt]
+\dfrac{\mathrm{d}N_{2}}{\mathrm{d}x} \dfrac{\mathrm{d}N_{1}}{\mathrm{d}x} &
+\dfrac{\mathrm{d}N_{2}}{\mathrm{d}x} \dfrac{\mathrm{d}N_{2}}{\mathrm{d}x}
+\end{bmatrix}\,\mathrm{d}x
+\end{equation}
+
+The needed integrals are:
+\begin{align*}
+\int_{0}^{L/2} \frac{\mathrm{d}N_{1}}{\mathrm{d}x} \dfrac{\mathrm{d}N_{1}}{\mathrm{d}x}\, \mathrm{d}x & =
+\int_{0}^{L/2} \left(-\frac{1}{h_{1}}\right) \left( -\frac{1}{h_{1}} \right)\, \mathrm{d}x \\
+& = \int_{0}^{L/2} \frac{1}{(L/2)^2}\, \mathrm{d}x \\
+& = \left[ \frac{4}{L^2}x \right]_{0}^{L/2} \\
+& = \frac{2}{L}
+\end{align*}
+and
+\begin{align*}
+\int_{0}^{L/2} \frac{\mathrm{d}N_{1}}{\mathrm{d}x} \dfrac{\mathrm{d}N_{2}}{\mathrm{d}x}\, \mathrm{d}x & =
+\int_{0}^{L/2} \left(-\frac{1}{h_{1}}\right) \left( \frac{1}{h_{1}} \right)\, \mathrm{d}x \\
+& = -\frac{2}{L}
+\end{align*}
+So the matrix elements can be written as
+\begin{equation}
+\mathbf{K}^{e_{1}} = \frac{k}{L/2} \begin{bmatrix}
+1  & -1 \\
+-1 & 1
+\end{bmatrix}
+\end{equation}
+%
+For more general case where $h_{1} \neq h_{2}$, we obtain:
+\begin{equation}
+\mathbf{K}^{e_{1}} = \frac{k}{h_{1}} \begin{bmatrix}
+1  & -1 \\
+-1 & 1
+\end{bmatrix}
+\end{equation}
+
+Source term for the first element:
+\begin{equation}
+\mathbf{f}^{e_{1},s} = \begin{bmatrix}
+f^{e_{1},s}_{1} \\
+f^{e_{1},s}_{2} \\
+\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+f^{e_{1},s}_{1} = Q \int_{0}^{L/2} N_{1}(x)\,\mathrm{d}x =
+Q \int_{0}^{L/2} \left( 1 - \dfrac{2x}{L} \right) \,\mathrm{d}x =
+Q \left[ x - \frac{1}{L} x^{2} \right]_{0}^{L/2} =
+Q \frac{L}{4} = Q \frac{h_1}{2}
+\end{equation}
+
+\begin{equation}
+f^{e_{1},s}_{2} = Q \int_{0}^{L/2} N_{2}(x)\,\mathrm{d}x =
+Q \int_{0}^{L/2} \left( \dfrac{2x}{L} \right) \,\mathrm{d}x =
+Q \left[ \frac{1}{L}x^{2} \right]_{0}^{L/2} =
+Q \frac{L}{4} = Q \frac{h_1}{2}
+\end{equation}
+
+Boundary terms for the first element
+\begin{equation}
+\mathbf{f}^{e_{1},b} = \begin{bmatrix}
+f^{e_{1},b}_{1} \\
+f^{e_{1},b}_{2} \\
+\end{bmatrix}
+\end{equation}
+
+By using boundary condition at $x=0$ and using the fact that $N_{1}(x=0)=1$
+and $N_{1}(x=L/2)=0$:
+\begin{equation}
+f^{e_{1},b}_{1} = \left[ N_{1}(x) \left( k\frac{\mathrm{d}T}{\mathrm{d}x} \right) \right]_{0}^{L/2} =
+N_{1}(L/2) \left. \left( k\frac{\mathrm{d}T}{\mathrm{d}x} \right)\right|_{x=L/2} -
+N_{1}(0) \left. \left( k\frac{\mathrm{d}T}{\mathrm{d}x} \right)\right|_{x=0} = q
+\end{equation}
+Meanwhile using using the fact that $N_{2}(x=0)=0$
+and $N_{2}(x=L/2)=1$:
+\begin{equation}
+f^{e_{1},b}_{2} = \left[ N_{2}(x) \left( k\frac{\mathrm{d}T}{\mathrm{d}x} \right) \right]_{0}^{L/2} =
+N_{2}(L/2) \left. \left( k\frac{\mathrm{d}T}{\mathrm{d}x} \right)\right|_{x=L/2} -
+N_{2}(0) \left. \left( k\frac{\mathrm{d}T}{\mathrm{d}x} \right)\right|_{x=0} =
+\left. \left( k\frac{\mathrm{d}T}{\mathrm{d}x} \right)\right|_{x=L/2}
+\end{equation}
+
+Local stiffness matrix
+
+The matrix $\mathbf{K}^{e_{2}}$ associated with the second element also has similar
+form. The matrix $\mathbf{K}^{e_{2}}$
+
+\begin{figure}[H]
+{\centering
+\includegraphics[width=\textwidth]{images/Heinrich_Fig_3_7.pdf}
+\par}
+\end{figure}
 
 
 \section{Time-dependent problem}
