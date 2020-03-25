@@ -12,7 +12,8 @@ x, y, z = symbols("x y z")
 α = Symbol("alpha", real=True, positive=True)
 A = Symbol("A", real=True, positive=True)
 #Q = 1 # constant
-Q = A*exp( -α*(z-L/2)**2 ) # make it as a function of z
+Q = Symbol("Q", real=True)
+#Q = A*exp( -α*(z-L/2)**2 ) # make it as a function of z
 pprint(Q)
 
 expr1 = simplify( integrate(Q, (z,0,y)) )

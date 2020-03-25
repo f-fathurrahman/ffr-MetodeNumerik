@@ -24,7 +24,7 @@ function main()
 
     T_analytic(x) = T_L + q/k * (L - x) + Q/(2*k) * (L^2 - x^2)
 
-    Nelements = 4
+    Nelements = 30
     Nnodes = Nelements + 1
     NnodesPerElement = 2 # linear element
 
@@ -67,7 +67,7 @@ function main()
         f_local[2] = 0.5*Q*h[iel]
         f[idx] = f[idx] + f_local
     end
-    # Boundary term
+    # Apply boundary condition Boundary term
     f[1] = f[1] + q
     #
     f[Nnodes-1] = f[Nnodes-1] + T_L*k/h[Nelements]
@@ -90,6 +90,14 @@ function main()
     #plt.grid()
     #plt.savefig("IMG_ex01.pdf")
 
+    # Flux at x=L (from the last equation that is dropped)
+    q_L = k/h[Nelements] * (T_L - T[Nnodes-1]) + Q/2*h[Nelements]
+
+    println("q_0 = ", q)
+    println("q_L = ", q_L)
+
+
+    println("q_L analytic: ", -L*Q - q)
 end
 
 main()
