@@ -63,11 +63,29 @@ Fadjar Fathurrahman}
 
 \section{Steady heat equation}
 
-Consider steady heat equation:
+As a model problem, we will consider determining the conduction of heat
+on a slender homogeneous metal wire of length L with a constant cross
+section. Assume that the left end is exposed to a prescribed heat flux, $q$,
+the right end is held at a constant temperature, $T = T_L$, and the length of
+the rod is surrounded by insulating material. The situation is shown in
+Figure \ref{fig:Heinrich_Fig_2_1}.
+
+\begin{figure}[H]
+{\centering
+\includegraphics[scale=1.5]{images/Heinrich_Fig_2_1.pdf}
+\par}
+\caption{Conduction of heat in a rod of length $L$ (from \cite{Heinrich2017})}
+\label{fig:Heinrich_Fig_2_1}
+\end{figure}
+
+The differential equation that
+governs the distribution of temperature across the rod can be written as
 \begin{equation}
 -k \frac{\mathrm{d}^2 T}{\mathrm{d}x^2} = Q
 \end{equation}
-for $0 < x < L$ and boundary conditions:
+for $0 < x < L$, where $k$ is the thermal conductivity of the material
+which is assumed constant and $Q$ is the internal heat source.
+The boundary conditions for this problem are
 \begin{equation}
 -k\frac{\mathrm{d}T}{\mathrm{d}x} = q \quad \text{at } x = 0
 \end{equation}
@@ -76,7 +94,7 @@ and
 T = T_{L} \quad \text{at } x = L
 \end{equation}
 
-The analytical solution to this problem can be expressed as \cite{Heinrich2017}:
+The analytical solution to this problem can be expressed as:
 \begin{equation}
 T(x) = T_{L} + \frac{q}{k}(L - x) + \frac{1}{k} \int_{x}^{L}
 \left( \int_{0}^{y} Q(z)\,\mathrm{d}z \right)\,\mathrm{d}y
@@ -99,6 +117,7 @@ have $n+1$ nodes (or nodal points).
 The solution to the PDE can be approximated as:
 \begin{equation}
 T(x) \approx \sum_{i}^{n+1} T_{i} N_{i}(x)
+\label{eq:sol_pde_approx}
 \end{equation}
 where $T_i$ are (unknown) nodal values of $T(x)$ and $N_{i}(x)$ are \textit{shape functions}
 (also called \textit{trial functions} or \textit{basis functions}) associated with each node.
@@ -107,12 +126,15 @@ where $T_i$ are (unknown) nodal values of $T(x)$ and $N_{i}(x)$ are \textit{shap
 \subsection{Linear shape functions}
 The shape functions are defined such that $N_{i}(x_{i}) = 1$ and $N_{i}(x_{j})=0$
 if $j \neq i$. In FEM, they are usually chosen to be low order, piecewise polynomials.
-As an example, we will consider the case of one element, $n=1$, or two nodes. The shape functions
-can be defined as:
-\begin{align}
-N_{1}(x) & = 1 - \frac{x}{L} \\
-N_{2}(x) & = \frac{x}{L}
-\end{align}
+As an example, we will consider the case of one element, $n=1$, or two nodes using
+the first order polynomial. The shape functions can be defined as:
+\begin{equation}
+\begin{cases}
+N_{1}(x) & = 1 - \dfrac{x}{L} \\[10pt]
+N_{2}(x) & = \dfrac{x}{L}
+\end{cases}
+\label{eq:linear_shape_functions}
+\end{equation}
 An illustration of this case is shows in Figure \ref{fig:Simpson_2_2}.
 
 \begin{figure}[H]
@@ -156,15 +178,24 @@ where $h_{i}$ are the spacings between nodal points.
 \begin{equation}
 h_{i} = x_{i+1} - x_{i}
 \end{equation}
+%
+In FEM, the size or the shape of elements and thus their
+spacings do not have to be homogeneous, i.e. they can have arbitrary spacing
+in the case of 1d.
+This feature of FEM is more apparent in 2d and 3d case.
+It is one of its main strength: it can handle
+complex geometries by allowing arbitary choices of mesh.
 
 \subsection{Weighted residuals}
 
-When we approximate the solution as ??ref??, in general, we cannot obtain the true
-solution to the differential equation. So, we will not get an exact equality but
+When we approximate the solution as in the Equation \ref{eq:sol_pde_approx},
+in general, we cannot obtain the true solution to the differential equation.
+So, we will not get an exact equality but
 some \textit{residual} associated with the error in the approximation. This residual
 can be defined as:
 \begin{equation}
 R(T,x) \equiv -k \frac{\mathrm{d}^2 T}{\mathrm{d}x^2} - Q
+\label{eq:residual_01}
 \end{equation}
 where $T$ in the above equation is the approximation to the true solution $T^{*}$
 for which we have:
@@ -179,12 +210,13 @@ the residual by a \textit{weighting function} and force the integral of the weig
 expression to vanish:
 \begin{equation}
 \int_{0}^{L} w(x) R(T,x) \mathrm{d}x = 0
+\label{eq:weighted_res}
 \end{equation}
 where $w(x)$ is the weighting function.
 Choosing different weighting functions and replacing each of them in
-??ref??, we can then generate a system
+\ref{eq:weighted_res}, we can then generate a system
 of linear equations in the unknown parameters $T_{i}$ that will determine an
-approximation T of the form of the finite series given in Equation ??ref??.
+approximation T of the form of the finite series given in Equation \ref{eq:sol_pde_approx}.
 This will satisfy the differential equation in an "average" or "integral" sense.
 The type of weighting function chosen depends on the type of weighted
 residual technique selected. In the \textit{Galerkin procedure}, the weights are set
@@ -202,7 +234,7 @@ So we have:
 Since the temperature distribution must be a continuous function of $x$,
 the simplest way to approximate it would be to use piecewise polynomial
 interpolation over each element, in particular, piecewise linear approxi-
-mation (by using linear shape functions as in ??ref??)
+mation (by using linear shape functions as in \ref{eq:linear_shape_functions})
 provides the simplest approximation with a continuous function.
 Unfortunately, the first derivatives of such functions are not continuous
 at the elements' ends and, hence, second derivatives do not exist there;
@@ -210,15 +242,17 @@ furthermore, the second derivative of $T$ would vanish inside each element.
 However, to require the second-order derivatives to exist everywhere is
 too restrictive.
 We can weaken this requirement by application of integration by parts to
-the second derivative:
+the second derivative: ($\int\,u\,\mathrm{d}v = uv - \int\,v\,\mathrm{d}u$):
 \begin{equation}
 \int_{0}^{L} N_{i} \left[ -k\frac{\mathrm{d}^2 T}{\mathrm{d}x^2} \right]\,\mathrm{d}x =
 \int_{0}^{L} k \frac{\mathrm{d} N_{i}}{\mathrm{d}x}
 \frac{\mathrm{d} T}{\mathrm{d}x} \mathrm{d}x -
 \left[ k N_{i} \frac{\mathrm{d}T}{\mathrm{d}x} \right]_{0}^{L}
+\label{eq:weak_form_01}
 \end{equation}
 
-Substituting the Equation ??ref?? to the integral term at the RHS:
+Substituting the Equation \ref{eq:sol_pde_approx} to the integral
+term at the RHS of equation \ref{eq:weak_form_01}:
 \begin{align}
 \int_{0}^{L} k \frac{\mathrm{d} N_{i}}{\mathrm{d}x}
 \frac{\mathrm{d}}{\mathrm{d}x}\, \left( \sum_{j=1}^{n+1} T_{j} N_{j} \right) \mathrm{d}x & =
@@ -230,7 +264,7 @@ Substituting the Equation ??ref?? to the integral term at the RHS:
 \frac{\mathrm{d}N_{j}}{\mathrm{d}x} T_{j} \right)\, \mathrm{d}x
 \end{align}
 
-The Equation ??ref?? can be rewritten as
+The Equation \ref{eq:weak_form_01} can be rewritten as
 \begin{equation}
 \int_{0}^{L} k
 \left( \sum_{j=1}^{n+1}
@@ -238,6 +272,7 @@ The Equation ??ref?? can be rewritten as
 \frac{\mathrm{d}N_{j}}{\mathrm{d}x} T_{j} \right)\, \mathrm{d}x -
 \int_{0}^{L} N_{i} Q\, \mathrm{d}x -
 \left[ k N_{i} \frac{\mathrm{d}T}{\mathrm{d}x} \right]_{0}^{L} = 0
+\label{eq:weak_form_02}
 \end{equation}
 for $i=1,2,\ldots,n+1$. The quantities $k$, $Q$, $N_{i}$ are known.
 The terms containing $T_{i}$ can be isolated to the LHS and the
@@ -245,16 +280,19 @@ the known quantities can be moved to the RHS. This is a system
 of linear equations with $T_{i}$ as the unknown variables. In matrix form:
 \begin{equation}
 \mathbf{K} \mathbf{u} = \mathbf{f}
+\label{eq:linear_system}
 \end{equation}
-where $\mathbf{K}$ is a matrix arising from the integral terms, $\mathbf{f}$ are
+where $\mathbf{K}$, usually called stiffness matrix,
+is a matrix arising from the integral terms,
+$\mathbf{f}$, usually called load vector, is
 column vector whose elements arise from
 the integrals of source term and boundary terms,
 and $\mathbf{u}$ is column vector of the the unknown $T_{i}$.
 These linear equations
 can be solved by standard method such as Gaussian elimination and LU decomposition.
 
-In practice, the integral in Equation ??ref?? can be calculated analytically or
-by numerical methods such as Gaussian quadrature.
+In practice, the integral in Equation \ref{eq:weak_form_02} can be
+calculated analytically or by numerical methods such as Gaussian quadrature.
 In the present case, the integral can be calculated analytically.
 The integral over all spatial
 domain can be divided into integrals over elements:
@@ -282,6 +320,7 @@ These integrals can be written as a matrix:
 \dfrac{\mathrm{d}N_{2}}{\mathrm{d}x} \dfrac{\mathrm{d}N_{2}}{\mathrm{d}x}
 \end{bmatrix}\,\mathrm{d}x
 \end{equation}
+where $\mathbf{K}^{e_{1}}$ is called the local stiffness matrix.
 
 The needed integrals are:
 \begin{align*}
@@ -359,16 +398,73 @@ N_{2}(0) \left. \left( k\frac{\mathrm{d}T}{\mathrm{d}x} \right)\right|_{x=0} =
 \left. \left( k\frac{\mathrm{d}T}{\mathrm{d}x} \right)\right|_{x=L/2}
 \end{equation}
 
-Local stiffness matrix
-
-The matrix $\mathbf{K}^{e_{2}}$ associated with the second element also has similar
-form. The matrix $\mathbf{K}^{e_{2}}$
+We can obtain similar expressions for $\mathbf{K}^{e_{2}}$ and $\mathbf{f}^{e_2}$.
+These per-element matrices and vector must be used to build the global stiffness and
+load vector. This process is called matrix assembly process.
+An illustration of this is given in Figure \ref{fig:assemble_2element}.
 
 \begin{figure}[H]
 {\centering
 \includegraphics[width=\textwidth]{images/Heinrich_Fig_3_7.pdf}
 \par}
+\caption{An illustration of matrix assembly for the case of 2 elements.}
+\label{fig:assemble_2element}
 \end{figure}
+
+The global system of equations that we have to solve can be written as:
+\begin{equation}
+\frac{2k}{L}\begin{bmatrix}
+1 & -1 & 0 \\
+-1 & 2 & -1 \\
+0 & -1 & 1
+\end{bmatrix}\begin{bmatrix}
+T_{1} \\
+T_{2} \\
+T_{3}
+\end{bmatrix} =
+\frac{QL}{4} \begin{bmatrix}
+1 \\
+2 \\
+1
+\end{bmatrix} +
+\begin{bmatrix}
+q \\
+0 \\
+\left(k\dfrac{\mathrm{d}T}{\mathrm{d}x}\right)_{x=L}
+\end{bmatrix}
+\end{equation}
+Because $T_{3} = T_{L}$ is known from the boundary conditions,
+the third equation can be discarded. In the second equation, the term
+containing $T_{3} = T_{L}$ can be moved to the RHS and the equations
+are rewritten as
+\begin{equation}
+\frac{2k}{L}\begin{bmatrix}
+1 & -1 \\
+-1 & 2
+\end{bmatrix}\begin{bmatrix}
+T_{1} \\
+T_{2}
+\end{bmatrix} =
+\frac{QL}{4} \begin{bmatrix}
+1 \\
+2
+\end{bmatrix} +
+\begin{bmatrix}
+q \\
+0
+\end{bmatrix} +
+\frac{2k}{L}T_{L}\begin{bmatrix}
+0 \\
+1
+\end{bmatrix}
+\end{equation}
+
+After $T_1$ and $T_2$ has been solved, we can use them to calculate the flux
+at the right boundary:
+\begin{equation}
+\left(k \frac{\mathrm{d}T}{\mathrm{d}x} \right)_{x=L} =
+\frac{2k}{L}\left( T_2 - T_L \right) + \frac{QL}{4}
+\end{equation}
 
 
 \section{Time-dependent problem}

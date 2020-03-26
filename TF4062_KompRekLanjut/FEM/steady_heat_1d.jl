@@ -17,14 +17,14 @@ function main()
 
     # Parameters
     T_L = 10.0
-    q = 5.0
+    q = 10.0
     k = 4.0
     L = 1.0
-    Q = 10.0
+    Q = 1.0
 
     T_analytic(x) = T_L + q/k * (L - x) + Q/(2*k) * (L^2 - x^2)
 
-    Nelements = 30
+    Nelements = 50
     Nnodes = Nelements + 1
     NnodesPerElement = 2 # linear element
 
@@ -80,23 +80,26 @@ function main()
     T[Nnodes] = T_L
     idx_solve = 1:Nnodes-1
     T[idx_solve] = K[idx_solve,idx_solve]\f[idx_solve]
-    display(T); println()
+    #display(T); println()
 
     T_exact = T_analytic.(x)
-    display(T_exact); println()
-    #plt.clf()
-    #plt.plot(x, T_exact, label="exact", marker="o")
-    #plt.legend()
-    #plt.grid()
-    #plt.savefig("IMG_ex01.pdf")
+    #display(T_exact); println()
+    plt.clf()
+    plt.plot(x, T_exact, label="exact", marker="o")
+    plt.legend()
+    plt.grid()
+    plt.savefig("IMG_ex01.pdf")
 
     # Flux at x=L (from the last equation that is dropped)
     q_L = k/h[Nelements] * (T_L - T[Nnodes-1]) + Q/2*h[Nelements]
 
+    println("T_0 = ", T[1])
     println("q_0 = ", q)
+
+    println("T_L = ", T_L)
     println("q_L = ", q_L)
 
-
+    println("T_0 analytic: ", T_analytic(0.0))
     println("q_L analytic: ", -L*Q - q)
 end
 
