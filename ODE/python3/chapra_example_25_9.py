@@ -2,6 +2,10 @@ import numpy as np
 
 def deriv(x, y):
     Nvec = len(y)
+    # Here we make an assertion to make sure that y is a 2-component vector
+    # Uncomment this line if the code appears to be slow
+    assert Nvec == 2
+    # Output array
     dydx = np.zeros(Nvec)
     # remember that in Python the array starts at 0
     # y1 = y[0]
