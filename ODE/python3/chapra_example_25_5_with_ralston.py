@@ -1,6 +1,5 @@
 from math import exp
 
-# One-step application of midpoint method for ODE
 def ode_ralston_1step(dfunc, xi, yi, h):
     k1 = dfunc(xi, yi)
     k2 = dfunc(xi + 3*h/4, yi + 3*k1*h/4)
