@@ -16,7 +16,6 @@ def ode_euler(dfunc, x0, y0, h, Nstep):
     # Start with initial cond
     x[0] = x0
     y[0] = y0
-    yend = 4.0
     for i in range(0,Nstep):
         x[i+1] = x[i] + h
         y[i+1] = ode_euler_1step(dfunc, x[i], y[i], h)
