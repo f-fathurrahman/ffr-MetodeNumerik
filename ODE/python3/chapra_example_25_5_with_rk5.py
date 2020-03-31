@@ -7,9 +7,8 @@ def ode_rk5_1step(dfunc, xi, yi, h):
     k3 = dfunc(xi + h/4, yi + k1*h/8 + k2*h/8)
     k4 = dfunc(xi + h/2, yi - k2*h/2 + k3*h)
     k5 = dfunc(xi + 3*h/4, yi + 3*k1*h/16 + 9*k4*h/16)
-    k6 = dfunc(xi + h, yi - 3*k1*h/7 + 2*k2*h/7 + 12*k3*h/7 - 12*k4*h/7 + 8*k5*h/7)    
+    k6 = dfunc(xi + h, yi - 3*k1*h/7 + 2*k2*h/7 + 12*k3*h/7 - 12*k4*h/7 + 8*k5*h/7)
     yip1 = yi + (7*k1 + 32*k3 + 12*k4 + 32*k5 + 7*k6)*h/90
-
     return yip1
 
 def deriv(x, y):
