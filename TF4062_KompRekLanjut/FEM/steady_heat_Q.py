@@ -24,7 +24,8 @@ pprint(expr2)
 
 T_analytic = T_L + q/k*(L - x) + 1/k * expr2
 
-q_L = simplify( k*diff(T_analytic,x).subs({x: L}) ) # positive value: q_L is pointing outside
+#q_L = simplify( k*diff(T_analytic,x).subs({x: L}) ) # positive value: q_L is pointing outside
+q_L = simplify( -k*diff(T_analytic,x).subs({x: L}) ) # positive value: q_L is pointing inside
 
 from sympy.utilities.codegen import codegen
 
