@@ -188,7 +188,7 @@ complex geometries by allowing arbitary choices of mesh.
 
 \subsection{Weighted residuals}
 
-When we approximate the solution as in the Equation \ref{eq:sol_pde_approx},
+When we approximate the solution as in the Equation \eqref{eq:sol_pde_approx},
 in general, we cannot obtain the true solution to the differential equation.
 So, we will not get an exact equality but
 some \textit{residual} associated with the error in the approximation. This residual
@@ -214,9 +214,9 @@ expression to vanish:
 \end{equation}
 where $w(x)$ is the weighting function.
 Choosing different weighting functions and replacing each of them in
-\ref{eq:weighted_res}, we can then generate a system
+\eqref{eq:weighted_res}, we can then generate a system
 of linear equations in the unknown parameters $T_{i}$ that will determine an
-approximation T of the form of the finite series given in Equation \ref{eq:sol_pde_approx}.
+approximation T of the form of the finite series given in Equation \eqref{eq:sol_pde_approx}.
 This will satisfy the differential equation in an "average" or "integral" sense.
 The type of weighting function chosen depends on the type of weighted
 residual technique selected. In the \textit{Galerkin procedure}, the weights are set
@@ -234,7 +234,7 @@ So we have:
 Since the temperature distribution must be a continuous function of $x$,
 the simplest way to approximate it would be to use piecewise polynomial
 interpolation over each element, in particular, piecewise linear approxi-
-mation (by using linear shape functions as in \ref{eq:linear_shape_functions})
+mation (by using linear shape functions as in \eqref{eq:linear_shape_functions})
 provides the simplest approximation with a continuous function.
 Unfortunately, the first derivatives of such functions are not continuous
 at the elements' ends and, hence, second derivatives do not exist there;
@@ -251,8 +251,8 @@ the second derivative: ($\int\,u\,\mathrm{d}v = uv - \int\,v\,\mathrm{d}u$):
 \label{eq:weak_form_01}
 \end{equation}
 
-Substituting the Equation \ref{eq:sol_pde_approx} to the integral
-term at the RHS of equation \ref{eq:weak_form_01}:
+Substituting the Equation \eqref{eq:sol_pde_approx} to the integral
+term at the RHS of equation \eqref{eq:weak_form_01}:
 \begin{align}
 \int_{0}^{L} k \frac{\mathrm{d} N_{i}}{\mathrm{d}x}
 \frac{\mathrm{d}}{\mathrm{d}x}\, \left( \sum_{j=1}^{n+1} T_{j} N_{j} \right) \mathrm{d}x & =
@@ -264,7 +264,7 @@ term at the RHS of equation \ref{eq:weak_form_01}:
 \frac{\mathrm{d}N_{j}}{\mathrm{d}x} T_{j} \right)\, \mathrm{d}x
 \end{align}
 
-The Equation \ref{eq:weak_form_01} can be rewritten as
+The Equation \eqref{eq:weak_form_01} can be rewritten as
 \begin{equation}
 \int_{0}^{L} k
 \left( \sum_{j=1}^{n+1}
@@ -291,7 +291,7 @@ and $\mathbf{u}$ is column vector of the the unknown $T_{i}$.
 These linear equations
 can be solved by standard method such as Gaussian elimination and LU decomposition.
 
-In practice, the integral in Equation \ref{eq:weak_form_02} can be
+In practice, the integral in Equation \eqref{eq:weak_form_02} can be
 calculated analytically or by numerical methods such as Gaussian quadrature.
 In the present case, the integral can be calculated analytically.
 The integral over all spatial
@@ -460,18 +460,111 @@ q \\
 \end{equation}
 
 After $T_1$ and $T_2$ has been solved, we can use them to calculate the flux
-at the right boundary:
+at the right boundary (where Dirichlet boundary condition is specified):
 \begin{equation}
 \left(k \frac{\mathrm{d}T}{\mathrm{d}x} \right)_{x=L} =
 \frac{2k}{L}\left( T_2 - T_L \right) + \frac{QL}{4}
 \end{equation}
+
+\subsection{Non-constant or variable source term}
+
+Now, we will consider the case where the source term $Q$ is not a constant, but
+a function of spatial dimension: $Q(x)$. To handle this case, we assume that the
+source is continuous and we use the shape functions to expand the $Q(x)$:
+\begin{equation}
+Q(x) \approx \sum_{j=1}^{n+1} Q_{j} N_{j}(x)
+\end{equation}
+The equation \eqref{eq:weak_form_02} becomes:
+\begin{equation}
+\int_{0}^{L} k
+\left( \sum_{j=1}^{n+1}
+\frac{\mathrm{d} N_{i}}{\mathrm{d}x}
+\frac{\mathrm{d}N_{j}}{\mathrm{d}x} T_{j} \right)\, \mathrm{d}x -
+\int_{0}^{L} N_{i} \sum_{j=1}^{n+1} Q_{j} N_{j}(x) \, \mathrm{d}x -
+\left[ k N_{i} \frac{\mathrm{d}T}{\mathrm{d}x} \right]_{0}^{L} = 0
+\label{eq:weak_form_03}
+\end{equation}
+where $Q_{j} = Q(x_{j})$, i.e. the value of function $Q(x)$ evaluated
+at node point $x_{j}$.
+Applying this to the two element case, we need to evaluate the integrals which
+can be written in matrix form:
+\begin{equation}
+\mathbf{M}^{e_1} =
+\int_{0}^{L/2} \begin{bmatrix}
+N_{1}(x) N_{1}(x) & N_{1}(x) N_{2}(x) \\
+N_{2}(x) N_{1}(x) & N_{2}(x) N_{2}(x)
+\end{bmatrix}
+\begin{bmatrix} Q_{1} \\ Q_{2} \end{bmatrix}
+ \, \mathrm{d}x
+\end{equation}
+and similar expression for $\mathbf{M}^{e_2}$. In several literature this matrix
+is also known as (local) \textit{mass matrix}.
+The result after carrying out the integrations is:
+\begin{equation}
+\mathbf{M}^{e_1} = \begin{bmatrix}
+\dfrac{L/2}{3} & \dfrac{L/2}{6} \\[10pt]
+\dfrac{L/2}{6} & \dfrac{L/2}{3} \\
+\end{bmatrix}\begin{bmatrix}
+Q_{1} \\[10pt] Q_{2}
+\end{bmatrix}
+\end{equation}
+
+\subsection{Non-constant or variable condution and convection boundary condition}
+
+In this case, $k$ is not constant but a function of $x$, i.e. $k(x)$.
+Now, assuming $Q=0$, the steady heat equation can be written as:
+\begin{equation}
+-\frac{\mathrm{d}}{\mathrm{d}x}\left(
+k(x) \frac{\mathrm{d}T}{\mathrm{d}x} \right) = 0
+\end{equation}
+%
+and convection boundary condition at $x=0$:
+\begin{equation}
+-k_{0}\frac{\mathrm{d}T}{\mathrm{d}x} + h (T - T_{\infty})
+\end{equation}
+where $k_{0} = k(x=0)$, $h$ is convective heat transfer coefficient and
+$T_{\infty}$ is an external reference temperature.
+At $x=L$ we have $T = T_{L}$.
+%
+The corresponding weak form is:
+\begin{equation}
+\int_{0}^{L} k(x)\frac{\mathrm{d}N_{i}}{\mathrm{d}x}
+\frac{\mathrm{d}T}{\mathrm{d}x} -
+\left[ N_{i} \left( -K(x) \frac{\mathrm{d}T}{\mathrm{d}x} \right) \right]_{x=0} +
+\left[ N_{i} \left( -K(x) \frac{\mathrm{d}T}{\mathrm{d}x} \right) \right]_{x=L} = 0
+\end{equation}
+Now, we may drop the boundary term at $x=L$ because the value of $T$ is specified
+by the boundary condition and replace the boundary term at $x=0$:
+\begin{equation}
+\int_{0}^{L} k(x) \frac{\mathrm{d}N_{i}}{\mathrm{d}x}
+\frac{\mathrm{d}T}{\mathrm{d}x} + N_{i} h (T - T_{\infty})_{x=0} = 0
+\end{equation}
+Using similar expansion for $k(x)$ as we have done for $Q(x)$:
+\begin{equation}
+k(x) = \sum_{j=1}^{n+1} k_{j} N_{j}(x)
+\end{equation}
+we can obtain similar linear system. For the present case, using two elements
+with same spacing between nodes, we have:
+\begin{equation}
+\frac{1}{L}\begin{bmatrix}
+K_{1} + K_{2} + hL & -(K_{1} + K_{2}) & 0 \\
+-(K_{1} + K_{2}) & K_{1} + 2K_{2} + K_{3} & -(K_2 + K_3) \\
+0 & -(K_{2} + K_{3}) & K_{2} + K_{3}
+\end{bmatrix}\begin{bmatrix}
+T_{1} \\ T_{2} \\ T_{3}
+\end{bmatrix} =
+\begin{bmatrix}
+hT_{\infty} \\ 0 \\ 0
+\end{bmatrix}
+\end{equation}
+
 
 
 \section{Time-dependent problem}
 
 Consider the unsteady heat PDE in one spatial dimension $x$:
 \begin{equation}
-\frac{\partial T}{\partial t} = k \frac{\partial^2 T}{\partial t^2} + Q
+\frac{\partial T}{\partial t} = k \frac{\partial^2 T}{\partial x^2} + Q
 \end{equation}
 where $k$ is thermal diffusivity constant and $Q$ is a constant heat source.
 %
@@ -484,15 +577,42 @@ and the boundary conditions are
 T(x=0,t) = 0 \qquad \text{and} \qquad T(x=L,t) = 0
 \end{equation}
 
+Following the general steps outlined for the time-independent case we can
+derive the weak form of this problem as:
+\begin{equation}
+\int_{0}^{L} N_{i} \frac{\partial T}{\partial t} =
+-k \left(N_{i} \frac{\partial T}{\partial x} \right)_{x=0}
++k \left(N_{i} \frac{\partial T}{\partial x} \right)_{x=L}
+-k \frac{\partial N_{i}}{\partial x} \frac{\partial T}{\partial x}\,\mathrm{d}x +
+\int_{0}^{L} N_{i}\,Q\,\mathrm{d}x
+\label{eq:unsteady_heat_weak_01}
+\end{equation}
 
-\section{Test}
+In the case of specified temperatures at both ends, we can drop the boundary terms
+at the RHS of equation \eqref{eq:unsteady_heat_weak_01}. Substituting the equation
+\eqref{eq:sol_pde_approx}, we can arrive at the following matrix equation:
+\begin{equation}
+\mathbf{M} \frac{\partial}{\partial t}\mathbf{u} + \mathbf{K}\mathbf{u} =
+\mathbf{f}
+\end{equation}
+Now, we need to discretize with respect to time variable $t$. One way to do this
+is via backward difference operator\footnote{Here $k$ denotes the index of time
+point.}:
+\begin{equation}
+\mathbf{M} \frac{\mathbf{u}^{k+1} - \mathbf{u}^{k}}{\Delta t} +
+\mathbf{K}\mathbf{u}^{k+1} = \mathbf{f}
+\end{equation}
+Rearranging, we obtain
+\begin{equation}
+\left( \frac{\mathbf{M}}{\Delta t} + \mathbf{K} \right) \mathbf{u}^{k+1} =
+\frac{\mathbf{M}}{\Delta t} \mathbf{u}^{k} + \mathbf{f}
+\label{eq:unsteady_heat_linsys}
+\end{equation}
+Given $\mathbf{u}^{0}$, we can find $\mathbf{u}^{1}$ and at later times
+by solving the linear system \eqref{eq:unsteady_heat_linsys}.
 
-Test cite: \cite{Heinrich2017}
 
-Test code:
-\begin{juliacode}
-α + β
-\end{juliacode}
+
 
 \bibliographystyle{unsrt}
 \bibliography{BIBLIO}
