@@ -1,0 +1,74 @@
+%\documentclass[a4paper,11pt]{article} % print setting
+\documentclass[a4paper,12pt]{article} % screen setting
+
+\usepackage[a4paper]{geometry}
+\geometry{verbose,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm}
+
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+
+\usepackage{cmbright}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{fontspec}
+\setmonofont{FreeMono}
+
+%\usepackage{sfmath}
+%\usepackage{mathptmx}
+%\usepackage{mathpazo}
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{minted}
+\newminted{julia}{breaklines,fontsize=\small}
+\newminted{bash}{breaklines,fontsize=\small}
+\newminted{text}{breaklines,fontsize=\small}
+
+\newcommand{\txtinline}[1]{\mintinline{text}{#1}}
+\newcommand{\jlinline}[1]{\mintinline{julia}{#1}}
+
+\newmintedfile[juliafile]{julia}{breaklines,fontsize=\small}
+
+\definecolor{mintedbg}{rgb}{0.90,0.90,0.90}
+\usepackage{mdframed}
+
+\BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=mintedbg]}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+
+\usepackage{setspace}
+
+\onehalfspacing
+
+\usepackage{appendix}
+
+
+\begin{document}
+
+
+\title{Introduction to FEniCS \\
+TF4062}
+\author{Iwan Prasetyo \\
+Fadjar Fathurrahman}
+\date{}
+\maketitle
+
+This document is based on FEniCS tutorial volume 1.
+
+\section{Poisson equation}
+
+Consider the following boundary value problem:
+\begin{align}
+-\nabla^2 u(\mathbf{x}) = f(\mathbf{x}) \\
+u(\mathbf{x}) = u_{\mathrm{D}}(\mathbf{x})
+\end{align}
+
+
+\end{document}
