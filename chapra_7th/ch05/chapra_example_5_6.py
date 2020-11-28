@@ -16,8 +16,8 @@ def root_bisection(f, xl, xu, NiterMax=100, eps_a=1e-10):
         fxr = f(xr)
         print("%4d %18.10f %18.10e" % (i, xr, fxr), end="")
         if i > 1 and abs(xr) > SMALL:
-            ε_a = abs((xr - xr_old)/xr)*100
-            print("%10.1f" % ε_a)
+            ε_a = abs((xr - xr_old)/xr)
+            print("%10.1f%%" % (ε_a*100))
         else:
             print("")
         if ε_a < eps_a:
@@ -45,8 +45,8 @@ def root_regula_falsi(f, xl, xu, NiterMax=100, eps_a=1e-10):
         fxr = f(xr)
         print("%4d %18.10f %18.10e" % (i, xr, fxr), end="")
         if i > 1 and abs(xr) > SMALL:
-            ε_a = abs((xr - xr_old)/xr)*100
-            print("%10.1f" % ε_a)
+            ε_a = abs((xr - xr_old)/xr)
+            print("%10.1f%%" % (ε_a*100)) # in percent
         else:
             print("")
         if ε_a < eps_a:
