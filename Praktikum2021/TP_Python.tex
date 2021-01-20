@@ -1,0 +1,109 @@
+\documentclass[a4paper,11pt,bahasa]{article} % screen setting
+
+\usepackage[a4paper]{geometry}
+\geometry{verbose,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm}
+
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+
+%\usepackage{cmbright}
+%\renewcommand{\familydefault}{\sfdefault}
+
+%\usepackage{fontspec}
+\usepackage[libertine]{newtxmath}
+\usepackage[no-math]{fontspec}
+\setmainfont{Linux Libertine O}
+\setmonofont{DejaVu Sans Mono}
+%\setmonofont{JuliaMono-Regular}
+
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{minted}
+
+\newminted{julia}{breaklines,fontsize=\footnotesize}
+\newminted{python}{breaklines,fontsize=\footnotesize}
+
+\newminted{bash}{breaklines,fontsize=\footnotesize}
+\newminted{text}{breaklines,fontsize=\footnotesize}
+
+\newcommand{\txtinline}[1]{\mintinline[breaklines,fontsize=\footnotesize]{text}{#1}}
+\newcommand{\jlinline}[1]{\mintinline[breaklines,fontsize=\footnotesize]{julia}{#1}}
+\newcommand{\pyinline}[1]{\mintinline[breaklines,fontsize=\footnotesize]{python}{#1}}
+
+\newmintedfile[juliafile]{julia}{breaklines,fontsize=\footnotesize}
+\newmintedfile[pythonfile]{python}{breaklines,fontsize=\footnotesize}
+
+\definecolor{mintedbg}{rgb}{0.90,0.90,0.90}
+\usepackage{mdframed}
+\BeforeBeginEnvironment{minted}{
+    \begin{mdframed}[backgroundcolor=mintedbg,%
+        topline=false,bottomline=false,%
+        leftline=false,rightline=false]
+}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+
+
+\usepackage{setspace}
+
+\onehalfspacing
+
+\usepackage{appendix}
+
+
+\newcommand{\highlighteq}[1]{\colorbox{blue!25}{$\displaystyle#1$}}
+\newcommand{\highlight}[1]{\colorbox{red!25}{#1}}
+
+
+
+\begin{document}
+
+\title{%
+{\small TF2202 Komputasi Rekayasa}\\
+Pengenalan Python untuk Komputasi Rekayasa
+}
+\author{Tim Praktikum Komputasi Rekayasa 2021\\
+Teknik Fisika\\
+Institut Teknologi Bandung}
+\date{}
+\maketitle
+
+
+\section{Review Python}
+
+- Bagaimana cara Anda menjalankan program berikut ini di komputer/laptop Anda
+  (pilih salah satu jika tidak ada)
+  
+  Python interpreter (console)
+  Python 
+
+- Jupyter notebook atau JupyterLab dan 
+
+- Tipe data kumpulan pada Python:
+
+Tipe data numerik pada Python
+
+
+\section{NumPy}
+
+
+\section{Matplotlib}
+
+Plot fungsi sederhana dengan Matplotlib
+
+
+
+
+
+\bibliographystyle{unsrt}
+\bibliography{BIBLIO}
+
+\end{document}
