@@ -76,34 +76,99 @@ Institut Teknologi Bandung}
 \date{}
 \maketitle
 
+Kerjakan pada Jupyter Notebook (mengunakan JupyterLab atau Google Colab).
 
 \section{Review Python}
 
-- Bagaimana cara Anda menjalankan program berikut ini di komputer/laptop Anda
-  (pilih salah satu jika tidak ada)
-  
-  Python interpreter (console)
-  Python 
+\subsection{Interaksi dengan Python}
 
-- Jupyter notebook atau JupyterLab dan 
+\begin{itemize}
+\item Bagaimana cara Anda menjalankan program berikut ini di komputer/laptop Anda
+(pilih salah satu jika tidak ada)
+  \begin{itemize}
+  \item Python interpreter (console) Python
+  \item Jupyter notebook atau JupyterLab dan 
+  \item Python IDE (integrated development environment): Spyder
+  \end{itemize}
+\item Bagaimana cara membuat script Python (ekstensi \txtinline{.py}) pada editor
+atau IDE dan menjalankannya pada komputer Anda.
+\end{itemize}
 
-- Tipe data kumpulan pada Python:
 
-Tipe data numerik pada Python
+\section{Dasar pemrograman Python}
+\begin{itemize}
+\item Jelaskan mengenai beberapa tipe data dasar pada Python:
+  \begin{itemize}
+  \item numerik (\txtinline{int} dan \txtinline{float})
+  \item string
+  \item bool
+  \end{itemize}
+\item Jelaskan juga mengenai beberapa operator yang bekerja pada tipe data dasar tersebut.
+\end{itemize}
+Tipe data kumpulan pada Python:
+
+Beberapa sumber Internet yang dapat Anda pelajari.
+\begin{itemize}
+\item {\footnotesize \url{https://docs.python.org/3/tutorial/}}
+\item {\footnotesize \url{https://learnxinyminutes.com/docs/python/}}
+\end{itemize}
 
 
-\section{NumPy}
+\section{Numpy}
 
+\begin{itemize}
+\item Tipe data numerik pada Numpy: float64, float32, float16, float128
+\item f
+\end{itemize}
+
+
+Beberapa sumber Internet yang dapat Anda pelajari:
+\begin{itemize}
+\item {\footnotesize \url{https://cs231n.github.io/python-numpy-tutorial/}}
+\item {\footnotesize \url{https://github.com/rougier/numpy-100/blob/master/100_Numpy_exercises_with_hints_with_solutions.md}}
+\end{itemize}
 
 \section{Matplotlib}
 
-Plot fungsi sederhana dengan Matplotlib
 
+\subsection{Plot fungsi sinusoidal}
 
+Jalankan script Python berikut:
 
+\subsection{Ekpansi dengan deret Fourier}
 
+Buatlah plot dari fungsi-fungsi berikut dengan memvariasikan nilai $N$, misalnya
+$N = 2, 5, 10, 100$. Plot Anda harus menunjukkan fungsi yang sama dengan nilai $N$
+yang berbeda.
+Silakan gunakan parameter $L$ yang Anda tentukan sendiri. Coba plot pada rentang
+$x=0$ dan $x=L$
+Contoh (gelombang kotak):
+{\center
+\includegraphics[scale=0.75]{codes/IMG_gel_kotak_v01.pdf}
+\par}
 
-\bibliographystyle{unsrt}
-\bibliography{BIBLIO}
+\begin{itemize}
+%
+\item Gelombang kotak:
+\begin{equation*}
+f(x) = \frac{4}{\pi} \sum_{n=1,3,5,\ldots}^{N} \frac{1}{n}\sin\left(
+\frac{2\pi n x}{L}
+\right)
+\end{equation*}
+%
+\item Gelombang gergaji:
+\begin{equation*}
+f(x) = \frac{1}{2} - \frac{1}{\pi} \sum_{n=1}^{N} \frac{1}{n}\sin\left(
+\frac{2 \pi n  x}{L} \right)
+\end{equation*}
+%
+\item Gelombang segitiga:
+\begin{equation*}
+f(x) = \sum_{n=1,3,5,\ldots}^{N} \frac{(-1)^{(n-1)/2}}{n^2}
+\sin\left( \frac{2\pi n x}{L} \right)
+\end{equation*}
+%
+\end{itemize}
+
 
 \end{document}
