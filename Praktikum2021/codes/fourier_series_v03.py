@@ -33,7 +33,7 @@ def do_plot(N, func):
     plt.plot(x, y, label="N="+str(N))
 
 plt.clf()
-for n in [1,2,5,10,100]:
+for n in [2,5,10,100]:
     #do_plot(n, sawtooth_wave)
     do_plot(n, square_wave)
 
