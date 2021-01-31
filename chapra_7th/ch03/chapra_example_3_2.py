@@ -1,4 +1,4 @@
-from math import factorial, exp, fabs
+from math import factorial, exp
 
 def approx_exp(x, N):
     assert(N >= 0)
