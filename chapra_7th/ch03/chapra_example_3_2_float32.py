@@ -11,7 +11,7 @@ def approx_exp(x, N):
     return s
 
 x = np.float32(0.5)
-true_val = np.exp(x) # from math module
+true_val = np.exp(x) # from np module
 
 n_digit = 10
 # Equation 3.7
