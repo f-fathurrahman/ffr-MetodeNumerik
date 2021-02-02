@@ -1,6 +1,7 @@
 Untitled*
 IMG_*
 ORIG_*
+*.dat
 
 .ipynb_checkpoints
 __pycache__
