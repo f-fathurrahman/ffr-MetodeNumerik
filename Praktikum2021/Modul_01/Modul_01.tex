@@ -89,374 +89,80 @@ Institut Teknologi Bandung}
 \date{}
 \maketitle
 
-\section{Chapra Contoh 3.2}
-Fungsi eksponensial dapat dihitung dengan menggunakan deret sebagai berikut:
-\begin{equation}
-e^{x} = 1 + x + \frac{x^2}{2} + \frac{x^3}{3!} + \cdots + \frac{x^n}{n!}
-\label{eq:exp-deret}
-\end{equation}
-Kita ingin menggunakan Persamaan \eqref{eq:exp-deret} untuk menghitung estimasi
-dari $e^{0.5}$.
-Dengan menggunakan kriteria dari Scarborough:
-\begin{equation*}
-\epsilon_{s} = (0.5 \times 10^{2-3}) \% = 0.05 \%
-\end{equation*}
-Kita akan menambahkan suku-suku pada Persamaan \eqref{eq:exp-deret} sampai $\epsilon_{a}$
-lebih kecil dari $\epsilon_{s}$.
-
-Program Python berikut ini dapat digunakan untuk melakukan perhitungan yang ada pada buku teks.
-\begin{pythoncode}
-from math import factorial, exp
-
-def approx_exp(x, N):
-  assert(N >= 0)
-  if N == 0:
-    return 1
-  s = 0.0
-  for i in range(N+1):
-    s = s + x**i/factorial(i)
-  return s
-  
-x = 0.5
-true_val = exp(x) # from math module
-  
-n_digit = 3
-# Equation 3.7
-ε_s_percent = 0.5*10**(2-n_digit)
-  
-prev_approx = 0.0
-for N in range(50):
-  approx_val = approx_exp(x, N)
-  ε_t_percent = abs(approx_val - true_val)/true_val * 100
-  if N > 0:
-    ε_a_percent = abs(approx_val - prev_approx)/approx_val * 100
-  else:
-    ε_a_percent = float('nan')
-  prev_approx = approx_val
-  print("%3d %18.10f %10.5f%% %10.5f%%" % (N+1, approx_val, ε_t_percent, ε_a_percent))
-  if ε_a_percent < ε_s_percent:
-    print("Converged within %d significant digits" % n_digit)
-    break
-
-print("true_val   is %18.10f" % true_val)
-print("approx_val is %18.10f" % approx_val)
-\end{pythoncode}
-
-Catatan: Pada program di atas, \pyinline{for}-loop digunakan dengan jumlah iterasi yang relatif
-besar. Anda dapat menggunakan \pyinline{while}-loop sebagai gantinya.
-
-Contoh output:
-\begin{textcode}
-  1       1.0000000000   39.34693%        nan%
-  2       1.5000000000    9.02040%   33.33333%
-  3       1.6250000000    1.43877%    7.69231%
-  4       1.6458333333    0.17516%    1.26582%
-  5       1.6484375000    0.01721%    0.15798%
-  6       1.6486979167    0.00142%    0.01580%
-Converged within 3 significant digits
-true_val   is       1.6487212707
-approx_val is       1.6486979167
-\end{textcode}
 
 
-\begin{soal}
-Ulangi perhitungan ini untuk jumlah digit signifikan yang berbeda, misalnya 5, 8, dan 10
-digit signifikan. Silakan melakukan modifikasi terhadap program yang diberikan.
-\end{soal}
-
-\section{Chapra Contoh 3.2, \textit{single precision}}
-Secara default, perhitungan dengan \textit{floating number} pada Python (dan NumPy)
-dilakukan dengan menggunakan \textit{double precision}. Pada bagian ini, kita akan
-mengulangi Chapra Contoh 3.2 dengan menggunakan \textit{single precision}.
-Pada C dan C++, tipe yang relevan adalah \txtinline{float}
-untuk \textit{single precision} dan \txtinline{double} untuk \textit{double
-precision}.
-Pada Fortran kita dapat menggunakan \txtinline{REAL(4)} untuk \textit{single precision}
-dan \txtinline{REAL(8)} untuk \textit{double precision}.
-
-Karena Python merupakan bahasa pemrograman dinamik yang \textit{type-loose} kita tidak dapat
-dengan mudah memberikan spesifikasi pada variabel yang kita gunakan. Meskipun demikian, 
-kita dapat menggunakan \textit{single precision} pada Python melalui
-\txtinline{np.float32}
-\footnote{\txtinline{np} digunakan sebagai
-singkatan dari modul \txtinline{numpy}},
-meskipun program yang dihasilkan kurang elegan. Selain itu, kita juga harus mengecek
-apakah hasil akhir yang diberikan tetap berupa \textit{single precision} (tidak terjadi
-\textit{type promotion} ke \textit{double precision}).
-
-\begin{pythoncode}
-from math import factorial
-import numpy as np
-  
-def approx_exp(x, N):
-  assert(N >= 0)
-  if N == 0:
-      return 1
-  s = np.float32(0.0)
-  for i in range(N+1):
-      s = s + np.float32(x**i)/np.float32(factorial(i))
-  return s
-  
-x = np.float32(0.5)
-true_val = np.exp(x) # from np module
-  
-n_digit = 3
-# Equation 3.7
-ε_s_percent = np.float32(0.5)*np.float32(10**(2-n_digit))
-  
-prev_approx = np.float32(0.0)
-for N in range(50):
-  approx_val = approx_exp(x, N)
-  ε_t_percent = abs(approx_val - true_val)/true_val * 100
-  if N > 0:
-    ε_a_percent = abs(approx_val - prev_approx)/approx_val * 100
-  else:
-    ε_a_percent = float('nan')
-  prev_approx = approx_val
-  print("%3d %18.10f %10.5f%% %10.5f%%" % (N+1, approx_val, ε_t_percent, ε_a_percent))
-  if ε_a_percent < ε_s_percent:
-    print("Converged within %d significant digits" % n_digit)
-    break
-  
-print("true_val   is %18.10f" % true_val)
-print("approx_val is %18.10f" % approx_val)
-  
-# Make sure that float32 is used
-print()
-print("type(true_val)   = ", type(true_val))
-print("type(approx_val) = ", type(approx_val))
-\end{pythoncode}
-
-Berikut ini adalah keluaran dari program.
-\begin{textcode}
-  1       1.0000000000   39.34693%        nan%
-  2       1.5000000000    9.02040%   33.33333%
-  3       1.6250000000    1.43876%    7.69231%
-  4       1.6458333731    0.17516%    1.26583%
-  5       1.6484375000    0.01721%    0.15798%
-  6       1.6486979723    0.00141%    0.01580%
-Converged within 3 significant digits
-true_val   is       1.6487212181
-approx_val is       1.6486979723
-
-type(true_val)   =  <class 'numpy.float32'>
-type(approx_val) =  <class 'numpy.float32'>
-\end{textcode}
-
-\begin{soal}
-Ulangi perhitungan pada Chapra Contoh 3.2 dengan menggunakan \textit{single precision}
-dengan jumlah digit signifikan yang berbeda, misalnya 5, 8, dan 10 digit signifikan
-(berdasarkan kriteria Scarborough). Bandingkan hasil yang Anda dapatkan jika
-\textit{double precision}. Apa yang dapat Anda simpulkan?
-\end{soal}
-
-\section{Chapra Contoh 3.8}
-Akar-akar suatu polinomial kuadrat:
-\begin{equation*}
-ax^2 + bx + c = 0
-\end{equation*}
-diberikan oleh formula berikut
-\begin{equation}
-x_{1,2} = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
-\label{eq:quadeq1}
-\end{equation}
-Untuk kasus di mana $b^2 \gg 4ac$ perbedaan antara pembilang dapat menjadi sangat kecil.
-Pada kasus tersebut, kita dapat menggunakan \textit{double precision} untuk mengurangi
-kesalahan pembulatan. Selain itu, kita juga dapat menggunakan formula:
-\begin{equation}
-x_{1,2} = \frac{-2c}{b \pm \sqrt{b^2 - 4ac}}
-\label{eq:quadeq2}
-\end{equation}
-
-Mengikuti contoh yang diberikan pada buku, kita akan menggunakan
-$a = 1$, $b = 3000.001$, dan $c = 3$. Akar-akar eksaknya adalah
-$x_{1} = -0.001$ dan $x_2 = -3000$.
-
-\begin{soal}
-Buat program Python dengan menggunakan \textit{single precision} dan
-\textit{double precision} untuk melihat perbedaan hasil yang diberikan 
-dari Persamaan \eqref{eq:quadeq1} dan Persamaan \eqref{eq:quadeq2}.
-
-Program berikut ini adalah dalam \textit{single precision}
-yang dapat Anda lengkapi. Anda juga dapat menggunakan program yang Anda tulis sendiri
-dari awal atau modifikasi dari program ini.
-\begin{pythoncode}
-import numpy as np
-
-def calc_quad_root_v1(a, b, c):
-  D = np.float32(b**2) - np.float32(4)*a*c
-  x1 = (-b + np.sqrt(D))/(np.float32(2)*a)
-  x2 = # ... lengkapi
-  return x1, x2
-  
-def calc_quad_root_v2(a, b, c):
-  D = # ... lengkapi
-  x1 = # ... lengkapi
-  x2 = # ... lengkapi
-  return x1, x2
-  
-a = np.float32(1.0)
-b = np.float32(3000.001)
-c = np.float32(3.0)
-  
-x1_true = np.float32(-0.001)
-x2_true = np.float32(-3000.0)
-  
-x1, x2 = calc_quad_root_v1(a, b, c)
-print("Using 1st formula: approx roots: ", x1, " ", x2)
-print(type(x1), type(x2)) # cek apakah x1 dan x2 merupakan np.float32
-  
-x1, x2 = calc_quad_root_v2(a, b, c)
-print(type(x1), type(x2))
-print("Using 2nd formula: approx roots: ", x1, " ", x2)  
-print("True roots: ", x1_true, " ", x2_true)
-\end{pythoncode}
-
-Bandingkan akar-akar yang Anda peroleh dengan akar-akar eksak.
-Untuk masing-masing akar, formula mana yang memberikan hasil yang paling dekat dengan
-hasil eksak?
-\end{soal}
-
-\begin{soal}
-Program berikut ini, kita akan menggunakan CAS atau \textit{computer algebra system}
-untuk memastikan bahwa formula \eqref{eq:quadeq1} dan \eqref{eq:quadeq2} memberikan
-hasil yang identik. Lengkapi kode berikut ini dan cek apakah hasil yang diberikan
-dari kedua formula tersebut adalah sama.
-\begin{pythoncode}
-from sympy import *
-
-def calc_quad_root_v1(a, b, c):
-  D = b**2 - 4*a*c
-  x1 = (-b + sqrt(D))/(2*a)
-  x2 = (-b - sqrt(D))/(2*a)
-  return x1, x2
-  
-def calc_quad_root_v2(a, b, c):
-  D = # lengkapi ...
-  x1 = # lengkapi ...
-  x2 = # lengkapi ... 
-  return x1, x2
-  
-a = Rational(1)
-b = Rational(3000001, 1000)
-c = Rational(3)
-  
-x1_true = -Rational(1, 1000)
-x2_true = -3000
-  
-x1, x2 = calc_quad_root_v1(a, b, c)
-print("Using 1st formula: appprox roots: ", x1, " ", x2)
-
-x1, x2 = calc_quad_root_v2(a, b, c)
-print("Using 2nd formula: appprox roots: ", x1, " ", x2)
-
-print("True roots: ", x1_true, " ", x2_true)
-\end{pythoncode}
-Perhatikan bahwa kode di atas juga mencetak tipe dari variabel \txtinline{x1} dan
-\txtinline{x2} adalah bilangan integer atau rasional.
-Pada SymPy, tipe untuk integer dan rasional adalah:
-\begin{textcode}
-<class 'sympy.core.numbers.Integer'> <class 'sympy.core.numbers.Rational'>
-\end{textcode}
-Coba turunkan formula \eqref{eq:quadeq2} dari \eqref{eq:quadeq1}.
-\end{soal}
-
-
-\section{Chapra Contoh 4.4}
-Diketahui sebuah fungsi:
-\begin{equation}
-f(x) = -0.1x^4 - 0.15x^3 - 0.5x^2 - 0.25x + 1.25
-\end{equation}
-Kita ingin menghitung pendekatan nilai turunan fungsi ini pada $x=0.5$ dengan menggunakan tiga formula.
-Formula pertama adalah beda hingga maju (\textit{forward finite difference}):
-\begin{equation}
-f'(x_{i}) \approx \frac{f(x_{i+1}) - f(x_{i})}{x_{i+1} - x_{i}} =
-\frac{f(x_{i}+h) - f(x_{i})}{h}
-\end{equation}
-beda hingga mundur:
-\begin{equation}
-f'(x_{i}) \approx \frac{f(x_{i}) - f(x_{i-1})}{x_{i} - x_{i-1}} =
-\frac{f(x_{i}) - f(x_{i}-h)}{h}
-\end{equation}
-dan beda hingga tengah:
-\begin{equation}
-f'(x_{i}) \approx \frac{f(x_{i+1}) - f(x_{i-1})}{x_{i+1} - x_{i-1}} =
-\frac{f(x_{i}+h) - f(x_{i}-h)}{2h}
-\end{equation}
-
-Nilai pendekatan akan dibandingkan dengan hasil evaluasi langsung dari
-turunan $f(x)$:
-\begin{equation}
-f'(x) = -0.4x^3 - 0.45x^2 - x - 0.25
-\end{equation}
-
-\begin{soal}
-Buat program Python untuk menghitung pendekatan nilai $f'(x)$ pada $x=0.5$ dengan
-menggunakan $h=0.5$ dan $h=0.25$. Bandingkan hasilnya dengan nilai eksak. Formula mana yang
-memberikan kesalahan paling kecil?
-\end{soal}
-
-
-\section{Chapra Contoh 4.8}
-Diketahui sebuah fungsi:
-\begin{equation}
-f(x) = -0.1x^4 - 0.15x^3 - 0.5x^2 - 0.25x + 1.2
-\end{equation}
-Turunan pertama dari $f(x)$ adalah:
-\begin{equation}
-f'(x) = -0.4x^3 - 0.45x^2 - x - 0.25
-\end{equation}
-Kita akan menghitung pendekatan fungsi ini pada $x=0.5$ dengan menggunakan
-formula beda hingga tengah. Kita akan mulai dari $h=1$, kemudian secara bertahap
-memperkecil nilai $h$ dengan faktor 10 untuk mendemonstrasikan bagaimana
-kesalahan pembulatan (\textit{round-off}) error menjadi dominan.
-
-\begin{soal}
-Berikut ini adalah program yang dapat Anda lengkapi (versi \textit{single precision}).
-\begin{pythoncode}
-import numpy as np
-
-def f(x):
-  return -np.float32(0.1)*x**np.float32(4) - np.float32(0.15)*x**np.float32(3) - \
-  np.float32(0.5)*x**np.float32(2) - np.float32(0.25)*x + np.float32(1.2)
-  
-def df(x):
-  return -np.float32(0.4)*x**np.float32(3) - np.float32(0.45)*x**np.float32(2) - \
-  x - np.float32(0.25)
-  
-def centered_diff(f, x, h):
-  return ( .... )/(np.float32(2)*h) # isi titik-titik
-  
-  x = np.float32(0.5)
-  h = np.float32(1.0)
-  true_val = ! ... lengkapi
-  
-  print("--------------------------------------------------------")
-  print("           h             approx_val             error")
-  print("--------------------------------------------------------")
-  
-for i in range(11):
-  approx_val = # ... lengkapi
-  εt = abs(approx_val - true_val)
-  print("%18.10f %18.14f %18.13f" % (h, approx_val, εt))
-  h = h/np.float32(10)
-
-print(type(h))
-print(type(centered_diff(f,x,h)))  
-\end{pythoncode}
-Coba juga untuk versi \textit{double precision} (default pada NumPy,
-atau \txtinline{np.float64}).
-Apakah error yang Anda peroleh semakin mendekati nol apabila nilai $h$ semakin
-diperkecil?
-NumPy juga menyediakan tipe bilangan \textit{quadruple precision}, yang lebih
-\textit{precise} dari \textit{double precision}, yaitu
-\txtinline{np.float128}. Coba ulangi perhitungan dan analisis Anda dengan
-menggunakan \txtinline{np.float128}.
-\end{soal}
+\input{Chapra_example_3_2}
+\input{Chapra_example_3_2_sp}
+\input{Chapra_example_3_8}
+\input{Chapra_example_4_2}
+\input{Chapra_example_4_4}
+\input{Chapra_example_4_8}
 
 
 \section{Soal tambahan}
 
-Beberapa soal latihan dari Chapra.
+\begin{soal}
+\textbf{Chapra Latihan 3.5}
+Deret tak-hingga:
+\begin{equation*}
+f(n) = \sum_{i=1}^{n} \frac{1}{i^4}
+\end{equation*}
+konvergen ke nilai $\pi^{4}/90$ untuk $n$ mendekati tak-hingga
+Untuk kasus $n \rightarrow \infty$ nilai ini merupakan nilai dari fungsi
+zeta Riemannn $\zeta(4)$
+\footnote{{\scriptsize\url{https://en.wikipedia.org/wiki/Riemann_zeta_function\#Specific_values}}}.
+Tulis program Python menggunakan \txtinline{np.float32} atau
+\textit{single precision} untuk menghitung
+nilai $f(n)$ dengan $n=10000$.
+Pastikan bahwa tipe numerik yang Anda gunakan pada program Python
+adalah \textit{single precision} dengan cara menampilkan tipe dari hasil akhir yang didapatkan.
+Lakukan penjumlahan dengan menggunakan perulangan
+dari $i=1$ ke $10000$. Ulangi perhitungan dengan menggunakan perulangan
+dengan urutan kebalikan yaitu dari $i=10000$ ke $i=1$. Hitung kesalahan untuk
+kedua kasus tersebut.
+Jelaskan hasil yang Anda dapatkan.
+Ulangi perhitungan Anda dengan menggunakan \textit{double precision}.
+\end{soal}
+
+\begin{soal}
+\textbf{Chapra Latihan 3.6}
+Evaluasi aproksimasi nilai dari $e^{-5}$ dengan menggunakan dua formula:
+\begin{equation}
+e^{-x} = 1 - x + \frac{x^2}{2!} - \frac{x^3}{3!} + \cdots
+\end{equation}
+dan
+\begin{equation}
+e^{-x} = \frac{1}{e^{x}} = \frac{1}{1 + x + \dfrac{x^2}{2!} + \dfrac{x^3}{3!} + \cdots}
+\end{equation}
+Bandingkan nilai yang diperoleh dengan mengunakan fungsi \textit{built-in} dari modul
+\txtinline{math} atau \txtinline{numpy}. Gunakan 20 suku untuk masing-masing formula.
+Hitung juga kesalahan sebenarnya dan kesalahan relatif dari aproksimasi yang dibuat.
+\end{soal}
+
+
+\begin{soal}
+\textbf{Chapra Latihan 3.11}
+Gunakan formula \eqref{eq:quadeq1} dan \eqref{eq:quadeq2} untuk mencari akar-akar
+pada persamaan kuadrat:
+\begin{equation*}
+x^2 - 5000.002x + 10
+\end{equation*}
+Lakukan dalam \textit{single precision} dan \textit{double precision}.
+\end{soal}
+
+
+\begin{soal}
+Metode "bagi dan rata-rata" adalah metode yang dapat digunakan untuk
+mengaproksimasi akar kuadrat dari suatu bilangan positif $a$ dengan input
+tebakan awal $x^{0}$. 
+Dalam bentuk iterasi, metode ini dapat dituliskan sebagai:
+\begin{equation}
+x^{i+1} = \dfrac{x^{i} + \dfrac{a}{x^{i}}}{2}
+\end{equation}
+di mana $x^{i}$ menyatakan nilai aproksimasi akar pada iterasi ke-$i$.
+Buatlah program Python untuk mengimplementasikan metode ini.
+Hitung kesalahan relatif dan sebenarnya (dengan referensi hasil fungsi
+\textit{built-in} \txtinline{sqrt} pada Python).
+\end{soal}
 
 \end{document}

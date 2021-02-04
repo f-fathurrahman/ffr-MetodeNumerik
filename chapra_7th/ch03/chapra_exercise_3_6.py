@@ -26,4 +26,5 @@ approx_val_v2 = calc_exp_minus_v2(x, Nterm-1)
 print("err v1 = ", abs(true_val - approx_val_v1))
 print("err v2 = ", abs(true_val - approx_val_v2))
 
+print("true_val = ", true_val)
 # TODO: also calculate relative error
