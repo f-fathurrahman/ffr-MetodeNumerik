@@ -17,3 +17,17 @@ print("y = ", y_num)
 pprint(Δy)
 print("Δy = ", Δy.subs(dict_subs))
 
+dict_subs = {
+    F: F_num - ΔF, L: L_num - ΔL,
+    E: E_num + ΔE, I: I_num + ΔI
+}
+ymin = y.subs(dict_subs)
+print("ymin = ", ymin)
+
+dict_subs = {
+    F: F_num + ΔF, L: L_num + ΔL,
+    E: E_num - ΔE, I: I_num - ΔI
+}
+ymax = y.subs(dict_subs)
+print("ymax = ", ymax)
+
