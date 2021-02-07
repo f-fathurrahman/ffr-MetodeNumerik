@@ -9,8 +9,8 @@ f'(x) = -0.4x^3 - 0.45x^2 - x - 0.25
 \end{equation}
 Kita akan menghitung pendekatan fungsi ini pada $x=0.5$ dengan menggunakan
 formula beda hingga tengah. Kita akan mulai dari $h=1$, kemudian secara bertahap
-memperkecil nilai $h$ dengan faktor 10 untuk mendemonstrasikan bagaimana
-kesalahan pembulatan (\textit{round-off}) error menjadi dominan.
+memperkecil nilai $h$ dengan faktor 10 untuk mempelajari bagaimana
+pengaruh nilai $h$ terhadap kesalahan.
 
 \begin{soal}
 Berikut ini adalah program yang dapat Anda lengkapi (versi \textit{single precision}).
@@ -45,7 +45,7 @@ for i in range(11):
 print(type(h))
 print(type(centered_diff(f,x,h)))  
 \end{pythoncode}
-Coba juga untuk versi \textit{double precision} (default pada NumPy,
+Coba juga untuk versi \textit{double precision} (default pada NumPy
 atau \txtinline{np.float64}).
 Apakah error yang Anda peroleh semakin mendekati nol apabila nilai $h$ semakin
 diperkecil?
@@ -53,4 +53,5 @@ NumPy juga menyediakan tipe bilangan \textit{quadruple precision}, yang lebih
 \textit{precise} dari \textit{double precision}, yaitu
 \txtinline{np.float128}. Coba ulangi perhitungan dan analisis Anda dengan
 menggunakan \txtinline{np.float128}.
+Berikan penjelasan mengenai hasil yang Anda dapatkan.
 \end{soal}
