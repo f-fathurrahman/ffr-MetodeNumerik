@@ -81,7 +81,7 @@
 
 \title{%
 {\small TF2202 Komputasi Rekayasa}\\
-Aproksimasi
+Aproksimasi, Kesalahan, dan Deret Taylor
 }
 \author{Tim Praktikum Komputasi Rekayasa 2021\\
 Teknik Fisika\\
@@ -153,6 +153,7 @@ Lakukan dalam \textit{single precision} dan \textit{double precision}.
 
 
 \begin{soal}
+\textbf{Chapra Latihan 3.13}
 Metode "bagi dan rata-rata" adalah metode yang dapat digunakan untuk
 mengaproksimasi akar kuadrat dari suatu bilangan positif $a$ dengan input
 tebakan awal $x^{0}$. 
@@ -167,6 +168,28 @@ Hitung kesalahan relatif dan sebenarnya (dengan referensi hasil fungsi
 \end{soal}
 
 \begin{soal}
+\textbf{Chapra Latihan 4.2}
+Deret Maclaurin untuk $\cos(x)$ adalah
+\begin{equation*}
+\cos(x) = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} - \frac{x^6}{6!} + \frac{x^8}{8!} - \cdots
+\end{equation*}
+Buatlah program Python untuk menghitung aproksimasi dari $\cos(\pi/3)$ menggunakan deret
+Maclaurin tersebut. Hitung juga kesalahan untuk tiap penambahan suku baru dengan referensi
+nilai yang diberikan oleh fungsi \textit{built-in} pada modul \txtinline{math} atau
+\txtinline{numpy}.
+\end{soal}
+
+
+\begin{soal}
+\textbf{Chapra Latihan 4.3}
+Lakukan hal yang sama dengan soal sebelumnya untuk mengestimasi nilai $\sin(\pi/3)$
+dengan menggunakan deret Maclaurin:
+\begin{equation*}
+\sin(x) = x - \frac{x^3}{3!} + \frac{x^5}{5!} - \frac{x^7}{7!} + \cdots
+\end{equation*}
+\end{soal}
+
+\begin{soal}
 \textbf{Chapra Latihan 4.5}
 Gunakan ekspansi deret Taylor orde-0 sampai dengan orde-3 untuk
 memprediksi $f(3)$ untuk
@@ -176,5 +199,29 @@ f(x) = 25x^3 - 6x^2 + 7x - 88
 dengan titik basis pada $x=1$. Hitung kesalahan pada masing-masing aproksimasi.
 \end{soal}
 
+\begin{soal}
+\textbf{Chapra Latihan 4.6}
+Gunakan deret Taylor dengan orde-0 sampai dengan orde-10 untuk memprediksi
+$f(2.5)$ untuk $f(x) = ln(x)$ dengan menggunakan nilai fungsi pada $x=1$.
+Hitung juga kesalahan pada masing-masing aproksimasi. Berikan penjelasan mengenai hasil
+yang Anda dapatkan.
+\end{soal}
+
+\begin{soal}
+\textbf{Chapra Latihan 4.11}
+Diketahui kecepatan jatuh seorang penerjun dapat dihitung dengan:
+\begin{equation*}
+v(t) = \frac{gm}{c}(1 - e^{-(c/m)t})
+\end{equation*}
+Gunakan analisis kesalahan orde-1 untuk mengestimasi kesalahan pada $v$ pada $t=6$ s,
+jika $g = 9.81\,\mathrm{m/s}^{2}$ dan $m=50$ kg, namun
+$c = 12.5 \pm 1.5 \, \mathrm{kg/s}$.
+\end{soal}
+
+\begin{soal}
+\textbf{Chapra Latihan 4.12}
+Ulangi soal sebelumnya dengan $g = 9.81$, $t = 6$, $c = 12.5 \pm 1.5$,
+dan $m = 50 \pm 2$.
+\end{soal}
 
 \end{document}
