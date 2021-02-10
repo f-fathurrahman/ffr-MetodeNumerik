@@ -1,0 +1,35 @@
+\section{Chapra Contoh 6.1}
+
+Pada soal ini, kita ingin mencari akar dari $f(x) = e^{-x} - x$ dengan
+menggunakan metode iterasi \textit{fixed-point}. Metode ini juga dikenal
+dengan nama iterasi satu titik atau substitusi berurutan. Metode ini
+bekerja dengan cara mengubah persamaan awal $f(x) = 0$ menjadi
+$x = g(x)$. Untuk contoh $f(x)$ yang diberikan kita memiliki:
+\begin{equation*}
+x = e^{-x}
+\end{equation*}
+Dimulai dari tebakan awal $x_{0} = 0$, kita dapat melakukan iterasi
+\textit{fixed-point} dengan menggunakan kode Python berikut.
+
+\begin{pythoncode}
+# Simple fixed-point iteration
+    
+import numpy as np # math module also can be used
+    
+def g(x):
+    return .... # lengkapi
+    
+# Initial guess
+x = 0.0
+x_true = 0.56714329
+    
+print()
+print("Initial point: x = ", x)
+print()
+for i in range(1,11):
+    xnew = .... # lengkapi
+    ε_a = np.abs( (xnew - x)/xnew )*100 # in percent
+    ε_t = np.abs( (x_true - xnew)/x_true )*100
+    print("%3d %10.6f %10.2f%% %10.2f%%" % (i, xnew, ε_a, ε_t))
+    x = xnew    
+\end{pythoncode}
