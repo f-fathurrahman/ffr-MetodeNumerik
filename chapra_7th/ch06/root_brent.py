@@ -1,6 +1,6 @@
 import numpy as np
 
-def brent(f, xl, xu, TOL=1.0e-9, verbose=False, NiterMax=100):
+def root_brent(f, xl, xu, TOL=1.0e-9, verbose=False, NiterMax=100):
 
     if verbose:
         print("")
