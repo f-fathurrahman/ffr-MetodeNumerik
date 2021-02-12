@@ -1,0 +1,138 @@
+\documentclass[a4paper,11pt,bahasa]{article} % screen setting
+\usepackage[a4paper]{geometry}
+
+%\documentclass[b5paper,11pt,bahasa]{article} % screen setting
+%\usepackage[b5paper]{geometry}
+
+\geometry{verbose,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm}
+
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+
+%\usepackage{cmbright}
+%\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage[libertine]{newtxmath}
+\usepackage[no-math]{fontspec}
+
+\setmainfont{Linux Libertine O}
+
+\setmonofont{JuliaMono-Regular}
+
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{minted}
+
+\newminted{julia}{breaklines,fontsize=\scriptsize}
+\newminted{python}{breaklines,fontsize=\scriptsize}
+
+\newminted{bash}{breaklines,fontsize=\scriptsize}
+\newminted{text}{breaklines,fontsize=\scriptsize}
+
+\newcommand{\txtinline}[1]{\mintinline[breaklines,fontsize=\scriptsize]{text}{#1}}
+\newcommand{\jlinline}[1]{\mintinline[breaklines,fontsize=\scriptsize]{julia}{#1}}
+\newcommand{\pyinline}[1]{\mintinline[breaklines,fontsize=\scriptsize]{python}{#1}}
+
+\newmintedfile[juliafile]{julia}{breaklines,fontsize=\scriptsize}
+\newmintedfile[pythonfile]{python}{breaklines,fontsize=\scriptsize}
+% f-o-otnotesize
+
+\usepackage{mdframed}
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage{appendix}
+
+\newcommand{\highlighteq}[1]{\colorbox{blue!25}{$\displaystyle#1$}}
+\newcommand{\highlight}[1]{\colorbox{red!25}{#1}}
+
+\newcounter{soal}%[section]
+\newenvironment{soal}[1][]{\refstepcounter{soal}\par\medskip
+   \noindent \textbf{Soal~\thesoal. #1} \sffamily}{\medskip}
+
+
+\definecolor{mintedbg}{rgb}{0.95,0.95,0.95}
+\BeforeBeginEnvironment{minted}{
+    \begin{mdframed}[backgroundcolor=mintedbg,%
+        topline=false,bottomline=false,%
+        leftline=false,rightline=false]
+}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+
+
+\BeforeBeginEnvironment{soal}{
+    \begin{mdframed}[%
+        topline=true,bottomline=true,%
+        leftline=true,rightline=true]
+}
+\AfterEndEnvironment{soal}{\end{mdframed}}
+
+% -------------------------
+\begin{document}
+
+\title{%
+{\small TF2202 Komputasi Rekayasa}\\
+Solusi Numerik Persamaan Navier-Stokes 2d
+}
+\author{Tim Praktikum Komputasi Rekayasa 2021\\
+Teknik Fisika\\
+Institut Teknologi Bandung}
+\date{}
+\maketitle
+
+Aliran fluida 2d, vektor kecepatan
+$q = ( u(x,y), v(x,y) ) \in \mathbb{R}^2$ dan tekanan $p(x,y) \in \mathbb{R}$.
+
+Konvervasi massa:
+\begin{equation}
+\mathrm{div}(q) = 0
+\end{equation}
+atau:
+\begin{equation}
+\frac{\partial u}{\partial x} + \frac{\partial v}{\partial y} = 0
+\end{equation}
+
+Konvervasi momentum
+\begin{equation}
+\frac{\partial q}{\partial t} + \mathrm{div}(q \otimes q) =
+-\mathcal{G}p + \frac{1}{\mathrm{Re}}\nabla q
+\end{equation}
+atau dalam bentuk eksplisit:
+\begin{align}
+\frac{\partial u}{\partial t} + \frac{\partial u^2}{\partial x} +
+\frac{\partial uv}{\partial y} = -\frac{\partial p}{\partial x} +
+\frac{1}{\mathrm{Re}}\left( \frac{\partial^2 u}{\partial x^2} +
+\frac{\partial^2 u}{\partial y^2}
+\right) \\
+\frac{\partial v}{\partial t} + \frac{\partial uv}{\partial x} +
+\frac{\partial v^2}{\partial y} = -\frac{\partial p}{\partial y} +
+\frac{1}{\mathrm{Re}}\left( \frac{\partial^2 v}{\partial x^2} +
+\frac{\partial^2 v}{\partial y^2}
+\right)
+\end{align}
+dengan bilangan Reynolds
+\begin{equation}
+\mathrm{Re} = \frac{V_{0} L}{\nu}
+\end{equation}
+
+Menggunakan metode \textit{fractional-step}:
+\begin{itemize}
+\item Predictor step, menyelesaikan persamaan momentum yang ditulis dalam bentuk
+\begin{equation}
+\frac{\partial q}{\partial t} = -\mathcal{G}p + \mathcal{H} + \frac{1}{\mathrm{Re}}\nabla q
+\end{equation}
+\item s
+\end{itemize}
+
+\input{LinearSysTrid}
+
+\end{document}

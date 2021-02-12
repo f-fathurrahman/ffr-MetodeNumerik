@@ -1,0 +1,43 @@
+\section{Sistem Linear Tridiagonal}
+
+Algoritma Thomas
+\begin{equation}
+\begin{bmatrix}
+b_{1} & c_{1} & 0 & \cdots & \cdots & 0 & 0 \\
+a_{2} & b_{2} & c_{2} & 0 & \cdots & 0 & 0 \\
+\cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots \\
+\cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots \\
+0 & 0 & 0 & 0 & a_{n-1} & b_{n-1} & c_{n-1} \\
+0 & 0 & 0 & 0 & \cdots & a_{n} & b_{n} \\
+\end{bmatrix}
+\begin{bmatrix}
+X_{1} \\ X_{2} \\ \vdots \\ \vdots \\ X_{n-1} \\ X_{n}
+\end{bmatrix} =
+\begin{bmatrix}
+f_{1} \\ f_{2} \\ \vdots \\ \vdots \\ f_{n-1} \\ f_{n}
+\end{bmatrix}
+\end{equation}
+dengan menggunakan \textit{recurrence relation}:
+\begin{align}
+X_{k} & = \gamma_{k} - \frac{c_{k}}{\beta_{k}} X_{k+1}, \qquad k = 1,\ldots,(n-1) \\
+X_{n} & = \gamma_{n}
+\end{align}
+Dapat diperoleh:
+\begin{align}
+\beta_{1} = b_1 \\
+\beta_{k} = b_{k} - \frac{c_{k-1}}{\beta_{k-1}}a_{k},\qquad k=2,\ldots,n
+\end{align}
+dan
+\begin{align}
+\gamma_{1} = \frac{f_{1}}{\beta_{1}} = \frac{f_{1}}{b_{1}} \\
+\gamma_{k} = \frac{f_{k} - a_{k}\gamma_{k-1}}{\beta_{k}}
+\end{align}
+
+Persamaan pertama:
+\begin{equation}
+b_{1}X_{1} + c_{1}X_{2} = f_{1}
+\end{equation}
+Substitusi: $X_{1} = \gamma_{1} - \dfrac{c_{1}}{\beta_{1}} X_{2}$
+\begin{equation}
+b_{1}(\gamma_{1} - \dfrac{c_{1}}{\beta_{1}} X_{2}) + c_{1}X_{2} = f_{1}
+\end{equation}
