@@ -1,6 +1,7 @@
 using LinearAlgebra
 
 include("linsolve_trid.jl")
+include("linsolve_trid_per.jl")
 
 function main()
     N = 5
@@ -18,7 +19,9 @@ function main()
     end
     fullmat[N,N-1] = a[N]
     fullmat[N,N] = b[N]
-
+    # periodic
+    fullmat[N,1] = c[1]
+    fullmat[1,N] = a[N]
     f = 10*ones(N)
 
     println("fullmat:")
@@ -28,7 +31,7 @@ function main()
     display(inv(fullmat)); println()
 
     x = zeros(N)
-    linsolve_trid!(a, b, c, f, x)
+    linsolve_trid_per!(a, b, c, f, x)
     display(x); println()
 
     println("fullmat*x = ")
