@@ -4,7 +4,7 @@ def root_newton_raphson(f, df, x0, NiterMax=100, TOL=1e-10, m=1):
     for i in range(1,NiterMax+1):
         xnew = x  - m*f(x)/df(x) # Newton-Raphson formula
         fxnew = f(xnew)
-        print("%3d %18.10f %18.10e" % (i, xnew, fxnew))
+        print("newton_raphson: %3d %18.10f %18.10e" % (i, xnew, fxnew))
         if abs(f(xnew)) < TOL:
             x = xnew
             break
@@ -22,7 +22,7 @@ def root_newton_raphson_mod(f, df, d2f, x0, NiterMax=100, TOL=1e-10):
         # Using equation 6.16
         xnew = x  - fx*dfx/( dfx**2 - fx*d2fx )
         fxnew = f(xnew)
-        print("%3d %18.10f %18.10e" % (i, xnew, fxnew))
+        print("newton_raphson_mod: %3d %18.10f %18.10e" % (i, xnew, fxnew))
         if abs(f(xnew)) < TOL:
             x = xnew
             break

@@ -1,13 +1,6 @@
 import numpy as np
 
-def root_brent(f, xl, xu, TOL=1.0e-9, verbose=False, NiterMax=100):
-
-    if verbose:
-        print("")
-        print("Searching root with Brent's method:")
-        print("Interval = (%18.10f,%18.10f)" % (xl,xu))
-        print("TOL = %e" % TOL)
-        print("")
+def root_brent(f, xl, xu, TOL=1.0e-10, NiterMax=100):
 
     a = xl
     b = xu
@@ -83,8 +76,7 @@ def root_brent(f, xl, xu, TOL=1.0e-9, verbose=False, NiterMax=100):
     
         fb = f(b)
 
-        if verbose:
-            print("brent: %5d %18.10f %15.5e" % (i, b, abs(fb)))
+        print("brent: %5d %18.10f %15.5e" % (i, b, abs(fb)))
 
-    return b, abs(b - b_old)
+    return b
 
