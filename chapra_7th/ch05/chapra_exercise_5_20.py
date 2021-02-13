@@ -2,6 +2,7 @@ from math import pi
 from root_regula_falsi import *
 from root_bisection import *
 from root_regula_falsi_mod import *
+from root_ridder import *
 
 r1 = 0.5
 r2 = 1.0
@@ -25,3 +26,4 @@ def f(h1):
 xr = root_regula_falsi(f, 0.1, 1.0, NiterMax=1000)
 xr = root_regula_falsi_mod(f, 0.1, 1.0, NiterMax=1000)
 xr = root_bisection(f, 0.01, 1.0, NiterMax=1000)
+xr = root_ridder(f, 0.01, 1.0, NiterMax=1000)
