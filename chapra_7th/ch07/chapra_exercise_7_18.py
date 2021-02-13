@@ -10,7 +10,8 @@ def f(x_):
     f3 = a**2 - 2*a - u
     return [f1, f2, f3]
 
-root = fsolve(f, [0.0, 0.0, 0.0])
+#root = fsolve(f, [0.0, 0.0, 0.0])
+root = fsolve(f, [-2.0, 10.0, -2.0])
 print(root)
 
 # Test the value of function at root
