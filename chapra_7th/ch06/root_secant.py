@@ -7,7 +7,7 @@ def root_secant(f, x0, x1, NiterMax=100, TOL=1e-10):
         xnew = x1 - f(x1)/dfx
         #
         fxnew = f(xnew)
-        print("%3d %18.10f %18.10e" % (i, xnew, fxnew))
+        print("secant: %3d %18.10f %18.10e" % (i, xnew, fxnew))
         if abs(f(xnew)) < TOL:
             x1 = xnew
             break
