@@ -38,9 +38,6 @@ def root_ridder(f, x1, x2, NiterMax=100, TOL=1.0e-10):
         print("ridder: %5d %18.10f %15.5e" % (i, x3, abs(f3)))
 
         if abs(f3) <= TOL:
-            print("")
-            print("ridder: Convergence is achieved in %d iterations" % (i))
-            # return the result
             return x3
 
         # Rebracket
