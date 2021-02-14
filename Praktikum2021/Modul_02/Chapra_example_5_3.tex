@@ -28,7 +28,7 @@ t = 10.0 # time, s
 g = 9.81
     
 def f(c):
-  return ... # lengkapi
+    return ... # lengkapi
     
 x_true = 14.8011 # from the text
     
@@ -47,9 +47,9 @@ print("ε_t = %.1f %%" % ε_t)
 
 # Determine new xr should replace xu or xl (make new interval)
 if f(xl)*f(xr) < 0:
-  xu = xr
+    xu = xr
 else:
-  xl = xr
+    xl = xr
     
 # Second iteration
 print("\n2nd iteration: ")
@@ -61,9 +61,9 @@ print("xr = ", xr)
 print("ε_t = %.1f %%" % ε_t)
 
 if f(xl)*f(xr) < 0:
-  xu = xr
+    xu = xr
 else:
-  xl = xr
+    xl = xr
     
 # Third iteration
 # ... teruskan jika diperlukan
