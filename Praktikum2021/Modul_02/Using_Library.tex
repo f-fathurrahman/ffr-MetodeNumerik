@@ -1,0 +1,17 @@
+\section{Menggunakan Pustaka Python}
+
+Pada bagian ini, kita akan menggunakan beberapa pustaka SciPy yang dapat digunakan
+untuk mencari akar persamaan nonlinear. Beberapa fungsi tersebut dapat ditemukan
+pada modul \txtinline{scipy.optimize}.
+\begin{itemize}
+\item \txtinline{scipt.optimize.root_scalar}: untuk mencari akar persamaan nonlinear
+yang terdiri dari satu variabel.
+\item \txtinline{scipy.optimize.fsolve}
+\end{itemize}
+
+\begin{pythoncode}
+from scipy.optimize import fsolve
+sol = optimize.root_scalar(f, bracket=[-1.3, 0.0], method='brentq')
+\end{pythoncode}
+
+{\scriptsize\url{https://docs.scipy.org/doc/scipy/reference/optimize.html\#root-finding}}
