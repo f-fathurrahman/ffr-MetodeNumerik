@@ -6,7 +6,7 @@ r = 1.0
 ρw = 1000.0
 
 def f(h):
-    Vw = np.pi*h**2/3*(3*r - h) # displaced volume of water
+    Vw = 4*np.pi*r**3/3 - np.pi*h**2/3*(3*r - h) # displaced volume of water
     Vs = 4*np.pi*r**3/3
     return ρw*Vw - ρs*Vs
 

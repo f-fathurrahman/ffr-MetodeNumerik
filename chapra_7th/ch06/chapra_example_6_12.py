@@ -20,7 +20,7 @@ def dvdy(x,y):
 x = 1.5
 y = 3.5
 
-for i in range(1,6):
+for i in range(1,5):
     # Jacobian matrix elements
     J11 = dudx(x,y)
     J12 = dudy(x,y)

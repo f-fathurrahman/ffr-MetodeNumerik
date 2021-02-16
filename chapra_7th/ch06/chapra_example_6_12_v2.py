@@ -23,7 +23,7 @@ X = np.array([1.5, 3.5])
 for i in range(1,6):
     fX = f(X)
     nfX = np.linalg.norm(fX)
-    print("X = ", X, "nfX = ", fX)
+    print("X = ", X, "nfX = ", nfX)
     if nfX <= 1e-10:
         print("Converged")
         break
