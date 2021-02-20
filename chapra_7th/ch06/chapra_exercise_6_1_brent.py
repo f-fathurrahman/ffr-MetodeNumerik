@@ -18,5 +18,5 @@ def root_fixed_point(g, x0, NiterMax=100, TOL=1e-10):
         x = xnew
     return x
 
-xroot, _ = root_brent(f, 0.5, 1.0, verbose=True)
+xroot = root_brent(f, 0.5, 1.0)
 print("At root f(x) = ", f(xroot))
