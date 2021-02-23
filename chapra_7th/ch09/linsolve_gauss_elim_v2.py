@@ -21,7 +21,7 @@ def linsolve_gauss_elim(A_, b_):
     #
     x = _do_back_substitution(A,b)
     print("x = \n", x)
-    return
+    return x
 
 def _do_elimination(A, b, s):
     SMALL = 1e-15
