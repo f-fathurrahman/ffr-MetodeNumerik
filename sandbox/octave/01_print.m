@@ -10,7 +10,7 @@ xlabel('x');
 ylabel('erf (x)');
 title('erf (x) with text annotation');
 set(hf, 'visible', 'off');
-print(hf, 'plot15_7.pdf', '-dpdflatexstandalone');
+print(hf, 'plot15_7.tex', '-dpdflatexstandalone');
 set(hf, 'visible', 'on');
 system('pdflatex plot15_7');
 
