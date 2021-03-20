@@ -44,6 +44,7 @@
 
 \newmintedfile[juliafile]{julia}{breaklines,fontsize=\scriptsize}
 \newmintedfile[pythonfile]{python}{breaklines,fontsize=\scriptsize}
+\newmintedfile[fortranfile]{fortran}{breaklines,fontsize=\scriptsize}
 % f-o-otnotesize
 
 \usepackage{mdframed}
@@ -92,6 +93,51 @@ Institut Teknologi Bandung}
 \date{}
 \maketitle
 
+\section{Polinomial Interpolasi Newton}
+
+\begin{soal}
+Implementasikan fungsi atau subroutin dalam Python untuk implementasi algoritma
+pada Gambar 18.7 untuk implementasi polinomial Newton.
+Uji hasil yang Anda dapatkan dengan menggunakan data-data yang diberikan pada contoh
+18.2 (polinomial kuadrat) dan 18.3 (polinomial kubik) pada Chapra.
+Lengkapi jawaban Anda dengan membuat plot seperti pada Gambar 18.4 dan 18.6 pada Chapra.
+\end{soal}
+
+\begin{soal}
+Gunakan data pada soal Chapra 18.5 untuk mengevaluasi nilai $f(x) = \mathrm{ln}(x)$
+pada $x = 2$ dengan menggunakan polinomial kubik. Coba variasikan titik-titik
+yang digunakan (\textit{base points}) dan perhatikan nilai estimasi
+kesalahan yang diberikan oleh
+fungsi/subrutin yang sudah Anda buat pada soal sebelumnya.
+\end{soal}
+
+\section{Polinomial Interpolasi Lagrange}
+\begin{soal}
+Implementasikan fungsi atau subroutin dalam Python untuk implementasi algoritma
+pada Gambar 18.11 untuk implementasi polinomial Lagrange.
+Uji hasil yang Anda dapatkan dengan menggunakan data-data yang diberikan pada contoh
+18.2 (polinomial kuadrat) dan 18.3 (polinomial kubik) pada Chapra.
+\end{soal}
+
+\begin{soal}
+Kerjakan Contoh 18.7 pada Chapra dengan menggunakan fungsi/subrutin interpolasi Lagrange
+yang sudah Anda buat pada soal sebelumnya sehingga Anda dapat mereproduksi Gambar 18.12
+pada Chapra. Pada Contoh 18.17 Anda diminta untuk mengestimasi kecepatan penerjun
+pada $t=10$ s, yang berada di antara dua titik data terakhir.
+Untuk polinom orde-1, gunakan dua titik data terakhir, untuk orde-2 gunakan tiga titik
+data terakhir, dan seterusnya sampai orde-4.
+\end{soal}
+
+\section{Interpolasi Spline Kubik}
+\begin{soal}
+Implementasikan fungsi atau subroutin dalam Python untuk implementasi algoritma
+pada Gambar 18.18 untuk implementasi spline kubik (natural).
+Uji hasil yang Anda dapatkan dengan menggunakan data-data yang diberikan pada contoh
+18.10.
+\end{soal}
+
+
+\section{Soal Tambahan}
 
 \input{Chapra_exercise_18_5}
 
@@ -106,4 +152,24 @@ Institut Teknologi Bandung}
 
 \input{Chapra_exercise_17_6}
 
+\section{Kode Fortran}
+
+\subsection{Interpolasi Newton}
+\fortranfile{../../chapra_7th/ch18/newton_interp.f90}
+
+\subsection{Contoh 18.2}
+\fortranfile{../../chapra_7th/ch18/example_18_2.f90}
+
+\subsection{Contoh 18.3}
+\fortranfile{../../chapra_7th/ch18/example_18_3.f90}
+
+\subsection{Interpolasi Lagrange}
+\fortranfile{../../chapra_7th/ch18/lagrange_interp.f90}
+
+
+\subsection{Interpolasi Spline Kubik Natural}
+\fortranfile{../../chapra_7th/ch18/natural_cubic_spline.f90}
+
+
 \end{document}
+
