@@ -1,22 +1,23 @@
-subroutine lagrange_interp(N, x, y, xx, res)
-  implicit none
-  integer :: N 
-  real(8) :: x(0:N), y(0:N)
-  real(8) :: xx, res
+SUBROUTINE lagrange_interp(N, x, y, xx, res)
+  IMPLICIT NONE 
+  INTEGER :: N 
+  REAL(8) :: x(0:N), y(0:N)
+  REAL(8) :: xx, res
   !
-  real(8) :: ss, pp
-  integer :: i, j
+  REAL(8) :: ss, pp
+  INTEGER :: i, j
 
   ss = 0.d0
-  do i = 0,N
+  DO i = 0,N
     pp = y(i)
-    do j = 0,N
-      if( i /= j ) then
+    DO j = 0,N
+      IF( i /= j ) THEN 
         pp = pp*( xx - x(j) ) / ( x(i) - x(j) )
-      endif
+      END IF 
     enddo
     ss = ss + pp
-  enddo
+  END DO 
   res = ss
-  return
-end subroutine 
+  RETURN 
+END SUBROUTINE 
+

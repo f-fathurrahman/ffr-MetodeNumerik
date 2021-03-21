@@ -1,28 +1,26 @@
-subroutine interp_nat_cubic_spline( N, x, y, d2x, xu, yu, dy, d2y )
+SUBROUTINE interp_nat_cubic_spline( N, x, y, d2x, xu, yu, dy, d2y )
   !
-  implicit none 
+  IMPLICIT NONE 
   !
-  integer :: N
-  real(8) :: x(0:N), y(0:N)
-  real(8) :: d2x(0:N)
-  real(8) :: xu
-  real(8) :: yu
-  real(8) :: dy, d2y
+  INTEGER :: N
+  REAL(8) :: x(0:N), y(0:N)
+  REAL(8) :: d2x(0:N)
+  REAL(8) :: xu
+  REAL(8) :: yu
+  REAL(8) :: dy, d2y
   !
-  integer :: i
-  logical :: flag, is_in_interval
-  real(8) :: c1, c2, c3, c4, t1, t2, t3, t4
-
-  !write(*,*) 'size d2x = ', size(d2x)
-  !write(*,*) 'd2x = ', d2x
+  INTEGER :: i
+  LOGICAL :: flag, is_in_interval
+  REAL(8) :: c1, c2, c3, c4, t1, t2, t3, t4
 
   flag = .false.
   i = 1
-  do while(.true.)
+  DO WHILE(.true.)
     !
     is_in_interval = (xu >= x(i-1)) .and. (xu <= x(i))
     !
-    if( is_in_interval ) then 
+    IF( is_in_interval ) THEN 
+      !
       !write(*,*) 'interval = ', i
       !
       c1 = d2x(i-1)/6.d0/( x(i) - x(i-1) )
@@ -51,83 +49,83 @@ subroutine interp_nat_cubic_spline( N, x, y, d2x, xu, yu, dy, d2y )
       !
       flag = .true.
       !
-    else 
+    ELSE 
       ! 
       i = i + 1
-    endif 
+    END IF 
     !
-    if( i == N + 1 .or. flag ) then 
-      exit ! break out of the loop
-    endif
-  enddo 
+    IF( i == N + 1 .or. flag ) THEN 
+      EXIT ! break out of the loop
+    END IF 
+  END DO 
 
-  if( .not. flag ) then
-    write(*,*) "ERROR: xu is outside range of spline"
-    return
-  endif
+  IF( .not. flag ) THEN 
+    WRITE(*,*) "ERROR: xu is outside range of spline"
+    RETURN
+  END IF
 
-  return
-end subroutine 
+  RETURN 
+END SUBROUTINE 
 
 
-subroutine decomp_trid(N, e, f, g)
-  implicit none
-  integer :: N
-  real(8) :: e(N), f(N), g(N)
-  integer :: k
-  do k = 2,N
+SUBROUTINE decomp_trid(N, e, f, g)
+  IMPLICIT  NONE 
+  INTEGER :: N
+  REAL(8) :: e(N), f(N), g(N)
+  INTEGER :: k
+  DO k = 2,N
     e(k) = e(k)/f(k-1)
     f(k) = f(k) - e(k)*g(k-1)
-  enddo
-  return
-end subroutine
+  END DO 
+  RETURN 
+END SUBROUTINE 
 
 ! should be called after calling decomp_trid
-subroutine subs_trid(N, e, f, g, r, x)
-  implicit none
-  integer :: N
-  real(8) :: e(N), f(N), g(N), r(N)
-  real(8) :: x(N) ! output
-  integer :: k
+SUBROUTINE subs_trid(N, e, f, g, r, x)
+  IMPLICIT NONE 
+  INTEGER :: N
+  REAL(8) :: e(N), f(N), g(N), r(N)
+  REAL(8) :: x(N) ! output
+  INTEGER :: k
 
   ! Forward subs
-  do k = 2,N
+  DO k = 2,N
     r(k) = r(k) - e(k)*r(k-1)
-  enddo
+  END DO 
 
   ! back subs
   x(N) = r(N)/f(N)
-  do k = N-1,1,-1
+  DO k = N-1,1,-1
     x(k) = ( r(k) - g(k)*x(k+1) ) / f(k)
-  enddo
-  return
-end subroutine
+  END DO 
+  RETURN 
+END SUBROUTINE 
 
-subroutine gen_trid_matrix(N, x, y, e, f, g, r)
-  implicit none
-  integer :: N
-  real(8) :: x(0:N), y(0:N)
-  real(8) :: e(N-1), f(N-1), g(N-1), r(N-1)
-  integer :: i
+SUBROUTINE gen_trid_matrix(N, x, y, e, f, g, r)
+  IMPLICIT NONE 
+  INTEGER :: N
+  REAL(8) :: x(0:N), y(0:N)
+  REAL(8) :: e(N-1), f(N-1), g(N-1), r(N-1)
+  INTEGER :: i
 
   f(1) = 2.d0*( x(2) - x(0) )
   g(1) = x(2) - x(1)
   r(1) = 6.d0/( x(2) - x(1) ) * ( y(2) - y(1) )
   r(1) = r(1) + 6.d0/( x(1) - x(0) ) * ( y(0) - y(1) )
   !
-  do i = 2,N-2
+  DO i = 2,N-2
     e(i) = x(i) - x(i-1)
     f(i) = 2.d0*( x(i+1) - x(i-1) )
     g(i) = x(i+1) - x(i)
     r(i) = 6.d0/( x(i+1) - x(i) ) * ( y(i+1) - y(i) )
     r(i) = r(i) + 6.d0/( x(i) - x(i-1) ) * ( y(i-1) - y(i) )
-  enddo
+  END DO 
   !
   e(n-1) = x(n-1) - x(n-2)
   f(n-1) = 2.d0*( x(n) - x(n-2) )
   r(n-1) = 6.d0/( x(n) - x(n-1) ) * ( y(n) - y(n-1) )
   r(n-1) = r(n-1) + 6.d0/( x(n-1) - x(n-2) ) * ( y(n-2) - y(n-1) )
 
+  RETURN 
+END SUBROUTINE 
 
-  return
-end subroutine

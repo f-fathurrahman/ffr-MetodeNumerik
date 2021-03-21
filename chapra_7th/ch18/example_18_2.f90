@@ -1,12 +1,12 @@
-program example
-  implicit none
-  integer :: N
-  real(8) :: x(3), y(3)
-  real(8) :: xi
-  real(8), allocatable :: ea(:)
-  real(8), allocatable :: yint(:)
+PROGRAM example_18_2
+  IMPLICIT NONE 
+  INTEGER :: N
+  REAL(8) :: x(3), y(3)
+  REAL(8) :: xi
+  REAL(8), ALLOCATABLE :: ea(:)
+  REAL(8), ALLOCATABLE :: yint(:)
   !
-  real(8), allocatable :: fdd(:,:)
+  REAL(8), ALLOCATABLE :: fdd(:,:)
 
   x = (/ 1.d0, 4.d0, 6.d0 /)
   y = (/ 0.d0, 1.386294d0, 1.791759d0 /)
@@ -14,15 +14,16 @@ program example
   N = 2
   xi = 2.d0
   
-  allocate( ea(0:N-1) )
-  allocate( yint(0:N) )
+  ALLOCATE( ea(0:N-1) )
+  ALLOCATE( yint(0:N) )
 
-  call newton_interp(N, x, y, xi, yint, ea)
+  CALL newton_interp(N, x, y, xi, yint, ea)
   
-  write(*,*) 'yint = ', yint
-  write(*,*) 'ea   = ', ea
+  WRITE(*,*) 'yint = ', yint
+  WRITE(*,*) 'ea   = ', ea
 
-  deallocate( ea )
-  deallocate( yint )
+  DEALLOCATE( ea )
+  DEALLOCATE( yint )
 
-end program 
+END PROGRAM 
+
