@@ -137,6 +137,158 @@ Uji hasil yang Anda dapatkan dengan menggunakan data-data yang diberikan pada co
 \end{soal}
 
 
+\section{Regresi Linear}
+\begin{soal}
+Implementasikan fungsi atau subroutin dalam Python untuk implementasi algoritma
+pada Gambar 17.6 untuk implementasi regresi linear. Uji dengan menggunakan data
+pada Contoh 17.1.
+\end{soal}
+
+\section{Regresi Linear (Notasi Matriks-Vektor)}
+
+Tinjau model linear berikut:
+\begin{equation}
+y = f(x; w_{0}, w_{1}) = w_{0} + w_{1}x
+\end{equation}
+di mana $w_{1}$ (atau kemiringan atau \textit{slope}) dan $w_{0}$
+(titik potong sumbu $y$ atau \textit{intercept}) adalah parameter model.
+Misalnya, diberikan suatu nilai atau input $x_{n}$, kita dapat menghitung output dari model
+sebagai:
+\begin{equation}
+y_{n} = f(x_{n}; w_{0}, w_{1}) = w_{0} + w_{1}x_{n}
+\label{eq:linmodel1}
+\end{equation}
+Definisikan:
+\begin{equation}
+\mathbf{x}_{n} = \begin{bmatrix}
+1 \\
+x_{n}
+\end{bmatrix}
+,\,\,\,%
+\mathbf{w} = \begin{bmatrix}
+w_{0} \\
+w_{1}
+\end{bmatrix}
+\end{equation}
+Dengan menggunakan notasi ini, model linear pada Persamaan \eqref{eq:linmodel1} dapat ditulis
+menjadi:
+\begin{equation}
+y_{n} = f(x_{n}; w_0, w_1) = \mathbf{w}^{\mathsf{T}} \mathbf{x}_{n}
+\label{eq:linmodel2}
+\end{equation}
+Dalam bentuk matriks-vektor, dapat dituliskan sebagai berikut:
+\begin{equation}
+\mathbf{y} = \mathbf{X}\mathbf{w}
+\end{equation}
+dengan $\mathbf{X}$ adalah matriks input:
+\begin{equation}
+\mathbf{X} = \begin{bmatrix}
+\mathbf{x}^{\mathsf{T}}_{1} \\
+\mathbf{x}^{\mathsf{T}}_{2} \\
+\vdots \\
+\mathbf{x}^{\mathsf{T}}_{N}
+\end{bmatrix} =
+\begin{bmatrix}
+1 & x_{1} \\
+1 & x_{2} \\
+\vdots & \vdots \\
+1 & x_{N} \\
+\end{bmatrix}
+\end{equation}
+dan $\mathbf{y}$ adalah vektor kolom:
+\begin{equation}
+\mathbf{y} =
+\begin{bmatrix}
+y_{1} \\
+y_{2} \\
+\vdots \\
+y_{N} \\
+\end{bmatrix}
+\end{equation}
+
+Diberikan himpunan pasangan data
+$\left\{(x_{1},y_{1}), (x_{2}, y_{2}), \ldots, (x_{n}, y_{n})\right\}$
+kita ingin
+mencari parameter $\mathbf{w}$ yang meminimumkan rata-rata kesalahan kuadrat
+$\mathcal{L}$ yang didefinisikan sebagai:
+\begin{equation}
+\mathcal{L} \equiv \frac{1}{N} \sum_{n=1}^{N} \left( y_{n} - \mathbf{w}^{\mathsf{T}}
+\mathbf{x}_{n} \right)^2
+\end{equation}
+Dapat ditunjukkan bahwa parameter yang membuat $\mathcal{L}$ menjadi mininum adalah
+\begin{equation}
+\mathbf{w} = \left(\mathbf{X}^{\mathsf{T}}\mathbf{X} \right)^{-1} \mathbf{X}^{\mathsf{T}} \mathbf{y}
+\label{eq:w_vektor}
+\end{equation}
+
+\begin{soal}
+Buat fungsi/subrutin dalam Python untuk membuat matriks $\mathbf{X}$ dengan argumen
+input $\mathbf{x}$ dan $\mathbf{y}$ dan menghitung $\mathbf{w}$ berdasarkan
+persamaan \eqref{eq:w_vektor}.
+Uji fungsi yang sudah Anda buat dengan menggunakan data pada Contoh 17.1 dan bandingkan
+parameter \textit{slope} dan \textit{intercept} yang Anda dapatkan pada soal ini dan
+soal sebelumnya. Anda dapat menggunakan \pyinline{np.linalg.inv} untuk menghitung
+invers matriks atau \pyinline{np.linalg.linsolve} jika Anda mengubah permasalahan
+ini menjadi sistem persamaan linear.
+\end{soal}
+
+Kita juga dapat menggunakan Persamaan \eqref{eq:w_vektor} untuk model linear
+\footnote{Model linear didefinisikan sebagai model yang parameternya linear
+(berpangkat satu)} polinom lebih tinggi dari satu. Misalkan, pada model
+polinom kuadrat:
+\begin{equation}
+y = w_{0} + w_{1} x + w_{2} x^2
+\end{equation}
+matriks $\mathbf{X}$ menjadi:
+\begin{equation}
+\mathbf{X} = \begin{bmatrix}
+1 & x_{1} & x_{1}^2 \\
+1 & x_{2} & x_{2}^2 \\
+\vdots & \vdots & \vdots \\
+1 & x_{N} & x_{N}^2
+\end{bmatrix}
+\end{equation}
+dan vektor $\mathbf{w}$ menjadi:
+\begin{equation}
+\mathbf{w} = 
+\begin{bmatrix}
+w_{0} \\
+w_{1} \\
+w_{2}
+\end{bmatrix}
+\end{equation}
+
+Formula yang sama juga dapat digunakan untuk model multilinear dengan
+dua variabel independen $x^{(1)}$ dan $x^{(2)}$ (tanda $^{(1)}$ dan $^{(2)}$ bukan
+menyatakan pangkat, namun variabel yang berbeda)
+\footnote{Silakan gunakan variabel lain seperti $t$, $x$, $y$, $z$}:
+\begin{equation}
+y = w_{0} + w_{1} x^{(1)} + w_{2} x^{(2)}
+\end{equation}
+di mana sekarang matrix $\mathbf{X}$ menjadi:
+\begin{equation}
+\mathbf{X} = \begin{bmatrix}
+1 & x^{(1)}_{1} & {x^{(2)}_{1}}^2 \\
+1 & x^{(1)}_{2} & {x^{(2)}_{2}}^2 \\
+\vdots & \vdots & \vdots \\
+1 & x^{(1)}_{N} & {x^{(2)}_{N}}^2
+\end{bmatrix}
+\end{equation}
+
+\begin{soal}
+Kembangkan fungsi/subrutin Python yang sudah Anda buat sehingga dapat menerima argumen
+opsional \pyinline{m}, di mana \pyinline{m >= 1} adalah orde polinom ingin digunakan.
+Uji dengan menggunakan data pada Contoh 17.5 di buku Chapra.
+\end{soal}
+
+\begin{soal}
+Modifikasi fungsi/subrutin Python sudah Anda buat untuk regresi linear sehingga
+dapat digunakan untuk regresi multilinear dan uji fungsi yang Anda buat
+dengan menggunakan data pada Contoh 17.6 di buku Chapra.
+\end{soal}
+
+
+
 \section{Soal Tambahan}
 
 \input{Chapra_exercise_18_5}
@@ -151,6 +303,10 @@ Uji hasil yang Anda dapatkan dengan menggunakan data-data yang diberikan pada co
 \input{Chapra_exercise_17_4}
 
 \input{Chapra_exercise_17_6}
+
+\input{Chapra_exercise_17_8}
+
+\input{Chapra_exercise_17_9}
 
 \section{Kode Fortran}
 
