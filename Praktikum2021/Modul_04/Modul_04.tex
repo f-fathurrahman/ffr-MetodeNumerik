@@ -268,16 +268,16 @@ y = w_{0} + w_{1} x^{(1)} + w_{2} x^{(2)}
 di mana sekarang matrix $\mathbf{X}$ menjadi:
 \begin{equation}
 \mathbf{X} = \begin{bmatrix}
-1 & x^{(1)}_{1} & {x^{(2)}_{1}}^2 \\
-1 & x^{(1)}_{2} & {x^{(2)}_{2}}^2 \\
+1 & x^{(1)}_{1} & x^{(2)}_{1} \\
+1 & x^{(1)}_{2} & x^{(2)}_{2} \\
 \vdots & \vdots & \vdots \\
-1 & x^{(1)}_{N} & {x^{(2)}_{N}}^2
+1 & x^{(1)}_{N} & x^{(2)}_{N}
 \end{bmatrix}
 \end{equation}
 
 \begin{soal}
 Kembangkan fungsi/subrutin Python yang sudah Anda buat sehingga dapat menerima argumen
-opsional \pyinline{m}, di mana \pyinline{m >= 1} adalah orde polinom ingin digunakan.
+opsional \pyinline{m}, di mana \pyinline{m >= 1} adalah orde polinomial yang ingin digunakan.
 Uji dengan menggunakan data pada Contoh 17.5 di buku Chapra.
 \end{soal}
 
@@ -309,6 +309,10 @@ dengan menggunakan data pada Contoh 17.6 di buku Chapra.
 \input{Chapra_exercise_17_9}
 
 \section{Kode Fortran}
+
+Anda dapat menggunakan laman berikut jika pada komputer Anda tidak tersedia
+\textit{compiler} untuk Fortran:
+{\footnotesize \url{https://www.onlinegdb.com/online_fortran_compiler}}
 
 \subsection{Interpolasi Newton}
 \fortranfile{../../chapra_7th/ch18/newton_interp.f90}
