@@ -2,9 +2,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from chebyshev_poly import *
+from gen_chebyshev_nodes import *
 
-x = np.array([0.75, 2, 3, 4, 6, 8, 8.5])
-y = np.array([1.2, 1.95, 2, 2.4, 2.4, 2.7, 2.6])
+z = gen_chebyshev_nodes(15)
+print("z = ", z)
+a = -1.0
+b =  1.0
+
+#x = np.array([0.75, 2, 3, 4, 6, 8, 8.5])
+#y = np.array([1.2, 1.95, 2, 2.4, 2.4, 2.7, 2.6])
+
+x = a + (b - a)*(z + 1)/2
+#y = np.sin(2*np.pi*x/(b - a))
+y = 1.0/(1 + 35*x**2)
+
+print("x = ", x)
+print("y = ", y)
 
 Ndata = len(x)
 
@@ -17,7 +30,7 @@ B = np.max(x)
 x_plt = np.linspace(A,B,NptsPlot)
 y_plt = np.zeros(NptsPlot)
 
-for degree in range(1,Ndata+1):
+for degree in range(1,Ndata+1,3):
     # fitting
     coefs = chebyshev_fit(x, y, degree)
     # plot
