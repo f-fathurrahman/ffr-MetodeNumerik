@@ -7,11 +7,14 @@
 \setlength{\parskip}{\smallskipamount}
 \setlength{\parindent}{0pt}
 
-\usepackage{cmbright}
-\renewcommand{\familydefault}{\sfdefault}
+%\usepackage{cmbright}
+%\renewcommand{\familydefault}{\sfdefault}
 
-\usepackage{fontspec}
-\setmonofont{FreeMono}
+\usepackage[libertine]{newtxmath}
+\usepackage[no-math]{fontspec}
+%
+\setmainfont{Linux Libertine O}
+%\setmainfont{STIX}
 
 %\usepackage{sfmath}
 %\usepackage{mathptmx}
@@ -158,7 +161,7 @@ For interior points:
 %
 \begin{equation}
 N_{i}(x) = \begin{cases}
-\dfrac{x - x}{h_{i-1}} & x_{i-1} \leq x \leq x_{i} \\[10pt]
+\dfrac{x - x_{i-1}}{h_{i-1}} & x_{i-1} \leq x \leq x_{i} \\[10pt]
 \dfrac{x_{i+1} - x}{h_{i}} & x_{i} \leq x \leq x_{i+1},\quad i=2,3,\ldots,n \\[10pt]
 0                     & \text{otherwise}
 \end{cases}
@@ -233,8 +236,8 @@ So we have:
 
 Since the temperature distribution must be a continuous function of $x$,
 the simplest way to approximate it would be to use piecewise polynomial
-interpolation over each element, in particular, piecewise linear approxi-
-mation (by using linear shape functions as in \eqref{eq:linear_shape_functions})
+interpolation over each element, in particular, piecewise linear approximation
+(by using linear shape functions as in \eqref{eq:linear_shape_functions})
 provides the simplest approximation with a continuous function.
 Unfortunately, the first derivatives of such functions are not continuous
 at the elements' ends and, hence, second derivatives do not exist there;
