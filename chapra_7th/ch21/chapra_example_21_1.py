@@ -11,6 +11,7 @@ I = (b - a)*(f_a + f_b)/2
 E_t = I_exact - I
 ε_t = E_t/I_exact * 100
 print("Integral result = %.6f" % I)
+print("True integral   = %.6f" % I_exact)
 print("True error      = %.6f" % E_t)
 print("ε_t             = %.1f%%" % ε_t)
 
@@ -21,5 +22,5 @@ d2f = f.diff(x,2)
 #sympy.pprint(d2f)
 avg_d2f_xi = sympy.integrate( d2f, (x,a,b) )/(b - a)
 #print("avg_d2f_xi = ", avg_d2f_xi)
-E_a = -1/12*avg_d2f_xi*(b - a)**3
+E_a = -1/12*avg_d2f_xi*(b - a)**3 # Persamaan 21.6
 print("Approx error    = %.6f" % E_a)
