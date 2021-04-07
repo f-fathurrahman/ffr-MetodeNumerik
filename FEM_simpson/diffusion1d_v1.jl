@@ -1,7 +1,6 @@
 # Based on: Simpson - Practical Finite Element Modelling in Earth Science
 
 using Printf
-using LinearAlgebra
 using SparseArrays
 import PyPlot
 
@@ -99,26 +98,22 @@ function main()
     k = 1
     Nii_plot = [1, 100, 500, 1000, 2500, 5000] # for plotting
     
-    LHS[1,2] = 0.0
-    LHS[1,1] = 1.0
-    LHS[NnodesTotal,2] = 0.0
-    LHS[NnodesTotal,NnodesTotal] = 1.0
-    
-    displ = zeros(NnodesTotal,1)
-    b = zeros(NnodesTotal,1)
-    factorLHS = lu(LHS)
-
     for ni in 1:Ntime
 
         #@printf("ni = %d\n", ni)
         
         t = t + dt
-
-        b[:] = RHS*displ + ff
+        b = RHS*displ + ff
+        
+        # Impose BC (this is special case, can be moved outside the time loop)
+        LHS[1,2] = 0.0
+        LHS[1,1] = 1.0
+        LHS[NnodesTotal,2] = 0.0
+        LHS[NnodesTotal,NnodesTotal] = 1.0
+        
         b[bcdof] .= bcval
     
-        #displ = LHS\b
-        ldiv!(displ, factorLHS, b)
+        displ = LHS\b
     
         # Analytic solution
         #sumv = 0.0
