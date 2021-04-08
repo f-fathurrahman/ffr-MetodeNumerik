@@ -207,10 +207,22 @@ dengan mengasumsikan nilai $H_1 = H(\xi_1)$ dan $H_2 = H(\xi_2)$ diketahui, kita
 $$
 H(\xi_{k}) = H_1 N_{1}(\xi_{k}) + H_2 N_{2}(\xi_{k})
 $$
-s
+Analytic Solution (from Jaeger)
 
-s
+The slab with heat produced within it.
+$$
+\frac{\partial^2 v}{\partial x^2} - \frac{1}{\kappa}\frac{\partial v}{\partial t} = -\frac{A}{K}
+$$
+$A$: heat production per unit time per unit volume
 
+$A = A_0$ constant for $t>0$.
+$$
+v = \frac{A_0 l^2}{2K}\left(
+1 - \frac{x^2}{l^2} - \frac{32}{\pi^3} \sum_{n=0}^{\infty}
+\frac{(-1)^n}{(2n + 1)^3} \cos \frac{(2n+1)\pi x}{2l}
+\exp\left[ -\kappa(2n + 1)^2 \pi^2 t / 4l^2 \right]
+\right)
+$$
 s
 
 s
