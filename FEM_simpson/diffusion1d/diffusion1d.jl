@@ -7,7 +7,26 @@ import PyPlot
 
 const plt = PyPlot
 
+function calc_analytic_solution!(κ, A, K, L, t, xgrid, Nterms, Texact)
+    Npoints = size(xgrid,1)
+    # Analytic solution
+    sumv = zeros(Npoints)
+    for i in 1:Npoints
+        x = xgrid[i]
+        sumv[i] = 0.0
+        for ni in 0:Nterms
+            et = exp( -κ*(2*ni+1)^2 * pi^2*t/4/L^2 )
+            sumv[i] = sumv[i] + (-1)^ni/(2*ni+1)^3*cos((2*ni+1)/2/L*pi*x)*et
+        end
+        Texact[i] = A * L^2/(2*K) * (1.0 - x^2/L^2 - 32/pi^3 * sumv[i] )
+    end
+    return
+end
+
+
+
 function main()
+    
     # -------------------
     # Physical parameters
     # -------------------
@@ -90,14 +109,17 @@ function main()
     # For analytic solution
     Nterms = 100
     L = Lx/2
-    x = range(-L, stop=L, length=100)
+    NptsGrid = 100
+    xgrid = range(-L, stop=L, length=NptsGrid)
+    Texact = zeros(NptsGrid)
+
+    Nii_plot = [1, 100, 500, 1000, 2500, 5000] # for plotting
 
     # ---------
     # Time loop
     # ---------
     t = 0.0
     k = 1
-    Nii_plot = [1, 100, 500, 1000, 2500, 5000] # for plotting
     
     LHS[1,2] = 0.0
     LHS[1,1] = 1.0
@@ -111,7 +133,6 @@ function main()
     for ni in 1:Ntime
 
         #@printf("ni = %d\n", ni)
-        
         t = t + dt
 
         b[:] = RHS*displ + ff
@@ -119,19 +140,12 @@ function main()
     
         #displ = LHS\b
         ldiv!(displ, factorLHS, b)
-    
-        # Analytic solution
-        #sumv = 0.0
-        #for ni in 0:Nterms
-        #    et = exp( -κ*(2*ni+1)^2 * pi^2*t/4/L^2 )
-        #    sumv = sumv .+ (-1)^ni/(2*ni+1)^3*cos.((2*ni+1)/2/L*pi*x)*et
-        #end
-        #T_exact = A * L^2/(2*K) * (1.0 .- x.^2/L^2 .- 32/pi^3 .* sumv )
 
-        #if ni in Nii_plot
+        #if ( do_plot && (ni in Nii_plot) )
+        #    calc_analytic_solution!(κ, A, K, L, t, xgrid, Nterms, Texact)
         #    plt.clf()
         #    plt.plot(g_coord, displ, marker="o", label="numerical")
-        #    plt.plot(x .+ L, T_exact, label="exact") # shift exact solution by L
+        #    plt.plot(xgrid .+ L, Texact, label="exact") # shift exact solution by L
         #    title_plot = @sprintf("t = %.1f year", t/seconds_per_yr)
         #    file_plot = @sprintf("IMG_sol_%04d.png", ni)
         #    plt.ylim(0.0, 10.0)
