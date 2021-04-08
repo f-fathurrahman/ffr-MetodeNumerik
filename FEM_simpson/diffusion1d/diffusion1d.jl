@@ -25,27 +25,19 @@ end
 
 
 
-function main()
+function main(; do_plot=false)
     
     # -------------------
     # Physical parameters
     # -------------------
-    seconds_per_yr = 60*60*24*365  # Number of seconds in one year (s)
-    
+    seconds_per_yr = 60.0*60*24*365  # Number of seconds in one year (s)
     Lx = 1e4  # Length of spatial domain (m)
-
     Cp = 1e3  # rock heat capacity (J/Kg/K)
-
-    rho = 2700  # rock density
-
+    rho = 2700.0  # rock density
     K = 3.3  # bulk thermal conductivity (W/m/K)
-
     κ = K/(Cp*rho)  # thermal diffusivity
-
     Tb = 0.0    # Temperature at boundaries (degree Celcius)
-
     A = 2.6e-6  # Heat production per volume per second (W/m^3)
-
     H = A/(rho*Cp)  # Heat source term (K/s)
 
 
@@ -63,8 +55,8 @@ function main()
     g_coord = 0.0:dx:Lx  # the size NnodesTotal
 
     # Boundary condition
-    bcdof = [1 NnodesTotal] # boundary nodes
-    bcval = [Tb Tb] # boundary values
+    bcdof = [1, NnodesTotal] # boundary nodes
+    bcval = [Tb, Tb] # boundary values
 
     # Connectivity and equation numbering
     g_num = zeros(Int64,NnodesPerElement,Nelements);
@@ -72,11 +64,11 @@ function main()
     g_num[2,:] = collect(2:NnodesTotal)
 
     # Matrices and vectors
-    ff = zeros(Float64, NnodesTotal, 1)  # system load vector
-    b = zeros(Float64, NnodesTotal, 1)   # system rhs vector
+    ff = zeros(Float64, NnodesTotal)  # system load vector
+    b = zeros(Float64, NnodesTotal)   # system rhs vector
     LHS = spzeros(Float64, NnodesTotal, NnodesTotal) # system lhs matrix
     RHS = spzeros(Float64, NnodesTotal, NnodesTotal) # system rhs matrix
-    displ = zeros(Float64, NnodesTotal, 1)  # initial temperature
+    displ = zeros(Float64, NnodesTotal)  # initial temperature
 
     # ---------------
     # Matrix assembly
@@ -121,13 +113,14 @@ function main()
     t = 0.0
     k = 1
     
+    # Boundary condition, pulled out from the time loop
     LHS[1,2] = 0.0
     LHS[1,1] = 1.0
     LHS[NnodesTotal,2] = 0.0
     LHS[NnodesTotal,NnodesTotal] = 1.0
     
-    displ = zeros(NnodesTotal,1)
-    b = zeros(NnodesTotal,1)
+    displ = zeros(NnodesTotal)
+    b = zeros(NnodesTotal)
     factorLHS = lu(LHS)
 
     for ni in 1:Ntime
@@ -141,17 +134,17 @@ function main()
         #displ = LHS\b
         ldiv!(displ, factorLHS, b)
 
-        #if ( do_plot && (ni in Nii_plot) )
-        #    calc_analytic_solution!(κ, A, K, L, t, xgrid, Nterms, Texact)
-        #    plt.clf()
-        #    plt.plot(g_coord, displ, marker="o", label="numerical")
-        #    plt.plot(xgrid .+ L, Texact, label="exact") # shift exact solution by L
-        #    title_plot = @sprintf("t = %.1f year", t/seconds_per_yr)
-        #    file_plot = @sprintf("IMG_sol_%04d.png", ni)
-        #    plt.ylim(0.0, 10.0)
-        #    plt.title(title_plot)
-        #    plt.savefig(file_plot, dpi=150)
-        #end
+        if ( do_plot && (ni in Nii_plot) )
+            calc_analytic_solution!(κ, A, K, L, t, xgrid, Nterms, Texact)
+            plt.clf()
+            plt.plot(g_coord, displ, marker="o", label="numerical")
+            plt.plot(xgrid .+ L, Texact, label="exact") # shift exact solution by L
+            title_plot = @sprintf("t = %.1f year", t/seconds_per_yr)
+            file_plot = @sprintf("IMG_sol_%04d.png", ni)
+            plt.ylim(0.0, 10.0)
+            plt.title(title_plot)
+            plt.savefig(file_plot, dpi=150)
+        end
 
     end
 
