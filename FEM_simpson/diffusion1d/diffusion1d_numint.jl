@@ -137,8 +137,8 @@ function main(; do_plot=false)
     LHS[NnodesTotal,2] = 0.0
     LHS[NnodesTotal,NnodesTotal] = 1.0
     
-    displ = zeros(NnodesTotal,1)
-    b = zeros(NnodesTotal,1)
+    displ = zeros(NnodesTotal)
+    b = zeros(NnodesTotal)
     factorLHS = lu(LHS)
 
     for ni in 1:Ntime
