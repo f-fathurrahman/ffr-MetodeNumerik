@@ -43,8 +43,8 @@ function main()
     g_coord = 0.0:dx:Lx  # the size NnodesTotal
 
     # Boundary condition
-    bcdof = [1 NnodesTotal] # boundary nodes
-    bcval = [Tb Tb] # boundary values
+    bcdof = [1, NnodesTotal] # boundary nodes
+    bcval = [Tb, Tb] # boundary values
 
     # Connectivity and equation numbering
     g_num = zeros(Int64,NnodesPerElement,Nelements);
@@ -52,11 +52,11 @@ function main()
     g_num[2,:] = collect(2:NnodesTotal)
 
     # Matrices and vectors
-    ff = zeros(Float64, NnodesTotal, 1)  # system load vector
-    b = zeros(Float64, NnodesTotal, 1)   # system rhs vector
+    ff = zeros(Float64, NnodesTotal)  # system load vector
+    b = zeros(Float64, NnodesTotal)   # system rhs vector
     LHS = spzeros(Float64, NnodesTotal, NnodesTotal) # system lhs matrix
     RHS = spzeros(Float64, NnodesTotal, NnodesTotal) # system rhs matrix
-    displ = zeros(Float64, NnodesTotal, 1)  # initial temperature
+    displ = zeros(Float64, NnodesTotal)  # initial temperature
 
     # ---------------
     # Matrix assembly
