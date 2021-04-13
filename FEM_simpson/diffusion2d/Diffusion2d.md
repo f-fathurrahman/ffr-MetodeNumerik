@@ -71,3 +71,12 @@ $$
 N_1 & N_2 & N_3 & N_4
 \end{bmatrix}
 $$
+
+## Integration of Element Matrices
+
+$$
+\int_{-1}^{1} f(\xi,\eta)\ \mathrm{d}\xi \mathrm{d}\eta \approx
+\sum_{i=1}^{nipx}\sum_{j=1}^{nipy} w_{i} w_{j} f(\xi_{i},\eta_{j}) =
+\sum_{k=1}^{nip} w_{k} f(\xi_{k},\eta_{k})
+$$
+
