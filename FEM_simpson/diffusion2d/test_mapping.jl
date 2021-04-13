@@ -3,7 +3,7 @@ function main()
 
     Ndim = 2
     NelsX = 3
-    NelsY = 4
+    NelsY = 2
     Nelements = NelsX*NelsY
     #
     NnodesPerElement = 4
