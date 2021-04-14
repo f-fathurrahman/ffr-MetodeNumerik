@@ -2,7 +2,11 @@ using Printf
 using LinearAlgebra
 using SparseArrays
 
+import Random
+
 function main()
+
+    Random.seed!(1234)
 
     # physical parameters
     d = 20    # diffusivity of species B
@@ -15,8 +19,8 @@ function main()
     Ly = 5.0   # length of y domain
 
     Ndim = 2
-    NelsX = 2
-    NelsY = 2
+    NelsX = 50
+    NelsY = 50
     Nelements = NelsX*NelsY
     #
     # Rectangular quadratic element
@@ -77,6 +81,7 @@ function main()
             nf[i,n] = idof  # store eqn number on each node
         end
     end
+    NdofsTotal = idof
     
     # equation number for each element
     g = zeros(Int64, NdofsPerElement)   # equation numbers for 1 element
@@ -167,6 +172,105 @@ function main()
         fun_s[k,:] = fun
         der_s[:,:,k] = der
     end
+
+    LHS = spzeros(Float64, NdofsTotal, NdofsTotal)
+    bv = zeros(Float64, NdofsTotal)
+    displ = zeros(Float64, NdofsTotal)
+    displ0 = zeros(Float64, NdofsTotal)
+    displ_tmp = zeros(Float64, NdofsTotal)
+
+    # initial conditions
+    displ[nf[1,:]] = (a + b)*ones(NnodesTotal) + NOISE_AMP*randn(NnodesTotal)
+    displ[nf[2,:]] = b/(a+b)^2 * ones(NnodesTotal) + NOISE_AMP*randn(NnodesTotal)
+
+    ## dirichlet boundary conditions
+    ## (zero-flux when the vectors are left empty)
+    #bcdof = [ ] ; % fixed nodes
+    #bcval = [ ] ; % fixed values
+    # XXXX NOT USED?
+
+    t = 0.0
+    dt   = 5e-4  # time step
+    Ntime = 1
+    
+    KMa = zeros(NnodesPerElement,NnodesPerElement)
+    KMb = zeros(NnodesPerElement,NnodesPerElement)
+    MM  = zeros(NnodesPerElement,NnodesPerElement)
+    FA  = zeros(NnodesPerElement)
+    FB  = zeros(NnodesPerElement)
+
+    for it in 1:Ntime
+        displ0[:] = displ[:] # save old solution
+        t = t + dt  # update time
+        err = 1.0 # initialise error to arbitary large number
+        #
+        for iterInner in 1:3
+            println("interInner = ", iterInner)
+            #    
+            bv[:] .= 0.0  # system rhs vector
+            LHS.nzval[:] .= 0.0
+            #
+            # element integration and assembly
+            #
+            for iel in 1:Nelements
+                num = g_num[:,iel] # node numbers
+                g = g_g[:,iel] #equation numbers (all)
+                ga = g[1:NnodesPerElement] # equation numbers for A
+                gb = g[NnodesPerElement+1:end]          # equation numbers for B
+                coord = g_coord[:,num]'  # node coordinates
+                #
+                KMa[:] .= 0.0
+                KMb[:] .= 0.0
+                MM[:] .= 0.0
+                FA[:] .= 0.0
+                FB[:] .= 0.0
+                #
+                for k in 1:NintegPoints 
+                    fun = fun_s[k,:]  # shape functions
+                    der = der_s[:,:,k] # derivs. of N in local coords
+                    jac = der*coord   # Jacobian matrix
+                    detjac = det(jac)  # determinant of Jac
+                    invjac = inv(jac)  # inverse of Jac
+                    #
+                    deriv = invjac*der # derivs. of N in physical coords
+                    #
+                    Ai = fun'*displ[ga]  # interpolate A to integration pt.
+                    Bi = fun'*displ[gb]  # interpolate B to integration pt.
+                    #
+                    dwt = detjac*wIntegPoints[k] # multiplier
+                    
+                    MM = MM + fun*fun'*dwt         # mass matrix
+                    KMa = KMa + deriv'*deriv*dwt    # A diffn matrix
+                    KMb = KMb + d*deriv'*deriv*dwt # B diffn matrix
+                    
+                    FA = FA + γ*(a + Ai^2*Bi)*fun*dwt # A load vector
+                    FB = FB + γ*(b - Ai^2*Bi)*fun*dwt # B load vector
+                end
+                # assemble global lhs matrix and rhs vector
+                LHS[ga,ga] = LHS[ga,ga] + MM/dt + KMa + γ*MM  # A contrib.
+                LHS[gb,gb] = LHS[gb,gb] + MM/dt + KMb         # B contribution
+                bv[ga] = bv[ga] + MM/dt*displ0[ga] + FA  # A contribution
+                bv[gb] = bv[gb] + MM/dt*displ0[gb] + FB  # B contribution
+            end
+            #println("Finish assembly")
+            #%-------------------------------------------------
+            #% implement boundary conditions and solve system
+            #%-------------------------------------------------
+            #% apply boundary conditions
+            #lhs(bcdof,:) = 0;
+            #tmp = spdiags(lhs,0) ;
+            #tmp(bcdof)=1;
+            #lhs=spdiags(tmp,0,lhs) ;
+            #bv(bcdof) = bcval ;
+            displ_tmp[:] = displ[:] # save solution vector
+            displ = LHS\bv # solve sytem
+            #% check for convergence
+            err = maximum( abs.(displ - displ_tmp) )/maximum(abs.(displ))
+            println("err = ", err)
+        # end of nonlinear iteration loop
+        end
+    end
+
 
 
     println("Pass here")
