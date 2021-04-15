@@ -11,6 +11,21 @@ def integ_trapz_multiple( f, a, b, N ):
     I = h/2 * ( f(x0) + 2*ss + f(xN) )
     return I
 
+
+def integ_trapz( f, a, b ):
+    I = (b - a) * (f(a) + f(b)) / 2
+    return I
+
+def integ_trapz_multiple_v2(f, a, b, N):
+    s = 0.0
+    Δ = (b-a)/N
+    for i in range(N):
+        aa = a + i*Δ
+        bb = a + (i+1)*Δ
+        s = s + integ_trapz(f, aa, bb)
+    return s
+
+
 # N is number of intervals
 # N+1 is number of points (total function evaluations)
 def integ_simpson13_multiple( f, a, b, N ):
