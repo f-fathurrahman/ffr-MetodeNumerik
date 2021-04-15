@@ -2,6 +2,9 @@ using Printf
 using LinearAlgebra
 using SparseArrays
 
+import PyPlot
+const plt = PyPlot
+
 import Random
 
 function main()
@@ -203,13 +206,15 @@ function main()
     jac = zeros(2,2)
     invjac = zeros(2,2)
 
-    for it in 1:2
+    for it in 1:200
         displ0[:] = displ[:] # save old solution
         t = t + dt  # update time
+        @printf("t = %18.10f s\n", t)
         err = 1.0 # initialise error to arbitary large number
         #
-        for iterInner in 1:3
-            println("interInner = ", iterInner)
+        iterInner = 0
+        while err > 1e-3
+            iterInner = iterInner + 1
             #    
             bv[:] .= 0.0  # system rhs vector
             LHS.nzval[:] .= 0.0
@@ -278,11 +283,26 @@ function main()
             displ = LHS\bv # solve sytem
             #% check for convergence
             err = maximum( abs.(displ - displ_tmp) )/maximum(abs.(displ))
-            println("err = ", err)
+            @printf("Inner iteration: %3d err = %18.5e\n", iterInner, err)
         end # end of nonlinear iteration loop
     end
 
+    xg = reshape(g_coord[1,:],NnodesY,NnodesX)
+    yg = reshape(g_coord[2,:],NnodesY,NnodesX)
+    Ag = reshape(displ[nf[1,:]],NnodesY,NnodesX)
+    Bg = reshape(displ[nf[2,:]],NnodesY,NnodesX)
 
+    plt.clf()
+    plt.pcolor(xg, yg, Ag, cmap="jet", shading="auto")
+    plt.axis("equal")
+    plt.title("A")
+    plt.savefig("IMG_A.png", dpi=150)
+
+    plt.clf()
+    plt.pcolor(xg, yg, Bg, cmap="jet", shading="auto")
+    plt.axis("equal")
+    plt.title("B")
+    plt.savefig("IMG_B.png", dpi=150)
 
     println("Pass here")
 end
