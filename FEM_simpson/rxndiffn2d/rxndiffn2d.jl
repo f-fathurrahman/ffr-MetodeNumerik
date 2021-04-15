@@ -199,7 +199,11 @@ function main()
     FA  = zeros(NnodesPerElement)
     FB  = zeros(NnodesPerElement)
 
-    for it in 1:Ntime
+    deriv = zeros(2,9)
+    jac = zeros(2,2)
+    invjac = zeros(2,2)
+
+    for it in 1:2
         displ0[:] = displ[:] # save old solution
         t = t + dt  # update time
         err = 1.0 # initialise error to arbitary large number
@@ -214,31 +218,29 @@ function main()
             #
             for iel in 1:Nelements
                 num = g_num[:,iel] # node numbers
-                g = g_g[:,iel] #equation numbers (all)
-                ga = g[1:NnodesPerElement] # equation numbers for A
-                gb = g[NnodesPerElement+1:end]          # equation numbers for B
+                ga = g_g[1:NnodesPerElement,iel] # equation numbers for A
+                gb = g_g[NnodesPerElement+1:end,iel]          # equation numbers for B
                 coord = g_coord[:,num]'  # node coordinates
                 #
-                KMa[:] .= 0.0
-                KMb[:] .= 0.0
-                MM[:] .= 0.0
-                FA[:] .= 0.0
-                FB[:] .= 0.0
+                fill!(KMa,0.0)
+                fill!(KMb,0.0)
+                fill!(MM,0.0)
+                fill!(FA,0.0)
+                fill!(FB,0.0)
                 #
                 for k in 1:NintegPoints 
                     fun = fun_s[k,:]  # shape functions
                     der = der_s[:,:,k] # derivs. of N in local coords
-                    jac = der*coord   # Jacobian matrix
+                    jac[:] = der*coord   # Jacobian matrix
                     detjac = det(jac)  # determinant of Jac
-                    invjac = inv(jac)  # inverse of Jac
+                    invjac[:] = inv(jac)  # inverse of Jac
                     #
-                    deriv = invjac*der # derivs. of N in physical coords
+                    deriv[:] = invjac*der # derivs. of N in physical coords
                     #
                     Ai = fun'*displ[ga]  # interpolate A to integration pt.
                     Bi = fun'*displ[gb]  # interpolate B to integration pt.
                     #
                     dwt = detjac*wIntegPoints[k] # multiplier
-                    
                     MM = MM + fun*fun'*dwt         # mass matrix
                     KMa = KMa + deriv'*deriv*dwt    # A diffn matrix
                     KMb = KMb + d*deriv'*deriv*dwt # B diffn matrix
@@ -247,10 +249,20 @@ function main()
                     FB = FB + γ*(b - Ai^2*Bi)*fun*dwt # B load vector
                 end
                 # assemble global lhs matrix and rhs vector
-                LHS[ga,ga] = LHS[ga,ga] + MM/dt + KMa + γ*MM  # A contrib.
-                LHS[gb,gb] = LHS[gb,gb] + MM/dt + KMb         # B contribution
-                bv[ga] = bv[ga] + MM/dt*displ0[ga] + FA  # A contribution
-                bv[gb] = bv[gb] + MM/dt*displ0[gb] + FB  # B contribution
+                for j in 1:9, i in 1:9
+                    ia = ga[i]
+                    ja = ga[j]
+                    LHS[ia,ja] = LHS[ia,ja] + MM[i,j]/dt + KMa[i,j] + γ*MM[i,j]  # A contrib.
+                end
+                for j in 1:9, i in 1:9
+                    ib = gb[i]
+                    jb = gb[j]
+                    LHS[ib,jb] = LHS[ib,jb] + MM[i,j]/dt + KMb[i,j]  # B contrib.
+                end
+                #LHS[ga,ga] = LHS[ga,ga] + MM/dt + KMa + γ*MM  # A contrib.
+                #LHS[gb,gb] = LHS[gb,gb] + MM/dt + KMb         # B contribution
+                bv[ga] = bv[ga] + MM*displ0[ga]/dt + FA  # A contribution
+                bv[gb] = bv[gb] + MM*displ0[gb]/dt + FB  # B contribution
             end
             #println("Finish assembly")
             #%-------------------------------------------------
@@ -267,8 +279,7 @@ function main()
             #% check for convergence
             err = maximum( abs.(displ - displ_tmp) )/maximum(abs.(displ))
             println("err = ", err)
-        # end of nonlinear iteration loop
-        end
+        end # end of nonlinear iteration loop
     end
 
 
