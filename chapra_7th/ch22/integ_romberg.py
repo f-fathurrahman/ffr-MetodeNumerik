@@ -11,9 +11,8 @@ def integ_trapz_multiple( f, a, b, N ):
     I = h/2 * ( f(x0) + 2*ss + f(xN) )
     return I
 
-def integ_romberg(f, a, b, es=1e-10):
-    MAXIT = 10 # XXX HARDCODED
-    I = np.zeros( (MAXIT+1,MAXIT+1) )  # XXX HARDCODED
+def integ_romberg(f, a, b, es=1e-10, MAXIT=10):
+    I = np.zeros( (MAXIT+2,MAXIT+2) )
     n = 1
     # We start from I[1,1], to follow the book's notation
     I[1,1] = integ_trapz_multiple(f, a, b, n)
