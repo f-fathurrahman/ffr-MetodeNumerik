@@ -31,6 +31,7 @@ def integ_romberg(f, a, b, es=1e-10, MAXIT=10):
             print("converged, iterConv = ", iterConv)
             break
         iterConv = i
+    print("iterConv = ", iterConv)
     # to make sure that we are use variable that is defined outside the loop
     # we use iterConv instead of i
     return I[1,iterConv+1]
