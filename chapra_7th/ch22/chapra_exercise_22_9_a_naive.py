@@ -4,6 +4,7 @@ func_symb = 1/(x*(x+2))
 resExact = sympy.N(sympy.integrate(func_symb, (x, 2, sympy.oo)))
 
 from integ_routines import *
+from integ_romberg import integ_romberg
 
 def my_func(x):
     return 1/(x*(x+2))
@@ -34,9 +35,16 @@ for n in [2, 4, 10, 50, 100]:
     print("%3d %18.10f %18.10e" % (n, resN, abs(resN-resExact)))
 
 print("\nUsing Boole")
-for n in [2, 4, 10, 20, 50]:
+for n in [2, 4, 10, 20, 50, 100, 200, 500]:
     resN = integ_boole_multiple(my_func, a, b, n)
-    print("%3d %18.10f %18.10e" % (n, resN, abs(resN-resExact)))
+    print("%3d %18.10f %18.10e %18.10e" % (n, resN, abs(resN-resExact), abs(resN-resApproxInf)))
 
+print("\nUsing integ_romberg")
+resN = integ_romberg(my_func, a, b, MAXIT=15)
+print("resN = %18.10f %18.10e" % (resN, abs(resN-resExact)))
+print("resN w.r.t approxInf = %18.10f %18.10e" % (resN, abs(resN-resApproxInf)))
+
+print()
 print("resExact     = ", resExact)
 print("resApproxInf = ", resApproxInf)
+print("diff         = ", abs(resExact-resApproxInf))
