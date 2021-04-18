@@ -13,6 +13,6 @@ def my_func(x):
 a = 0.0
 b = pi/2
 resN = integ_romberg(my_func, a, b)
-print("resN = %18.10f" % resN)
-print("res  = %18.10f" % resExact)
-print("err  = %18.10e" % abs(resExact-resN))
+print("resN = %18.12f" % resN)
+print("res  = %18.12f" % resExact)
+print("err  = %18.12e" % abs(resExact-resN))
