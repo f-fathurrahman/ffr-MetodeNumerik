@@ -1,0 +1,174 @@
+\documentclass[a4paper,11pt,bahasa]{article} % screen setting
+\usepackage[a4paper]{geometry}
+
+%\documentclass[b5paper,11pt,bahasa]{article} % screen setting
+%\usepackage[b5paper]{geometry}
+
+\geometry{verbose,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm}
+
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+
+%\usepackage{cmbright}
+%\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage[libertine]{newtxmath}
+\usepackage[no-math]{fontspec}
+
+\setmainfont{Linux Libertine O}
+
+\setmonofont{JuliaMono-Regular}
+
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{minted}
+\usepackage{enumitem}
+
+\newminted{julia}{breaklines,fontsize=\scriptsize}
+\newminted{python}{breaklines,fontsize=\scriptsize}
+
+\newminted{bash}{breaklines,fontsize=\scriptsize}
+\newminted{text}{breaklines,fontsize=\scriptsize}
+
+\newcommand{\txtinline}[1]{\mintinline[breaklines,fontsize=\scriptsize]{text}{#1}}
+\newcommand{\jlinline}[1]{\mintinline[breaklines,fontsize=\scriptsize]{julia}{#1}}
+\newcommand{\pyinline}[1]{\mintinline[breaklines,fontsize=\scriptsize]{python}{#1}}
+
+\newmintedfile[juliafile]{julia}{breaklines,fontsize=\scriptsize}
+\newmintedfile[pythonfile]{python}{breaklines,fontsize=\scriptsize}
+% f-o-otnotesize
+
+\usepackage{mdframed}
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage{mhchem}
+\usepackage{appendix}
+
+\newcommand{\highlighteq}[1]{\colorbox{blue!25}{$\displaystyle#1$}}
+\newcommand{\highlight}[1]{\colorbox{red!25}{#1}}
+
+\newcounter{soal}%[section]
+\newenvironment{soal}[1][]{\refstepcounter{soal}\par\medskip
+   \noindent \textbf{Soal~\thesoal. #1} \sffamily}{\medskip}
+
+
+\definecolor{mintedbg}{rgb}{0.95,0.95,0.95}
+\BeforeBeginEnvironment{minted}{
+    \begin{mdframed}[backgroundcolor=mintedbg,%
+        topline=false,bottomline=false,%
+        leftline=false,rightline=false]
+}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+
+
+\BeforeBeginEnvironment{soal}{
+    \begin{mdframed}[%
+        topline=true,bottomline=true,%
+        leftline=true,rightline=true]
+}
+\AfterEndEnvironment{soal}{\end{mdframed}}
+
+% -------------------------
+\begin{document}
+
+\title{%
+{\small TF2202 Komputasi Rekayasa}\\
+Integral dan Diferensiasi Numerik
+}
+\author{Tim Praktikum Komputasi Rekayasa 2021\\
+Teknik Fisika\\
+Institut Teknologi Bandung}
+\date{}
+\maketitle
+
+\begin{soal}[Chapra Latihan 21.1]
+Untuk integral-integral berikut ini
+\begin{align}
+& \int_{0}^{\pi/2} (6 + 3\cos(x))\ \mathrm{d}x \\
+& \int_{0}^{3} (1 - e^{-2x})\ \mathrm{d}x \\
+& \int_{-2}^{4} (1 - x - 4x^3 + 2x^5)\ \mathrm{d}x \\
+& \int_{1}^{2} (x - 2/x)^2\ \mathrm{d}x \\
+& \int_{-3}^{5} (4x - 3)^3 \mathrm{d}x \\
+& \int_{0}^{3} x^2 e^x \mathrm{d}x \\
+& \int_{0}^{1} 14^{2x}\ \mathrm{d}x
+\end{align}
+dengan menggunakan metode:
+\begin{enumerate}[label=(\alph*)]
+\item analitik
+\item aturan trapesium
+\item aturan 1/3 Simpson
+\item aturan 3/8 Simpson
+\item aturan Boole
+\end{enumerate}
+Variasikan parameter numerik yang terkait, seperti jumlah titik yang dievaluasi,
+untuk setiap metode yang digunakan.
+Bandingkan hasil numerik yang diberikan dengan hasil analitik.
+Anda dapat menggunakan SymPy untuk menghitung integral secara analitik.
+\end{soal}
+
+Contoh penggunaan SymPy untuk perhitungan integral.
+\begin{pythoncode}
+import sympy
+x = sympy.symbols("x")
+func_symb = 6 + 3*sympy.cos(x)
+resExact = sympy.N(sympy.integrate(func_symb, (x, 0, sympy.pi/2)))
+# fungsi sympy.N digunakan untuk memaksa hasil dalam bentuk numerik.
+\end{pythoncode}
+
+
+\begin{soal}[Chapra 21.10 dan 21.11]
+Hitung integral dari data berikut ini dengan menggunakan aturan trapesium dan aturan
+Simpson.
+
+Data Chapra 21.10
+
+{\centering
+\begin{tabular}{|c|cccccc|}
+\hline
+$x$    & 0 & 0.1 & 0.2 & 0.3 & 0.4 & 0.5 \\
+$f(x)$ & 1 & 8   & 4   & 3.5 & 5   & 1 \\
+\hline
+\end{tabular}
+\par}
+
+Data Chapra 21.11
+
+{\centering
+\begin{tabular}{|c|ccccccc|}
+\hline
+$x$    & -2 & 0 & 2 & 4 & 6 & 8 & 10 \\
+$f(x)$ & 35 & 5 & -10 & 2 & 5 & 3 & 20 \\
+\hline
+\end{tabular}
+\par}
+\end{soal}
+
+\begin{soal}[Chapra 21.13]
+Diketahui data berikut ini dihasilkan dari fungsi $f(x)=2e^{-1.5x}$
+
+{\centering
+\begin{tabular}{|c|ccccccc|}
+\hline
+$x$    & 0 & 0.05   & 0.15 & 0.25 & 0.35 & 0.475 & 0.6 \\
+$f(x)$ & 2 & 1.8555 & 1.5970 & 1.3746 & 1.1831 & 0.9808 & 0.8131 \\
+\hline
+\end{tabular}
+\par}
+
+Hitung integral dari data ini dari $a=0$ dan $b=0.6$ dengan menggunakan
+aturan trapesium dan aturan Simpson. Bandingkan hasil yang Anda peroleh
+dengan melakukan integrasi $f(x)$ secara analitik.
+\end{soal}
+
+
+\end{document}
