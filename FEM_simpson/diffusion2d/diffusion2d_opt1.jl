@@ -168,9 +168,16 @@ function main()
             F = F + fun*H*detjac*wIntegPoints[k]
         end
         # assemble global matrices and vector
-        LHS[num,num] = LHS[num,num] + MM/dt + KM
-        RHS[num,num] = RHS[num,num] + MM/dt
-        ff[num] = ff[num] + F
+        for j in 1:NnodesPerElement, i in 1:NnodesPerElement
+            ii = num[i]
+            jj = num[j]
+            LHS[ii,jj] = LHS[ii,jj] + MM[i,j]/dt + KM[i,j]
+            RHS[ii,jj] = RHS[ii,jj] + MM[i,j]/dt
+        end
+        for i in 1:NnodesPerElement
+            ii = num[i]
+            ff[ii] = ff[ii] + F[i]
+        end
     end
 
     displ = Ti*ones(NnodesTotal) # initial condition

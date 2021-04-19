@@ -192,7 +192,7 @@ function main()
     for i in bcdof
         LHS[i,i] = 1.0
     end
-    factorLHS = lu(LHS)
+
     b = zeros(NnodesTotal)
     factorLHS = lu(LHS)
 
