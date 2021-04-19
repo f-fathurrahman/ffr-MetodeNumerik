@@ -71,7 +71,6 @@ function main(; do_plot=false)
     # ---------------
     # Matrix assembly
     # ---------------
-
     for iel = 1:Nelements
     
         num = g_num[:,iel] # get equation number
@@ -89,9 +88,12 @@ function main(; do_plot=false)
         # Load vector
         F = dx*H*[1/2; 1/2]
 
-        LHS[num,num] = LHS[num,num] + MM/dt + KM
-
-        RHS[num,num] = RHS[num,num] + MM/dt
+        for j in 1:NnodesPerElement, i in 1:NnodesPerElement
+            ii = num[i]
+            jj = num[j]
+            LHS[ii,jj] = LHS[ii,jj] + MM[i,j]/dt + KM[i,j]
+            RHS[ii,jj] = RHS[ii,jj] + MM[i,j]/dt
+        end
 
         ff[num] = ff[num] + F
     end
