@@ -1,3 +1,5 @@
+# Persamaan Difusi 1d
+
 Persamaan difusi:
 $$
 \frac{\partial T}{\partial t} = \kappa \frac{\partial^2 T}{\partial x^2} + H
@@ -17,13 +19,15 @@ $H$ adalah konstata sumber kalor $10^{-6}$ $\mathrm{K}\mathrm{s}^{-1}$.
 
 $L_x = 10000$ m
 
+## Diskritisasi Elemen Hingga
+
 Persamaan terdiskritisasi:
 $$
 \mathbf{L}\ \mathbf{T}^{n+1} = \mathbf{R}\ \mathbf{T}^{n} + \mathbf{F}
 $$
 
 $$
-\mathbf{L} = \frac{\mathbf{M}}{\Delta T} + \mathbf{K}
+\mathbf{L} = \frac{\mathbf{M}}{\Delta t} + \mathbf{K}
 $$
 
 Mass matrix
@@ -79,13 +83,13 @@ $$
 
 $$
 \mathbf{M} = \int_{0}^{L} \kappa
-\frac{\mathbf{N}^T}{\partial x}
-\frac{\mathbf{N}}{\partial x} \mathrm{d}x =
+\frac{\partial \mathbf{N}^T}{\partial x}
+\frac{\partial \mathbf{N}}{\partial x} \mathrm{d}x =
 \int_{0}^{L} \begin{bmatrix}
-\dfrac{N_1}{\partial x} \dfrac{N_1}{\partial x} &
-\dfrac{N_1}{\partial x} \dfrac{N_2}{\partial x} \\
-\dfrac{N_2}{\partial x} \dfrac{N_1}{\partial x} & 
-\dfrac{N_2}{\partial x} \dfrac{N_2}{\partial x}
+\dfrac{\partial N_1}{\partial x} \dfrac{N_1}{\partial x} &
+\dfrac{\partial N_1}{\partial x} \dfrac{N_2}{\partial x} \\
+\dfrac{\partial N_2}{\partial x} \dfrac{N_1}{\partial x} & 
+\dfrac{\partial N_2}{\partial x} \dfrac{N_2}{\partial x}
 \end{bmatrix}\ \mathrm{d}x
 $$
 
@@ -93,7 +97,7 @@ $$
 
 $$
 \mathbf{F} = \int_{0}^{L} H \mathbf{N}^{T}\ \mathrm{d}x =
-\int_{0}^{L} \begin{bmatrix} N_1 \\ N_2 \end{bmatrix} \ \mathrm{d}x
+\int_{0}^{L} H \begin{bmatrix} N_1 \\ N_2 \end{bmatrix} \ \mathrm{d}x
 $$
 
 Linear shape functions:
@@ -178,8 +182,6 @@ $$
 \int_{-1}^{1} N_{1}(\xi) N_{1}(\xi)\ \mathrm{d}\xi \approx
 \frac{L}{2} \sum_{k=1}^{n} w_{k} N_{1}(\xi_{k}) N_{1}(\xi_{k})
 $$
-s
-
 Tinjau integral:
 $$
 \int_{0}^{L} \kappa \frac{\partial N_2}{\partial x}
