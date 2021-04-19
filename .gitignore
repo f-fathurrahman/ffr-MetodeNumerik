@@ -4,6 +4,8 @@ IMG_*
 ORIG_*
 *.dat
 
+images_priv
+
 .ipynb_checkpoints
 __pycache__
 *.pyx
