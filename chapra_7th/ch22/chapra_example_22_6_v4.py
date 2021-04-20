@@ -27,7 +27,7 @@ for n in [1, 2, 4, 10, 50, 100, 200, 300, 500, 1000, 10000]:
         resN, abs(resN-resExact), abs(resN-resApproxInf)))
 
 print("\nUsing integ_romberg")
-resN = integ_romberg(my_func, a, b, MAXIT=14)
+resN = integ_romberg(my_func, a, b, MAXIT=14, es=1e-12)
 print("resN = %18.10f %18.10e %18.10e" % (resN,
     abs(resN-resExact), abs(resN-resApproxInf)))
 
