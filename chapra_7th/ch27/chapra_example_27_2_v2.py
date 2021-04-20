@@ -7,6 +7,9 @@
 
 import numpy as np
 from math import ceil, log10
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use("dark_background")
 
 # T == y[0]
 # dT/dx == y[1]
@@ -143,7 +146,6 @@ x, y = ode_solve(deriv, ode_rk4_1step, x0, y0, h, Nstep)
 print("Tf = ", y[-1,0])  # Should not give a value of about 200.0
 
 # Now plot the solution
-import matplotlib.pyplot as plt
 plt.clf()
 plt.plot(x, y[:,0], marker="o", label="Temperature")
 plt.xlabel("x")

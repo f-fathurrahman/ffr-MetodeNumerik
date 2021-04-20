@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.style.use("dark_background")
 
+
 # T == y[0]
 # dT/dx == y[1]
 # d2T/dx2 == dydx[1]
@@ -63,6 +64,15 @@ x, y = ode_solve(deriv, ode_rk4_1step, x0, y0, h, Nstep)
 Tf_1 = y[-1,0]
 print("First guess: T(10) = y[-1,0] = ", Tf_1)
 
+plt.clf()
+plt.plot(x, y[:,0], marker="o", label="Temperature")
+plt.ylim(25, 300)
+plt.xlabel("x")
+plt.ylabel("T")
+plt.legend(loc=2)
+plt.savefig("IMG_example_27_1_v2_1st.png", dpi=150)
+
+
 # Integrate again, now with new guess for z(0) = y0[1]
 z0_2 = 20.0
 y0[1] = z0_2 # Guess for z = dT/dx == y[1]
@@ -70,6 +80,15 @@ x, y = ode_solve(deriv, ode_rk4_1step, x0, y0, h, Nstep)
 # At the end of the interval
 Tf_2 = y[-1,0]
 print("Second guess: T(10) = y[-1,0] = ", Tf_2)
+
+plt.clf()
+plt.plot(x, y[:,0], marker="o", label="Temperature")
+plt.ylim(25, 300)
+plt.xlabel("x")
+plt.ylabel("T")
+plt.legend(loc=2)
+plt.savefig("IMG_example_27_1_v2_2nd.png", dpi=150)
+
 
 # Using linear interp to guess what value of z(0) which gives T(10) = 200
 z0_new = z0_1 + (z0_2 - z0_1)/(Tf_2 - Tf_1) * (Tf - Tf_1)
@@ -82,14 +101,11 @@ x, y = ode_solve(deriv, ode_rk4_1step, x0, y0, h, Nstep)
 Tf_3 = y[-1,0]
 print("Third guess: T(10) = y[-1,0] = ", Tf_3) # Should give Tf = 200
 
-# The obtained solution, i.e. y, is the solution to the BVP
-# Let's visualize the solution
 plt.clf()
 plt.plot(x, y[:,0], marker="o", label="Temperature")
+plt.ylim(25, 300)
 plt.xlabel("x")
 plt.ylabel("T")
-plt.legend()
-plt.savefig("IMG_example_27_1.png", dpi=150)
+plt.legend(loc=2)
+plt.savefig("IMG_example_27_1_v2_3rd.png", dpi=150)
 
-# Of course, you may try to visualize the y's that's produced
-# by guessing z0 for comparison.
