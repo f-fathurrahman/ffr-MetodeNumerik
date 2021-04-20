@@ -6,6 +6,9 @@
 #   T(10) = 200
 
 import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use("dark_background")
 
 h = 0.01
 T_a = 20.0
@@ -56,7 +59,6 @@ for i in range(Npoints):
     x[i] = x0 + i*Δx
     print("%f %f" % (x[i], T[i]))
 
-import matplotlib.pyplot as plt
 plt.clf()
 plt.plot(x, T, marker="o", label="Temperature")
 plt.xlabel("x")
