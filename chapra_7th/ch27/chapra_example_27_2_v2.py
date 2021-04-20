@@ -143,7 +143,7 @@ xf = 10.0  # end interval
 h = 2.0 # Step size
 Nstep = int( (xf-x0)/h )
 x, y = ode_solve(deriv, ode_rk4_1step, x0, y0, h, Nstep)
-print("Tf = ", y[-1,0])  # Should not give a value of about 200.0
+print("Tf = ", y[-1,0])  # CHECK: Should give a value close to 200.0
 
 # Now plot the solution
 plt.clf()
