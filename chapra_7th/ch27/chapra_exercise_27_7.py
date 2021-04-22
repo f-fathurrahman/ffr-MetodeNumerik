@@ -15,9 +15,9 @@ def deriv(x, y):
     C1 = 1e-7
     y0s = y[0] + 273
     # y[0] -> y0s - 273
-    #dydx[1] = C1*(y[0] + 273.0)**4 - 4*(150 - y[0])  # original equation
-    #
-    dydx[1] = C1*y0s**4 - 4*( 150.0 - (y0s - 273.0) )
+    Tb = 150.0 # Linearization energy
+    linear_term = C1*(Tb+273.0)**4 + 4*C1*(Tb+273.0)**3*(y[0] - Tb)
+    dydx[1] = linear_term - 4*(150 - y[0])
     #
     return dydx
 
@@ -127,7 +127,7 @@ for i in range(NpstPlt):
     yplt[i] = obj_func(xplt[i])
 plt.plot(xplt, yplt)
 plt.grid()
-plt.savefig("IMG_exercise_27_6_obj_func.pdf")
+plt.savefig("IMG_exercise_27_7_obj_func.pdf")
 #exit()
 
 # For testing values of z0_1 and z0_2 which brackets obj_func
@@ -160,5 +160,5 @@ plt.plot(x, y[:,0], marker="o", label="Numeric")
 plt.xlabel("x")
 plt.ylabel("y")
 plt.legend()
-plt.savefig("IMG_exercise_27_6.pdf")
+plt.savefig("IMG_exercise_27_7.pdf")
 
