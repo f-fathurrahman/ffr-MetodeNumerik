@@ -54,7 +54,7 @@ Tf_2 = obj_func(z0_2)
 print("Tf_1 = ", Tf_1)
 print("Tf_2 = ", Tf_2)
 
-z0, Δ = bisection(obj_func, z0_1, z0_2, TOL=1.0e-9)
+z0 = root_bisection(obj_func, z0_1, z0_2, TOL=1.0e-9)
 
 # Now solve the ODE with the obtained z0
 y0 = np.zeros(2)
