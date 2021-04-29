@@ -8,6 +8,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
+from my_ode_solve import *
+from my_root_solving import *
 matplotlib.style.use("dark_background")
 
 # T == y[0]
@@ -27,7 +29,6 @@ def deriv(x, y):
     #
     return dydx
 
-from my_ode_solve import *
 
 def obj_func(z0_guess):
     # Initial cond
@@ -44,8 +45,6 @@ def obj_func(z0_guess):
     # At the end of the interval
     Tf_guess = y[-1,0]
     return Tf_guess - Tf
-
-from my_root_solving import *
 
 
 # For testing values of z0_1 and z0_2 which brackets obj_func
