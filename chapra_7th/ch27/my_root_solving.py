@@ -1,6 +1,6 @@
 from math import ceil, log10
 
-def bisection(f, x1, x2, TOL=1.0e-9, NiterMax=None ):
+def root_bisection(f, x1, x2, TOL=1.0e-9, NiterMax=None ):
 
     f1 = f(x1)
     if abs(f1) <= TOL:
@@ -39,7 +39,7 @@ def bisection(f, x1, x2, TOL=1.0e-9, NiterMax=None ):
             print("")
             print("bisection is converged in %d iterations" % i)
             # return the result
-            return x3, abs(x3 - x3_old)
+            return x3
 
         if f2*f3 < 0.0:
             # sign of f2 and f3 is different
@@ -55,7 +55,7 @@ def bisection(f, x1, x2, TOL=1.0e-9, NiterMax=None ):
             f2 = f3
 
     print("No root is found")
-    return None, None
+    return None
 
 def root_regula_falsi(f, xl, xu, NiterMax=100, TOL=1e-10):
     fxl = f(xl)
