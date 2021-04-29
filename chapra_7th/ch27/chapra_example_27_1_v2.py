@@ -1,4 +1,4 @@
-# Shooting method for linear BVP
+# Shooting method for linear BVP, with plotting for each guess
 
 # d2T/dx2 + h'(T_a - T) = 0
 # Boundary condition:
