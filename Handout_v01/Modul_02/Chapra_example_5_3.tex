@@ -1,0 +1,95 @@
+\section{Chapra Contoh 5.3}
+
+Kita ingin mencari nilai dari $c$ dari persamaan
+\begin{equation*}
+v(t) = \frac{gm}{c}(1 - e^{-(c/m)t})
+\end{equation*}
+
+sehingga untuk $v(t=10) = 40$, dengan $g=9.81$ dan $m=68.1$.
+Nilai $c$ dapat dicari sebagai akar dari persamaan:
+
+\begin{equation*}
+f(c) \equiv \frac{gm}{c}(1 - e^{-(c/m)t}) - v(t)
+\end{equation*}
+
+Kita akan menggunakan metode \textit{bisection} untuk mengaproksimasi akar atau solusi dari
+persamaan $f(c) = 0$. Diberikan dua nilai $x_{l}$ (lower) dan $x_{u}$ (upper), di mana
+$x_{u} > x_{l}$ dan $f(c=x_{l})f(c=x_{u}) < 0$, metode \textit{bisection} memberikan
+aproksimasi akar $x_{r}$ sebagai berikut:
+
+\begin{equation}
+x_{r} = \frac{x_{l} + x_{u}}{2}
+\end{equation}
+
+Kode Python berikut ini mengilustrasikan penggunaan 
+
+\begin{pythoncode}
+import numpy as np
+
+m = 68.1 # mass, kg
+v = 40.0 # velocity, m/s
+t = 10.0 # time, s
+g = 9.81
+    
+def f(c):
+    return ... # lengkapi
+    
+x_true = 14.8011 # from the text
+    
+# Initial guess
+xl = 12.0
+xu = 16.0
+    
+# First iteration
+print("\n1st iteration: ")
+print("xl = %f, xu = %f" % (xl, xu))
+print("f(xl) = %f, f(xu) = %f" % (f(xl), f(xu)))
+xr = # ... lengkapi
+print("xr = ", xr)
+ε_t = abs(xr - x_true)/x_true*100 # error in percent
+print("ε_t = %.1f %%" % ε_t)
+
+# Determine new xr should replace xu or xl (make new interval)
+if f(xl)*f(xr) < 0:
+    xu = xr
+else:
+    xl = xr
+    
+# Second iteration
+print("\n2nd iteration: ")
+print("xl = %f, xu = %f" % (xl, xu))
+print("f(xl) = %f, f(xu) = %f" % (f(xl), f(xu)))
+xr = (xl + xu)/2
+print("xr = ", xr)
+ε_t = abs(xr - x_true)/x_true*100 # error in percent
+print("ε_t = %.1f %%" % ε_t)
+
+if f(xl)*f(xr) < 0:
+    xu = xr
+else:
+    xl = xr
+    
+# Third iteration
+# ... teruskan jika diperlukan
+
+# Jika xr merupakan akar dari f, maka f(xr) harus mendekati 0
+# Tampilkan hasil dari f(xr) di sini
+\end{pythoncode}
+
+Lengkapi kode untuk ilustrasi penggunakan bisection tersebut. Lakukan iterasi sampai
+suatu kriteria tertentu yang Anda tentukan. Anda boleh menggunakan loop
+untuk menghindari pengulangan kode.
+
+
+%\section{Chapra Contoh 5.5}
+
+%Dengan menggunakan metode \textit{regula falsi} aproksimasi akar diberikan oleh:
+
+%\begin{equation}
+%x_{r} = x_{u} - \frac{f(x_u)(x_{l} - x_{u})}{f(x_l) - f(x_u)}
+%\end{equation}
+
+%Lakukan modifikasi pada kode yang diberikan di soal sebelumnya sehingga dapat
+%memberikan ilustrasi penggunaan metode \textit{regula falsi}. Bandingkan hasil yang
+%Anda dapatkan dengan metode \textit{bisection}.
+
