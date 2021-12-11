@@ -1,0 +1,33 @@
+\section{Chapra Contoh 6.8}
+
+Kita dapat melakukan modifikasi pada metode \textit{secant} sehingga hanya
+memerlukan input satu tebakan akar awal. Aproksimasi turunan fungsi
+dihitung dengan cara memberikan perturbasi $\delta$ dari input
+\begin{equation*}
+f'(x_{i}) \approx \frac{f(x_{i}+\delta) - f(x_{i})}{\delta}
+\end{equation*}
+sehingga kita memperoleh bentuk iterasi sebagai berikut:
+\begin{equation}
+x_{i+1} = x_{i} - \frac{\delta f(x_{i})}{f(x_{i}+\delta) - f(x_{i})}
+\end{equation}
+
+\begin{pythoncode}
+# ... definisi f dan df sama dengan contoh Newton-Raphson
+x = 1.0
+δ = 0.01
+for i in range(1,6):
+    # approximation of derivative of f(x)
+    dfx = ... # lengkapi
+    xnew = ... # lengkapi
+    fxnew = f(xnew)
+    print("%3d %18.10f %18.10e" % (i, xnew, fxnew))
+    x = xnew    
+\end{pythoncode}
+
+\begin{soal}
+Lengkapi program Python untuk modifikasi metode metode \textit{secant} di atas.
+Implementasikan program Anda sehingga
+dapat melakukan iterasi sampai nilai kesalahan menjadi lebih kecil dari
+suatu nilai tertentu yang diberikan. Anda dapat menggunakan loop \txtinline{while}
+atau loop \txtinline{for} dengan jumlah iterasi maksimum tertentu.
+\end{soal}

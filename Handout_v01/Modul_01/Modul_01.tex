@@ -1,0 +1,148 @@
+\input{../PREAMBLE}
+
+% -------------------------
+\begin{document}
+
+\title{Aproksimasi, Kesalahan, dan Deret Taylor}
+\author{Fadjar Fathurrahman}
+\date{}
+\maketitle
+
+
+
+\input{Chapra_example_3_2}
+\input{Chapra_example_3_2_sp}
+\input{Chapra_example_3_8}
+\input{Chapra_example_4_2}
+\input{Chapra_example_4_4}
+\input{Chapra_example_4_6}
+\input{Chapra_example_4_8}
+
+
+\section{Soal tambahan}
+
+\begin{soal}
+\textbf{Chapra Latihan 3.5}
+Deret tak-hingga:
+\begin{equation*}
+f(n) = \sum_{i=1}^{n} \frac{1}{i^4}
+\end{equation*}
+konvergen ke nilai $\pi^{4}/90$ untuk $n$ mendekati tak-hingga
+Untuk kasus $n \rightarrow \infty$ nilai ini merupakan nilai dari fungsi
+zeta Riemannn $\zeta(4)$
+\footnote{{\scriptsize\url{https://en.wikipedia.org/wiki/Riemann_zeta_function\#Specific_values}}}.
+Tulis program Python menggunakan \txtinline{np.float32} atau
+\textit{single precision} untuk menghitung
+nilai $f(n)$ dengan $n=10000$.
+Pastikan bahwa tipe numerik yang Anda gunakan pada program Python
+adalah \textit{single precision} dengan cara menampilkan tipe dari hasil akhir yang didapatkan.
+Lakukan penjumlahan dengan menggunakan perulangan
+dari $i=1$ ke $10000$. Ulangi perhitungan dengan menggunakan perulangan
+dengan urutan kebalikan yaitu dari $i=10000$ ke $i=1$. Hitung kesalahan untuk
+kedua kasus tersebut.
+Jelaskan hasil yang Anda dapatkan.
+Ulangi perhitungan Anda dengan menggunakan \textit{double precision}.
+\end{soal}
+
+\begin{soal}
+\textbf{Chapra Latihan 3.6}
+Evaluasi aproksimasi nilai dari $e^{-5}$ dengan menggunakan dua formula:
+\begin{equation}
+e^{-x} = 1 - x + \frac{x^2}{2!} - \frac{x^3}{3!} + \cdots
+\end{equation}
+dan
+\begin{equation}
+e^{-x} = \frac{1}{e^{x}} = \frac{1}{1 + x + \dfrac{x^2}{2!} + \dfrac{x^3}{3!} + \cdots}
+\end{equation}
+Bandingkan nilai yang diperoleh dengan mengunakan fungsi \textit{built-in} dari modul
+\txtinline{math} atau \txtinline{numpy}. Gunakan 20 suku untuk masing-masing formula.
+Hitung juga kesalahan sebenarnya dan kesalahan relatif dari aproksimasi yang dibuat.
+\end{soal}
+
+
+\begin{soal}
+\textbf{Chapra Latihan 3.11}
+Gunakan formula \eqref{eq:quadeq1} dan \eqref{eq:quadeq2} untuk mencari akar-akar
+pada persamaan kuadrat:
+\begin{equation*}
+x^2 - 5000.002x + 10
+\end{equation*}
+Lakukan dalam \textit{single precision} dan \textit{double precision}.
+\end{soal}
+
+
+\begin{soal}
+\textbf{Chapra Latihan 3.13}
+Metode "bagi dan rata-rata"
+\footnote{{\scriptsize\url{https://en.wikipedia.org/wiki/Methods_of_computing_square_roots\#Babylonian_method}}}
+adalah metode yang dapat digunakan untuk
+mengaproksimasi akar kuadrat dari suatu bilangan positif $a$ dengan input
+tebakan awal $x^{0}$. 
+Dalam bentuk iterasi, metode ini dapat dituliskan sebagai:
+\begin{equation}
+x^{i+1} = \dfrac{x^{i} + \dfrac{a}{x^{i}}}{2}
+\end{equation}
+di mana $x^{i}$ menyatakan nilai aproksimasi akar pada iterasi ke-$i$.
+Buatlah program Python untuk mengimplementasikan metode ini.
+Hitung kesalahan relatif dan sebenarnya (dengan referensi hasil fungsi
+\textit{built-in} \txtinline{sqrt} pada Python).
+\end{soal}
+
+\begin{soal}
+\textbf{Chapra Latihan 4.2}
+Deret Maclaurin untuk $\cos(x)$ adalah
+\begin{equation*}
+\cos(x) = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} - \frac{x^6}{6!} + \frac{x^8}{8!} - \cdots
+\end{equation*}
+Buatlah program Python untuk menghitung aproksimasi dari $\cos(\pi/3)$ menggunakan deret
+Maclaurin tersebut. Hitung juga kesalahan untuk tiap penambahan suku baru dengan referensi
+nilai yang diberikan oleh fungsi \textit{built-in} pada modul \txtinline{math} atau
+\txtinline{numpy}.
+\end{soal}
+
+
+\begin{soal}
+\textbf{Chapra Latihan 4.3}
+Lakukan hal yang sama dengan soal sebelumnya untuk mengestimasi nilai $\sin(\pi/3)$
+dengan menggunakan deret Maclaurin:
+\begin{equation*}
+\sin(x) = x - \frac{x^3}{3!} + \frac{x^5}{5!} - \frac{x^7}{7!} + \cdots
+\end{equation*}
+\end{soal}
+
+\begin{soal}
+\textbf{Chapra Latihan 4.5}
+Gunakan ekspansi deret Taylor orde-0 sampai dengan orde-3 untuk
+memprediksi $f(3)$ untuk
+\begin{equation*}
+f(x) = 25x^3 - 6x^2 + 7x - 88
+\end{equation*}
+dengan titik basis pada $x=1$. Hitung kesalahan pada masing-masing aproksimasi.
+\end{soal}
+
+\begin{soal}
+\textbf{Chapra Latihan 4.6}
+Gunakan deret Taylor dengan orde-0 sampai dengan orde-10 untuk memprediksi
+$f(2.5)$ untuk $f(x) = ln(x)$ dengan menggunakan nilai fungsi pada $x=1$.
+Hitung juga kesalahan pada masing-masing aproksimasi. Berikan penjelasan mengenai hasil
+yang Anda dapatkan.
+\end{soal}
+
+\begin{soal}
+\textbf{Chapra Latihan 4.11}
+Diketahui kecepatan jatuh seorang penerjun dapat dihitung dengan:
+\begin{equation*}
+v(t) = \frac{gm}{c}(1 - e^{-(c/m)t})
+\end{equation*}
+Gunakan analisis kesalahan orde-1 untuk mengestimasi kesalahan pada $v$ pada $t=6$ s,
+jika $g = 9.81\,\mathrm{m/s}^{2}$ dan $m=50$ kg, namun
+$c = 12.5 \pm 1.5 \, \mathrm{kg/s}$.
+\end{soal}
+
+\begin{soal}
+\textbf{Chapra Latihan 4.12}
+Ulangi soal sebelumnya dengan $g = 9.81$, $t = 6$, $c = 12.5 \pm 1.5$,
+dan $m = 50 \pm 2$.
+\end{soal}
+
+\end{document}
