@@ -1,0 +1,167 @@
+\input{../PREAMBLE_BEAMER}
+
+\begin{document}
+
+\title{Numerical Methods}
+\subtitle{Ordinary Differential Equation}
+\author{Fadjar Fathurrahman}
+\institute{
+Teknik Fisika \\
+Institut Teknologi Bandung
+}
+\date{}
+
+
+\frame{\titlepage}
+
+
+\begin{frame}
+\frametitle{Examples}
+
+Newton's equation of motion
+\begin{equation*}
+\frac{\mathrm{d}v}{\mathrm{d}t} = \frac{F}{m}
+\end{equation*}
+
+Fourier's heat law:
+\begin{equation*}
+q = -k \frac{\mathrm{d}T}{\mathrm{d}x}
+\end{equation*}
+
+Fick's law of diffusion:
+\begin{equation*}
+J = -D \frac{\mathrm{d}c}{\mathrm{d}x}
+\end{equation*}
+
+Faraday's law:
+\begin{equation*}
+\Delta V_{L} = L \frac{\mathrm{d}i}{\mathrm{d}t}
+\end{equation*}
+
+\end{frame}
+
+
+% ----------------------------------------------------
+\begin{frame}
+\frametitle{General form}
+
+\begin{equation}
+\frac{\mathrm{d}y}{\mathrm{d}x} = f(x,y)
+\label{eq:ode_gen01}
+\end{equation}
+
+A simple method:
+\begin{equation*}
+y_{i+1} = y_{i} + \phi h
+\end{equation*}
+
+$y_{i}$: old value
+
+$y_{i+1}$: new value
+
+$\phi$: slope estimate
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Euler's method}
+
+Use the 1st derivative as direct estimate of slope at $x_i$:
+\begin{equation*}
+\phi = f(x_i, y_i)
+\end{equation*}
+or
+\begin{equation*}
+y_{i+1} = y_{i} + f(x_i, y_i) h
+\end{equation*}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Example}
+Solve
+\begin{equation*}
+\frac{\mathrm{d}y}{\mathrm{d}x} = -2x^3 + 12x^2 - 20x + 8.5
+\end{equation*}
+from $x = 0$ to $x = 4$ with a step size $h=0.5$.
+Initial condition: $y(x=0) = 1$.
+
+Comparing with general form of ODE \eqref{eq:ode_gen01}, we have:
+\begin{equation*}
+f(x,y) = -2x^3 + 12x^2 - 20x + 8.5
+\end{equation*}
+Note that in this case $f(x,y)$ does not depend of $y$.
+
+Compare the obtained numerical solution with exact solution:
+\begin{equation*}
+y(x) = -0.5*x^4 + 4x^3 - 10x^2 + 8.5x + 1
+\end{equation*}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+
+Let's make define several functions that we will use later.
+
+First the one-step application of Euler's method.
+
+This code fragment implements:
+\begin{equation*}
+y_{i+1} = y_{i} + f(x_i, y_i) h
+\end{equation*}
+
+\begin{pythoncode}
+# One-step application of Euler's method for ODE
+def ode_euler_1step(dfunc, xi, yi, h):
+    return yi + dfunc(xi,yi)*h
+
+# initial cond
+x0 = 0.0
+y0 = 1.0
+\end{pythoncode}
+
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+
+The left hand side of dy/dx=... (in general depends on x and y)
+In the present case it only depends on x.
+\begin{pythoncode}
+def deriv(x, y):
+    return -2*x**3 + 12*x**2 - 20*x + 8.5
+\end{pythoncode}
+
+and the exact solution:
+\begin{pythoncode}
+def exact_sol(x):
+    return -0.5*x**4 + 4*x**3 - 10*x**2 + 8.5*x + 1
+\end{pythoncode}
+
+Example code: \txtinline{Code}
+
+\end{frame}
+
+
+\begin{framefont}{\small}
+
+\begin{frame} %[fragile]
+\frametitle{Frame with reduced font size}
+Test
+\begin{itemize}
+  \item Nunc sed pede. Praesent vitae lectus.
+  \item Nunc sed pede. Praesent vitae lectus.
+\end{itemize}
+%\begin{pythoncode}
+%  def exact_sol(x):
+%      return -0.5*x**4 + 4*x**3 - 10*x**2 + 8.5*x + 1
+%\end{pythoncode}
+
+\end{frame}
+\end{framefont}
+
+\end{document}
