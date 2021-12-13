@@ -2,16 +2,18 @@ from math import exp
 
 # One-step application of Heun's method for ODE
 # Using iterative steps to determine y0ip1
-def ode_heun_1step_iterative(dfunc, xi, yi, h, Niter):
+def ode_heun_1step_iterative(dfunc, xi, yi, h, NiterMax=100, Δ=1e-6):
     y0ip1 = yi + dfunc(xi,yi)*h
     y0ip1_old = y0ip1
-    for i in range(Niter):
+    for i in range(NiterMax+1):
         avg = 0.5*( dfunc(xi,yi) + dfunc(xi+h,y0ip1) )*h
         y0ip1 = yi + avg
-        #diff = abs(y0ip1 - y0ip1_old)
-        ## Uncomment this to see the iteration process
-        #print("iter: %2d y0ip1 = %12.7f  diff = %12.7e" % (i, y0ip1, diff))
-        #y0ip1_old = y0ip1
+        diff = abs(y0ip1 - y0ip1_old)
+        # Uncomment this to see the iteration process
+        print("iter: %2d y0ip1 = %12.7f  diff = %12.7e" % (i+1, y0ip1, diff))
+        if diff <= Δ:
+            break
+        y0ip1_old = y0ip1
     return y0ip1
 
 def deriv(x, y):
@@ -31,7 +33,7 @@ x = x0
 y = y0
 for i in range(0,Nstep):
     xp1 = x + h
-    yp1 = ode_heun_1step_iterative(deriv, x, y, h, 15)
+    yp1 = ode_heun_1step_iterative(deriv, x, y, h)
     y_true = exact_sol(xp1)
     ε_t = (y_true - yp1)/y_true * 100
     print("%f %12.7f %12.7f  %5.2f%%" % (xp1, y_true, yp1, abs(ε_t)))
