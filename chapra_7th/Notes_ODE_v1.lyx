@@ -84,6 +84,10 @@
 
 \begin_body
 
+\begin_layout Subsection*
+Milne's method
+\end_layout
+
 \begin_layout Standard
 Milne's method is the most common multistep method based on Newton-Cotes
  integration formulas.
@@ -123,6 +127,46 @@ E_{p}=\frac{28}{29}\left(y_{i}^{m}-y_{i}^{0}\right)
 \begin_inset Formula 
 \[
 E_{c}\approx-\frac{1}{29}\left(y_{i+1}^{m}-y_{i+1}^{0}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+4th-order Adams method
+\end_layout
+
+\begin_layout Standard
+Use 4th-order Adams-Bashforth formula for predictor:
+\begin_inset Formula 
+\[
+y_{i+1}^{0}=y_{i}^{m}+h\left(\frac{55}{24}f_{i}^{m}-\frac{59}{24}f_{i-1}^{m}+\frac{37}{24}f_{i-2}^{m}-\frac{9}{24}f_{i-3}^{m}\right)
+\]
+
+\end_inset
+
+and 4th-order Adams-Moulton formula for the corrector:
+\begin_inset Formula 
+\[
+y_{i+1}^{j}=y_{i}^{m}+h\left(\frac{9}{24}f_{i+1}^{j-1}+\frac{19}{24}f_{i}^{m}-\frac{5}{24}f_{i-1}^{m}+\frac{1}{24}f_{i-2}^{m}\right)
+\]
+
+\end_inset
+
+Error estimate:
+\begin_inset Formula 
+\[
+E_{p}=\frac{251}{270}\left(y_{i}^{m}-y_{i}^{0}\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+E_{c}=-\frac{19}{270}\left(y_{i+1}^{m}-y_{i+1}^{0}\right)
 \]
 
 \end_inset
