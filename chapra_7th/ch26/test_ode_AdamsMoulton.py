@@ -45,6 +45,7 @@ def ode_AdamsMoulton(dfunc, x0, y0, h, Nstep, Norder=3):
     for i in range(Norder,Nstep):
         x[i+1] = x[i] + h
         print("Using AdamsMoulton, i+1 = ", i+1)
+        y[i+1] = y[i] # initial guess, can be zero
         yip1_old = y[i+1]
         for ii in range(1,10):
             s = 0.0
