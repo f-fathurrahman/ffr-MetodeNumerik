@@ -44,13 +44,19 @@ def ode_AdamsMoulton(dfunc, x0, y0, h, Nstep, Norder=3):
     #
     for i in range(Norder,Nstep):
         x[i+1] = x[i] + h
-        s = 0.0
         print("Using AdamsMoulton, i+1 = ", i+1)
-        for k in range(0,Norder):
-            print("access idx: ", i+1-k)
-            s += β[k]*dfunc(x[i+1-k], y[i+1-k])
-        y[i+1] = y[i] + h*s
-
+        yip1_old = y[i+1]
+        for ii in range(1,10):
+            s = 0.0
+            for k in range(0,Norder):
+                #print("access idx: ", i+1-k)
+                s += β[k]*dfunc(x[i+1-k], y[i+1-k])
+            y[i+1] = y[i] + h*s
+            diff = abs(y[i+1] - yip1_old)
+            print("iter = %d, diff = %e" % (ii, diff))
+            if diff < 1e-8:
+                break
+            yip1_old = y[i+1]
     return x, y
 
 
