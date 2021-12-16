@@ -32,6 +32,7 @@ def ode_RK4(dfunc, x0, y0, h, Nstep):
 
 def ode_AdamsBashforth(dfunc, x0, y0, h, Nstep, Norder=3):
     β = β_AdamsBashforth[Norder]
+    print(β)
     x = np.zeros(Nstep+1)
     y = np.zeros(Nstep+1)
     #
@@ -45,9 +46,9 @@ def ode_AdamsBashforth(dfunc, x0, y0, h, Nstep, Norder=3):
     for i in range(Norder,Nstep):
         x[i+1] = x[i] + h
         s = 0.0
-        #print("Using AdamsBashforth, i+1 = ", i+1)
+        print("Using AdamsBashforth, i+1 = ", i+1)
         for k in range(0,Norder):
-            print("i = ", i, "k = ", k)
+            print("access idx: ", i-k)
             s += β[k]*dfunc(x[i-k], y[i-k])
         y[i+1] = y[i] + h*s
 
@@ -66,15 +67,35 @@ def exact_sol(x):
 x0 = 0.0
 y0 = 2.0
 xf = 4.0
-h = 0.1
+h = 0.2
 Nstep = int(xf/h)
 
-x, y = ode_AdamsBashforth(deriv, x0, y0, h, Nstep, Norder=2)
-_, yrk4 = ode_RK4(deriv, x0, y0, h, Nstep)
+x, y = ode_AdamsBashforth(deriv, x0, y0, h, Nstep, Norder=5)
+# Norder=6 not working?
 
+"""
+_, yrk4 = ode_RK4(deriv, x0, y0, h, Nstep)
 
 for i in range(0,Nstep+1):
     y_exact = exact_sol(x[i])
     Δ_AB = abs(y[i] - y_exact)
     Δ_RK4 = abs(yrk4[i] - y_exact)
-    print("%18.5e %18.5e %d" % (Δ_AB, Δ_RK4, Δ_AB < Δ_RK4) )
+    print("%18.5e %18.5e" % (Δ_AB, Δ_RK4))
+
+import matplotlib.pyplot as plt
+
+plt.clf()
+plt.plot(x, y, label="AB5")
+plt.plot(x, yrk4, label="RK4")
+plt.grid(True)
+plt.legend()
+plt.savefig("IMG_test_AB_v1.pdf")
+
+plt.clf()
+plt.plot(x, np.abs(y - exact_sol(x)), marker="o", label="AB5")
+plt.plot(x, np.abs(yrk4 - exact_sol(x)), marker="o", label="RK4")
+plt.grid(True)
+plt.legend()
+plt.title("Abs error")
+plt.savefig("IMG_test_AB_v2.pdf")
+"""
