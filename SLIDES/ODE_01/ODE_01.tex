@@ -43,12 +43,46 @@ Faraday's law:
 
 % ----------------------------------------------------
 \begin{frame}
-\frametitle{General form}
+\frametitle{General form of initial value problem}
 
+Solve the ODE:
 \begin{equation}
 \frac{\mathrm{d}y}{\mathrm{d}x} = f(x,y)
 \label{eq:ode_gen01}
 \end{equation}
+given the initial condition $y(x=x_0) = y_0$.
+
+$y(x)$ is the dependent variable (or the function that we search for)
+and $x$ is the independent variable.
+
+For initial value problem it is usually
+more common to use $t$ as the independent variable:
+\begin{equation}
+\frac{\mathrm{d}y}{\mathrm{d}t} = f(t,y)
+\label{eq:ode_gen02}
+\end{equation}
+
+\end{frame}
+
+% -----------------------
+
+\begin{frame}
+\frametitle{Methods to solve IVP}
+  
+\begin{itemize}
+\item one-step methods
+\item multi-step methods
+\item implicit methods for stiff ODEs
+\end{itemize}
+
+\end{frame}
+
+
+
+% -----------------------
+
+\begin{frame}
+\frametitle{One-step methods}
 
 A simple method:
 \begin{equation*}
@@ -67,17 +101,31 @@ $\phi$: slope estimate
 \begin{frame}
 \frametitle{Euler's method}
 
-Use the 1st derivative as direct estimate of slope at $x_i$:
-\begin{equation*}
-\phi = f(x_i, y_i)
-\end{equation*}
-or
-\begin{equation*}
-y_{i+1} = y_{i} + f(x_i, y_i) h
-\end{equation*}
+\begin{columns}
+
+\begin{column}{0.5\textwidth}
+  {\centering
+  \includegraphics[width=0.9\textwidth]{images_priv/Chapra_Fig_25_1.pdf}
+  \par}    
+\end{column}
+
+\begin{column}{0.5\textwidth}
+  Use the 1st derivative as direct estimate of slope at $x_i$:
+  \begin{equation*}
+  \phi = f(x_i, y_i)
+  \end{equation*}
+  or
+  \begin{equation*}
+  y_{i+1} = y_{i} + f(x_i, y_i) h
+  \end{equation*}
+\end{column}
+
+\end{columns}
 
 \end{frame}
 
+
+% ------------------------------------
 
 \begin{frame}
 \frametitle{Example}
@@ -96,32 +144,83 @@ Note that in this case $f(x,y)$ does not depend of $y$.
 
 Compare the obtained numerical solution with exact solution:
 \begin{equation*}
-y(x) = -0.5*x^4 + 4x^3 - 10x^2 + 8.5x + 1
+y(x) = -0.5x^4 + 4x^3 - 10x^2 + 8.5x + 1
 \end{equation*}
 
 \end{frame}
 
 
 \begin{frame}[fragile]
+\frametitle{Implementation}
 
 Let's make define several functions that we will use later.
 
 First the one-step application of Euler's method.
 
-This code fragment implements:
+This code fragment implements one-step application of Euler's method for ODE
 \begin{equation*}
 y_{i+1} = y_{i} + f(x_i, y_i) h
 \end{equation*}
 
 \begin{pythoncode}
-# One-step application of Euler's method for ODE
 def ode_euler_1step(dfunc, xi, yi, h):
     return yi + dfunc(xi,yi)*h
-
-# initial cond
-x0 = 0.0
-y0 = 1.0
 \end{pythoncode}
+
+The passed function \pyinline{dfunc} implement the RHS $f(x,y)$. It should be defined like:
+\begin{pythoncode}
+def dfunc(x,y):
+    return ... # implement f(x,y)
+\end{pythoncode}
+
+We can call \pyinline{ode_euler_1step} multiple times to advance the solution from initial
+condition until the required $x$ (independent variable).
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+The previous code fragments are quite general. Now let's code specific
+details for our current problem, i.e:
+\begin{equation*}
+\frac{\mathrm{d}y}{\mathrm{d}x} = -2x^3 + 12x^2 - 20x + 8.5
+\end{equation*}
+
+The following implement the RHS function $f(x,y)$:
+\begin{pythoncode}
+def deriv(x, y):
+    return -2*x**3 + 12*x**2 - 20*x + 8.5
+\end{pythoncode}
+and the exact solution:
+\begin{pythoncode}
+def exact_sol(x):
+    return -0.5*x**4 + 4*x**3 - 10*x**2 + 8.5*x + 1
+\end{pythoncode}
+\end{frame}
+
+
+\begin{frame}[fragile]
+
+Test \pyinline{ode_euler_1step}:
+\begin{pythoncode}
+x0 = 0.0; y0 = 1.0 # Initial condition
+x = x0; y = y0; h = 0.5 # Using step of 0.5, starting from x0 and y0
+xp1 = x + h # we are searching for solution at x = 0.5, increment by step size
+yp1 = ode_euler_1step(deriv, x, y, h)
+y_true = exact_sol(xp1)
+ε_t = (y_true - yp1)/y_true * 100 # relative error in percent
+print("First step : x = %f y_true = %.5f y = %.5f ε_t = %.1f %%" %
+  (xp1, y_true, yp1, ε_t))
+\end{pythoncode}
+
+Your task: continue this for the next steps.
+You can use loop.
+
+Example output (including 2nd step):
+\begin{textcode}
+First step : x = 0.500000 y_true = 3.21875 y = 5.25000 ε_t = -63.1 %
+Second step: x = 1.000000 y_true = 3.00000 y = 5.87500 ε_t = -95.8 %
+\end{textcode}
 
 \end{frame}
 
@@ -129,39 +228,26 @@ y0 = 1.0
 
 \begin{frame}[fragile]
 
-The left hand side of dy/dx=... (in general depends on x and y)
-In the present case it only depends on x.
+Example of calling \pyinline{ode_euler_1step} several times.
 \begin{pythoncode}
-def deriv(x, y):
-    return -2*x**3 + 12*x**2 - 20*x + 8.5
+x = x0; y = y0; h = 0.5
+for i in range(0,Nsteps):
+    xp1 = x + h
+    yp1 = ode_euler_1step(deriv, x, y, h)
+    y_true = exact_sol(xp1) # calculate exact solution if available
+    # relative error in percent, you can use other
+    ε_t = (y_true - yp1)/y_true * 100
+    # print the results ...
+    # Update x and y for the next step
+    x = xp1; y = yp1
 \end{pythoncode}
 
-and the exact solution:
-\begin{pythoncode}
-def exact_sol(x):
-    return -0.5*x**4 + 4*x**3 - 10*x**2 + 8.5*x + 1
-\end{pythoncode}
+Your task: Save the calculation results (x and y) to array and make a plot.
 
-Example code: \txtinline{Code}
+You also can wrap this in a function.
 
 \end{frame}
 
 
-\begin{framefont}{\small}
-
-\begin{frame} %[fragile]
-\frametitle{Frame with reduced font size}
-Test
-\begin{itemize}
-  \item Nunc sed pede. Praesent vitae lectus.
-  \item Nunc sed pede. Praesent vitae lectus.
-\end{itemize}
-%\begin{pythoncode}
-%  def exact_sol(x):
-%      return -0.5*x**4 + 4*x**3 - 10*x**2 + 8.5*x + 1
-%\end{pythoncode}
-
-\end{frame}
-\end{framefont}
 
 \end{document}
