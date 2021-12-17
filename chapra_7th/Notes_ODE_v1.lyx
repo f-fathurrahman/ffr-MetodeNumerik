@@ -84,6 +84,373 @@
 
 \begin_body
 
+\begin_layout Standard
+Heun's method
+\end_layout
+
+\begin_layout Standard
+Predictor (using Euler's method):
+\begin_inset Formula 
+\[
+y_{i+1}^{0}=y_{i}+f(x_{i},y_{i})h
+\]
+
+\end_inset
+
+Predictor provides an estimate of 
+\begin_inset Formula $y_{i+1}$
+\end_inset
+
+ that allows the calculation of estimated slope at the end of the interval:
+\begin_inset Formula 
+\[
+y_{i+1}'=f(x_{i+1},y_{i+1}^{0})
+\]
+
+\end_inset
+
+The two slopes can be combined to obtain an average slope for the interval:
+ 
+\begin_inset Formula 
+\[
+y'_{\mathrm{avg}}=\frac{y_{i}'+y_{i+1}'}{2}=\frac{f(x_{i},y_{i})+f(x_{i+1},y_{i+1}^{0})}{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The average slope is then used to extrapolate linearly from 
+\begin_inset Formula $y_{i}$
+\end_inset
+
+ to 
+\begin_inset Formula $y_{i+1}$
+\end_inset
+
+using Euler's method:
+\begin_inset Formula 
+\[
+y_{i+1}=y_{i}+\frac{f(x_{i},y_{i})+f(x_{i+1},y_{i+1}^{0})}{2}h
+\]
+
+\end_inset
+
+which is called a corrector.
+ Note that 
+\begin_inset Formula $y_{i+1}$
+\end_inset
+
+ appears on both sides, so it should be applied iteratively.
+\end_layout
+
+\begin_layout Subsection*
+Midpoint method (modified Euler)
+\end_layout
+
+\begin_layout Standard
+Use Euler method to predict a value of 
+\begin_inset Formula $y$
+\end_inset
+
+ at the midpoint of the interval
+\begin_inset Formula 
+\[
+y_{i+1/2}=y_{i}+f(x_{i},y_{i})\frac{h}{2}
+\]
+
+\end_inset
+
+This predicted value is used to calculate a slope at the midpoint
+\begin_inset Formula 
+\[
+y_{i+1/2}'=f(x_{i+1/2},y_{i+1/2})
+\]
+
+\end_inset
+
+The slope is then used to extrapolate linearly from 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+ to 
+\begin_inset Formula $x_{i+1}$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+y_{i+1}=y_{i}+f(x_{i+1/2},y_{i+1/2})h
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset Formula $y_{i+1}$
+\end_inset
+
+ is not on both sides, so it can be used directly.
+\end_layout
+
+\begin_layout Subsection*
+Runge-Kutta method: general form
+\end_layout
+
+\begin_layout Standard
+General form:
+\begin_inset Formula 
+\[
+y_{i+1}=y_{i}+\text{\ensuremath{\phi(x_{i},y_{i},h)h}}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\phi(x_{i},y_{i},h)$
+\end_inset
+
+ is called an increment function, which can be interpreted as a representative
+ slope over the interval.
+\end_layout
+
+\begin_layout Subsection*
+Runge-Kutta 2nd order
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+y_{i+1}=y_{i}+\left(a_{1}k_{1}+a_{2}k_{2}\right)h
+\]
+
+\end_inset
+
+where
+\begin_inset Formula 
+\begin{align*}
+k_{1} & =f(x_{i},y_{i})\\
+k_{2} & =f(x_{i}+p_{1}h,y_{i}+q_{11}k_{1}h)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Taylor series expansion:
+\begin_inset Formula 
+\[
+y_{i+1}=y_{i}+f(x_{i},y_{i})h+\frac{f'(x_{i},y_{i})}{2!}h^{2}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $f'(x_{i},y_{i})$
+\end_inset
+
+ must be determinted by chain-rule differentiation:
+\begin_inset Formula 
+\[
+f'(x_{i},y_{i})=\frac{\partial f(x,y)}{\partial x}+\frac{\partial f(x,y)}{\partial y}\frac{\mathrm{d}y}{\mathrm{d}x}
+\]
+
+\end_inset
+
+Substituting this to Taylor series expansion:
+\begin_inset Formula 
+\[
+y_{i+1}=y_{i}+f(x_{i},y_{i})h+\left(\frac{\partial f(x,y)}{\partial x}+\frac{\partial f(x,y)}{\partial y}\frac{\mathrm{d}y}{\mathrm{d}x}\right)\frac{h^{2}}{2!}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The basic strategy underlying Runge-Kutta methods is to use algebraic manipulati
+ons to solve for values of 
+\begin_inset Formula $a_{1}$
+\end_inset
+
+,
+\begin_inset Formula $a_{2}$
+\end_inset
+
+,
+\begin_inset Formula $p_{1}$
+\end_inset
+
+, and 
+\begin_inset Formula $q_{11}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Taylor seris for two-variable function:
+\begin_inset Formula 
+\[
+g(x+r,y+s)=g(x,y)+r\frac{\partial g}{\partial x}+s\frac{\partial g}{\partial y}+\cdots
+\]
+
+\end_inset
+
+Expand the expression for 
+\begin_inset Formula $k_{2}$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+f(x_{i}+p_{1}h,y_{i}+q_{11}k_{1}h)=f(x_{i},y_{i})+p_{1}h\frac{\partial f}{\partial x}+q_{11}k_{1}h\frac{\partial f}{\partial y}+\mathcal{O}(h^{2})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Substitute:
+\begin_inset Formula 
+\[
+y_{i+1}=y_{i}+a_{1}hf(x_{i},y_{i})+a_{2}hf(x_{i},y_{i})+a_{2}p_{1}h^{2}\frac{\partial f}{\partial x}+a_{2}q_{11}h^{2}f(x_{i},y_{i})\frac{\partial f}{\partial y}+\mathcal{O}(h^{3})
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+y_{i+1}=y_{i}+\left[a_{1}f(x_{i},y_{i})+a_{2}f(x_{i},y_{i})\right]h+\left[a_{2}p_{1}\frac{\partial f}{\partial x}+a_{2}q_{11}f(x_{i},y_{i})\frac{\partial f}{\partial y}\right]h^{2}+\mathcal{O}(h^{3})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We obtain:
+\begin_inset Formula 
+\[
+a_{1}+a_{2}=1
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+a_{2}p_{1}=\frac{1}{2}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+a_{2}q_{11}=\frac{1}{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Runge-Kutta 3rd order
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+y_{i+1}=y_{i}+\frac{1}{6}\left(k_{1}+4k_{2}+k_{3}\right)h
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+k_{1} & =f(x_{i},y_{i})\\
+k_{2} & =f\left(x_{i}+\frac{1}{2}h,y_{i}+\frac{1}{2}k_{1}h\right)\\
+k_{3} & =f(x_{i}+h,y_{i}-k_{1}h+2k_{2}h)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Runge-Kutta 4th order
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+y_{i+1}=y_{i}+\frac{1}{6}\left(k_{1}+2k_{2}+2k_{3}+k_{4}\right)h
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+k_{1} & =f(x_{i},y_{i})\\
+k_{2} & =f\left(x_{i}+\frac{1}{2}h,y_{i}+\frac{1}{2}k_{1}h\right)\\
+k_{3} & =f\left(x_{i}+\frac{1}{2}h,y_{i}+\frac{1}{2}k_{2}h\right)\\
+k_{4} & =f(x_{i}+h,y_{i}+k_{3}h)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Runge-Kutta 5th order
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+y_{i+1}=y_{i}+\frac{1}{90}\left(7k_{1}+32k_{3}+12k_{4}+32k_{5}+7k_{6}\right)h
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+k_{1} & =f(x_{i},y_{i})\\
+k_{2} & =f\left(x_{i}+\frac{1}{4}h,y_{i}+\frac{1}{4}k_{1}h\right)\\
+k_{3} & =f\left(x_{i}+\frac{1}{4}h,y_{i}+\frac{1}{8}k_{1}h+\frac{1}{8}k_{2}h\right)\\
+k_{4} & =f(x_{i}+h,y_{i}+k_{3}h)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection*
 Milne's method
 \end_layout
