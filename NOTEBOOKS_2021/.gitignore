@@ -3,3 +3,7 @@ Untitled*.ipynb
 js
 *.pdf
 IMG_*
+*.tex
+*.out
+*.log
+*.aux
