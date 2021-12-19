@@ -1,5 +1,6 @@
 function NSE_trid_per_c2D(a_, b_, c_, fi_)
-    
+
+    # Arguments should not be modified    
     a = copy(a_)
     b = copy(b_)
     c = copy(c_)
@@ -19,13 +20,12 @@ function NSE_trid_per_c2D(a_, b_, c_, fi_)
     # Resolution of the tridiagonal system
     # aa(j,i)*X(j,i-1) + ab(j,i)*X(j,i) + ac(j,i)*X(j,i+1) = xs2(j,i)
     #      i=1,n
-    # -> solution stored in xs2
+    # solution stored in xs2
 
-    #
-    #--> Thomas algorithm 
-    #-->                  alph(i) = 1/beta(i)
-    #                     aa(i) = aa(i)/beta(i-1)
-    #                     ac(i) = ac(i)/beta(i)
+    # Thomas algorithm 
+    #                  alph(i) = 1/beta(i)
+    #                  aa(i) = aa(i)/beta(i-1)
+    #                  ac(i) = ac(i)/beta(i)
 
     alph = zeros(Float64, N)
     alph[1] = 1.0/b[1]

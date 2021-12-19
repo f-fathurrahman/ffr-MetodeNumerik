@@ -3,7 +3,8 @@
 # global ip im jp jm ic jc;
 
 include("common.jl")
-
+include("NSE_fsource.jl")
+include("NSE_calc_lap.jl")
 
 function main()
 
@@ -42,16 +43,18 @@ function main()
     jm[1] = Nym
 
     xx, yy = meshgrid(xc, ym)
+    xx = xx'
+    yy = yy'
 
     display(xc); println()
     display(ym); println()
 
     #  Initialization
-    u = zeros(Float64, Nxm,Nym)
-    du = zeros(Float64, Nxm,Nym)
+    u = zeros(Float64, Nxm, Nym)
+    du = zeros(Float64, Nxm, Nym)
 
     # Time step
-    dt = 0.5/(1/(dx*dx)+1/(dy*dy))
+    dt = 0.5/( 1/dx^2 + 1/dy^2 )
     println("dt = ", dt)
 
     # Time loop
@@ -69,7 +72,7 @@ function main()
         Temps = Temps + dt
     
         # compute the vector u^{n+1}-u^n
-        du = dt*( NSE_fsource(Lx,Ly,xx,yy) + NSE_calc_lap(u) )
+        du = dt*( NSE_fsource(Lx,Ly,xx,yy) + NSE_calc_lap(u, dx, dy, imm, ip, jp, jm, ic, jc) )
     
         # convergence criterium
         #CONV = NSE_norm_L2(du);
