@@ -1,0 +1,323 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{babel}
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children false
+\language american
+\language_package default
+\inputencoding iso8859-15
+\fontencoding T1
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 2
+\use_package amssymb 2
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip smallskip
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+Aliran fluida 2d, vektor kecepatan 
+\begin_inset Formula $q=(u(x,y),v(x,y))\in\mathbb{R}^{2}$
+\end_inset
+
+ dan tekanan 
+\begin_inset Formula $p(x,y)\in\mathbb{R}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Konvervasi massa: 
+\begin_inset Formula 
+\[
+\mathrm{div}(q)=0
+\]
+
+\end_inset
+
+atau:
+\begin_inset Formula 
+\[
+\frac{\partial u}{\partial x}+\frac{\partial v}{\partial y}=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Konvervasi momentum:
+\begin_inset Formula 
+\[
+\frac{\partial q}{\partial t}+\mathrm{div}(q\otimes q)=-\mathcal{G}p+\frac{1}{\mathrm{Re}}\nabla q
+\]
+
+\end_inset
+
+atau dalam bentuk eksplisit:
+\begin_inset Formula 
+\begin{align*}
+\frac{\partial u}{\partial t}+\frac{\partial u^{2}}{\partial x}+\frac{\partial uv}{\partial y} & =-\frac{\partial p}{\partial x}+\frac{1}{\mathrm{Re}}\left(\frac{\partial^{2}u}{\partial x^{2}}+\frac{\partial^{2}u}{\partial y^{2}}\right)\\
+\frac{\partial v}{\partial t}+\frac{\partial uv}{\partial x}+\frac{\partial v^{2}}{\partial y} & =-\frac{\partial p}{\partial y}+\frac{1}{\mathrm{Re}}\left(\frac{\partial^{2}v}{\partial x^{2}}+\frac{\partial^{2}v}{\partial y^{2}}\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+dengan bilangan Reynolds:
+\begin_inset Formula 
+\[
+\mathrm{Re}=\frac{V_{0}L}{\nu}
+\]
+
+\end_inset
+
+Menggunakan metode 
+\emph on
+fractional-step
+\emph default
+:
+\end_layout
+
+\begin_layout Itemize
+Predictor step, menyelesaikan persamaan momentum yang ditulis dalam bentuk:
+\begin_inset Formula 
+\[
+\frac{\partial q}{\partial t}=-\mathcal{G}p+\mathcal{H}+\frac{1}{\mathrm{Re}}\nabla^{2}q
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Algoritma Thomas
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\begin{bmatrix}b_{1} & c_{1} & 0 & \cdots & \cdots & 0 & 0\\
+a_{2} & b_{2} & c_{2} & 0 & \cdots & 0 & 0\\
+\cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots\\
+\cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots\\
+0 & 0 & 0 & 0 & a_{n-1} & b_{n-1} & c_{n-1}\\
+0 & 0 & 0 & 0 & \cdots & a_{n} & b_{n}
+\end{bmatrix}\begin{bmatrix}X_{1}\\
+X_{2}\\
+\vdots\\
+\vdots\\
+X_{n-1}\\
+X_{n}
+\end{bmatrix}=\begin{bmatrix}f_{1}\\
+f_{2}\\
+\vdots\\
+\vdots\\
+f_{n-1}\\
+f_{n}
+\end{bmatrix}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+dengan menggunakan relasi pengulangan (recurred relation):
+\begin_inset Formula 
+\[
+\begin{align}X_{k} & =\gamma_{k}-\frac{c_{k}}{\beta_{k}}X_{k+1},\qquad k=1,\ldots,(n-1)\\
+X_{n} & =\gamma_{n}
+\end{align}
+\]
+
+\end_inset
+
+Dapat diperoleh:
+\begin_inset Formula 
+\[
+\begin{align}\beta_{1}=b_{1}\\
+\beta_{k}=b_{k}-\frac{c_{k-1}}{\beta_{k-1}}a_{k},\qquad k=2,\ldots,n
+\end{align}
+\]
+
+\end_inset
+
+dan
+\begin_inset Formula 
+\[
+\begin{align}\gamma_{1}=\frac{f_{1}}{\beta_{1}}=\frac{f_{1}}{b_{1}}\\
+\gamma_{k}=\frac{f_{k}-a_{k}\gamma_{k-1}}{\beta_{k}}
+\end{align}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Persamaan pertama:
+\begin_inset Formula 
+\[
+b_{1}X_{1}+c_{1}X_{2}=f_{1}
+\]
+
+\end_inset
+
+Substitusi 
+\begin_inset Formula $X_{1}=\gamma_{1}-\dfrac{c_{1}}{\beta_{1}}X_{2}$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+b_{1}(\gamma_{1}-\dfrac{c_{1}}{\beta_{1}}X_{2})+c_{1}X_{2}=f_{1}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\partial u}{\partial t}-\nabla^{2}u(t,x,y)=f(x,y)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+untuk 
+\begin_inset Formula $(x,y)\in\Omega=\left[0,L_{x}\right]\times\left[0,L_{y}\right]$
+\end_inset
+
+ menggunakan syarat batas periodik.
+\end_layout
+
+\begin_layout Standard
+Pada keadaan tunak:
+\begin_inset Formula 
+\[
+-\nabla^{2}u_{s}(x,y)=f(x,y)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fungsi untuk RHS:
+\begin_inset Formula 
+\[
+f(x,y)=(a^{2}+b^{2})\sin(ax)\cos(by)
+\]
+
+\end_inset
+
+dengan 
+\begin_inset Formula $a=\dfrac{2\pi}{L_{x}}$
+\end_inset
+
+ dan 
+\begin_inset Formula $b=\dfrac{2\pi}{L_{y}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Solusi eksak:
+\begin_inset Formula 
+\[
+u_{\mathrm{exact}}(x,y)=\sin(ax)\cos(by)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
