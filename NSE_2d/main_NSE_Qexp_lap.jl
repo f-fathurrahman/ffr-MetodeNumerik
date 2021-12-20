@@ -1,17 +1,31 @@
-# global dx dy Lx Ly;
-# global nxm nym ;
-# global ip im jp jm ic jc;
+using Printf
+using LinearAlgebra: norm
 
 include("common.jl")
-include("NSE_fsource.jl")
 include("NSE_calc_lap.jl")
+include("NSE_norm_L2.jl")
+
+function NSE_fsource(Lx, Ly, x , y)
+     aa = 2π/Lx
+     bb = 2π/Ly
+     fs = (aa*aa + bb*bb) * ( cos.(aa*x) .* sin.(bb*y) )
+     return fs
+end
+
+function NSE_fexact(Lx, Ly, x, y)
+    aa = 2π/Lx
+    bb = 2π/Ly
+    fex = cos.(aa*x) .* sin.(bb*y)
+    return fex
+end
+
 
 function main()
 
     # Input parameters
     Lx = 1.0
-    Ly = 2.0
-    Nx = 21
+    Ly = 1.0
+    Nx = 51
     Ny = 51
 
     # 2D grid variables
@@ -46,8 +60,8 @@ function main()
     xx = xx'
     yy = yy'
 
-    display(xc); println()
-    display(ym); println()
+    #display(xc); println()
+    #display(ym); println()
 
     #  Initialization
     u = zeros(Float64, Nxm, Nym)
@@ -59,14 +73,17 @@ function main()
 
     # Time loop
     CONV = 1.0
-    Nitermax = 10 #10000
+    Nitermax = 100_000
 
     Niter = 0
     Temps = 0.0
 
     #tcpu = cputime;  % to estimate the computational CPU time: initialization
 
-    while( (CONV > 1e-6) && (Niter <= Nitermax) )
+    convt = Int64[]
+    conve = Float64[]
+
+    while( (CONV > 1e-8) && (Niter <= Nitermax) )
     
         Niter = Niter + 1
         Temps = Temps + dt
@@ -75,27 +92,25 @@ function main()
         du = dt*( NSE_fsource(Lx,Ly,xx,yy) + NSE_calc_lap(u, dx, dy, imm, ip, jp, jm, ic, jc) )
     
         # convergence criterium
-        #CONV = NSE_norm_L2(du);
+        CONV = NSE_norm_L2(du, dx, dy)
     
-        ## solution u^{n+1}
-        #u = u + du;
+        # solution u^{n+1}
+        @views u[:,:] = u[:,:] + du[:,:]
     
-        #% check for convergence
-        #if( mod(niter,10) == 0 ); 
-        #    fprintf('It=%4d   time=%5.3f ||u-uold||=%10.5e \n', niter, temps, eps);
-        #end;
+        if( mod(Niter,10) == 0 ); 
+            @printf("It=%4d  time=%5.3f norm(du) = %10.5e\n", Niter, Temps, CONV)
+        end
 
-        #convt(niter) = niter;
-        #conve(niter) = eps;
+        # Need this?
+        append!(convt, Niter)
 
     end
      
     #% Exact solution
-    #fex = NSE_fexact(Lx,Ly,xx,yy);
-         
-    #fprintf('\n=====End of computation ======= CPU time =%d\n',cputime-tcpu)
-    #fprintf('It=%d   time=%5.3f ||u-uold||=%10.5e \n', niter, temps, eps);
-    #fprintf('Norm ||Uex-Unum|| =%10.5e \n', NSE_norm_L2(fex-u));
+    fex = NSE_fexact(Lx, Ly, xx, yy)
+    
+    @printf("Norm ||Uex-Unum|| =%10.5e \n", NSE_norm_L2(fex - u, dx, dy))
+    println( norm(fex-u)*sqrt(dx*dy) )
 
     #% Plot the iso-contours
     #% numerical sol./exact sol.
@@ -109,7 +124,6 @@ function main()
     #ylabel('\epsilon');
     #title('Convergence of the explicit solution','FontSize',24)
 
-    println("Pass here ...")
 end
 
 main()
