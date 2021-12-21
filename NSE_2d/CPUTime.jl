@@ -1,13 +1,3 @@
-module CPUTime
-
-export
-    CPUtime_us,
-    CPUtic,
-    CPUtoq,
-    CPUtoc,
-    @CPUtime,
-    @CPUelapsed
-
 function CPUtime_us()
     rusage = Libc.malloc(4*sizeof(Clong) + 14*sizeof(UInt64))  # sizeof(uv_rusage_t); this is different from sizeof(rusage)
     ccall(:uv_getrusage, Cint, (Ptr{Nothing},), rusage)
@@ -63,4 +53,3 @@ macro CPUelapsed(ex)
     end
 end
 
-end # module
