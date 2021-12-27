@@ -1,5 +1,7 @@
 import MAT
 using Printf
+using LinearAlgebra
+using SparseArrays
 
 function main()
 
@@ -118,6 +120,64 @@ function main()
 
     #println("Nx0found = ", Nx0found)
     #println("Nxnfound = ", Nxnfound)
+
+    # initialise global matrices and vectors
+    bv = zeros(NnodesTotal) # global rhs vector
+    LHS = spzeros(NnodesTotal,NnodesTotal) # global lhs matrix
+    
+    #----------------------------------------------------
+    # matrix integration and assembly
+    #----------------------------------------------------
+    KM = zeros(NnodesPerElement,NnodesPerElement) # initialise element stiffness matrix
+    for iel in 1:Nelements # loop over elements
+        num = g_num[:,iel] # element nodes
+        coord = g_coord[:,num]' # element coordinates
+        KM .= 0.0
+        for k in 1:NintegPoints # integration loop
+            der = der_s[:,:,k] # der. of shape functions in local coordinates
+            jac = der*coord
+            # jacobian matrix
+            detjac = det(jac) # det. of jacobian
+            invjac = inv(jac) # inv. of jacobian
+            deriv = invjac*der # der. of shape fun. in physical coords.
+            KM = KM + deriv'*deriv*detjac*wts[k] # stiffness matrix
+        end
+        # assemble global matrix
+        for j in 1:NnodesPerElement, i in 1:NnodesPerElement
+            ii = num[i]
+            jj = num[j]
+            LHS[ii,jj] = LHS[ii,jj] + KM[i,j]
+        end
+    end
+
+    # compute boundary vector for Neumann condition on x=0
+    mmv = zeros(Int64,NnodesPerElement)
+    for i in 1:size(belx0,1)
+        iel = belx0[i]
+        num = g_num[:,iel]
+        y = g_coord[2,num]'
+        ln = iix0[:,i]
+        mmv .= 0
+        mmv[ln] .= 1
+        b = abs.( diff(y[ln]) )
+        Fb = 0.5 * U * b .* mmv
+        bv[num] = bv[num] - Fb
+    end
+
+    # compute boundary vector for Neumann condition on x=Lx
+    for i in 1:size(belxn,1)
+        iel = belxn[i]
+        num = g_num[:,iel]
+        y = g_coord[2,num]
+        ln = iixn[:,i]
+        mmv .= 0
+        mmv[ln] .= 1
+        b = abs.( diff(y[ln]) )
+        Fb = 0.5 * U * b .* mmv
+        bv[num] = bv[num] + Fb
+    end
+
+    displ = LHS\bv
 
     #println("Pass here ...")
 end
