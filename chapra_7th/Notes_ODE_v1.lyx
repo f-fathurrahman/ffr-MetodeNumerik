@@ -443,7 +443,68 @@ y_{i+1}=y_{i}+\frac{1}{90}\left(7k_{1}+32k_{3}+12k_{4}+32k_{5}+7k_{6}\right)h
 k_{1} & =f(x_{i},y_{i})\\
 k_{2} & =f\left(x_{i}+\frac{1}{4}h,y_{i}+\frac{1}{4}k_{1}h\right)\\
 k_{3} & =f\left(x_{i}+\frac{1}{4}h,y_{i}+\frac{1}{8}k_{1}h+\frac{1}{8}k_{2}h\right)\\
-k_{4} & =f(x_{i}+h,y_{i}+k_{3}h)
+k_{4} & =f\left(x_{i}+\frac{1}{2}h,y_{i}-\frac{1}{2}k_{2}h+k_{3}h\right)\\
+k_{5} & =f\left(x_{i}+\frac{3}{4}h,y_{i}+\frac{3}{16}k_{1}h+\frac{9}{16}k_{4}h\right)\\
+k_{6} & =f\left(x_{i}+h,y_{i}-\frac{3}{7}k_{1}h+\frac{2}{7}k_{2}h+\frac{12}{7}k_{3}h-\frac{12}{7}k_{4}h+\frac{8}{7}k_{5}h\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Systems of equations
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\frac{\mathrm{d}y_{1}}{\mathrm{d}x} & =f_{1}\left(x,y_{1},y_{2},\ldots,y_{n}\right)\\
+\frac{\mathrm{d}y_{2}}{\mathrm{d}x} & =f_{2}\left(x,y_{1},y_{2},\ldots,y_{n}\right)\\
+\vdots & ...\\
+\frac{\mathrm{d}y_{n}}{\mathrm{d}x} & =f_{n}\left(x,y_{1},y_{2},\ldots,y_{n}\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Runge-Kutta-Fehlberg
+\end_layout
+
+\begin_layout Standard
+Also known as embedded Runge-Kutta.
+\end_layout
+
+\begin_layout Standard
+Use the 4th-order estimate
+\begin_inset Formula 
+\[
+y_{i+1}=y_{i}+\left(\frac{37}{378}k_{1}+\frac{250}{621}k_{3}+\frac{125}{594}k_{4}+\frac{512}{1771}k_{6}\right)h
+\]
+
+\end_inset
+
+along with 5th-order formula:
+\begin_inset Formula 
+\[
+y_{i+1}=y_{i}+\left(\frac{2825}{27648}k_{1}+\frac{18575}{48384}k_{3}+\frac{13525}{55296}k_{4}+\frac{277}{14336}k_{5}+\frac{1}{4}k_{6}\right)h
+\]
+
+\end_inset
+
+where
+\begin_inset Formula 
+\begin{align*}
+k_{1} & =f\left(x_{i},y_{i}\right)\\
+k_{2} & =f\left(x_{i}+\frac{1}{5}h,y_{i}+\frac{1}{5}k_{1}h\right)\\
+k_{3} & =f\left(x_{i}+\frac{3}{10}h,y_{i}+\frac{3}{40}k_{1}h+\frac{9}{40}k_{2}h\right)\\
+k_{4} & =f\left(x_{i}+\frac{3}{5}h,y_{i}+\frac{3}{10}k_{1}h-\frac{9}{10}k_{2}h+\frac{6}{5}k_{3}h\right)\\
+k_{5} & =f\left(x_{i}+h,y_{i}-\frac{11}{54}k_{1}h+\frac{5}{2}k_{2}h-\frac{70}{27}k_{3}h+\frac{35}{27}k_{4}h\right)\\
+k_{6} & =f\left(x_{i}+\frac{7}{8}h,y_{i}+\frac{1631}{55296}k_{1}h+\frac{175}{512}k_{2}h+\frac{575}{13824}k_{3}h+\frac{44275}{110592}k_{4}h+\frac{253}{4096}k_{5}h\right)
 \end{align*}
 
 \end_inset
