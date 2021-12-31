@@ -36,7 +36,8 @@ def ode_rk45_1step(dfunc, xi, yi, h):
 def ode_adapt_1step(dfunc, xi, yi, htry, yscal):
     safety = 0.9
     econ = 1.89e-4
-    EPS = 0.00005 # use machine precision?
+    #EPS = 0.00005 # use machine precision?
+    EPS = 1e-6
     h = htry
     emax = np.nan
     while True:
@@ -60,17 +61,17 @@ def ode_adapt_1step(dfunc, xi, yi, htry, yscal):
     return x, y, h_next
 
 
-def ode_adapt(dfunc, xi, yi, htry, xf, NstepMax):
+def ode_adapt(dfunc, xi, yi, htry, xf, NstepMax=100):
     SMALL = 1e-30
     #
-    x = np.zeros(Nstep+1)
-    y = np.zeros(Nstep+1)
+    x = np.zeros(NstepMax+1)
+    y = np.zeros(NstepMax+1)
     #
     x[0] = x0
     y[0] = y0
     h = htry
-    NstepActual = Nstep
-    for i in range(0,Nstep):
+    NstepActual = 0
+    for i in range(0,NstepMax):
         print("\nstep = ", i + 1)
         #
         if x[i] + h > xf:
@@ -88,13 +89,16 @@ def ode_adapt(dfunc, xi, yi, htry, xf, NstepMax):
             NstepActual = i + 1
             break
     #
+    if x[NstepActual] < xf:
+        print("WARNING: NstepMax is not sufficient x = ", x[NstepActual])
     return x[:NstepActual+1], y[:NstepActual+1]
 
 def deriv(x, y):
     return 10*np.exp( -(x-2)**2/(2*0.075**2) ) - 0.6*y
 
-def exact_sol(x):
-    return 0.5*np.exp(-0.6*x)
+# This is not an exact solution
+#def exact_sol(x):
+#    return 0.5*np.exp(-0.6*x)
 
 x0 = 0.0
 y0 = 0.5
@@ -107,10 +111,13 @@ plt.clf()
 
 x, y = ode_rk4(deriv, x0, y0, h, Nstep)
 plt.plot(x, y, marker="o", label="RK4")
+print("Nstep = ", Nstep)
+print(x)
 
-x, y = ode_adapt(deriv, x0, y0, 0.5, xf, Nstep)
-plt.plot(x, y, marker="o", label="Adaptive")
+x_adapt, y_adapt = ode_adapt(deriv, x0, y0, 0.5, xf, NstepMax=100)
+plt.plot(x_adapt, y_adapt, marker="o", label="Adaptive")
 
+plt.legend()
 plt.grid(True)
 plt.savefig("IMG_chapra_example_25_14.pdf")
 
