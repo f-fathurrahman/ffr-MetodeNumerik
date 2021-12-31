@@ -57,7 +57,7 @@ def ode_adapt_1step(dfunc, xi, yi, htry, yscal, EPS=1e-6):
     return x, y, h_next
 
 
-def ode_adapt(dfunc, xi, yi, htry, xf, NstepMax=100):
+def ode_adapt(dfunc, xi, yi, htry, xf, NstepMax=100, EPS=1e-6):
     SMALL = 1e-30
     #
     x = np.zeros(NstepMax+1)
@@ -74,7 +74,7 @@ def ode_adapt(dfunc, xi, yi, htry, xf, NstepMax=100):
         #
         dy = dfunc(x[i], y[i])
         yscal = abs(y[i]) + abs(h*dy) + SMALL
-        x[i+1], y[i+1], h = ode_adapt_1step(dfunc, x[i], y[i], h, yscal)
+        x[i+1], y[i+1], h = ode_adapt_1step(dfunc, x[i], y[i], h, yscal, EPS=EPS)
         #
         if x[i+1] >= xf:
             NstepActual = i + 1
@@ -91,13 +91,14 @@ x0 = 0.0
 y0 = 0.0
 xf = 1.0
 h = 0.01
-for h in [0.5, 0.25, 0.1, 0.05, 0.01]:
+for h in [0.5, 0.25, 0.1, 0.05, 0.01, 0.001]:
     Nstep = int(xf/h)
     x, y = ode_rk4(deriv, x0, y0, h, Nstep)
     print("h = %18.10f Last points: %18.10f %18.10f" % (h, x[-1], y[-1]))
 
-x_adapt, y_adapt = ode_adapt(deriv, x0, y0, 0.5, xf, NstepMax=100)
-print("Adaptive Last points: %18.10f %18.10f" % (x[-1], y[-1]))
+for eps in [1e-6, 1e-7, 1e-8, 1e-9, 1e-10, 1e-12]:
+    x_adapt, y_adapt = ode_adapt(deriv, x0, y0, 0.5, xf, NstepMax=1000, EPS=eps)
+    print("Adaptive Last points: %e %18.10f %18.10f" % (eps, x_adapt[-1], y_adapt[-1]))
 
 
 # Using Romberg integration
@@ -130,10 +131,9 @@ def integ_romberg(f, a, b, es=1e-10, MAXIT=10):
         ea = abs( (I[1,i+1] - I[2,i])/I[1,i+1] )*100 # in percent
         if ea <= es:
             iterConv = i
-            print("converged, iterConv = ", iterConv)
+            print("Converged: iterConv = ", iterConv)
             break
         iterConv = i
-    print("iterConv = ", iterConv)
     # to make sure that we are use variable that is defined outside the loop
     # we use iterConv instead of i
     return I[1,iterConv+1]
@@ -143,5 +143,12 @@ def my_func(x):
 
 a = 0.0
 b = 1.0
-resN = integ_romberg(my_func, a, b)
+resN = integ_romberg(my_func, a, b, es=1e-12)
 print("integ_romberg = %18.10f" % resN)
+
+
+# Using mpmath
+import mpmath
+my_func = lambda x: 1/((x-0.3)**2 + 0.01) + 1/( (x - 0.9)**2 + 0.04 ) - 6
+resN = mpmath.quad(my_func, [a, b])
+print("Using mpmath  = %18.10f" % resN)
