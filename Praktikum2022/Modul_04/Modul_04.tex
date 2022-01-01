@@ -1,0 +1,376 @@
+\documentclass[a4paper,11pt,bahasa]{article} % screen setting
+\usepackage[a4paper]{geometry}
+
+%\documentclass[b5paper,11pt,bahasa]{article} % screen setting
+%\usepackage[b5paper]{geometry}
+
+\geometry{verbose,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm}
+
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+
+%\usepackage{cmbright}
+%\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage[libertine]{newtxmath}
+\usepackage[no-math]{fontspec}
+
+\setmainfont{Linux Libertine O}
+
+\setmonofont{JuliaMono-Regular}
+
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{minted}
+
+\newminted{julia}{breaklines,fontsize=\scriptsize}
+\newminted{python}{breaklines,fontsize=\scriptsize}
+
+\newminted{bash}{breaklines,fontsize=\scriptsize}
+\newminted{text}{breaklines,fontsize=\scriptsize}
+
+\newcommand{\txtinline}[1]{\mintinline[breaklines,fontsize=\scriptsize]{text}{#1}}
+\newcommand{\jlinline}[1]{\mintinline[breaklines,fontsize=\scriptsize]{julia}{#1}}
+\newcommand{\pyinline}[1]{\mintinline[breaklines,fontsize=\scriptsize]{python}{#1}}
+
+\newmintedfile[juliafile]{julia}{breaklines,fontsize=\scriptsize}
+\newmintedfile[pythonfile]{python}{breaklines,fontsize=\scriptsize}
+\newmintedfile[fortranfile]{fortran}{breaklines,fontsize=\scriptsize}
+% f-o-otnotesize
+
+\usepackage{mdframed}
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage{enumitem}
+
+\usepackage{mhchem}
+\usepackage{appendix}
+
+\newcommand{\highlighteq}[1]{\colorbox{blue!25}{$\displaystyle#1$}}
+\newcommand{\highlight}[1]{\colorbox{red!25}{#1}}
+
+\newcounter{soal}%[section]
+\newenvironment{soal}[1][]{\refstepcounter{soal}\par\medskip
+   \noindent \textbf{Soal~\thesoal. #1} \sffamily}{\medskip}
+
+
+\definecolor{mintedbg}{rgb}{0.95,0.95,0.95}
+\BeforeBeginEnvironment{minted}{
+    \begin{mdframed}[backgroundcolor=mintedbg,%
+        topline=false,bottomline=false,%
+        leftline=false,rightline=false]
+}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+
+
+\BeforeBeginEnvironment{soal}{
+    \begin{mdframed}[%
+        topline=true,bottomline=true,%
+        leftline=true,rightline=true]
+}
+\AfterEndEnvironment{soal}{\end{mdframed}}
+
+% -------------------------
+\begin{document}
+
+\title{%
+{\small TF2202 Komputasi Rekayasa}\\
+Interpolasi dan Pencocokan Kurva
+}
+\author{Tim Praktikum Komputasi Rekayasa 2021\\
+Teknik Fisika\\
+Institut Teknologi Bandung}
+\date{}
+\maketitle
+
+\section{Polinomial Interpolasi Newton}
+
+\begin{soal}
+Implementasikan fungsi atau subroutin dalam Python untuk implementasi algoritma
+pada Gambar 18.7 untuk implementasi polinomial Newton.
+Uji hasil yang Anda dapatkan dengan menggunakan data-data yang diberikan pada contoh
+18.2 (polinomial kuadrat) dan 18.3 (polinomial kubik) pada Chapra.
+Lengkapi jawaban Anda dengan membuat plot seperti pada Gambar 18.4 dan 18.6 pada Chapra.
+\end{soal}
+
+\begin{soal}
+Gunakan data pada soal Chapra 18.5 untuk mengevaluasi nilai $f(x) = \mathrm{ln}(x)$
+pada $x = 2$ dengan menggunakan polinomial kubik. Coba variasikan titik-titik
+yang digunakan (\textit{base points}) dan perhatikan nilai estimasi
+kesalahan yang diberikan oleh
+fungsi/subrutin yang sudah Anda buat pada soal sebelumnya.
+\end{soal}
+
+\section{Polinomial Interpolasi Lagrange}
+\begin{soal}
+Implementasikan fungsi atau subroutin dalam Python untuk implementasi algoritma
+pada Gambar 18.11 untuk implementasi polinomial Lagrange.
+Uji hasil yang Anda dapatkan dengan menggunakan data-data yang diberikan pada contoh
+18.2 (polinomial kuadrat) dan 18.3 (polinomial kubik) pada Chapra.
+\end{soal}
+
+\begin{soal}
+Kerjakan Contoh 18.7 pada Chapra dengan menggunakan fungsi/subrutin interpolasi Lagrange
+yang sudah Anda buat pada soal sebelumnya sehingga Anda dapat mereproduksi Gambar 18.12
+pada Chapra. Pada Contoh 18.17 Anda diminta untuk mengestimasi kecepatan penerjun
+pada $t=10$ s, yang berada di antara dua titik data terakhir.
+Untuk polinom orde-1, gunakan dua titik data terakhir, untuk orde-2 gunakan tiga titik
+data terakhir, dan seterusnya sampai orde-4.
+\end{soal}
+
+\section{Interpolasi Spline Kubik}
+\begin{soal}
+Implementasikan fungsi atau subroutin dalam Python untuk implementasi algoritma
+pada Gambar 18.18 untuk implementasi spline kubik (natural).
+Uji hasil yang Anda dapatkan dengan menggunakan data-data yang diberikan pada contoh
+18.10.
+\end{soal}
+
+
+\section{Regresi Linear}
+\begin{soal}
+Implementasikan fungsi atau subroutin dalam Python untuk implementasi algoritma
+pada Gambar 17.6 untuk implementasi regresi linear. Uji dengan menggunakan data
+pada Contoh 17.1.
+\end{soal}
+
+\section{Regresi Linear (Notasi Matriks-Vektor)}
+
+Tinjau model linear berikut:
+\begin{equation}
+y = f(x; w_{0}, w_{1}) = w_{0} + w_{1}x
+\end{equation}
+di mana $w_{1}$ (atau kemiringan atau \textit{slope}) dan $w_{0}$
+(titik potong sumbu $y$ atau \textit{intercept}) adalah parameter model.
+Misalnya, diberikan suatu nilai atau input $x_{n}$, kita dapat menghitung output dari model
+sebagai:
+\begin{equation}
+y_{n} = f(x_{n}; w_{0}, w_{1}) = w_{0} + w_{1}x_{n}
+\label{eq:linmodel1}
+\end{equation}
+Definisikan:
+\begin{equation}
+\mathbf{x}_{n} = \begin{bmatrix}
+1 \\
+x_{n}
+\end{bmatrix}
+,\,\,\,%
+\mathbf{w} = \begin{bmatrix}
+w_{0} \\
+w_{1}
+\end{bmatrix}
+\end{equation}
+Dengan menggunakan notasi ini, model linear pada Persamaan \eqref{eq:linmodel1} dapat ditulis
+menjadi:
+\begin{equation}
+y_{n} = f(x_{n}; w_0, w_1) = \mathbf{w}^{\mathsf{T}} \mathbf{x}_{n}
+\label{eq:linmodel2}
+\end{equation}
+Dalam bentuk matriks-vektor, dapat dituliskan sebagai berikut:
+\begin{equation}
+\mathbf{y} = \mathbf{X}\mathbf{w}
+\end{equation}
+dengan $\mathbf{X}$ adalah matriks input:
+\begin{equation}
+\mathbf{X} = \begin{bmatrix}
+\mathbf{x}^{\mathsf{T}}_{1} \\
+\mathbf{x}^{\mathsf{T}}_{2} \\
+\vdots \\
+\mathbf{x}^{\mathsf{T}}_{N}
+\end{bmatrix} =
+\begin{bmatrix}
+1 & x_{1} \\
+1 & x_{2} \\
+\vdots & \vdots \\
+1 & x_{N} \\
+\end{bmatrix}
+\end{equation}
+dan $\mathbf{y}$ adalah vektor kolom:
+\begin{equation}
+\mathbf{y} =
+\begin{bmatrix}
+y_{1} \\
+y_{2} \\
+\vdots \\
+y_{N} \\
+\end{bmatrix}
+\end{equation}
+
+Diberikan himpunan pasangan data
+$\left\{(x_{1},y_{1}), (x_{2}, y_{2}), \ldots, (x_{n}, y_{n})\right\}$
+kita ingin
+mencari parameter $\mathbf{w}$ yang meminimumkan rata-rata kesalahan kuadrat
+$\mathcal{L}$ yang didefinisikan sebagai:
+\begin{equation}
+\mathcal{L} \equiv \frac{1}{N} \sum_{n=1}^{N} \left( y_{n} - \mathbf{w}^{\mathsf{T}}
+\mathbf{x}_{n} \right)^2
+\end{equation}
+Dapat ditunjukkan bahwa parameter yang membuat $\mathcal{L}$ menjadi mininum adalah
+\begin{equation}
+\mathbf{w} = \left(\mathbf{X}^{\mathsf{T}}\mathbf{X} \right)^{-1} \mathbf{X}^{\mathsf{T}} \mathbf{y}
+\label{eq:w_vektor}
+\end{equation}
+
+\begin{soal}
+Buat fungsi/subrutin dalam Python untuk membuat matriks $\mathbf{X}$ dengan argumen
+input $\mathbf{x}$ dan $\mathbf{y}$ dan menghitung $\mathbf{w}$ berdasarkan
+persamaan \eqref{eq:w_vektor}.
+Uji fungsi yang sudah Anda buat dengan menggunakan data pada Contoh 17.1 dan bandingkan
+parameter \textit{slope} dan \textit{intercept} yang Anda dapatkan pada soal ini dan
+soal sebelumnya. Anda dapat menggunakan \pyinline{np.linalg.inv} untuk menghitung
+invers matriks atau \pyinline{np.linalg.linsolve} jika Anda mengubah permasalahan
+ini menjadi sistem persamaan linear.
+\end{soal}
+
+Kita juga dapat menggunakan Persamaan \eqref{eq:w_vektor} untuk model linear
+\footnote{Model linear didefinisikan sebagai model yang parameternya linear
+(berpangkat satu)} polinom lebih tinggi dari satu. Misalkan, pada model
+polinom kuadrat:
+\begin{equation}
+y = w_{0} + w_{1} x + w_{2} x^2
+\end{equation}
+matriks $\mathbf{X}$ menjadi:
+\begin{equation}
+\mathbf{X} = \begin{bmatrix}
+1 & x_{1} & x_{1}^2 \\
+1 & x_{2} & x_{2}^2 \\
+\vdots & \vdots & \vdots \\
+1 & x_{N} & x_{N}^2
+\end{bmatrix}
+\end{equation}
+dan vektor $\mathbf{w}$ menjadi:
+\begin{equation}
+\mathbf{w} = 
+\begin{bmatrix}
+w_{0} \\
+w_{1} \\
+w_{2}
+\end{bmatrix}
+\end{equation}
+
+Formula yang sama juga dapat digunakan untuk model multilinear dengan
+dua variabel independen $x^{(1)}$ dan $x^{(2)}$ (tanda $^{(1)}$ dan $^{(2)}$ bukan
+menyatakan pangkat, namun variabel yang berbeda)
+\footnote{Silakan gunakan variabel lain seperti $t$, $x$, $y$, $z$}:
+\begin{equation}
+y = w_{0} + w_{1} x^{(1)} + w_{2} x^{(2)}
+\end{equation}
+di mana sekarang matrix $\mathbf{X}$ menjadi:
+\begin{equation}
+\mathbf{X} = \begin{bmatrix}
+1 & x^{(1)}_{1} & x^{(2)}_{1} \\
+1 & x^{(1)}_{2} & x^{(2)}_{2} \\
+\vdots & \vdots & \vdots \\
+1 & x^{(1)}_{N} & x^{(2)}_{N}
+\end{bmatrix}
+\end{equation}
+
+\begin{soal}
+Kembangkan fungsi/subrutin Python yang sudah Anda buat sehingga dapat menerima argumen
+opsional \pyinline{m}, di mana \pyinline{m >= 1} adalah orde polinomial yang ingin digunakan.
+Uji dengan menggunakan data pada Contoh 17.5 di buku Chapra.
+\end{soal}
+
+\begin{soal}
+Modifikasi fungsi/subrutin Python sudah Anda buat untuk regresi linear sehingga
+dapat digunakan untuk regresi multilinear dan uji fungsi yang Anda buat
+dengan menggunakan data pada Contoh 17.6 di buku Chapra.
+\end{soal}
+
+
+
+\section{Soal Tambahan}
+
+\input{Chapra_exercise_18_5}
+
+\input{Chapra_exercise_18_11}
+
+\input{Chapra_exercise_18_26}
+
+\input{Chapra_exercise_18_27}
+
+
+\input{Chapra_exercise_17_4}
+
+\input{Chapra_exercise_17_6}
+
+\input{Chapra_exercise_17_8}
+
+\input{Chapra_exercise_17_9}
+
+\begin{soal}
+Titik simpul Chebyshev jenis pertama didefinisikan pada selang $[-1,1]$ dan
+dapat dituliskan sebagai berikut:
+\begin{equation}
+t_{k} = -\cos\left( \frac{k\pi}{n} \right), \,\,\,\, k = 0, \ldots, n
+\end{equation}
+Gunakan titik simpul Chebyshev sebagai ganti dari titik-titik $x$ yang memiliki jarak seragam
+untuk melakukan interpolasi dengan polinom orde 10 dan orde 20 untuk fungsi Runge
+pada interval $[-1,1]$.
+Bandingkan hasilnya jika Anda menggunakan titik-titik $x$ yang memiliki jarak
+seragam.
+\end{soal}
+
+
+\section{Kode Fortran}
+
+Pada bagian ini akan diberikan kode Fortran dari beberapa algoritma yang
+ada pada buku Chapra mengenai interpolasi.
+
+Beberapa catatan mengenai Fortran:
+\begin{itemize}
+\item Kode Fortran disusun berdasarkan blok dengan kata kunci dan nama tertentu.
+Yang biasa kita gunakan adalah kata kunci \txtinline{PROGRAM} dan \txtinline{SUBROUTINE}.
+Akhir tiap blok ditandai dengan kata kunci \txtinline{END}.
+\item Fortran dapat menebak tipe data yang kita gunakan berdasarkan nama variabel
+yang digunakan. Kita memaksa agar hal ini tidak terjadi dengan menggunakan pernyataan
+\txtinline{IMPLICIT NONE}, artinya seluruh variabel yang digunakan harus dideklarasikan
+terlebih dahulu beserta tipenya. Beberapa korespondensi tipe variabel:
+  \begin{itemize}
+  \item \txtinline{REAL(8)} dengan \txtinline{float64} pada Python
+  \item \txtinline{INTEGER} dengan \txtinline{int}
+  \item \txtinline{LOGICAL} dengan \txtinline{bool}
+  \end{itemize}
+\item Array pada Fortran dapat dimulai dari indeks bilangan bulat apa saja, namun secara default
+dimulai dari 1. Contoh:
+  \begin{itemize}
+  \item \txtinline{a(N)}: array \txtinline{a} memiliki indeks \txtinline{1}
+  sampai \txtinline{N}. Jumlah elemen array adalah \txtinline{N}.
+  \item \txtinline{a(0:N)}: array \txtinline{a} memiliki indeks \txtinline{0}
+  sampai \txtinline{N}. Jumlah elemen array adalah \txtinline{N+1}.
+  \end{itemize}
+\end{itemize}
+
+Anda dapat menggunakan laman berikut jika pada komputer Anda tidak tersedia
+\textit{compiler} untuk Fortran:
+{\footnotesize \url{https://www.onlinegdb.com/online_fortran_compiler}}
+
+\subsection{Interpolasi Newton}
+\fortranfile{../../chapra_7th/ch18/newton_interp.f90}
+
+\subsection{Contoh 18.2}
+\fortranfile{../../chapra_7th/ch18/example_18_2.f90}
+
+\subsection{Contoh 18.3}
+\fortranfile{../../chapra_7th/ch18/example_18_3.f90}
+
+\subsection{Interpolasi Lagrange}
+\fortranfile{../../chapra_7th/ch18/lagrange_interp.f90}
+
+
+\subsection{Interpolasi Spline Kubik Natural}
+\fortranfile{../../chapra_7th/ch18/natural_cubic_spline.f90}
+
+
+\end{document}
+

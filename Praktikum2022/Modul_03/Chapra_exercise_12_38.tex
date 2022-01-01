@@ -1,0 +1,41 @@
+\begin{soal}[Chapra Latihan 12.38]
+Sistem persamaan linear dapat muncul dalam solusi numerik
+persamaan diferensial. Sebagai contoh, persamaan diferensial
+berikut dapat diturunkan dari kesetimbangan kalor
+pada suatu batang tipis yang panjang:
+\begin{equation*}
+\frac{\mathrm{d}^2 T}{\mathrm{d}x^2} + h'(T_{a} - T) = 0
+\end{equation*}
+di mana $T$ adalah temperatur (dalam $^{\circ}\mathrm{C}$),
+$x$ adalah posisi sepanjang batang (dalam meter), $h'$ adalah
+koefisien transfer kalor antara batang dan udara sekitar (dalam
+$\mathrm{m}^{-2}$), dan $T_{a}$ adalah temperatur lingkungan
+(dalam $^{\circ}\mathrm{C}$). Dengan menggunakan aproksimasi
+beda hingga untuk turunan kedua:
+\begin{equation}
+\frac{\mathrm{d}^2 T}{\mathrm{d}x^2} = \frac{T_{i+1} - 2T_{i} + T_{i-1}}{\Delta x^2}
+\label{eq:heatpde1d}
+\end{equation}
+di mana $T_{i}$ menyatakan temperatur pada titik atau node ke-$i$.
+Dengan mensubstitusikan aproksimasi ini ke persamaan diferensial awal,
+diperoleh aproksimasi sebagai berikut.
+\begin{equation}
+-T_{i-1} + (2 + h'\Delta x^2)T_{i} - T_{i+1} = h'\Delta x^2 T_{a}
+\label{eq:heatpde1dfd}
+\end{equation}
+Persamaan ini dapat dituliskan utuk setiap titik interior dari batang dan menghasilkan
+sistem persamaan linear dengan matriks tridiagonal.
+Titik pertama dan terakhir ditentukan berdasarkan kondisi batas.
+(a) Hitung solusi analitik dari persamaan diferensial \eqref{eq:heatpde1d}
+untuk suatu batang dengan panjang 10 m, $T_a = 20$, $T(x=0) = 40$, 
+$T(x=10) = 200$ dan $h' = 0.02$.
+(b) Hitung solusi numerik untuk nilai parameter yang sama pada bagian (a) denga
+menggunakan metode beda-hingga berdasarkan persamaan \eqref{eq:heatpde1dfd}
+dengan 4 titik internal yang ditunjukkan pada gambar berikut.
+($\Delta x = 2$ m)
+
+{\centering
+\includegraphics[scale=1.0]{images_priv/Chapra_Fig_12_38.pdf}
+\par}
+
+\end{soal}

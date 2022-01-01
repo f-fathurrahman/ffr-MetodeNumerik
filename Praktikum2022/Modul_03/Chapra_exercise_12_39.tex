@@ -1,0 +1,26 @@
+\begin{soal}[Chapra Latihan 12.39]
+Ditribusi temperatur pada keadaan tunak dari suatu plat yang dipanaskan
+dapat dimodelkan dengan menggunakan persamaan Laplace:
+\begin{equation*}
+\frac{\partial^2 T}{\partial x^2} + \frac{\partial^2 T}{\partial y^2} = 0
+\end{equation*}
+Jika plat ini direpresentasikan menjadi kumpulan titik-titik yang berjarak
+seragam, metode beda hingga dapat diaplikasikan untuk mencari solusi numerik
+dari persamaan Laplace. Gunakan aproksimasi beda hingga (seperti pada soal
+sebelumnya) untuk menurunkan sistem persamaan linear untuk 4 titik interior
+seperti pada gambar berikut.
+
+{\centering
+\includegraphics[scale=1.0]{images_priv/Chapra_Fig_12_39.pdf}
+\par}
+
+Asumsikan $\Delta x = \Delta y$. Tulis juga persamaan linear yang diperoleh
+jika ada 9 dan 16 titik interior. 
+Implementasikan program untuk menyelesaikan sistem persamaan linear
+ini dengan menggunakan metode Gauss-Seidel. Program Anda harus dapat menerima input
+$N$ di mana $N = N$ adalah jumlah titik interior yang digunakan. Asumsikan juga bahwa $N$
+merupakan bilangan kuadrat, artinya jumlah titik diskritisasi pada arah $x$ dan $y$
+bernilai sama.
+(Lihat Chapra Contoh 29.1 untuk informasi lebih lanjut, jika diperlukan)
+\end{soal}
+
