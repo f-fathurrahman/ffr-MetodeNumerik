@@ -1,0 +1,139 @@
+\documentclass[a4paper,11pt,bahasa]{article} % screen setting
+\usepackage[a4paper]{geometry}
+
+%\documentclass[b5paper,11pt,bahasa]{article} % screen setting
+%\usepackage[b5paper]{geometry}
+
+\geometry{verbose,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm}
+
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+
+%\usepackage{cmbright}
+%\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage[libertine]{newtxmath}
+\usepackage[no-math]{fontspec}
+
+\setmainfont{Linux Libertine O}
+
+\setmonofont{JuliaMono-Regular}
+
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{minted}
+
+\newminted{julia}{breaklines,fontsize=\scriptsize}
+\newminted{python}{breaklines,fontsize=\scriptsize}
+
+\newminted{bash}{breaklines,fontsize=\scriptsize}
+\newminted{text}{breaklines,fontsize=\scriptsize}
+
+\newcommand{\txtinline}[1]{\mintinline[breaklines,fontsize=\scriptsize]{text}{#1}}
+\newcommand{\jlinline}[1]{\mintinline[breaklines,fontsize=\scriptsize]{julia}{#1}}
+\newcommand{\pyinline}[1]{\mintinline[breaklines,fontsize=\scriptsize]{python}{#1}}
+
+\newmintedfile[juliafile]{julia}{breaklines,fontsize=\scriptsize}
+\newmintedfile[pythonfile]{python}{breaklines,fontsize=\scriptsize}
+% f-o-otnotesize
+
+\usepackage{mdframed}
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage{mhchem}
+\usepackage{appendix}
+
+\newcommand{\highlighteq}[1]{\colorbox{blue!25}{$\displaystyle#1$}}
+\newcommand{\highlight}[1]{\colorbox{red!25}{#1}}
+
+\newcounter{soal}%[section]
+\newenvironment{soal}[1][]{\refstepcounter{soal}\par\medskip
+   \noindent \textbf{Soal~\thesoal. #1} \sffamily}{\medskip}
+
+
+\definecolor{mintedbg}{rgb}{0.95,0.95,0.95}
+\BeforeBeginEnvironment{minted}{
+    \begin{mdframed}[backgroundcolor=mintedbg,%
+        topline=false,bottomline=false,%
+        leftline=false,rightline=false]
+}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+
+
+\BeforeBeginEnvironment{soal}{
+    \begin{mdframed}[%
+        topline=true,bottomline=true,%
+        leftline=true,rightline=true]
+}
+\AfterEndEnvironment{soal}{\end{mdframed}}
+
+% -------------------------
+\begin{document}
+
+\title{%
+{\small TF2202 Komputasi Rekayasa}\\
+Akar Persamaan Nonlinear
+}
+\author{Tim Praktikum Komputasi Rekayasa 2021\\
+Teknik Fisika\\
+Institut Teknologi Bandung}
+\date{}
+\maketitle
+
+\input{Chapra_example_5_3}
+\input{Chapra_example_5_6}
+
+\input{Chapra_example_6_1}
+\input{Chapra_example_6_3}
+\input{Chapra_example_6_6}
+\input{Chapra_example_6_8}
+\input{Chapra_example_6_10}
+\input{Chapra_example_6_12}
+
+\input{Using_Library}
+
+\section{Soal Tambahan}
+
+\begin{soal}
+Buat subrutin atau fungsi pada Python yang mengimplementasikan metode pencarian akar nonlinear
+dari sebuah fungsi satu variabel dengan metode:
+\begin{itemize}
+\item bisection
+\item regula falsi
+\item Newton-Raphson
+\item secant
+\end{itemize}
+Buat dokumentasi singkat atau penjelaskan mengenai subrutin yang Anda implementasikan:
+\begin{itemize}
+\item Input apa saja yang diperlukan
+\item Keluaran atau apa saja yang dikembalikan oleh fungsi (\textit{return values})
+\item Kondisi terminasi apa yang digunakan
+\end{itemize}
+Uji subrutin yang Anda buat untuk mencari akar dari salah satu persoalan yang
+diberikan pada contoh-contoh sebelumnya.
+\end{soal}
+
+\input{Chapra_exercise_5_18}
+\input{Chapra_exercise_5_19}
+\input{Chapra_exercise_6_25}
+\input{Chapra_exercise_8_3}
+\input{Chapra_exercise_8_7}
+\input{Chapra_exercise_8_18}
+\input{Chapra_exercise_8_32}
+\input{Chapra_exercise_8_33}
+\input{Chapra_exercise_8_39}
+\input{FungsiBesselSferis}
+\input{Chapra_exercise_6_23}
+\input{Chapra_exercise_6_24}
+
+\end{document}
