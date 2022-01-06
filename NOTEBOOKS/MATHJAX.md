@@ -22,7 +22,7 @@ open ../notebook/static/notebook/js/main.min.js, search for availableFonts. It s
 availableFonts: ["STIX-Web","TeX"],
 imageFont: null;
 preferredFont: "TeX",
-webFont: "TeX"
+webFont: "TeX",
 ...
 
 
