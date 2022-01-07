@@ -13,6 +13,31 @@ Institut Teknologi Bandung}
 \date{}
 \maketitle
 
+\section{Statistik dasar}
+Rata-rata aritmatik (\textit{mean})
+\begin{equation}
+\bar{y} = \dfrac{\sum y_i}{n}
+\end{equation}
+$y_i$: titik data dan $n$: jumlah data
+
+Deviasi standard:
+\begin{equation}
+s_{y} = \sqrt{\frac{S_t}{n-1}}
+\end{equation}
+dengan $S_t$ adalah jumlah kuadrat dari residual antara titik data dan rata-rata:
+\begin{equation}
+S_t = \sum \left( y_i - \bar{y} \right)^2
+\end{equation}
+Variansi:
+\begin{equation}
+s^{2}_{y} = \frac{S_t}{n - 1} 
+\end{equation}
+Persamaan alternatif:
+\begin{equation}
+s^{2}_{y} = \frac{\sum y_i - \left( \sum y_i \right)^2 / n}{n - 1}
+\end{equation}
+
+
 \section{Polinomial Interpolasi Newton}
 
 \begin{soal}
@@ -58,6 +83,34 @@ Uji hasil yang Anda dapatkan dengan menggunakan data-data yang diberikan pada co
 
 
 \section{Regresi Linear}
+Diberikan pasangan data: $(x_1, y_1), (x_2, y_2), \ldots, (x_n, y_n)$, kita ingin
+mencari persamaan kurva garis lurus yang paling cocok:
+\begin{equation}
+y = a_0 + a_1 x + e
+\end{equation}
+di mana $a_0$ dan $a_1$ adalah parameter kurva dan $e$ adalah error atau residual.
+Error dapat dituliskan sebagai:
+\begin{equation}
+e = y - a_0 - a_1 x
+\end{equation}
+Jumlah kuadrat dari error untuk seluruh data yang diberikan adalah:
+\begin{equation}
+S_r = \sum_{i=1}^{n} e_{i}^2 = \sum_{i=1}^{n} \left( y_{i} - a_0 - a_1 x_{i} \right)^2
+\end{equation}
+$a_0$ dan $a_1$ yang meminimumkan $S_r$ dapat dicari dengan syarat:
+\begin{align}
+\frac{\partial S_r}{\partial a_0} & = -2 \sum \left( y_i - a_0 - a_1 x_i \right) = 0 \\
+\frac{\partial S_r}{\partial a_1} & = -2 \sum x_{i} \left( y_i - a_0 - a_1 x_i \right) = 0
+\end{align}
+
+
+
+Standard error of the estimate:
+\begin{equation}
+s_{y/x} = \sqrt{\frac{S_r}{n - 2}}
+\end{equation}
+
+
 \begin{soal}
 Implementasikan fungsi atau subroutin dalam Python untuk implementasi algoritma
 pada Gambar 17.6 untuk implementasi regresi linear. Uji dengan menggunakan data
@@ -148,7 +201,7 @@ persamaan \eqref{eq:w_vektor}.
 Uji fungsi yang sudah Anda buat dengan menggunakan data pada Contoh 17.1 dan bandingkan
 parameter \textit{slope} dan \textit{intercept} yang Anda dapatkan pada soal ini dan
 soal sebelumnya. Anda dapat menggunakan \pyinline{np.linalg.inv} untuk menghitung
-invers matriks atau \pyinline{np.linalg.linsolve} jika Anda mengubah permasalahan
+invers matriks atau \pyinline{np.linalg.solve} jika Anda mengubah permasalahan
 ini menjadi sistem persamaan linear.
 \end{soal}
 
