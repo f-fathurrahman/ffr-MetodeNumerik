@@ -1,4 +1,7 @@
-\subsection{Chapra Contoh 3.2, \textit{single precision}}
+\subsection{Penggunaan \textit{single precision}}
+
+\textbf{Chapra Contoh 3.2}
+
 Secara default, perhitungan dengan \textit{floating number} pada Python (dan NumPy)
 dilakukan dengan menggunakan \textit{double precision}. Pada bagian ini, kita akan
 mengulangi Chapra Contoh 3.2 dengan menggunakan \textit{single precision}.
@@ -11,9 +14,7 @@ dan \txtinline{REAL(8)} untuk \textit{double precision}.
 Karena Python merupakan bahasa pemrograman dinamik yang \textit{type-loose} kita tidak dapat
 dengan mudah memberikan spesifikasi pada variabel yang kita gunakan. Meskipun demikian, 
 kita dapat menggunakan \textit{single precision} pada Python melalui
-\txtinline{np.float32}
-\footnote{\txtinline{np} digunakan sebagai
-singkatan dari modul \txtinline{numpy}},
+\txtinline{np.float32},
 meskipun program yang dihasilkan kurang elegan. Selain itu, kita juga harus mengecek
 apakah hasil akhir yang diberikan tetap berupa \textit{single precision} (tidak terjadi
 \textit{type promotion} ke \textit{double precision}).
