@@ -1,4 +1,4 @@
-subroutine bairstow(a,nn,es,rr,ss,maxit,re,im,ier)
+subroutine root_bairstow(a,nn,es,rr,ss,maxit,re,im,ier)
   implicit none
   integer :: nn
   real(8) :: a(0:nn)
@@ -125,8 +125,8 @@ subroutine quadroot(r,s,r1,i1,r2,i2)
   if(disc > 0) then
     r1 = (r + SQRT(disc))/2.d0
     r2 = (r - SQRT(disc))/2.d0
-    i1 = 0
-    i2 = 0
+    i1 = 0.d0
+    i2 = 0.d0
   else
     r1 = r/2.d0
     r2 = r1
@@ -136,6 +136,7 @@ subroutine quadroot(r,s,r1,i1,r2,i2)
   return
 end subroutine
 
+
 program test
   implicit none
   integer, parameter :: nn = 5
@@ -144,11 +145,14 @@ program test
   real(8) :: rr, ss
   integer, parameter :: maxit = 100
   integer :: ier
+  integer :: i
 
   allocate(a(0:nn))
-  allocate(re(0:nn))
-  allocate(im(0:nn))
+  allocate(re(nn))
+  allocate(im(nn))
 
+  ! coefficients are a0, a1, ..., aN
+  ! N is the degree of the polinomial
   a(:) = (/ 1.25d0, -3.875d0, 2.125d0, 2.75d0, -3.5d0, 1.d0 /)
   re(:) = 0.d0
   im(:) = 0.d0
@@ -156,9 +160,14 @@ program test
   rr = 0.d0
   ss = 0.d0
 
-  call bairstow(a,nn,es,rr,ss,maxit,re,im,ier)
+  call root_bairstow(a,nn,es,rr,ss,maxit,re,im,ier)
 
-  write(*,*) 're = ', re
-  write(*,*) 'im = ', im
+  do i = 1,nn
+    write(*,'(1x,I4,2F18.10)') i, re(i), im(i)
+  enddo
+
+  deallocate(a)
+  deallocate(re)
+  deallocate(im)
 
 end program
