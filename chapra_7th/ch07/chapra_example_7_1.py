@@ -1,46 +1,23 @@
 import numpy as np
 
-# Algorithm to divide a polynomial (defined by its coefficients a)
-# by a lower-order polynomial d.
+# divide polynomial with factor (x-t)
+def polynom_deflate(a_, t):
+    a = np.copy(a_)
+    #
+    n = len(a) - 1 # degree
+    r = a[n]
+    a[n] = 0.0
+    #
+    for i in range(n-1,-1,-1): # loop until n-1 to 0
+        s = a[i]
+        a[i] = r
+        print("i = ", i, end=" ")
+        print("a = ", a)
+        r = s + r*t
+    return a, r
 
-def poly_division(a, n, d, m, q, r):
-    
-    for j in range(n+1):
-        r[j] = a[j]
-        q[j] = 0.0
-    
-    for k in range(n-m,-1,-1): # step = -1, stop = 0 - 1
-        #print("k = ", k)
-        q[k+1] = r[m+k]/d[m]
-        for j in range(m+k-1,k-1,-1):
-            r[j] = r[j] - q[k+1]*d[j-k]
+a = np.array([-40.0, 2.0, 1.0])
 
-    for j in range(m,n+1):
-        r[j] = 0.0
-    #print("r = ", r)
-    #for i in range(0,n-m+1):
-    #    a[i] = q[i+1]
-    return
-
-a = np.array([-24.0, 2.0, 1.0]) # x^2 + 2*x - 24
-n = len(a) - 1
-
-d = np.array([-4.0, 1.0]) # x - 4
-m = len(d) - 1
-
-q = np.zeros(n+1)
-r = np.zeros(n+1)
-
-print("a = ", a)
-print("d = ", d)
+q, r = polynom_deflate(a, 4.0)
 print("q = ", q)
 print("r = ", r)
-
-poly_division(a, n, d, m, q, r)
-
-print("after: ")
-print("a = ", a)
-print("d = ", d)
-print("q = ", q)
-print("r = ", r)
-
