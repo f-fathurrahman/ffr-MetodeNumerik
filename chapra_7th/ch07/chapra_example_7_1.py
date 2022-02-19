@@ -1,6 +1,6 @@
 import numpy as np
 
-# Algorithm to divide a polynomial (defi ned by its coefficients a)
+# Algorithm to divide a polynomial (defined by its coefficients a)
 # by a lower-order polynomial d.
 
 def poly_division(a, n, d, m, q, r):
@@ -13,7 +13,7 @@ def poly_division(a, n, d, m, q, r):
         #print("k = ", k)
         q[k+1] = r[m+k]/d[m]
         for j in range(m+k-1,k-1,-1):
-            r[j] = r[j] - q[k+1]*a[j-k]
+            r[j] = r[j] - q[k+1]*d[j-k]
 
     for j in range(m,n+1):
         r[j] = 0.0
