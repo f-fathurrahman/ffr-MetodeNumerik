@@ -1,6 +1,8 @@
 import numpy as np
 
-def root_bairstow( a, rr=0.0, ss=0.0, NiterMax=100, es=1e-10, SMALL=1e-10 ):
+def root_bairstow( a_, rr=0.0, ss=0.0, NiterMax=100, es=1e-10, SMALL=1e-10 ):
+
+    a = np.copy(a_) # do not modify the input
 
     Ndeg = len(a) - 1
     print("Ndeg = ", Ndeg)
