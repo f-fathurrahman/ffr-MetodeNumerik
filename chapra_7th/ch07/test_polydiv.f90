@@ -21,7 +21,7 @@ subroutine polydiv(a, n, d, m, q, r)
     do j = m+k-1, k, -1
       write(*,*) 'j = ', j
       !r(j) = r(j) - q(k+1) * b(j-k)
-      r(j) = r(j) - q(k+1) * a(j-k)
+      r(j) = r(j) - q(k+1) * d(j-k)
     enddo
   enddo
   
