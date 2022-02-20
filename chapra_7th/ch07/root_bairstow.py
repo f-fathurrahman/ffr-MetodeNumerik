@@ -1,11 +1,10 @@
 import numpy as np
 
-def root_bairstow( a_, rr=0.0, ss=0.0, NiterMax=100, es=1e-10, SMALL=1e-10 ):
+def root_bairstow( a_, rr=1.0, ss=1.0, NiterMax=100, SMALL=1e-10 ):
 
     a = np.copy(a_) # do not modify the input
 
     Ndeg = len(a) - 1
-    print("Ndeg = ", Ndeg)
 
     re = np.zeros(Ndeg)
     im = np.zeros(Ndeg)
@@ -28,6 +27,7 @@ def root_bairstow( a_, rr=0.0, ss=0.0, NiterMax=100, es=1e-10, SMALL=1e-10 ):
         #print("n = ", n)
         #print("a = ", a)
         #print("b = ", b)
+        #print("c = ", c)
 
         if (n < 3) or (iteration >= NiterMax) :
             #print("Exit main loop")
@@ -39,7 +39,7 @@ def root_bairstow( a_, rr=0.0, ss=0.0, NiterMax=100, es=1e-10, SMALL=1e-10 ):
             iteration = iteration + 1
             #
             if iteration >= NiterMax:
-                print("Break inner loop")
+                #print("Break inner loop")
                 break
             #
             #print("inner loop iter = ", iteration)
@@ -54,27 +54,28 @@ def root_bairstow( a_, rr=0.0, ss=0.0, NiterMax=100, es=1e-10, SMALL=1e-10 ):
                 b[i] = a[i] + r*b[i+1] + s*b[i+2]
                 c[i] = b[i] + r*c[i+1] + s*c[i+2]
             #
+            #print("a = ", a)
+            #print("b = ", b)
+            #print("c = ", c)
             det = c[2]*c[2] - c[3]*c[1]
+            #print("det = ", det)
+            #exit()
             #
             if abs(det) >= SMALL:
                 dr = ( -b[1]*c[2] + b[0] * c[3] ) / det
                 ds = ( -b[0]*c[2] + b[1] * c[1] ) / det
                 r = r + dr
                 s = s + ds
-                #
-                if abs(r) >= SMALL:
-                    ea1 = abs(dr/r) * 100
-                #
-                if(abs(s) >= SMALL):
-                    ea2 = abs(ds/s) * 100
+                #print("r = %18.10f s = %18.10f" % (r, s))
+                #print("dr = %18.10f ds = %18.10f" % (dr, ds))
             else:
-                # what's this?
+                # Update with different initial r and s
                 print("INFO: Resetting iter")
                 r = r + 1.0
                 s = s + 1.0
                 iteration = 0
-            if (ea1 <= es) and (ea2 <= es):
-                print("INFO: Found roots")
+            if (abs(dr) <= SMALL) and (abs(ds) <= SMALL):
+                #print("INFO: Found roots")
                 break
     
         r1, i1, r2, i2  = quadroot(r, s)
@@ -87,7 +88,6 @@ def root_bairstow( a_, rr=0.0, ss=0.0, NiterMax=100, es=1e-10, SMALL=1e-10 ):
         for i in range(0,n+1):
             a[i] = b[i+2]
   
-
     if iteration < NiterMax:
         if n == 2:
             r = -a[1]/a[2]
@@ -101,9 +101,16 @@ def root_bairstow( a_, rr=0.0, ss=0.0, NiterMax=100, es=1e-10, SMALL=1e-10 ):
             re[n-1] = -a[0]/a[1]
             im[n-1] = 0.0
     else:
+        print("WARNING: there are some errors")
         ier = 1
 
-    return re, im
+    # Convert to complex-valued array
+    zroots = np.zeros(Ndeg, dtype=np.complex128)
+    # `numpy.complex128`: Complex number type composed
+    # of 2 64-bit-precision floating-point numbers.
+    for i in range(Ndeg):
+        zroots[i] = complex(re[i], im[i])
+    return zroots
 
 
 def quadroot(r, s):
