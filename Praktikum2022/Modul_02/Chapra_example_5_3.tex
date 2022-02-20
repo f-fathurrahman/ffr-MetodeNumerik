@@ -1,10 +1,11 @@
-\section{Chapra Contoh 5.3}
+\section{Metode \textit{bisection}}
 
+\textbf{Chapra Contoh 5.3}
 Kita ingin mencari nilai dari $c$ dari persamaan
 \begin{equation*}
 v(t) = \frac{gm}{c}(1 - e^{-(c/m)t})
 \end{equation*}
-sehingga untuk $v(t=10) = 40$, dengan $g=9.81$ dan $m=68.1$.
+sehingga untuk $v(t=10) = 40$, dengan $g=9.81$ dan $m=68.1$ (semua satuan dalam SI).
 Nilai $c$ dapat dicari sebagai akar dari persamaan:
 \begin{equation*}
 f(c) \equiv \frac{gm}{c}(1 - e^{-(c/m)t}) - v(t)
@@ -78,14 +79,3 @@ suatu kriteria tertentu yang Anda tentukan. Anda boleh menggunakan loop
 untuk menghindari pengulangan kode.
 \end{soal}
 
-\section{Chapra Contoh 5.5}
-Dengan menggunakan metode \textit{regula falsi} aproksimasi akar diberikan oleh:
-\begin{equation}
-x_{r} = x_{u} - \frac{f(x_u)(x_{l} - x_{u})}{f(x_l) - f(x_u)}
-\end{equation}
-
-\begin{soal}
-Lakukan modifikasi pada kode yang diberikan di soal sebelumnya sehingga dapat
-memberikan ilustrasi penggunaan metode \textit{regula falsi}. Bandingkan hasil yang
-Anda dapatkan dengan metode \textit{bisection}.
-\end{soal}

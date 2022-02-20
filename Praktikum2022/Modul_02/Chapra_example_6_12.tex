@@ -1,4 +1,6 @@
-\section{Chapra Contoh 6.12}
+\section{Sistem persamaan nonlinear}
+
+\textbf{Chapra Contoh 6.12}
 Tinjau suatu sistem persamaan nonlinear berikut:
 \begin{align*}
 u(x,y) = x^{2} + xy - 10 = 0 \\
@@ -140,7 +142,8 @@ for i in range(1,6): # change this if needed
     fX = f(X)
     nfX = np.linalg.norm(fX) # calculate norm of f(X)
     print("X = ", X, "nfX = ", nfX)
-    if nfX <= 1e-10: # stop the iteration if norm of f(X) become smaller than certain value
+    # stop the iteration if norm of f(X) become smaller than certain value
+    if nfX <= 1e-10:
         print("Converged")
         break
     J = ... # calculate Jacobian matrix here
