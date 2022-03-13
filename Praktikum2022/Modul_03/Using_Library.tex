@@ -1,18 +1,19 @@
 \section{Menggunakan Pustaka Python}
 
-Pustaka Numpy menyediakan banyak subrutin untuk melakukan operasi matriks-vektor.
-
+Pustaka Numpy menyediakan banyak subrutin untuk melakukan operasi matriks-vektor dan
+aljabar linear, di antaranya adalah:
 \begin{itemize}
-\item np.linalg.solve: menyelesaikan sistem persamaan linear
-\item np.linalg.inv: inverse matriks
-\item dekomposisi LU
-\item dekomposisi Cholesky
-\item scipy.sparse.linalg
-\item np.linalg.eig
+\item \pyinline{np.matmul} atau operator \pyinline{@} untuk perkalian matriks
+\item \pyinline{np.linalg.solve}: menyelesaikan sistem persamaan linear
+\item \pyinline{np.linalg.inv}: inverse matriks
+\item \pyinline{scipy.linalg.lu}: dekomposisi LU
+\item \pyinline{scipy.linalg.cholesky}: dekomposisi Cholesky
+\item \pyinline{np.linalg.eig}: persamaan eigen
+\item Fungsi-fungsi pada \pyinline{scipy.sparse.linalg}: aljabar linear pada matriks dan
+vektor sparse.
 \end{itemize}
 
-BLAS dan LAPACK
-
-ATLAS
-
-Intel MKL
+% Pustaka-pustaka lainnya:
+% BLAS dan LAPACK
+% ATLAS
+% Intel MKL
