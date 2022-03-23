@@ -7,79 +7,16 @@
 {\small TF2202 Komputasi Rekayasa}\\
 Interpolasi dan Pencocokan Kurva
 }
-\author{Tim Praktikum Komputasi Rekayasa 2021\\
+\author{Tim Praktikum Komputasi Rekayasa 2022\\
 Teknik Fisika\\
 Institut Teknologi Bandung}
 \date{}
 \maketitle
 
-\section{Statistik dasar}
-Rata-rata aritmatik (\textit{mean})
-\begin{equation}
-\bar{y} = \dfrac{\sum y_i}{n}
-\end{equation}
-$y_i$: titik data dan $n$: jumlah data
 
-Deviasi standard:
-\begin{equation}
-s_{y} = \sqrt{\frac{S_t}{n-1}}
-\end{equation}
-dengan $S_t$ adalah jumlah kuadrat dari residual antara titik data dan rata-rata:
-\begin{equation}
-S_t = \sum \left( y_i - \bar{y} \right)^2
-\end{equation}
-Variansi:
-\begin{equation}
-s^{2}_{y} = \frac{S_t}{n - 1} 
-\end{equation}
-Persamaan alternatif:
-\begin{equation}
-s^{2}_{y} = \frac{\sum y_i - \left( \sum y_i \right)^2 / n}{n - 1}
-\end{equation}
-
-
-\section{Polinomial Interpolasi Newton}
-
-\begin{soal}
-Implementasikan fungsi atau subroutin dalam Python untuk implementasi algoritma
-pada Gambar 18.7 untuk implementasi polinomial Newton.
-Uji hasil yang Anda dapatkan dengan menggunakan data-data yang diberikan pada contoh
-18.2 (polinomial kuadrat) dan 18.3 (polinomial kubik) pada Chapra.
-Lengkapi jawaban Anda dengan membuat plot seperti pada Gambar 18.4 dan 18.6 pada Chapra.
-\end{soal}
-
-\begin{soal}
-Gunakan data pada soal Chapra 18.5 untuk mengevaluasi nilai $f(x) = \mathrm{ln}(x)$
-pada $x = 2$ dengan menggunakan polinomial kubik. Coba variasikan titik-titik
-yang digunakan (\textit{base points}) dan perhatikan nilai estimasi
-kesalahan yang diberikan oleh
-fungsi/subrutin yang sudah Anda buat pada soal sebelumnya.
-\end{soal}
-
-\section{Polinomial Interpolasi Lagrange}
-\begin{soal}
-Implementasikan fungsi atau subroutin dalam Python untuk implementasi algoritma
-pada Gambar 18.11 untuk implementasi polinomial Lagrange.
-Uji hasil yang Anda dapatkan dengan menggunakan data-data yang diberikan pada contoh
-18.2 (polinomial kuadrat) dan 18.3 (polinomial kubik) pada Chapra.
-\end{soal}
-
-\begin{soal}
-Kerjakan Contoh 18.7 pada Chapra dengan menggunakan fungsi/subrutin interpolasi Lagrange
-yang sudah Anda buat pada soal sebelumnya sehingga Anda dapat mereproduksi Gambar 18.12
-pada Chapra. Pada Contoh 18.17 Anda diminta untuk mengestimasi kecepatan penerjun
-pada $t=10$ s, yang berada di antara dua titik data terakhir.
-Untuk polinom orde-1, gunakan dua titik data terakhir, untuk orde-2 gunakan tiga titik
-data terakhir, dan seterusnya sampai orde-4.
-\end{soal}
-
-\section{Interpolasi Spline Kubik}
-\begin{soal}
-Implementasikan fungsi atau subroutin dalam Python untuk implementasi algoritma
-pada Gambar 18.18 untuk implementasi spline kubik (natural).
-Uji hasil yang Anda dapatkan dengan menggunakan data-data yang diberikan pada contoh
-18.10.
-\end{soal}
+\input{NewtonInterp}
+\input{LagrangeInterp}
+\input{SplineKubik}
 
 
 \section{Regresi Linear}
@@ -293,57 +230,6 @@ pada interval $[-1,1]$.
 Bandingkan hasilnya jika Anda menggunakan titik-titik $x$ yang memiliki jarak
 seragam.
 \end{soal}
-
-
-\section{Kode Fortran}
-
-Pada bagian ini akan diberikan kode Fortran dari beberapa algoritma yang
-ada pada buku Chapra mengenai interpolasi.
-
-Beberapa catatan mengenai Fortran:
-\begin{itemize}
-\item Kode Fortran disusun berdasarkan blok dengan kata kunci dan nama tertentu.
-Yang biasa kita gunakan adalah kata kunci \txtinline{PROGRAM} dan \txtinline{SUBROUTINE}.
-Akhir tiap blok ditandai dengan kata kunci \txtinline{END}.
-\item Fortran dapat menebak tipe data yang kita gunakan berdasarkan nama variabel
-yang digunakan. Kita memaksa agar hal ini tidak terjadi dengan menggunakan pernyataan
-\txtinline{IMPLICIT NONE}, artinya seluruh variabel yang digunakan harus dideklarasikan
-terlebih dahulu beserta tipenya. Beberapa korespondensi tipe variabel:
-  \begin{itemize}
-  \item \txtinline{REAL(8)} dengan \txtinline{float64} pada Python
-  \item \txtinline{INTEGER} dengan \txtinline{int}
-  \item \txtinline{LOGICAL} dengan \txtinline{bool}
-  \end{itemize}
-\item Array pada Fortran dapat dimulai dari indeks bilangan bulat apa saja, namun secara default
-dimulai dari 1. Contoh:
-  \begin{itemize}
-  \item \txtinline{a(N)}: array \txtinline{a} memiliki indeks \txtinline{1}
-  sampai \txtinline{N}. Jumlah elemen array adalah \txtinline{N}.
-  \item \txtinline{a(0:N)}: array \txtinline{a} memiliki indeks \txtinline{0}
-  sampai \txtinline{N}. Jumlah elemen array adalah \txtinline{N+1}.
-  \end{itemize}
-\end{itemize}
-
-Anda dapat menggunakan laman berikut jika pada komputer Anda tidak tersedia
-\textit{compiler} untuk Fortran:
-{\footnotesize \url{https://www.onlinegdb.com/online_fortran_compiler}}
-
-\subsection{Interpolasi Newton}
-\fortranfile{../../chapra_7th/ch18/newton_interp.f90}
-
-\subsection{Contoh 18.2}
-\fortranfile{../../chapra_7th/ch18/example_18_2.f90}
-
-\subsection{Contoh 18.3}
-\fortranfile{../../chapra_7th/ch18/example_18_3.f90}
-
-\subsection{Interpolasi Lagrange}
-\fortranfile{../../chapra_7th/ch18/lagrange_interp.f90}
-
-
-\subsection{Interpolasi Spline Kubik Natural}
-\fortranfile{../../chapra_7th/ch18/natural_cubic_spline.f90}
-
 
 \end{document}
 

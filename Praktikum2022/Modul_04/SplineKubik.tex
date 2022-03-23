@@ -1,0 +1,160 @@
+\section{Interpolasi Spline Kubik}
+
+Pada spline kubik, polinomial orde-3 diberikan untuk tiap interval di antara dua titik simpul. Polinomial orde-3 ini dapat dituliskan sebagai:
+$$
+f_i(x) = a_i x^3 + b_i x^2 + c_i x + d_i
+$$
+Untuk, $n+1$ titik data, dengan $i=0,1,2,\ldots,n$, terdapat $n$ interval sehingga ada $4n$ konstanta yang harus dievaluasi. Terdapat $4n$ kondisi yang diperlukan untuk mendapatkan konstanta-konstanta tersebut. Kondisi ini dapat dituliskan sebagai berikut.
+\begin{itemize}
+\item Nilai fungsi harus sama pada titik simpul dalam (interior): ($2n-2$ kondisi)
+\item Fungsi pertama dan terakhir harus melalui titik-titik ujung: ($2$ kondisi)
+\item Turunan pertama pada titik simpul dalam harus sama: ($n-1$ kondisi)
+\item Turunan kedua pada titik simpul dalam harus sama: ($n-1$ kondisi)
+\item Turunan kedua pada titik-titik ujung bernilai 0: ($2$ kondisi)
+\end{itemize}
+Kondisi 5 mensyaratkan bahwa fungsi menjadi garis lurus pada titik-titik ujung. Spesifikasi ini mendefinisikan spline kubik natural atau alami.
+
+Karena tiap pasang titik simpul pada interval dihubungkan oleh suatu polinomial kubik,
+maka turunan kedua dari fungsi tersebut adalah fungsi linear (garis lurus).
+Turunan kedua dapat direpresentasikan dengan suatu polinomial Lagrange orde-1:
+$$
+f''_{i}(x) = f''_i(x_{i-1})\frac{x - x_{i}}{x_{i-1} - x_{i}} +
+f''_i(x_{i})\frac{x - x_{i-1}}{x_{i} - x_{i-1}}
+$$
+di mana $f''_{i}(x)$ adalah nilai dari turunan kedua pada sembarang titik $x$ pada interval ke-$i$.
+
+...
+
+
+Persamaan polinomial kubik untuk tiap interval:
+\begin{align*}
+f_{i}(x) & =
+\frac{f''_{i}(x_{i-1})}{6(x_{i} - x_{i-1})}(x_{i} - x)^3 +
+\frac{f''_{i}(x_{i})}{6(x_{i} - x_{i-1})}(x - x_{i-1})^3 \\
+& + \left[
+\frac{f(x_{i-1})}{x_{i} - x_{i-1}} - \frac{f''(x_{i-1}) (x_i - x_{i-1})}{6}
+\right] (x_i - x) \\
+& + \left[
+\frac{f(x_{i})}{x_{i} - x_{i-1}} - \frac{f''(x_{i}) (x_i - x_{i-1})}{6}
+\right] (x - x_{i-1})
+\end{align*}
+Persamaan ini hanya memiliki dua variabel yang tidak diketahui, yaitu turunan kedua
+pada tiap ujung-ujung interval. Variabel-variabel tersebut dapat dihitung dengan menyelesaikan
+persamaan berikut:
+\begin{multline*}
+(x_i - x_{i-1}) f''(x_{i-1}) + 2(x_{i+1} - x_{i-1}) f''(x_{i}) + (x_{i+1} - x_{i})f''(x_{i+1}) = \\
+\frac{6}{x_{i+1} - x_{i}} \left[ f(x_{i+1}) - f(x_i) \right] +
+\frac{6}{x_{i} - x_{i+1}} \left[ f(x_{i+1}) - f(x_i) \right]
+\end{multline*}
+
+\begin{soal}
+Implementasikan fungsi atau subroutin dalam Python untuk implementasi algoritma
+pada Gambar 18.18 untuk implementasi spline kubik (natural).
+Uji hasil yang Anda dapatkan dengan menggunakan data-data yang diberikan pada contoh
+18.10.
+\end{soal}
+
+\begin{pythoncode}
+import numpy as np
+
+def interp_nat_cubic_spline( x, y, d2x, xu ):    
+    assert len(x) == len(y)
+    N = len(x) - 1
+    success = False
+    i = 1
+    
+    while True:
+        is_in_interval = (x[i-1] <= xu <= x[i])    
+        if is_in_interval:
+            c1 = d2x[i-1]/6.0/( x[i] - x[i-1] )
+            c2 = ....
+            c3 = ....
+            c4 = ....
+            #
+            t1 = c1*( x[i] - xu )**3
+            t2 = ....
+            t3 = ....
+            t4 = ....
+            yu = t1 + t2 + t3 + t4
+            #
+            # Turunan pertama
+            #
+            t1 = -3.0*c1*( x[i] - xu )**2
+            t2 = 3.0*c2*( xu - x[i-1] )**2
+            t3 = -c3
+            t4 = c4
+            dy = t1 + t2 + t3 + t4
+            #
+            # Turunan kedua
+            #
+            t1 = 6.0*c1*( x[i] - xu )
+            t2 = 6.0*c2*( xu - x[i-1] )
+            d2y = t1 + t2
+            #
+            success = True
+            #
+        else:
+            #
+            i = i + 1
+        
+        if i == (N + 1) or success:
+            break # break out of the loop
+    
+    if not success:
+        raise RuntimeError("xu is outside range of spline")
+        
+    return yu, dy, d2y
+
+def decomp_trid(e, f, g):
+    N = len(e)
+    assert N == len(f)
+    assert N == len(g)
+    #
+    for k in range(1,N):
+        e[k] = e[k]/f[k-1]
+        f[k] = f[k] - e[k]*g[k-1]
+    return
+    
+# should be called after calling decomp_trid
+def subs_trid(e, f, g, r):
+    N = len(e)
+    assert N == len(f)
+    assert N == len(g)
+    # Forward subs
+    for k in range(1,N):
+        r[k] = r[k] - e[k]*r[k-1]
+    # back subs
+    x = np.zeros(N)
+    x[N-1] = r[N-1]/f[N-1]
+    for k in range(N-2,-1,-1):
+        x[k] = ( r[k] - g[k]*x[k+1] ) / f[k]
+    return x    
+    
+def gen_trid_matrix(x, y):
+    assert len(x) == len(y)
+    N = len(x) - 1
+    #
+    e = np.zeros(N-1)
+    f = np.zeros(N-1)
+    g = np.zeros(N-1)
+    r = np.zeros(N-1)
+    #
+    f[0] = 2.0*( x[2] - x[0] )
+    g[0] = x[2] - x[1]
+    r[0] = 6.0/( x[2] - x[1] ) * ( y[2] - y[1] )
+    r[0] = r[0] + 6.0/( x[1] - x[0] ) * ( y[0] - y[1] )
+    #
+    for i in range(2,N-1):
+        e[i-1] = x[i] - x[i-1]
+        f[i-1] = 2.0*( x[i+1] - x[i-1] )
+        g[i-1] = x[i+1] - x[i]
+        r[i-1] = 6.0/( x[i+1] - x[i] ) * ( y[i+1] - y[i] )
+        r[i-1] = r[i-1] + 6.0/( x[i] - x[i-1] ) * ( y[i-1] - y[i] )
+    #    
+    e[N-2] = x[N-1] - x[N-2]
+    f[N-2] = 2.0*( x[N] - x[N-2] )
+    r[N-2] = 6.0/( x[N] - x[N-1] ) * ( y[N] - y[N-1] )
+    r[N-2] = r[N-2] + 6.0/( x[N-1] - x[N-2] ) * ( y[N-2] - y[N-1] )
+    
+    return e, f, g, r    
+\end{pythoncode}
