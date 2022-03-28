@@ -2,7 +2,7 @@ import numpy as np
 
 # search for maximum value
 
-def golden_section_optim(f, xlow, xhigh, NiterMax=100, TOL=1e-10):
+def optim_golden_ratio(f, xlow, xhigh, NiterMax=100, TOL=1e-10, sign=1):
 
     SMALL = np.finfo(np.float64).resolution
 
@@ -13,8 +13,8 @@ def golden_section_optim(f, xlow, xhigh, NiterMax=100, TOL=1e-10):
     d = ϕ*(xu - xl)
     x1 = xl + d
     x2 = xu - d
-    f1 = f(x1)
-    f2 = f(x2)
+    f1 = sign*f(x1)
+    f2 = sign*f(x2)
     
     fx_old = np.nan # use this for evaluating convergence?
 
@@ -33,13 +33,13 @@ def golden_section_optim(f, xlow, xhigh, NiterMax=100, TOL=1e-10):
             x2 = x1
             x1 = xl + d
             f2 = f1
-            f1 = f(x1)
+            f1 = sign*f(x1)
         else:
             xu = x1
             x1 = x2
             x2 = xu - d
             f1 = f2
-            f2 = f(x2)
+            f2 = sign*f(x2)
         # Update iiter?
         if f1 > f2:
             xopt = x1
