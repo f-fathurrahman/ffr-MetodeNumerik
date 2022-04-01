@@ -5,18 +5,14 @@ def interp_nat_cubic_spline( x, y, d2x, xu ):
     assert len(x) == len(y)
     N = len(x) - 1
 
-    flag = False
+    success = False
     i = 1
 
     while True:
-        #    
-        #is_in_interval = (xu >= x[i-1]) and (xu <= x(i))
+
         is_in_interval = (x[i-1] <= xu <= x[i])
         
         if is_in_interval:
-            #
-            #write(*,*) 'interval = ', i
-            #
             c1 = d2x[i-1]/6.0/( x[i] - x[i-1] )
             c2 = d2x[i]/6.0/( x[i] - x[i-1] )
             c3 = y[i-1]/(x[i] - x[i-1]) - d2x[i-1]*(x[i] - x[i-1])/6.0
@@ -38,16 +34,16 @@ def interp_nat_cubic_spline( x, y, d2x, xu ):
             t2 = 6.0*c2*( xu - x[i-1] )
             d2y = t1 + t2
             #
-            flag = True
+            success = True
             #
         else:
             #
             i = i + 1
     
-        if i == (N + 1) or flag:
+        if i == (N + 1) or success:
             break # break out of the loop
 
-    if not flag:
+    if not success:
         raise RuntimeError("xu is outside range of spline")
     
     return yu, dy, d2y
