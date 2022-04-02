@@ -1,0 +1,118 @@
+\input{../PREAMBLE_beamer}
+
+\begin{document}
+
+\title{Introduction to Finite Element Method}
+\subtitle{TF40XX}
+\author{Fadjar Fathurrahman}
+\institute{
+Program Studi Teknik Fisika\\
+Institut Teknologi Bandung
+}
+\date{}
+
+
+\frame{\titlepage}
+
+
+\begin{frame} % ---------------------------------------------------------------
+\frametitle{1d Diffusion}
+
+Governing PDE
+\begin{equation*}
+\frac{\partial T}{\partial t} = \kappa \frac{\partial^2 T}{\partial x^2} + H
+\end{equation*}
+
+Initial conditions:
+\begin{equation*}
+T(x,t=0) = 0 \,\, \forall x \in [0,L_{x}]
+\end{equation*}
+
+Boundary conditions:
+\begin{equation*}
+T(x=0,t) = 0 \,\,\text{and} T(x=L_{x},t) = 0
+\end{equation*}
+
+\end{frame} % -----------------------------------------------------------------
+
+
+
+\begin{frame} % ---------------------------------------------------------------
+\frametitle{Discretized equations}
+
+\begin{equation*}
+\mathbf{L} \mathbf{T}^{n+1} = \mathbf{R} \mathbf{T}^{n} + \mathbf{F}
+\end{equation*}
+
+\begin{equation*}
+\mathbf{L} = \frac{\mathbf{M}}{\Delta t} + \mathbf{K}
+\end{equation*}
+
+\end{frame}
+
+
+\begin{frame} % ----------------------------------------
+\title{Mass matrix}
+
+\begin{equation*}
+\mathbf{M} = \begin{bmatrix}
+\dfrac{\Delta x}{3} & \dfrac{\Delta x}{6} \\
+\dfrac{\Delta x}{6} & \dfrac{\Delta x}{3}
+\end{bmatrix}
+\end{equation*}
+
+\begin{equation*}
+\mathbf{R} = \frac{\mathbf{M}}{\Delta t}
+\end{equation*}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Stiffness matrix}
+\begin{equation*}
+\mathbf{K} = \kappa\begin{bmatrix}
+\dfrac{1}{\Delta x} & -\dfrac{1}{\Delta x} \\[0.4cm]
+-\dfrac{1}{\Delta x} & \dfrac{1}{\Delta x}
+\end{bmatrix}
+\end{equation*}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Load vector}
+
+\begin{equation*}
+\mathbf{F} = H\begin{bmatrix}
+\dfrac{\Delta x}{2} \\
+\dfrac{\Delta x}{2}
+\end{bmatrix}
+\end{equation*}
+
+\end{frame}
+
+
+\begin{frame}
+$$
+\mathbf{T} = \begin{bmatrix}
+T_1 \\ T_2
+\end{bmatrix}
+$$
+\end{frame}
+
+\begin{frame} % ---------------------------------------------------------------
+Sistem global (menggunakan matriks dan vektor global):
+$$
+\tilde{\mathbf{L}} \tilde{\mathbf{T}}^{n+1} = \tilde{\mathbf{R}}\ 
+\tilde{\mathbf{T}}^{n} + \tilde{\mathbf{F}} = \tilde{\mathbf{b}}
+$$
+\end{frame} % -----------------------------------------------------------------
+
+
+%\begin{frame} % ---------------------------------------------------------------
+%\frametitle{Title of the slide}
+%\end{frame} % -----------------------------------------------------------------
+
+\end{document}
+
