@@ -2,9 +2,7 @@
 
 using Printf
 using SparseArrays
-import PyPlot
-
-const plt = PyPlot
+import PyPlot as plt
 
 function main()
     # -------------------
