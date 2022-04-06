@@ -3,9 +3,7 @@
 using Printf
 using LinearAlgebra
 using SparseArrays
-import PyPlot
-
-const plt = PyPlot
+import PyPlot as plt
 
 function calc_analytic_solution!(κ, A, K, L, t, xgrid, Nterms, Texact)
     Npoints = size(xgrid,1)
