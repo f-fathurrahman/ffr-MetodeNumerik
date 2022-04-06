@@ -1,66 +1,48 @@
-\input{../PREAMBLE_beamer}
+\input{../PREAMBLE_tufte}
 
 \begin{document}
 
 \title{Pengenalan Metode Elemen Hingga: Difusi Transien 1d}
-\subtitle{TF4062}
 \author{Fadjar Fathurrahman}
-\institute{
-Program Studi Teknik Fisika\\
-Institut Teknologi Bandung
-}
 \date{}
+\maketitle
 
+Difusi Transien 1d
 
-\frame{\titlepage}
-
-
-\begin{frame} % ---------------------------------------------------------------
-\frametitle{Difusi Transien 1d}
-
-{\centering
-\includegraphics[width=0.7\textwidth]{images_priv/Simpson_Fig_2_1.pdf}
-\par}
-
+Persamaan yang ingin diselesasikan adalah:
 \begin{equation*}
 \frac{\partial T}{\partial t} = \kappa \frac{\partial^2 T}{\partial x^2} + H
 \end{equation*}
 
+\begin{figure}[h]
+{\centering
+\includegraphics[width=\textwidth]{images_priv/Simpson_Fig_2_1.pdf}
+\par}
+\end{figure}
+
+Syarat awal:
 \begin{equation*}
 T(x,t=0) = 0 \,\, \forall x \in [0,L_{x}]
 \end{equation*}
 
+Syarat batas:
 \begin{equation*}
 T(x=0,t) = 0 \,\, \text{dan} \,\, T(x=L_{x},t) = 0
 \end{equation*}
 
-\end{frame} % -----------------------------------------------------------------
 
-
-\begin{frame}
-\frametitle{Ekspansi solusi dengan fungsi basis (fungsi bentuk)}
-
+Ekspansi solusi dengan fungsi basis (fungsi bentuk, \textit{shape functions}):
 \begin{equation*}
 T \approx \sum_{i=1}^{n} N_{i}(x) T_{i}
 \end{equation*}
 
-\end{frame}
-
-
-\begin{frame}
-\frametitle{Elemen linear}
-
+Elemen linear
 \begin{align*}
 N_{1}(x) = 1 - \frac{x}{L} \\
 N_{2}(x) = \frac{x}{L}
 \end{align*}
 
-
-\end{frame}
-
-\begin{frame} % ---------------------------------------------------------------
-\frametitle{Discretized equations}
-
+Discretized equations
 \begin{equation*}
 \mathbf{L} \mathbf{T}^{n+1} = \mathbf{R} \mathbf{T}^{n} + \mathbf{F}
 \end{equation*}
@@ -69,12 +51,7 @@ N_{2}(x) = \frac{x}{L}
 \mathbf{L} = \frac{\mathbf{M}}{\Delta t} + \mathbf{K}
 \end{equation*}
 
-\end{frame}
-
-
-\begin{frame} % ----------------------------------------
-\title{Mass matrix}
-
+Mass matrix
 \begin{equation*}
 \mathbf{M} = \begin{bmatrix}
 \dfrac{\Delta x}{3} & \dfrac{\Delta x}{6} \\
@@ -86,11 +63,8 @@ N_{2}(x) = \frac{x}{L}
 \mathbf{R} = \frac{\mathbf{M}}{\Delta t}
 \end{equation*}
 
-\end{frame}
 
-
-\begin{frame}
-\frametitle{Stiffness matrix}
+Stiffness matrix
 \begin{equation*}
 \mathbf{K} = \kappa\begin{bmatrix}
 \dfrac{1}{\Delta x} & -\dfrac{1}{\Delta x} \\[0.4cm]
@@ -98,12 +72,9 @@ N_{2}(x) = \frac{x}{L}
 \end{bmatrix}
 \end{equation*}
 
-\end{frame}
 
 
-\begin{frame}
-\frametitle{Load vector}
-
+Load vector
 \begin{equation*}
 \mathbf{F} = H\begin{bmatrix}
 \dfrac{\Delta x}{2} \\
@@ -111,29 +82,19 @@ N_{2}(x) = \frac{x}{L}
 \end{bmatrix}
 \end{equation*}
 
-\end{frame}
-
-
-\begin{frame}
 $$
 \mathbf{T} = \begin{bmatrix}
 T_1 \\ T_2
 \end{bmatrix}
 $$
-\end{frame}
 
-\begin{frame} % ---------------------------------------------------------------
 Sistem global (menggunakan matriks dan vektor global):
 $$
 \tilde{\mathbf{L}} \tilde{\mathbf{T}}^{n+1} = \tilde{\mathbf{R}}\ 
 \tilde{\mathbf{T}}^{n} + \tilde{\mathbf{F}} = \tilde{\mathbf{b}}
 $$
-\end{frame} % -----------------------------------------------------------------
 
-
-%\begin{frame} % ---------------------------------------------------------------
-%\frametitle{Title of the slide}
-%\end{frame} % -----------------------------------------------------------------
+%\bibliographystyle{unsrt}
+%\bibliography{BIBLIO}
 
 \end{document}
-
