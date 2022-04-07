@@ -14,7 +14,7 @@ Point(1) = {0.0, 0.0, 0.0, lc};
 // We can then define some additional points. All points should have different
 // tags:
 Point(2) = {0.1, 0.0, 0.0, lc};
-Point(3) = {0.5, 0.3, 0.0, lc};
+Point(3) = {0.3, 0.3, 0.0, lc};
 Point(4) = {0.0, 0.3, 0.0, lc};
 
 // Curves are Gmsh’s second type of elementary entities, and, amongst curves,
