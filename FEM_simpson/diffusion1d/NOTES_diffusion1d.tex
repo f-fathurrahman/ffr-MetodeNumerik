@@ -1,4 +1,5 @@
-\input{../PREAMBLE_tufte}
+%\input{../PREAMBLE_tufte}
+\input{../PREAMBLE_article}
 
 \begin{document}
 
@@ -33,20 +34,139 @@ T(x=0,t) = 0 \,\, \text{dan} \,\, T(x=L_{x},t) = 0
 
 Ekspansi solusi dengan fungsi basis (fungsi bentuk, \textit{shape functions}):
 \begin{equation*}
-T \approx \sum_{i=1}^{n} N_{i}(x) T_{i}
+T(x) \approx \sum_{i=1}^{n} N_{i}(x) T_{i}
 \end{equation*}
+atau dalam notasi matriks-vektor:
+\begin{equation*}
+T(x) \approx \begin{bmatrix}
+N_{1}(x) & N_{2}(x)
+\end{bmatrix} \begin{bmatrix}
+T_{1} \\ T_{2}
+\end{bmatrix}
+\end{equation*}
+
 
 Elemen linear
 \begin{align*}
-N_{1}(x) = 1 - \frac{x}{L} \\
-N_{2}(x) = \frac{x}{L}
+N_{1}(x) & = 1 - \frac{x}{L} \\
+N_{2}(x) & = \frac{x}{L}
 \end{align*}
 
-Discretized equations
+Residual:
+\begin{equation*}
+R(x) \equiv
+\frac{\partial}{\partial t} \begin{bmatrix}
+N_{1}(x) & N_{2}(x) \end{bmatrix} \begin{bmatrix} T_{1} \\ T_{2} \end{bmatrix} -
+\kappa \frac{\partial^2}{\partial x^2} \begin{bmatrix}
+N_{1}(x) & N_{2}(x) \end{bmatrix} \begin{bmatrix} T_{1} \\ T_{2} \end{bmatrix} - H
+\end{equation*}
+
+Integral residual terbobot ($i=1,2$):
+\begin{equation}
+\int_{0}^{L} R(x) w_{i}(x) \, \mathrm{d}x
+\end{equation}
+
+\begin{align*}
+\int_{0}^{L} \begin{bmatrix} N_{1}(x) \\ N_{2}(x) \end{bmatrix}
+\frac{\partial}{\partial t}
+\begin{bmatrix} N_{1}(x) & N_{2}(x) \end{bmatrix}
+\begin{bmatrix} T_{1} \\ T_{2} \end{bmatrix}\,\mathrm{d}x \\
+- \int_{0}^{L} \begin{bmatrix} N_{1}(x) \\ N_{2}(x) \end{bmatrix}
+\kappa \frac{\partial^2}{\partial x^2}
+\begin{bmatrix} N_{1}(x) & N_{2}(x) \end{bmatrix}
+\begin{bmatrix} T_{1} \\ T_{2} \end{bmatrix}\,\mathrm{d}x \\
+- \int_{0}^{L} \begin{bmatrix} N_{1}(x) \\ N_{2}(x) \end{bmatrix} H \, \mathrm{d}x
+\end{align*}
+
+Ekspansi, persamaan pertama
+\begin{align*}
+\int_{0}^{L} N_{1}(x) N_{2}(x) \frac{\partial T_1}{\partial t}\, \mathrm{d}x
++ \int_{0}^{L} N_{1}(x) N_{2}(x) \frac{\partial T_2}{\partial t}\, \mathrm{d}x \\
+- \int_{0}^{L} \kappa N_{1}(x) \frac{\partial^2 N_{1}(x)}{\partial x^2} T_{1}
+- \int_{0}^{L} \kappa N_{1}(x) \frac{\partial^2 N_{2}(x)}{\partial x^2} T_{2} \\
+- \int_{0}^{L} N_{1}(x) H \, \mathrm{d}x = 0
+\end{align*}
+
+Ekspansi, persamaan kedua:
+\begin{align*}
+\int_{0}^{L} N_{2}(x) N_{1}(x) \frac{\partial T_2}{\partial t}\, \mathrm{d}x
++ \int_{0}^{L} N_{2}(x) N_{2}(x) \frac{\partial T_2}{\partial t}\, \mathrm{d}x \\
+- \int_{0}^{L} \kappa N_{2}(x) \frac{\partial^2 N_{1}(x)}{\partial x^2} T_{1}
+- \int_{0}^{L} \kappa N_{2}(x) \frac{\partial^2 N_{2}(x)}{\partial x^2} T_{2} \\
+- \int_{0}^{L} N_{2}(x) H \, \mathrm{d}x = 0
+\end{align*}
+
+Menggunakan integrasi parsial (\textit{integration by parts}):
+\begin{equation*}
+\int_{0}^{L} N_{i}(x) \frac{\partial^2 N_{j}(x)}{\partial x^2} \, \mathrm{d}x =
+\left[ \frac{\partial N_{j}(x)}{\partial x} N_{i}(x) \right]_{0}^{L} -
+\int_{0}^{L} \frac{\partial N_{i}(x)}{\partial x}
+\frac{\partial N_{j}(x)}{\partial x} \, \mathrm{d}x
+\end{equation*}
+
+Dalam bentuk matriks-vektor:
+\begin{align*}
+\int_{0}^{L}
+\begin{bmatrix}
+N_{1}(x) N_{1}(x) & N_{1}(x) N_{2}(x) \\
+N_{2}(x) N_{1}(x) & N_{2}(x) N_{2}(x) \\
+\end{bmatrix}\, \mathrm{d}x
+\frac{\partial}{\partial t}
+\begin{bmatrix} T_{1} \\ T_{2} \end{bmatrix} \\
+\int_{0}^{L} \kappa
+\begin{bmatrix}
+\frac{\partial N_{1}(x)}{\partial x} \frac{\partial N_{1}(x)}{\partial x} &
+\frac{\partial N_{1}(x)}{\partial x} \frac{\partial N_{2}(x)}{\partial x} \\
+\frac{\partial N_{2}(x)}{\partial x} \frac{\partial N_{1}(x)}{\partial x} &
+\frac{\partial N_{2}(x)}{\partial x} \frac{\partial N_{2}(x)}{\partial x} \\
+\end{bmatrix} \, \mathrm{d}x
+\begin{bmatrix} T_{1} \\ T_{2} \end{bmatrix} \\
+- \int_{0}^{L} H \begin{bmatrix} N_{1}(x) \\ N_{2}(x) \end{bmatrix}\, \mathrm{d}x = 
+\begin{bmatrix} 0 \\ 0 \end{bmatrix}
+\end{align*}
+
+atau dalam notasi matriks:
+\begin{equation}
+[ \mathbf{M} ] \frac{\partial}{\partial t} \{ \mathbf{T} \} +
+[ \mathbf{K} ] \{ \mathbf{T} \} = \{ \mathbf{F} \}
+\end{equation}
+
+Matriks massa (mass matrix)
+\begin{equation*}
+\mathbf{M} = \int_{0}^{L}
+\begin{bmatrix}
+N_{1}(x) N_{1}(x) & N_{1}(x) N_{2}(x) \\[0.2cm]
+N_{2}(x) N_{1}(x) & N_{2}(x) N_{2}(x) \\
+\end{bmatrix}\, \mathrm{d}x
+\end{equation*}
+
+Matriks kekakuan (stiffness matrix)
+\begin{equation*}
+\int_{0}^{L} \kappa
+\begin{bmatrix}
+\dfrac{\partial N_{1}(x)}{\partial x} \dfrac{\partial N_{1}(x)}{\partial x} &
+\dfrac{\partial N_{1}(x)}{\partial x} \dfrac{\partial N_{2}(x)}{\partial x} \\[0.25cm]
+\dfrac{\partial N_{2}(x)}{\partial x} \dfrac{\partial N_{1}(x)}{\partial x} &
+\dfrac{\partial N_{2}(x)}{\partial x} \dfrac{\partial N_{2}(x)}{\partial x}
+\end{bmatrix} \, \mathrm{d}x
+\end{equation*}
+
+Load vector:
+\begin{equation*}
+\mathbf{F} = \int_{0}^{L} H \begin{bmatrix} N_{1}(x) \\ N_{2}(x) \end{bmatrix}\, \mathrm{d}x
+\end{equation*}
+
+Menggunakan aproksimasi beda hingga untuk turunan terhadap waktu dan metode
+Euler implisit:
+\begin{equation}
+\mathbf{M} \frac{ \mathbf{T}^{n+1} - \mathbf{T}^{n}}{\Delta t} +
+\mathbf{K} \mathbf{T}^{n+1} = \{ \mathbf{F} \}
+\end{equation}
+dapat diperoleh persamaan berikut:
 \begin{equation*}
 \mathbf{L} \mathbf{T}^{n+1} = \mathbf{R} \mathbf{T}^{n} + \mathbf{F}
 \end{equation*}
-
+dengan:
 \begin{equation*}
 \mathbf{L} = \frac{\mathbf{M}}{\Delta t} + \mathbf{K}
 \end{equation*}
@@ -89,10 +209,19 @@ T_1 \\ T_2
 $$
 
 Sistem global (menggunakan matriks dan vektor global):
-$$
-\tilde{\mathbf{L}} \tilde{\mathbf{T}}^{n+1} = \tilde{\mathbf{R}}\ 
+\begin{equation*}
+\tilde{\mathbf{L}} \tilde{\mathbf{T}}^{n+1} = \tilde{\mathbf{R}}
 \tilde{\mathbf{T}}^{n} + \tilde{\mathbf{F}} = \tilde{\mathbf{b}}
-$$
+\end{equation*}
+
+
+\begin{figure}[h]
+{\centering
+\includegraphics[width=\linewidth]{images_priv/Simpson_Fig_2_3.pdf}
+\par}
+\caption{Ilustrasi assembli matriks dan vektor global}
+\end{figure}
+
 
 %\bibliographystyle{unsrt}
 %\bibliography{BIBLIO}
