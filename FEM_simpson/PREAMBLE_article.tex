@@ -1,0 +1,66 @@
+\documentclass[a4paper,bahasa]{article}
+
+\usepackage{babel}
+
+\usepackage{fontspec}
+\setmonofont{JuliaMono-Regular}
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{minted}
+\usepackage{enumitem}
+
+\newminted{julia}{breaklines,fontsize=\footnotesize}
+\newminted{python}{breaklines,fontsize=\footnotesize}
+
+\newminted{bash}{breaklines,fontsize=\footnotesize}
+\newminted{text}{breaklines,fontsize=\footnotesize}
+
+\newcommand{\txtinline}[1]{\mintinline[breaklines,fontsize=\footnotesize]{text}{#1}}
+\newcommand{\jlinline}[1]{\mintinline[breaklines,fontsize=\footnotesize]{julia}{#1}}
+\newcommand{\pyinline}[1]{\mintinline[breaklines,fontsize=\footnotesize]{python}{#1}}
+
+\newmintedfile[juliafile]{julia}{breaklines,fontsize=\footnotesize}
+\newmintedfile[pythonfile]{python}{breaklines,fontsize=\footnotesize}
+\newmintedfile[fortranfile]{fortran}{breaklines,fontsize=\footnotesize}
+% f-o-otnotesize
+
+\usepackage{mdframed}
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage{mhchem}
+\usepackage{appendix}
+
+\newcommand{\highlighteq}[1]{\colorbox{blue!25}{$\displaystyle#1$}}
+\newcommand{\highlight}[1]{\colorbox{red!25}{#1}}
+
+\newcounter{soal}%[section]
+\newenvironment{soal}[1][]{\refstepcounter{soal}\par\medskip
+   \noindent {\color{blue}\textbf{Soal~\thesoal. #1}} \sffamily}{\medskip}
+
+
+\definecolor{mintedbg}{rgb}{0.95,0.95,0.95}
+\BeforeBeginEnvironment{minted}{
+  \begin{mdframed}[ %backgroundcolor=mintedbg,%
+    topline=false,bottomline=false,%
+    leftline=false,rightline=false]
+}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+
+
+%\BeforeBeginEnvironment{soal}{
+%  \begin{mdframed}[%
+%    topline=true,bottomline=true,%
+%    leftline=true,rightline=true]
+%}
+%\AfterEndEnvironment{soal}{\end{mdframed}}
+
