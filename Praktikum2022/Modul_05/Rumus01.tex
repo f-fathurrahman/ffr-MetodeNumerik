@@ -1,0 +1,44 @@
+
+Formula Newton-Cotes merupakan skema integrasi numerik yang paling umum.
+Formula ini menggunakan strategi dengan cara mengganti fungsi atau tabel data
+yang ingin dicari nilai integralnya dengan suatu fungsi pendekatan yang
+mudah untuk diintegralkan:
+\begin{equation}
+I = \int_{a}^{b} f(x) \, \mathrm{d}x \approx \int_{a}^{b} f_{n}(x) \, \mathrm{d}x
+\end{equation}
+di mana $f_{n}(x)$ adalah sebuah polinomial:
+\begin{equation}
+f_{n}(x) = a_{0} + a_{1}x + \cdots + a_{n-1} x^{n-1} + a_{n} x^{n}
+\end{equation}
+di mana $n$ adalah orde dari polinomial.
+
+Aturan trapesium adalah formula pertama Newton-Cotes di mana polinomial yang digunakan
+adalah orde 1, dan hasil dari integrasinya adalah sebagai berikut:
+\begin{equation}
+I = (b - a) \frac{f(a) + f(b)}{2}
+\end{equation}
+Estimasi error untuk aturan trapesium adalah sebagai berikut:
+\begin{equation}
+E_{t} = -\frac{1}{12} f''(\xi) (b - a)^3
+\end{equation}
+di mana $\xi$ adalah suatu bilang yang berada berada di dalam interval $[a,b]$.
+
+Aturan trapesium (dan aturan integrasi Newton-Cotes yang lain)
+juga dapat digunakan untuk beberapa interval. Misalkan interval
+awal $[a,b]$ dibagi menjadi $n$ segmen dengan panjang yang sama sehingga terdapat
+total $n+1$ titik: $(x_0, x_1, \ldots, x_n)$. Panjang dari segmen atau subinterval
+adalah
+\begin{equation*}
+h = \frac{b - a}{n}
+\end{equation*}
+dengan $x_0 = a$ dan $x_n = b$. Integral dari $a$ ke $b$ dapat diurai menjadi
+integral pada masing-masing segmen:
+\begin{equation*}
+I = \int_{a}^{b} = \int_{x_0}^{x_1} + \int_{x_1}^{x_2} + \cdots + \int_{x_{n-1}}^{x_n}
+\end{equation*}
+Dengan menggunakan aturan trapesium untuk masing-masing selang, diperoleh:
+\begin{equation}
+I = \frac{h}{2}\left[
+    f(x_{0}) + 2\sum_{i=1}^{n-1} f(x_{i}) + f(x_{n})
+\right]
+\end{equation}
