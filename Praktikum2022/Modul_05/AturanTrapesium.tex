@@ -1,0 +1,58 @@
+\section{Aturan trapesium}
+
+Aturan trapesium untuk integral numerik dapat dituliskan sebagai
+berikut:
+\begin{equation}
+I \equiv \int_{a}^{b} f(x) \, \mathrm{d}x \approx (b - a) \frac{f(a) + f(b)}{2}
+\end{equation}
+dengan estimasi error untuk aturan trapesium adalah sebagai berikut:
+\begin{equation}
+E_{t} = -\frac{1}{12} f''(\xi) (b - a)^3
+\end{equation}
+
+\begin{soal}[Chapra Contoh 21.1]
+Gunakan aturan trapesium untuk aproksimasi integral berikut.
+\begin{equation*}
+f(x) = 0.2 + 25x - 200x^2 + 675x^3 - 900x^4 + 400x^5
+\end{equation*}
+dari $a = 0$ sampai $b = 0.8$. Bandingkan hasilnya dengan hasil analitik,
+yaitu 1.640533.
+\end{soal}
+
+Anda dapat melengkapi kode berikut ini untuk Chapra Contoh 21.1
+\begin{pythoncode}
+def my_func(x):
+    return 0.2 + 25*x - 200*x**2 + 675*x**3 - 900*x**4 + 400*x**5
+
+a = 0.0
+b = 0.8
+f_a = my_func(a)
+f_b = my_func(b)
+
+I_exact = 1.640533 # from the book
+# Alternatively, you can use SymPy to do the integration
+
+# Use trapezoid rule here
+I = .... # Lengkapi
+
+E_t = I_exact - I
+ε_t = E_t/I_exact * 100 # in percent
+print("Integral result = %.6f" % I)
+print("True integral   = %.6f" % I_exact)
+print("True error      = %.6f" % E_t)
+print("ε_t             = %.1f%%" % ε_t)
+
+import sympy
+x = sympy.symbols("x")
+f = 0.2 + 25*x - 200*x**2 + 675*x**3 - 900*x**4 + 400*x**5
+d2f = f.diff(x,2) # calculate 2nd derivative
+avg_d2f_xi = sympy.integrate( d2f, (x,a,b) )/(b - a)
+E_a = -1/12*avg_d2f_xi*(b - a)**3 # Persamaan 21.6
+print("Approx error    = %.6f" % E_a)
+\end{pythoncode}
+
+
+\begin{soal}
+Gunakan aturan trapesium multi-interval dengan jumlah segmen 2 untuk menghitung
+aproksimasi integral pada Soal sebelumnya (Chapra Contoh 21.1).
+\end{soal}
