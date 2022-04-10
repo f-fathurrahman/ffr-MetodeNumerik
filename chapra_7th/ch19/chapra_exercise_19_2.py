@@ -30,7 +30,7 @@ months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", 
 plt.xticks(np.arange(1,13), months)
 plt.legend()
 plt.grid()
-plt.savefig("TEMP_chapra_19_2.pdf")
+plt.savefig("IMG_chapra_exercise_19_2.pdf")
 
 
 print("Pada pertengahan Agustus:")

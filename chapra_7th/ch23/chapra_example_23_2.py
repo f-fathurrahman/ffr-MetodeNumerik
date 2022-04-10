@@ -25,11 +25,11 @@ h2 = 0.25
 true_val = -0.9125
 
 # Using forward_diff_Oh
-Dh1 = forward_diff_Oh(f, x, h1)
-Dh2 = forward_diff_Oh(f, x, h2)
+#Dh1 = forward_diff_Oh(f, x, h1)
+#Dh2 = forward_diff_Oh(f, x, h2)
 
-#Dh1 = centered_diff_Oh2(f, x, h1)
-#Dh2 = centered_diff_Oh2(f, x, h2)
+Dh1 = centered_diff_Oh2(f, x, h1)
+Dh2 = centered_diff_Oh2(f, x, h2)
 
 # Richardson extrapolation
 Dh12 = 4*Dh2/3 - Dh1/3

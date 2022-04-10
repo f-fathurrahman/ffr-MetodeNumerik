@@ -29,5 +29,5 @@ plt.plot(x_plt, y_plt, label="sinusoid-fit")
 plt.xticks(np.arange(0,25,2))
 plt.grid()
 plt.legend()
-plt.savefig("TEMP_chapra_19_3.pdf")
+plt.savefig("IMG_chapra_exercise_19_3.pdf")
 
