@@ -76,8 +76,10 @@ def integ_romberg(f, a, b, es=1e-10, MAXIT=10):
         if ea <= es:
             iterConv = i
             # For debugging, please comment if not needed
-            print("converged, iterConv = ", iterConv)
+            print("Converged)
             break
+        # Here we set iterConv to i to make sure that the last value
+        # will be returned in case of no convergence.
         iterConv = i
     # to make sure that we are use variable that is defined outside the loop
     # we use iterConv instead of i
@@ -109,7 +111,7 @@ print("err  = %18.12e" % abs(resExact-resN))
 
 Contoh hasil keluaran:
 \begin{textcode}
-converged, iterConv =  5
+Converged
 iterConv =  5
 resN =    12.424777960769
 res  =    12.424777960769

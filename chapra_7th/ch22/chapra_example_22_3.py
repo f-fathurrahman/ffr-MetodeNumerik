@@ -14,7 +14,7 @@ a_1 = (b - a)/2
 def mapping_func(x_d):
     return a_0 + a_1*x_d
 
-dx_dx_d = (b - a)/2
+dx_dx_d = (b - a)/2 # Eq. (22.30)
 
 NGaussPoints = 2
 GAUSS2_c = [1.0, 1.0]

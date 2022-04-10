@@ -29,6 +29,7 @@ a_1 = (b - a)/2
 # mapping from x_d -> x
 def mapping_func(x_d):
     return a_0 + a_1*x_d
+
 dx_dx_d = (b - a)/2
 
 for NGaussPoints in range(2,7):
@@ -38,4 +39,5 @@ for NGaussPoints in range(2,7):
         x_d = GAUSS_x[i]
         c = GAUSS_c[i]
         I = I + c * my_func( mapping_func(x_d) ) * dx_dx_d
-    print("NGaussPoints = %d, I = %.4f" % (NGaussPoints,I))
+    Δ = abs(I_exact-I)
+    print("NGaussPoints = %d, I = %15.10f, err = %10.5e" % (NGaussPoints,I,Δ))

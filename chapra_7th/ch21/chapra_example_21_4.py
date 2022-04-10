@@ -4,9 +4,11 @@ def my_func(x):
 a = 0.0
 b = 0.8
 h = (b-a)/2
+# Base points for Simpson's 1/3 rule
 x0 = a
 x1 = a + h
 x2 = b
+# We use 3 points or 2 segments.
 
 I_exact = 1.640533 # from the book
 

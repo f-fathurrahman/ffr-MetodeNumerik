@@ -15,13 +15,14 @@ def integ_trapz_multiple( f, a, b, N ):
     I = h/2 * ( f(x0) + 2*ss + f(xN) )
     return I
 
-Nsegments = 10
+Nsegments = 2
 a = 0.0
 b = 0.8
 I_exact = 1.640533 # from the book
 
 I = integ_trapz_multiple( my_func, a, b, Nsegments )
 
+print("Nsegments = ", Nsegments)
 print("Integral result = %.6f" % I)
 E_t = I_exact - I
 print("True integral   = %.6f" % I_exact)

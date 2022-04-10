@@ -28,12 +28,14 @@ def integ_romberg(f, a, b, es=1e-10, MAXIT=10):
         ea = abs( (I[1,i+1] - I[2,i])/I[1,i+1] )*100 # in percent
         if ea <= es:
             iterConv = i
-            print("converged, iterConv = ", iterConv)
+            print("Converged")
             break
+        # Here we set iterConv to i to make sure that the last value
+        # will be returned in case of no convergence.
         iterConv = i
-    print("iterConv = ", iterConv)
     # to make sure that we are use variable that is defined outside the loop
     # we use iterConv instead of i
+    print("iterConv = ", iterConv)
     return I[1,iterConv+1]
  
 
