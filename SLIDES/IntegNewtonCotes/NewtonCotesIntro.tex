@@ -1,0 +1,37 @@
+\section{Formula Newton-Cotes}
+
+\begin{frame}
+\frametitle{Formula Newton-Cotes}
+\fontsize{9pt}{8.0}\selectfont
+% 7.2 baselineskip
+
+\begin{columns}
+
+\begin{column}{0.5\textwidth}
+Formula Newton-Cotes merupakan skema integrasi numerik yang paling umum.
+Formula ini menggunakan strategi dengan cara mengganti fungsi atau tabel data
+yang ingin dicari nilai integralnya dengan suatu fungsi pendekatan yang
+mudah untuk diintegralkan:
+\begin{equation*}
+I = \int_{a}^{b} f(x) \, \mathrm{d}x \approx \int_{a}^{b} f_{n}(x) \, \mathrm{d}x
+\end{equation*}
+di mana $f_{n}(x)$ adalah sebuah polinomial:
+\begin{equation*}
+f_{n}(x) = a_{0} + a_{1}x + \cdots + a_{n-1} x^{n-1} + a_{n} x^{n}
+\end{equation*}
+di mana $n$ adalah orde dari polinomial.    
+\end{column}
+
+\begin{column}{0.5\textwidth}
+{\centering
+\includegraphics[width=\textwidth]{images_priv/Chapra_Fig_21_1.pdf}
+\par}
+
+(a) polinomial orde 1 (b) polinomial orde 2
+\end{column}
+
+\end{columns}
+
+
+
+\end{frame}
