@@ -1,0 +1,118 @@
+\section{Integrasi Romberg}
+
+\begin{soal}[Chapra Contoh 22.1 dan 22.2]
+Tinjau kembali integral dari fungsi pada Chapra Contoh 21.1. Gunakan aturan trapesium
+dengan jumlah segmen 1, 2, dan 4. Gunakan ekstrapolasi Richardson untuk
+mendapatkan estimasi integral yang lebih akurat.
+\end{soal}
+
+Anda dapat melengkapi kode berikut.
+\begin{pythoncode}
+# Lengkapi definisi fungsi-fungsi yang diperlukan
+# ....
+
+a = 0.0
+b = 0.8
+I_exact = 1.640533
+
+print("Using trapezoidal rule")
+
+I_1 = integ_trapz_multiple(my_func, a, b, 1) # satu segmen
+ε_t = (I_exact - I_1)/I_exact * 100
+print("I_1  = %.6f ε_t = %2.1f%%" % (I_1, ε_t))
+
+I_2 = integ_trapz_multiple(my_func, a, b, 2) # dua segmen
+ε_t = (I_exact - I_2)/I_exact * 100
+print("I_2  = %.6f ε_t = %2.1f%%" % (I_2, ε_t))
+
+I_3 = integ_trapz_multiple(my_func, a, b, 3) # 3 segmen
+ε_t = (I_exact - I_3)/I_exact * 100
+print("I_3  = %.6f ε_t = %2.1f%%" % (I_3, ε_t))
+
+I_4 = integ_trapz_multiple(my_func, a, b, 4) # 4 segmen
+ε_t = (I_exact - I_4)/I_exact * 100
+print("I_4  = %.6f ε_t = %2.1f%%" % (I_4, ε_t))
+
+print()
+print("Using Richardson's extrapolation:")
+
+I_12 = .... # LENGKAPI: kombinasi I_2 dan I_1
+ε_t = (I_exact - I_12)/I_exact * 100
+print("I_12 = %.6f ε_t = %2.1f%%" % (I_12, ε_t))
+
+I_24 = .... # LENGKAPI: kombinasi I_4 dan I_2
+ε_t = (I_exact - I_24)/I_exact * 100
+print("I_24 = %.6f ε_t = %2.1f%%" % (I_24, ε_t))
+
+print()
+print("Using Richardson's extrapolation (2nd iter):")
+
+I_124 = .... # LENGKAPI: kombinasi I_24 dan I_12
+ε_t = (I_exact - I_124)/I_exact * 100
+print("I_124 = %.6f ε_t = %2.1f%%" % (I_124, ε_t))
+\end{pythoncode}
+
+\begin{soal}
+Implementasikan algoritma pada Gambar 22.4 untuk integrasi Romberg.
+\end{soal}
+
+Anda dapat melengkapi kode berikut:
+\begin{pythoncode}
+def integ_romberg(f, a, b, es=1e-10, MAXIT=10):
+    I = np.zeros( (MAXIT+2,MAXIT+2) )
+    n = 1
+    # We start from I[1,1], to follow the book's notation
+    I[1,1] = integ_trapz_multiple(f, a, b, n)
+    iterConv = 0
+    for i in range(1,MAXIT+1):
+        n = 2**i
+        I[i+1,1] = integ_trapz_multiple(f, a, b, n)
+        #
+        for k in range(2,i+2):
+            j = 2 + i - k
+            I[j,k] = ....# LENGKAPI
+        #
+        ea = abs( (I[1,i+1] - I[2,i])/I[1,i+1] )*100 # in percent
+        if ea <= es:
+            iterConv = i
+            # For debugging, please comment if not needed
+            print("converged, iterConv = ", iterConv)
+            break
+        iterConv = i
+    # to make sure that we are use variable that is defined outside the loop
+    # we use iterConv instead of i
+    return I[1,iterConv+1]
+\end{pythoncode}
+
+Contoh pengujian (membandingkan dengan hasil dari SymPy):
+\begin{pythoncode}
+from math import cos, pi
+
+import sympy
+x = sympy.symbols("x")
+func_symb = 6 + 3*sympy.cos(x)
+resExact = sympy.N(sympy.integrate(func_symb, (x, 0, sympy.pi/2)))
+
+# Definisikan atau import fungsi-fungsi yang diperlukan
+# ...
+    
+def my_func(x):
+    return 6 + 3*cos(x)
+    
+a = 0.0
+b = pi/2
+resN = integ_romberg(my_func, a, b)
+print("resN = %18.12f" % resN)
+print("res  = %18.12f" % resExact)
+print("err  = %18.12e" % abs(resExact-resN))    
+\end{pythoncode}
+
+Contoh hasil keluaran:
+\begin{textcode}
+converged, iterConv =  5
+iterConv =  5
+resN =    12.424777960769
+res  =    12.424777960769
+err  = 0.000000000000e+00    
+\end{textcode}
+
