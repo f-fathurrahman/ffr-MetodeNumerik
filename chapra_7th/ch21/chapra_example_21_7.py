@@ -1,5 +1,5 @@
 
-def integ_trapz( fa, fb, a, b ):
+def integ_trapz_table( fa, fb, a, b ):
     I = (b - a) * (fa + fb) / 2
     return I
 
@@ -14,7 +14,7 @@ I_exact = 1.640533 # from the book
 Ndata = len(x)
 I = 0.0
 for i in range(Ndata-1):
-    I = I + integ_trapz( fx[i], fx[i+1], x[i], x[i+1] )
+    I = I + integ_trapz_table( fx[i], fx[i+1], x[i], x[i+1] )
 
 E_t = (I_exact - I)
 ε_t = E_t/I_exact * 100

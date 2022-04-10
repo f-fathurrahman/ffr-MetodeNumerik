@@ -29,10 +29,6 @@ I_2 = integ_trapz_multiple(my_func, a, b, 2) # dua segmen
 ε_t = (I_exact - I_2)/I_exact * 100
 print("I_2  = %.6f ε_t = %2.1f%%" % (I_2, ε_t))
 
-I_3 = integ_trapz_multiple(my_func, a, b, 3) # 3 segmen
-ε_t = (I_exact - I_3)/I_exact * 100
-print("I_3  = %.6f ε_t = %2.1f%%" % (I_3, ε_t))
-
 I_4 = integ_trapz_multiple(my_func, a, b, 4) # 4 segmen
 ε_t = (I_exact - I_4)/I_exact * 100
 print("I_4  = %.6f ε_t = %2.1f%%" % (I_4, ε_t))
@@ -43,7 +39,6 @@ print("Using Richardson's extrapolation:")
 I_12 = 4/3*I_2 - 1/3*I_1
 ε_t = (I_exact - I_12)/I_exact * 100
 print("I_12 = %.6f ε_t = %2.1f%%" % (I_12, ε_t))
-
 
 I_24 = 4/3*I_4 - 1/3*I_2
 ε_t = (I_exact - I_24)/I_exact * 100

@@ -18,8 +18,13 @@ b = 1000.0 # practical, approximate infinity
 
 resApproxInf = sympy.N(sympy.integrate(func_symb, (x, a, b)))
 
+print()
+print("resExact     = %18.12f" % resExact) # exact result from SymPy
+print("resApproxInf = %18.12f" % resApproxInf) # result with approximate infinity (a=-100)
+print("diff         = %18.10e" % abs(resExact-resApproxInf))
+
 print("\nUsing Boole's rule") # naive
-for n in [1, 2, 4, 10, 50, 100, 200, 300, 500, 1000, 10000]:
+for n in [1, 10, 50, 100, 200, 500, 1000, 2000, 3000, 5000, 10000]:
     resN = apply_quadrature_multi_interval(
         integ_boole, my_func, a, b, n
     )    
@@ -47,7 +52,3 @@ for n in [1, 2, 4, 10, 50, 100]:
     )
     print("%5d %18.10f %18.10e" % (n, resN, abs(resN-resExact)))
 
-print()
-print("resExact     = %18.12f" % resExact) # exact result from SymPy
-print("resApproxInf = %18.12f" % resApproxInf) # result with approximate infinity (a=-100)
-print("diff         = %18.10e" % abs(resExact-resApproxInf))

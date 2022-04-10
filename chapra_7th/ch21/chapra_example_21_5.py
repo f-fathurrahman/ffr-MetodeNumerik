@@ -5,14 +5,16 @@ def my_func(x):
 
 # Using equation 21.18
 def integ_simpson13_multiple( f, a, b, N ):
-    
+    # N: is number of segments
     assert N >= 2
+    assert N % 2 == 0 # must be an even number
 
     x0 = a
     xN = b
     h = (b - a)/N
     x = np.linspace(a, b, N+1)
-    
+    # Total number of base points is N+1 (an odd number)
+
     ss_odd = 0.0
     for i in range(1,N,2):
         ss_odd = ss_odd + f(x[i])
@@ -27,11 +29,12 @@ def integ_simpson13_multiple( f, a, b, N ):
 a = 0.0
 b = 0.8
 I_exact = 1.640533 # from the book
-Nsegments = 2
+Nsegments = 4
 
 I = integ_simpson13_multiple(my_func, a, b, Nsegments)
 E_t = (I_exact - I)
 ε_t = E_t/I_exact * 100
+print("Nsegments = ", Nsegments)
 print("Integral result = %.7f" % I)
 print("True error      = %.7f" % E_t)
 print("ε_t             = %.2f%%" % ε_t)
