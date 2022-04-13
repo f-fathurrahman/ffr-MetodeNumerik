@@ -1,0 +1,242 @@
+Persamaan diferensial biasa, dengan bentuk umum:
+\begin{equation*}
+\frac{\mathrm{d}y}{\mathrm{d}x} = f(x,y)
+\end{equation*}
+Solusi aproksimasi:
+\begin{equation*}
+y_{i+1} = y_{i} + \phi h
+\end{equation*}
+Estimasi kemiringan $\phi$ digunakan untuk mengekstrapolasi nilai lama
+$y_{i}$ ke nilai baru $y_{i+1}$ pada jarak atau ukuran langkah $h$.
+
+Metode Euler: menggunakan turunan pertama sebagai estimasi kemiringan pada
+$x_i$:
+\begin{equation*}
+\phi = f(x_i, y_i)
+\end{equation*}
+sehingga diperoleh:
+\begin{equation*}
+y_{i+1} = y_{i} + f(x_i, y_i) h
+\end{equation*}
+
+Kesalahan pemotongan pada metode Euler dapat dituliskan sebagai:
+\begin{equation*}
+E_{t} = \frac{f'(x_i, y_i)}{2!} h^2 + \cdots + \mathcal{O}(h^{n+1})
+\end{equation*}
+untuk nilai $h$ yang cukup kecil, dapat digunakan hanya satu suku saja:
+\begin{equation*}
+E_{a} = \frac{f'(x_i, y_i)}{2!} h^2
+\end{equation*}
+
+Menggunakan deret Taylor orde-tinggi
+
+Misalnya, menggunakan orde dua:
+\begin{equation*}
+y_{i+1} = y_{i} + f(x_i, y_i) + \frac{f'(x_i, y_i)}{2!}h^2
+\end{equation*}
+dengan kesalahan pemotongan lokal:
+\begin{equation*}
+E_{a} = \frac{f''(x_i, y_i)}{6} h^3
+\end{equation*}
+Dengan menggunakan aturan rantai untuk turunan:
+\begin{equation*}
+f'(x_i, y_i) = \frac{\partial f(x,y)}{\partial x} +
+\frac{\partial f(x,y)}{\partial y}\frac{\mathrm{d}y}{\mathrm{d}x}
+\end{equation*}
+
+Metode Heun
+
+\begin{equation*}
+y'_{i} = f(x_i, y_i)
+\end{equation*}
+ekstrapolasi:
+\begin{equation*}
+y^{0}_{i+1} = y_{i} + f(x_i, y_i) h
+\end{equation*}
+Untuk metode Heun, $y^{0}_{i+1}$ digunakan sebagai prediksi intermediat.
+Persamaan ini dikenal sebagai persamaan prediktor.
+Persamaan ini memberikan estimasi $y_{i+1}$ pada $x_{i+1}$:
+\begin{equation*}
+y'_{i+1} = f(x_{i+1}, y^{0}_{i+1})
+\end{equation*}
+Dengan menggunakan rata-rata dari nilai kemiringan ini diperoleh:
+\begin{equation*}
+\overline{y}' = \frac{y'_{i} + y'_{i+1}}{2} = 
+\frac{f(x_i, y_i) + f(x_{i+1},y^{0}_{i+1})}{2}
+\end{equation*}
+Kemiringan rata-rata ini kemudian digunakan untuk ekstrapolasi linear dari $y_{i}$ ke
+$y_{i+1}$:
+\begin{equation*}
+y_{i+1} = y_{i} + \frac{f(x_i, y_i) + f(x_{i+1}, y^{0}_{i+1})}{2} h
+\end{equation*}
+Persamaan ini dikenal sebagai persamaan korektor.
+
+Metode Heun termasuk ke dalam kelompok metode prediktor-korektor. Metode Heun dapat
+dituliskan sebagai berikut.
+\begin{align*}
+y^{0}_{i+1} & = y_{i} + f(x_i, y_i) h & \text{   Prediktor}\\
+y_{i+1} & = y_{i} + \frac{f(x_i, y_i) + f(x_{i+1}, y^{0}_{i+1})}{2} h & \text{   Korektor}
+\end{align*}
+Karena $y_{i+1}$ berada pada kedua ruas dari persamaan korektor, maka kita harus mengaplikasikan
+persamaan tersebut secara iteratif.
+
+Metode titik tengah (midpoint atau improved polygon)
+
+Metode titik tengah menggunakan metode Euler untuk memprediksi nilai $y$ pada titik tengah
+interval:
+\begin{equation*}
+y_{i+1/2} = y_{i} + f(x_i, y_i) \frac{h}{2}
+\end{equation*}
+Kemudian nilai ini digunakan untuk menghitung kemiringan pada titik tengah:
+\begin{equation*}
+y'_{i+1/2} = f(x_{i+1/2}, y_{i+1/2})
+\end{equation*}
+yang diasumsikan sebagai aproksimasi dari rata-rata kemiringan untuk pada interval.
+Kemiringan ini kemudian digunakan untuk mengekstrapolasi linear dari $x_i$ ke $x_{i+1}$:
+\begin{equation*}
+y_{i+1} = y_{i} + f(x_{i+1/2}, y_{i+1/2}) h
+\end{equation*}
+
+Metode Runge-Kutta
+
+\begin{equation*}
+y_{i+1} = y_{i} + \phi(x_i, y_i, h) h
+\end{equation*}
+
+$\phi(x_i, y_i, h)$: fungsi inkremen
+
+\begin{equation*}
+\phi = a_1 k_1 + a_2 k_2 + \cdots + a_n k_n
+\end{equation*}
+
+di mana $a$ adalah konstanta dan $k$ adalah:
+\begin{align*}
+k_1 & = f(x_i, y_i) \\
+k_2 & = f(x_i + p_1 h, y_i + q_{11} k_1 h ) \\
+k_3 & = f(x_i + p_2 h, y_i + q_{21} k_1 h + q_{22} k_2 h) \\
+\cdots & \cdots \\
+k_n & = f(x_i + p_{n-1}h, y_i + q_{n-1,1} k_1 h + q_{n-1,2} k_2 h + \cdots + q_{n-1,n-1} k_{n-1} h)
+\end{align*}
+di mana $p$ dan $q$ adalah konstanta.
+Perhatikan bahwa $k$ memiliki hubungan rekurensi (perulangan).
+
+Runge-Kutta orde 2
+
+\begin{equation*}
+y_{i+1} = y_i + (a_1 k_1 + a_2 k_2) h
+\end{equation*}
+dengan
+\begin{align*}
+k_1 = f(x_i, y_i) \\
+k_2 = f(x_i + p_1 h, y_i + q_{11} k_1 h)
+\end{align*}
+Nilai-nilai dari $a_1$, $a_2$, $p_1$, dan $q_{11}$ dapat diperoleh dari persamaan
+berikut.
+\begin{align*}
+a_1 + a_2  & = 1 \\
+a_2 p_1    & = \frac{1}{2} \\
+a_2 q_{11} & = \frac{1}{2}
+\end{align*}
+Karena ada tiga persamaan dan empat variabel yang tidak diketahui, kita harus mengasumsikan satu
+nilai dari variabel tersebut untuk mendapatkan tiga variabel yang lain.
+Misalkan nilai $a_2$ telah dipilih, maka variabel-variabel yang lain
+dapat ditentukan sebagai berikut.
+\begin{align*}
+a_1 = 1 - a_2
+p_1 = q_{11} = \frac{1}{2a_2}
+\end{align*}
+Dengan kata lain, ada tak hingga versi dari metode Runge-Kutta orde-2.
+
+Ada tiga versi yang populer:
+
+Metode Heun dengan korektor tunggal, $a_2 = 1/2$
+$a_1 = 1/2$ dan $p_1 = q_{11} = 1$. Dengan parameter tersebut, diperoleh skema
+sebagai berikut:
+\begin{equation*}
+y_{i+1} = y_{i} + \left(
+\frac{1}{2}k_1 + \frac{1}{2}k_2
+\right)h
+\end{equation*}
+dengan
+\begin{align*}
+k_1 = f(x_i, y_i) \\
+k_2 = f(x_i + h, y_i + k_1 h)
+\end{align*}
+Perhatikan bahwa $k_1$ adalah kemiringan pada awal interval dan $k_2$ adalah
+kemiringan pada akhir interval. Oleh karena itu, metode Runge-Kutta orde-2 ini
+tidak lain adalah metode Heun tanpa iterasi.
+
+
+Metode titik tengah, $a_2 = 1$, $a_1 = 0$, $p_1 = q_{11} = 1/2$, diperoleh
+skema sebagai berikut.
+\begin{equation*}
+y_{i+1} = y_i + k_2 h
+\end{equation*}
+dengan
+\begin{align*}
+k_1 = f(x_i, y_i) \\
+k_2 = f\left( x_i + \frac{1}{2}h, y_i + \frac{1}{2} k_1 h \right)
+\end{align*}
+yang merupakan metode titik tengah.
+
+Metode Ralston, dikembangkan oleh Ralston (1962) dan Ralston dan Rabinowitz (1978),
+yang memilih parameter-parameter sehingga batas minimum untuk kesalahan pemotongan,
+dengan parameter $a_2 = 2/3$, $a_1 = 1/3$, dan $p_1 = q_{11} = 3/4$, yang
+memberikan skema sebagai berikut:
+\begin{equation*}
+y_{i+1} = y_i + \left( \frac{1}{3}k_1 + \frac{2}{3}k_2 \right) h
+\end{equation*}
+dengan
+\begin{align*}
+k_1 = f(x_i, y_i) \\
+k_2 = f\left( x_i + \frac{3}{4}h, y_i + \frac{3}{4}k_1 h \right)
+\end{align*}
+
+
+Metode Runge-Kutta orde-3
+
+Skema:
+\begin{equation*}
+y_{i+1} = y_i + \frac{1}{6}(k_1 + 4k_2 + k_3)h
+\end{equation*}
+dengan
+\begin{align*}
+k_1 = f(x_i, y_i) \\
+k_2 = f(x_i + \frac{1}{2}h, y_i + \frac{1}{2} k_1 h ) \\
+k_3 = f(x_i + h, y_i - k_1 h + 2 k_2 h)
+\end{align*}
+Perhatikan bahwa, jika fungsi turunan merupakan fungsi dari $x$ saja, maka metode ini menjadi
+aturan 1/3 Simpson.
+
+Metode Runge-Kutta orde-4
+
+Skema:
+\begin{equation*}
+y_{i+1} = y_{i} + \frac{1}{6}(k_1 + 2k_2 + 2k_3 + k_4) h
+\end{equation*}
+dengan
+\begin{align*}
+k_1 = f(x_i, y_i) \\
+k_2 = f\left( x_i + \frac{1}{2}h, y_i + \frac{1}{2} k_1 h \right) \\
+k_3 = f\left( x_i + \frac{1}{2}h, y_i + \frac{1}{2} k_2 h \right) \\
+k_4 = f(x_i + h, y_i + k_3 h)
+\end{align*}
+
+Metode Runge-Kutta orde-5
+
+Oleh Butcher (1964)
+
+Skema:
+\begin{equation*}
+y_{i+1} = y_i + \frac{1}{90} ( 7 k_1 + 32 k_3 + 12 k_4 + 32 k_5 + 7 k_6) h
+\end{equation*}
+dengan:
+\begin{align*}
+k_1 = f(x_i, y_i) \\
+k_2 = f\left( x_i + \frac{1}{4}h, y_i + \frac{1}{4} k_1 h \right) \\
+k_3 = f\left( x_i + \frac{1}{4}h, y_i + \frac{1}{8} k_1 h + \frac{1}{8} k_2 h \right) \\
+k_4 = f\left( x_i + \frac{1}{2}h, y_i - \frac{1}{2} k_2 h + k_3 h \right) \\
+k_5 = f\left( x_i + \frac{3}{4}h, y_i + \frac{3}{16} k_1 h + \frac{9}{16} k_4 h \right) \\
+k_6 = f\left( x_i + h, y_i - \frac{3}{7} k_1 h + \frac{2}{7} k_2 h +
+\frac{12}{7}k_3 h - \frac{12}{7}k_4 h + \frac{8}{7}k_5 h \right)
+\end{align*}
