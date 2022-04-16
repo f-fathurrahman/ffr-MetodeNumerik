@@ -1,0 +1,9 @@
+\section{Metode Ralston}
+
+\begin{pythoncode}
+def ode_ralston_1step(dfunc, xi, yi, h):
+    k1 = dfunc(xi, yi)
+    k2 = dfunc(xi + 3*h/4, yi + 3*k1*h/4)
+    yip1 = yi + (k1/3 + 2*k2/3)*h
+    return yip1
+\end{pythoncode}

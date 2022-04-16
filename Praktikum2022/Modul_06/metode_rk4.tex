@@ -1,0 +1,24 @@
+\section{Metode Runge-Kutta orde 4}
+
+\begin{pythoncode}
+def ode_rk4_1step(dfunc, xi, yi, h):
+    k1 = dfunc(xi, yi)
+    k2 = dfunc(xi + 0.5*h, yi + 0.5*k1*h)
+    k3 = dfunc(xi + 0.5*h, yi + 0.5*k2*h)
+    k4 = dfunc(xi + h, yi + k3*h)
+    yip1 = yi + (k1 + 2*k2 + 2*k3 + k4)*h/6
+    return yip1
+\end{pythoncode}
+
+
+\begin{pythoncode}
+def ode_rk5_1step(dfunc, xi, yi, h):
+    k1 = dfunc(xi, yi)
+    k2 = dfunc(xi + h/4, yi + k1*h/4)
+    k3 = dfunc(xi + h/4, yi + k1*h/8 + k2*h/8)
+    k4 = dfunc(xi + h/2, yi - k2*h/2 + k3*h)
+    k5 = dfunc(xi + 3*h/4, yi + 3*k1*h/16 + 9*k4*h/16)
+    k6 = dfunc(xi + h, yi - 3*k1*h/7 + 2*k2*h/7 + 12*k3*h/7 - 12*k4*h/7 + 8*k5*h/7)
+    yip1 = yi + (7*k1 + 32*k3 + 12*k4 + 32*k5 + 7*k6)*h/90
+    return yip1
+\end{pythoncode}
