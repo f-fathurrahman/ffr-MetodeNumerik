@@ -12,7 +12,28 @@ Institut Teknologi Bandung}
 \date{}
 \maketitle
 
+Persamaan diferensial biasa, dengan bentuk umum:
+\begin{equation*}
+\frac{\mathrm{d}y}{\mathrm{d}x} = f(x,y)
+\end{equation*}
+Solusi aproksimasi:
+\begin{equation*}
+y_{i+1} = y_{i} + \phi h
+\end{equation*}
+Estimasi kemiringan $\phi$ digunakan untuk mengekstrapolasi nilai lama
+$y_{i}$ ke nilai baru $y_{i+1}$ pada jarak atau ukuran langkah $h$.
 
+\input{metode_euler}
+
+\input{metode_heun}
+
+\input{metode_midpoint}
+
+\input{metode_ralston}
+
+\input{metode_rk4}
+
+\section*{Teori}
 \input{Teori_01}
 
 

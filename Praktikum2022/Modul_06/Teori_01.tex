@@ -1,33 +1,4 @@
-Persamaan diferensial biasa, dengan bentuk umum:
-\begin{equation*}
-\frac{\mathrm{d}y}{\mathrm{d}x} = f(x,y)
-\end{equation*}
-Solusi aproksimasi:
-\begin{equation*}
-y_{i+1} = y_{i} + \phi h
-\end{equation*}
-Estimasi kemiringan $\phi$ digunakan untuk mengekstrapolasi nilai lama
-$y_{i}$ ke nilai baru $y_{i+1}$ pada jarak atau ukuran langkah $h$.
-
-Metode Euler: menggunakan turunan pertama sebagai estimasi kemiringan pada
-$x_i$:
-\begin{equation*}
-\phi = f(x_i, y_i)
-\end{equation*}
-sehingga diperoleh:
-\begin{equation*}
-y_{i+1} = y_{i} + f(x_i, y_i) h
-\end{equation*}
-
-Kesalahan pemotongan pada metode Euler dapat dituliskan sebagai:
-\begin{equation*}
-E_{t} = \frac{f'(x_i, y_i)}{2!} h^2 + \cdots + \mathcal{O}(h^{n+1})
-\end{equation*}
-untuk nilai $h$ yang cukup kecil, dapat digunakan hanya satu suku saja:
-\begin{equation*}
-E_{a} = \frac{f'(x_i, y_i)}{2!} h^2
-\end{equation*}
-
+% ----------------------------------
 Menggunakan deret Taylor orde-tinggi
 
 Misalnya, menggunakan orde dua:
@@ -43,60 +14,6 @@ Dengan menggunakan aturan rantai untuk turunan:
 f'(x_i, y_i) = \frac{\partial f(x,y)}{\partial x} +
 \frac{\partial f(x,y)}{\partial y}\frac{\mathrm{d}y}{\mathrm{d}x}
 \end{equation*}
-
-Metode Heun
-
-\begin{equation*}
-y'_{i} = f(x_i, y_i)
-\end{equation*}
-ekstrapolasi:
-\begin{equation*}
-y^{0}_{i+1} = y_{i} + f(x_i, y_i) h
-\end{equation*}
-Untuk metode Heun, $y^{0}_{i+1}$ digunakan sebagai prediksi intermediat.
-Persamaan ini dikenal sebagai persamaan prediktor.
-Persamaan ini memberikan estimasi $y_{i+1}$ pada $x_{i+1}$:
-\begin{equation*}
-y'_{i+1} = f(x_{i+1}, y^{0}_{i+1})
-\end{equation*}
-Dengan menggunakan rata-rata dari nilai kemiringan ini diperoleh:
-\begin{equation*}
-\overline{y}' = \frac{y'_{i} + y'_{i+1}}{2} = 
-\frac{f(x_i, y_i) + f(x_{i+1},y^{0}_{i+1})}{2}
-\end{equation*}
-Kemiringan rata-rata ini kemudian digunakan untuk ekstrapolasi linear dari $y_{i}$ ke
-$y_{i+1}$:
-\begin{equation*}
-y_{i+1} = y_{i} + \frac{f(x_i, y_i) + f(x_{i+1}, y^{0}_{i+1})}{2} h
-\end{equation*}
-Persamaan ini dikenal sebagai persamaan korektor.
-
-Metode Heun termasuk ke dalam kelompok metode prediktor-korektor. Metode Heun dapat
-dituliskan sebagai berikut.
-\begin{align*}
-y^{0}_{i+1} & = y_{i} + f(x_i, y_i) h & \text{   Prediktor}\\
-y_{i+1} & = y_{i} + \frac{f(x_i, y_i) + f(x_{i+1}, y^{0}_{i+1})}{2} h & \text{   Korektor}
-\end{align*}
-Karena $y_{i+1}$ berada pada kedua ruas dari persamaan korektor, maka kita harus mengaplikasikan
-persamaan tersebut secara iteratif.
-
-Metode titik tengah (midpoint atau improved polygon)
-
-Metode titik tengah menggunakan metode Euler untuk memprediksi nilai $y$ pada titik tengah
-interval:
-\begin{equation*}
-y_{i+1/2} = y_{i} + f(x_i, y_i) \frac{h}{2}
-\end{equation*}
-Kemudian nilai ini digunakan untuk menghitung kemiringan pada titik tengah:
-\begin{equation*}
-y'_{i+1/2} = f(x_{i+1/2}, y_{i+1/2})
-\end{equation*}
-yang diasumsikan sebagai aproksimasi dari rata-rata kemiringan untuk pada interval.
-Kemiringan ini kemudian digunakan untuk mengekstrapolasi linear dari $x_i$ ke $x_{i+1}$:
-\begin{equation*}
-y_{i+1} = y_{i} + f(x_{i+1/2}, y_{i+1/2}) h
-\end{equation*}
-
 Metode Runge-Kutta
 
 \begin{equation*}
