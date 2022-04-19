@@ -1,5 +1,11 @@
 import numpy as np
+
 import matplotlib.pyplot as plt
+plt.rcParams.update({
+    "text.usetex": True,
+    "font.size": 12}
+)
+
 
 def deriv(x, y):
     return -2*x**3 + 12*x**2 - 20*x + 8.5
@@ -78,7 +84,8 @@ plt.plot(x_midpoint, y_midpoint, label="Midpoint", marker="o")
 plt.plot(x_ralston, y_ralston, label="Ralston", marker="o")
 plt.plot(x_true, y_true, label="true") # Do not show the markers
 plt.legend()
-plt.savefig("IMG_example_25_6.png", dpi=150)
+plt.tight_layout()
+plt.savefig("IMG_chapra_example_25_6.pdf")
 
 
 # Table stuffs

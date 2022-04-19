@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 def pendulum_ode(x, y):
     Nvec = len(y)
-    # Here we make an assertion to make sure that y is a 2-component vector
+    # Here we make an assertion to make sure that y is a 4-component vector
     # Uncomment this line if the code appears to be slow
     assert Nvec == 4
     # Output array
