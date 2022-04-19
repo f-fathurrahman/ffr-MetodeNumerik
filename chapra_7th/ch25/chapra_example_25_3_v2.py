@@ -1,5 +1,10 @@
 import numpy as np
+
 import matplotlib.pyplot as plt
+plt.rcParams.update({
+    "text.usetex": True,
+    "font.size": 14}
+)
 
 # the left hand side of dy/dx=... (in general depends on x and y)
 # In the present case it only depends on x
@@ -46,7 +51,8 @@ y_true = exact_sol(x_true)
 # Plot
 plt.clf()
 plt.plot(xs1, ys1, label="h=0.5", marker="o")
-plt.plot(xs2, ys2, label="h=0.5", marker="o")
+plt.plot(xs2, ys2, label="h=0.25", marker="o")
 plt.plot(x_true, y_true, label="true") # Do not show the markers
 plt.legend()
-plt.savefig("IMG_example_25_3.png", dpi=150)
+plt.tight_layout()
+plt.savefig("IMG_chapra_example_25_3.pdf")

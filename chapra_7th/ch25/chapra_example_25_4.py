@@ -1,5 +1,10 @@
 import numpy as np
+
 import matplotlib.pyplot as plt
+plt.rcParams.update({
+    "text.usetex": True,
+    "font.size": 14}
+)
 
 def model_linear(t, v):
     g = 9.81
@@ -50,4 +55,4 @@ plt.clf()
 plt.plot(t_linear, v_linear, label="model linear")
 plt.plot(t_nonlinear, v_nonlinear, label="model nonlinear")
 plt.legend()
-plt.savefig("IMG_example_25_4.png", dpi=150)
+plt.savefig("IMG_chapra_example_25_4.pdf")
