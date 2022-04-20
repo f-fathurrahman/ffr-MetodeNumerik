@@ -149,11 +149,35 @@ y_{i+1} = y_i + \frac{1}{90} ( 7 k_1 + 32 k_3 + 12 k_4 + 32 k_5 + 7 k_6) h
 \end{equation*}
 dengan:
 \begin{align*}
-k_1 = f(x_i, y_i) \\
-k_2 = f\left( x_i + \frac{1}{4}h, y_i + \frac{1}{4} k_1 h \right) \\
-k_3 = f\left( x_i + \frac{1}{4}h, y_i + \frac{1}{8} k_1 h + \frac{1}{8} k_2 h \right) \\
-k_4 = f\left( x_i + \frac{1}{2}h, y_i - \frac{1}{2} k_2 h + k_3 h \right) \\
-k_5 = f\left( x_i + \frac{3}{4}h, y_i + \frac{3}{16} k_1 h + \frac{9}{16} k_4 h \right) \\
-k_6 = f\left( x_i + h, y_i - \frac{3}{7} k_1 h + \frac{2}{7} k_2 h +
+k_1 & = f(x_i, y_i) \\
+k_2 & = f\left( x_i + \frac{1}{4}h, y_i + \frac{1}{4} k_1 h \right) \\
+k_3 & = f\left( x_i + \frac{1}{4}h, y_i + \frac{1}{8} k_1 h + \frac{1}{8} k_2 h \right) \\
+k_4 & = f\left( x_i + \frac{1}{2}h, y_i - \frac{1}{2} k_2 h + k_3 h \right) \\
+k_5 & = f\left( x_i + \frac{3}{4}h, y_i + \frac{3}{16} k_1 h + \frac{9}{16} k_4 h \right) \\
+k_6 & = f\left( x_i + h, y_i - \frac{3}{7} k_1 h + \frac{2}{7} k_2 h +
 \frac{12}{7}k_3 h - \frac{12}{7}k_4 h + \frac{8}{7}k_5 h \right)
 \end{align*}
+
+
+Persamaan diferensial orde dua
+
+Contoh:
+\begin{equation*}
+m \frac{\mathrm{d}^2 x}{\mathrm{d}t^2} + c \frac{\mathrm{d}x}{\mathrm{d}t} + kx = 0
+\end{equation*}
+$c$: koefisien redaman, $k$ konstant pegas.
+
+Definisikan $y_{1}(t) = x(t)$, $y_{2}(t) = x'(t)$, sehingga:
+$y'_{1}(t) = x'(t) = y_{2}(t)$, dan
+$y'_{2}(t) = x''(t)$:
+\begin{align*}
+m \frac{\mathrm{d}^2 x}{\mathrm{d}t^2} + c \frac{\mathrm{d}x}{\mathrm{d}t} + kx & = 0 \\
+m y'_{2}(t) + c y_{2}(t) + k y_{1}(t) & = 0 \\
+y'_{2}(t) & = -\frac{c y_{2}(t) + k y_{1}(t)}{m}
+\end{align*}
+
+\begin{align*}
+y'_{1}(t) & = y_{2}(t) \\
+y'_{2}(t) & = -\frac{c y_{2}(t) + k y_{1}(t)}{m}
+\end{align*}
+%m \frac{\mathrm{d}^2 x}{\mathrm{d}t^2} + c \frac{\mathrm{d}x}{\mathrm{d}t} + kx = 0
