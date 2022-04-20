@@ -1,4 +1,4 @@
-\section{Metode Runge-Kutta orde 4}
+\section{Metode Runge-Kutta Orde 4}
 
 \begin{pythoncode}
 def ode_rk4_1step(dfunc, xi, yi, h):
@@ -11,6 +11,8 @@ def ode_rk4_1step(dfunc, xi, yi, h):
 \end{pythoncode}
 
 
+\section{Metode Runge-Kutta Orde 5}
+
 \begin{pythoncode}
 def ode_rk5_1step(dfunc, xi, yi, h):
     k1 = dfunc(xi, yi)
@@ -22,3 +24,21 @@ def ode_rk5_1step(dfunc, xi, yi, h):
     yip1 = yi + (7*k1 + 32*k3 + 12*k4 + 32*k5 + 7*k6)*h/90
     return yip1
 \end{pythoncode}
+
+
+\section{Subrutin umum untuk metode RK}
+
+\begin{pythoncode}
+def ode_solve(dfunc, do_1step, x0, y0, h, Nstep):
+    Nvec = len(y0)
+    x = np.zeros(Nstep+1)
+    y = np.zeros((Nstep+1,Nvec))
+    # Start with initial cond
+    x[0] = x0
+    y[0,:] = y0[:]
+    for i in range(0,Nstep):
+        x[i+1] = x[i] + h
+        y[i+1,:] = do_1step(dfunc, x[i], y[i,:], h)
+    return x, y
+\end{pythoncode}
+
