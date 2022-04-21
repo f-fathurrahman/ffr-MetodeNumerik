@@ -34,7 +34,6 @@ def deriv_underdamped(x, y):
     assert Nvec == 2
     # Output array
     dydx = np.zeros(Nvec)
-    # c, k, m are accessed as global parameters
     dydx[0] = y[1]
     dydx[1] = -(c*y[1] + k*y[0])/m
     #
@@ -52,7 +51,6 @@ def deriv_critical_damped(x, y):
     assert Nvec == 2
     # Output array
     dydx = np.zeros(Nvec)
-    # c, k, m are accessed as global parameters
     dydx[0] = y[1]
     dydx[1] = -(c*y[1] + k*y[0])/m
     #
@@ -70,7 +68,6 @@ def deriv_overdamped(x, y):
     assert Nvec == 2
     # Output array
     dydx = np.zeros(Nvec)
-    # c, k, m are accessed as global parameters
     dydx[0] = y[1]
     dydx[1] = -(c*y[1] + k*y[0])/m
     #
