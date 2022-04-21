@@ -1,4 +1,14 @@
-\section{Metode Ralston}
+\subsection{Metode Ralston}
+
+Skema:
+\begin{equation*}
+y_{i+1} = y_i + \left( \frac{1}{3}k_1 + \frac{2}{3}k_2 \right) h
+\end{equation*}
+dengan
+\begin{align*}
+k_1 & = f(x_i, y_i) \\
+k_2 & = f\left( x_i + \frac{3}{4}h, y_i + \frac{3}{4}k_1 h \right)
+\end{align*}
 
 \begin{pythoncode}
 def ode_ralston_1step(dfunc, xi, yi, h):

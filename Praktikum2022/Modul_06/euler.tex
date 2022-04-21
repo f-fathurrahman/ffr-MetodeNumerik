@@ -1,4 +1,4 @@
-\section{Metode Euler}
+\subsection{Metode Euler}
 
 Metode Euler: menggunakan turunan pertama sebagai estimasi kemiringan pada
 $x_i$:
@@ -109,123 +109,16 @@ print("Second step: x = %f y_true = %.5f y = %.5f ε_t = %.1f %%" % (xp1, y_true
 Keluaran yang diperoleh seharusnya sama dengan cara manual (tanpa fungsi).
 
 
-\subsection*{Analisis kesalahan metode Euler}
-
-Kesalahan pada metode Euler:
-\begin{itemize}
-\item Kesalahan pemotongan (truncation)
-\item Kesalahan pembulatan (round-off)
-\end{itemize}
-
-Kesalahan pemotongan terdiri dari dua bagian:
-\begin{itemize}
-\item kesalahan pemotongan lokal yang berasal dari aplikasi metode pada satu
-ukuran langkah.
-\item kesalahan pemotongan perambatan (propagated truncation error) yang diakibatkan
-aproksimasi pada langkah-langkah sebelumnya.
-\end{itemize}
-Penjumlahan dari kedua jenis kesalahan tersebut adalah kesalahan pemotongan global.
-
-Misalkan, persamaan diferensial yang akan diintegralkan adalah:
-\begin{equation*}
-y' = \frac{\mathrm{d}y}{\mathrm{d}x} = f(x,y)
-\end{equation*}
-Jika solusi, yaitu fungsi yang mendeskripsikan $y$, memiliki turunan yang kontinu, maka
-deret Taylor dapat digunakan untuk merepresentasikan fungsi di sekitar nilai awal
-$(x_i, y_i)$:
-\begin{equation*}
-y_{i+1} = y_{i} + y'_{i} h + \frac{y''_{i}}{2!}h^2 + \cdots + \frac{y^{(n)}_{i}}{n!} h^n + R_n
-\end{equation*}
-dengan $h = x_{i+1} - x_{i}$ dan $R_n$ adalah suku sisa yang didefinisikan sebagai:
-\begin{equation*}
-R_n = \frac{y^{n+1}(\xi)}{(n+1)!} h^{n+1}
-\end{equation*}
-di mana $\xi$ berada di dalam interval $[x_i, x_{i+1}]$.
-Alternatif penulisan:
-\begin{equation*}
-y_{i+1} = y_{i} + f(x_i, y_i) h + \frac{f'(x_i, y_i)}{2!}h^2 + \cdots +
-\frac{f^{(n-1)}(x_i, y_i)}{n!} h^n + \mathcal{O}(h^{n+1})
-\end{equation*}
-di mana $\mathcal{O}(h^{n+1})$ menyatakan kontribusi kesalahan pemotongan lokal
-yang sebanding dengan ukuran langkah pangkat $(n+1)$.
-
-Dengan membandingkan persamaan ini dengan skema metode Euler, diperoleh
-kesalahan pemotongan pada metode Euler sebagai berikut:
-\begin{equation*}
-E_{t} = \frac{f'(x_i, y_i)}{2!} h^2 + \cdots + \mathcal{O}(h^{n+1})
-\end{equation*}
-untuk nilai $h$ yang cukup kecil, dapat digunakan hanya satu suku saja:
-\begin{equation*}
-E_{a} = \frac{f'(x_i, y_i)}{2!} h^2
-\end{equation*}
-atau
-\begin{equation*}
-E_a = \mathcal{O}(h^2)
-\end{equation*}
-di mana $E_a$ adalah aproksimasi kesalahan pemotongan lokal.
-
-Dengan loop, perhitungan error pemotongan
-\begin{pythoncode}
-# .... definisi deriv
-# .... definisi ode_euler_1step
-# .... definisi exact_sol
-
-# For local truncation errors
-from math import factorial
-def trunc_err_second(x,y,h):
-    return (-6*x**2 + 24*x - 20)*h**2/factorial(2)
-
-def trunc_err_third(x,y,h):
-    return (-12*x + 24)*h**3/factorial(3)
-
-def trunc_err_fourth(x,y,h):
-    return -12*h**4/factorial(4)
-
-# initial cond
-x0 = 0.0
-y0 = 1.0
-
-print("   x     y_true   y_Euler       ε_t   ε_t local")
-print("-----------------------------------------------")
-
-print("%5.1f  %8.5f  %8.5f" % (x0, y0, y0)) # Initial cond
-
-x = x0
-y = y0
-h = 0.5
-for i in range(0,8):
-    xp1 = x + h
-    yp1 = ode_euler_1step(deriv, x, y, h)
-    y_true = exact_sol(xp1)
-    ε_t = (y_true - yp1)/y_true * 100
-    ε_t_local = (trunc_err_second(x,y,h) + trunc_err_third(x,y,h) + \
-        trunc_err_fourth(x,y,h))/y_true * 100
-    print("%5.1f  %8.5f  %8.5f  %8.1f%%  %8.1f%%" % (xp1, y_true, yp1, ε_t, ε_t_local))
-    # Update x and y for the next step
-    x = xp1
-    y = yp1
-\end{pythoncode}
-
-Contoh keluaran:
-\begin{textcode}
-   x     y_true   y_Euler       ε_t   ε_t local
------------------------------------------------
-  0.0   1.00000   1.00000
-  0.5   3.21875   5.25000     -63.1%     -63.1%
-  1.0   3.00000   5.87500     -95.8%     -28.1%
-  1.5   2.21875   5.12500    -131.0%      -1.4%
-  2.0   2.00000   4.50000    -125.0%      20.3%
-  2.5   2.71875   4.75000     -74.7%      17.2%
-  3.0   4.00000   5.87500     -46.9%       3.9%
-  3.5   4.71875   7.12500     -51.0%     -11.3%
-  4.0   3.00000   7.00000    -133.3%     -53.1%
-\end{textcode}
-    
+\input{error_euler}
 
 
 
 
+
+\subsection*{Subrutin untuk metode satu langkah}
 Chapra Contoh 25.3
+
+Kita tidak ingin menggunakan loop manual seperti pada contoh-contoh sebelumnya.
 
 \begin{pythoncode}
 def ode_euler(dfunc, x0, y0, h, Nstep):
@@ -240,14 +133,14 @@ def ode_euler(dfunc, x0, y0, h, Nstep):
     return x, y
 \end{pythoncode}
 
-Kode program
+Kode ini dapat digeneralisasi untuk metode satu langkah lain.
+
+Contoh:
 \begin{pythoncode}
 # .... Definisi dan/atau import fungsi-fungsi yang diperlukan
 
-# initial cond
-x0 = 0.0
-y0 = 1.0
-xf = 4.0
+x0 = 0.0; y0 = 1.0 # initial cond
+xf = 4.0 # last or final x
 
 # Using h=0.5
 h = 0.5

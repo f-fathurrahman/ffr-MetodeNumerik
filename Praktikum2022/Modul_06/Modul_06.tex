@@ -12,16 +12,38 @@ Institut Teknologi Bandung}
 \date{}
 \maketitle
 
-Persamaan diferensial biasa, dengan bentuk umum:
+
+\section{*Pendahuluan}
+Pada modul ini kita akan mengeksplorasi beberapa metode yang
+dapat digunakan untuk menyelesaikan persamaan diferensial biasa, dengan bentuk umum:
 \begin{equation*}
 \frac{\mathrm{d}y}{\mathrm{d}x} = f(x,y)
 \end{equation*}
-Solusi aproksimasi:
+Untuk mendapatkan solusi yang unik, diperlukan informasi tambahan.
+Informasi tambahan ini dapat berupa:
+\begin{itemize}
+\item Nilai fungsi yang ingin dicari dispesifikasikan pada satu titik $y(x=x_0)=y_0$.
+Dalam konteks persoalan fisis, biasanya variabel independen ini adalah waktu, di mana
+fungsi atau kuantitas yang ingin dicari solusinya diketahui pada suatu kondisi awal
+dan kita ingin mengetahui evolusi atau dinamika dari kuantitas tersebut. Persoalan
+ini dikenal sebagai persoalan nilai awal (\textit{initial valus problem}).
+\item Nilai fungsi dispesifikasikan pada titik-titik batas domain fungsi.
+Persoalan ini dikenal dengan persoalan nilai batas (\textit{boundary value problem}).
+\end{itemize}
+
+Kita akan mulai dengan membahas mengenai persoalan nilai awal. Salah satu metode yang
+dapat digunakan adalah metode satu langkah. Metode ini termasuk metode eksplisit
+di mana solusi aproksimasi memiliki bentuk sebagai berikut:
 \begin{equation*}
 y_{i+1} = y_{i} + \phi h
 \end{equation*}
 Estimasi kemiringan $\phi$ digunakan untuk mengekstrapolasi nilai lama
 $y_{i}$ ke nilai baru $y_{i+1}$ pada jarak atau ukuran langkah $h$.
+Perhatikan bahwa solusi pada titik ke-$(i+1)$ bergantung pada informasi solusi
+pada titik ke-$i$
+
+
+\section{Metode Satu Langkah}
 
 \input{euler}
 \input{heun}
@@ -29,8 +51,8 @@ $y_{i}$ ke nilai baru $y_{i+1}$ pada jarak atau ukuran langkah $h$.
 \input{ralston}
 \input{rk4}
 
-\section*{Teori}
-\input{Teori_01}
+%\section*{Teori}
+%\input{Teori_01}
 
 
 \end{document}

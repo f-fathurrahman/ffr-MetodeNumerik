@@ -1,4 +1,4 @@
-\section{Metode titik tengah}
+\subsection{Metode titik tengah}
 
 Metode titik tengah (midpoint atau improved polygon)
 menggunakan metode Euler untuk memprediksi nilai $y$ pada titik tengah
@@ -18,7 +18,6 @@ y_{i+1} = y_{i} + f(x_{i+1/2}, y_{i+1/2}) h
 
 Implementasi:
 \begin{pythoncode}
-# One-step application of midpoint method for ODE
 def ode_midpoint_1step(dfunc, xi, yi, h):
     yip12 = yi + deriv(xi,yi)*h/2  # midpoint value
     xip12 = xi + 0.5*h             # midpoint
