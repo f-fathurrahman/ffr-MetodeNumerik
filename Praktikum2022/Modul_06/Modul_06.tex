@@ -16,9 +16,10 @@ Institut Teknologi Bandung}
 \section{*Pendahuluan}
 Pada modul ini kita akan mengeksplorasi beberapa metode yang
 dapat digunakan untuk menyelesaikan persamaan diferensial biasa, dengan bentuk umum:
-\begin{equation*}
+\begin{equation}
 \frac{\mathrm{d}y}{\mathrm{d}x} = f(x,y)
-\end{equation*}
+\label{eq:dydx_umum}
+\end{equation}
 Untuk mendapatkan solusi yang unik, diperlukan informasi tambahan.
 Informasi tambahan ini dapat berupa:
 \begin{itemize}
@@ -39,8 +40,8 @@ y_{i+1} = y_{i} + \phi h
 \end{equation*}
 Estimasi kemiringan $\phi$ digunakan untuk mengekstrapolasi nilai lama
 $y_{i}$ ke nilai baru $y_{i+1}$ pada jarak atau ukuran langkah $h$.
-Perhatikan bahwa solusi pada titik ke-$(i+1)$ bergantung pada informasi solusi
-pada titik ke-$i$
+Perhatikan bahwa solusi pada titik ke-$(i+1)$ hanya bergantung pada informasi solusi
+pada titik ke-$i$.
 
 
 \section{Metode Satu Langkah}
