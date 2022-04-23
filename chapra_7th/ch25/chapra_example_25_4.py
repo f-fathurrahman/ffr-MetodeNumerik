@@ -36,9 +36,6 @@ def ode_euler(dfunc, x0, y0, h, Nstep):
         y[i+1] = ode_euler_1step(dfunc, x[i], y[i], h)
     return x, y
 
-def exact_sol(x):
-    return -0.5*x**4 + 4*x**3 - 10*x**2 + 8.5*x + 1
-
 # initial cond
 t0 = 0.0
 v0 = 0.0
