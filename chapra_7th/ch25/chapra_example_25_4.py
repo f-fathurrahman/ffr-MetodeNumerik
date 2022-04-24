@@ -43,7 +43,6 @@ tf = 15.0
 h = 0.1
 Nstep = int(tf/h)
 t_linear, v_linear = ode_euler(model_linear, t0, v0, h, Nstep)
-#
 t_nonlinear, v_nonlinear = ode_euler(model_nonlinear, t0, v0, h, Nstep)
 
 
@@ -51,5 +50,9 @@ t_nonlinear, v_nonlinear = ode_euler(model_nonlinear, t0, v0, h, Nstep)
 plt.clf()
 plt.plot(t_linear, v_linear, label="model linear")
 plt.plot(t_nonlinear, v_nonlinear, label="model nonlinear")
+plt.xlabel("t (s)")
+plt.ylabel("v (m/s)")
 plt.legend()
+plt.grid(True)
+plt.tight_layout()
 plt.savefig("IMG_chapra_example_25_4.pdf")
