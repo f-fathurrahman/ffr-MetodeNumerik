@@ -1,4 +1,4 @@
-\subsection{Metode Runge-Kutta orde-3}
+\subsection{Metode Runge-Kutta Orde-3}
 
 Skema:
 \begin{equation*}
@@ -78,20 +78,12 @@ def ode_rk5_1step(dfunc, xi, yi, h):
 \end{pythoncode}
 
 
-\subsection{Subrutin umum untuk metode satu langkah}
+\begin{soal}
+Gunakan metode \textit{midpoint}, Ralston, Runge-Kutta orde-3, -4, dan -5 untuk
+menyelesaikan persamaan diferensial yang sama pada Chapra Contoh 25.5.
+\end{soal}
 
-Vektor:
-\begin{pythoncode}
-def ode_solve(dfunc, do_1step, x0, y0, h, Nstep):
-    Nvec = len(y0)
-    x = np.zeros(Nstep+1)
-    y = np.zeros((Nstep+1,Nvec))
-    # Start with initial cond
-    x[0] = x0
-    y[0,:] = y0[:]
-    for i in range(0,Nstep):
-        x[i+1] = x[i] + h
-        y[i+1,:] = do_1step(dfunc, x[i], y[i,:], h)
-    return x, y
-\end{pythoncode}
+
+
+
 

@@ -1,14 +1,15 @@
 \subsection{Metode Heun}
 
-Metode Heun
+Pad metode Euler, turunan fungsi pada titik ke-$i$ 
 \begin{equation*}
 y'_{i} = f(x_i, y_i)
 \end{equation*}
-ekstrapolasi:
+digunakan untuk mendapatkan solusi pada titik ke-$(i+1)$ (atau ekstrapolasi):
 \begin{equation*}
 y^{0}_{i+1} = y_{i} + f(x_i, y_i) h
 \end{equation*}
-Untuk metode Heun, $y^{0}_{i+1}$ digunakan sebagai prediksi intermediat.
+Untuk metode Heun, $y^{0}_{i+1}$ tidak digunakan sebagai solusi (seperti pada metode Euler)
+namun digunakan sebagai prediksi intermediat.
 Persamaan ini dikenal sebagai persamaan prediktor.
 Persamaan ini memberikan estimasi $y_{i+1}$ pada $x_{i+1}$:
 \begin{equation*}
@@ -35,6 +36,15 @@ y_{i+1} & = y_{i} + \frac{f(x_i, y_i) + f(x_{i+1}, y^{0}_{i+1})}{2} h & \text{  
 Karena $y_{i+1}$ berada pada kedua ruas dari persamaan korektor, maka kita harus mengaplikasikan
 persamaan tersebut secara iteratif.
 
+Jika tidak menggunakan skema iteratif, diperoleh metode Heun non-iteratif:
+\begin{pythoncode}
+# One-step application of Heun's method for ODE
+def ode_heun_1step(dfunc, xi, yi, h):
+    y0ip1 = yi + dfunc(xi,yi)*h
+    avg = 0.5*( dfunc(xi,yi) + dfunc(xi+h,y0ip1) )*h
+    return yi + avg
+\end{pythoncode}
+
 
 \begin{soal}[Chapra Contoh 25.5]
 Gunakan metode Heun untuk mengintegrasikan persamaan diferensial
@@ -50,37 +60,25 @@ y = \frac{4}{1.3} \left( e^{0.8x} - e^{-0.5x} \right) + 2e^{-0.5x}
 \end{soal}
 
 
+Berikut ini adalah implementasi Python menggunakan metode Heun non-iteratif:
 \begin{pythoncode}
-# One-step application of Heun's method for ODE
-def ode_heun_1step(dfunc, xi, yi, h):
-    y0ip1 = yi + dfunc(xi,yi)*h
-    avg = 0.5*( dfunc(xi,yi) + dfunc(xi+h,y0ip1) )*h
-    return yi + avg
-\end{pythoncode}
-
-\begin{pythoncode}
-from math import exp
-
-# .... import dan/atau definisi
+# .... import library dan/atau definisi fungsi
 
 def deriv(x, y):
     return 4*exp(0.8*x) - 0.5*y
     
 def exact_sol(x):
     return 4.0/1.3*( exp(0.8*x) - exp(-0.5*x) ) + 2*exp(-0.5*x)
-    
-# Initial cond
-x0 = 0.0
-y0 = 2.0
+
+x0 = 0.0; y0 = 2.0 # Initial cond
 xf = 4.0
 h = 1.0
 Nstep = int(xf/h)
     
-x = x0
-y = y0
+x = x0; y = y0
 for i in range(0,Nstep):
     xp1 = x + h
-    yp1 = ode_heun_1step(deriv, x, y, h)
+    yp1 = ode_heun_1step(deriv, x, y, h) # or use the iterative one
     y_true = exact_sol(xp1)
     ε_t = (y_true - yp1)/y_true * 100
     print("%f %12.7f %12.7f  %5.2f%%" % (xp1, y_true, yp1, abs(ε_t)))
@@ -90,7 +88,22 @@ for i in range(0,Nstep):
 \end{pythoncode}
 
 
-Iteratif:
+
+Berikut ini adalah hasil yang diperoleh jika kita menggunakan metode
+non-iteratif:
+\begin{textcode}
+------------------------------------------
+  x         y_true        y_Heun      ε_t
+------------------------------------------
+0.000000    2.0000000
+1.000000    6.1946314    6.7010819   8.18%
+2.000000   14.8439219   16.3197819   9.94%
+3.000000   33.6771718   37.1992489  10.46%
+4.000000   75.3389626   83.3377673  10.62%  
+\end{textcode}
+
+
+Berikut ini adalah implementasi metode Heun secara iteratif.
 \begin{pythoncode}
 # One-step application of Heun's method for ODE
 # Using iterative steps to determine y0ip1
@@ -102,9 +115,22 @@ def ode_heun_1step_iterative(dfunc, xi, yi, h, NiterMax=100, Δ=1e-6):
         y0ip1 = yi + avg
         diff = abs(y0ip1 - y0ip1_old)
         # Uncomment this to see the iteration process
-        print("iter: %2d y0ip1 = %12.7f  diff = %12.7e" % (i+1, y0ip1, diff))
+        #print("iter: %2d y0ip1 = %12.7f  diff = %12.7e" % (i+1, y0ip1, diff))
         if diff <= Δ:
             break
         y0ip1_old = y0ip1
     return y0ip1
 \end{pythoncode}
+
+Berikut ini adalah hasil dari aplikasi metode Heun iteratif. Error yang dihasilkan lebih
+kecil daripada metode Heun non-iteratif.
+\begin{textcode}
+------------------------------------------
+  x         y_true      y_Heun_iter    ε_t
+------------------------------------------
+0.000000    2.0000000
+1.000000    6.1946314    6.3608654   2.68%
+2.000000   14.8439219   15.3022364   3.09%
+3.000000   33.6771718   34.7432760   3.17%
+4.000000   75.3389626   77.7350961   3.18%
+\end{textcode}
