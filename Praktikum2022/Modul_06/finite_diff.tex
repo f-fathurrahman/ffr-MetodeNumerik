@@ -1,0 +1,97 @@
+\subsection{Metode Beda Hingga}
+
+\begin{soal}
+Gunakan metode beda hingga untuk menyelesaikan persoalan nilai
+batas pada Chapra Contoh 27.1
+\end{soal}
+
+\begin{pythoncode}
+# Finite-difference method for linear BVP
+
+# d2T/dx2 + h'(T_a - T) = 0
+# Boundary condition:
+#   T(0) = 40
+#   T(10) = 200
+
+import numpy as np
+
+h = 0.01
+T_a = 20.0
+
+x0 = 0.0
+T0 = 40.0 # Boundary condition, T(0) = 40
+xf = 10.0
+Tf = 200.0 # Boundary condition, T(10) = 200
+Δx = 2.0 # segment length (or step size in shooting method)
+Nstep = int( (xf-x0)/Δx )
+Npoints = Nstep + 1
+
+T = np.zeros(Npoints)
+T[0] = T0
+T[-1] = Tf
+
+# Finite-difference operator of second derivative matrix
+# In general we should use sparse matrix. However, because
+# The size is rather small, we use full (dense) matrix
+# Please refer to the left-hand-side of Eq. 27.3 for the matrix elements.
+Npointsm2 = Npoints-2 # Number of interior points
+d2dx2 =  np.zeros((Npointsm2,Npointsm2))
+for i in range(Npointsm2):
+    d2dx2[i,i] = 2 + h*Δx**2
+    if i != 0:
+        d2dx2[i-1,i] = -1.0
+    if i != (Npointsm2-1):
+        d2dx2[i+1,i] = -1.0
+# Display the matrix
+print("FD representation of second-derivative operator:")
+print(d2dx2)
+
+# The vector represented by the right hand side of Eq. 27.3
+f = np.zeros(Npointsm2)
+for i in range(1,Npointsm2-1):
+    f[i] = h*Δx**2*T_a
+# From the left BC
+f[0] = h*Δx**2*T_a + T0
+# From the right BC 
+f[-1] = h*Δx**2*T_a + Tf
+# Display
+print("f = ", f)
+
+# Solve the linear equations
+T[1:Npoints-1] = np.linalg.solve(d2dx2,f)
+
+def exact_sol(x):
+    return 20*((1 - np.exp(2))*np.exp(x/10) + (1 - 9*np.e)*np.exp(x/5) + \
+            np.e*(9 - np.e))*np.exp(-x/10)/(1 - np.exp(2))
+
+x = np.zeros(Npoints)
+for i in range(Npoints):
+    x[i] = x0 + i*Δx
+    T_exact = exact_sol(x[i])
+    error = abs(T[i] - T_exact)
+    print("%18.10f %18.10f %18.10f %18.10e" % (x[i], T[i], T_exact, error))
+
+plt.clf()
+plt.plot(x, T, marker="o", label="Temperature")
+plt.xlabel("x")
+plt.ylabel("T")
+plt.legend()
+\end{pythoncode}
+
+Contoh keluaran
+\begin{textcode}
+FD representation of second-derivative operator:
+[[ 2.04 -1.    0.    0.  ]
+ [-1.    2.04 -1.    0.  ]
+ [ 0.   -1.    2.04 -1.  ]
+ [ 0.    0.   -1.    2.04]]
+f =  [ 40.8   0.8   0.8 200.8]
+      0.0000000000      40.0000000000      40.0000000000   0.0000000000e+00
+      2.0000000000      65.9698343668      65.9517913981   1.8042968650e-02
+      4.0000000000      93.7784621082      93.7477895327   3.0672575481e-02
+      6.0000000000     124.5382283340     124.5035454074   3.4682926640e-02
+      8.0000000000     159.4795236931     159.4533954960   2.6128197126e-02
+     10.0000000000     200.0000000000     200.0000000000   0.0000000000e+00
+\end{textcode}
+
+
