@@ -7,10 +7,14 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib
+plt.rcParams.update({
+    "text.usetex": True,
+    "font.size": 14
+})
+
 from my_ode_solve import *
 from my_root_solving import *
-matplotlib.style.use("dark_background")
+
 
 # T == y[0]
 # dT/dx == y[1]
@@ -76,5 +80,8 @@ plt.plot(x, y[:,0], marker="o", label="Temperature")
 plt.xlabel("x")
 plt.ylabel("T")
 plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.savefig("IMG_example_27_2.pdf")
 plt.savefig("IMG_example_27_2.png", dpi=150)
 

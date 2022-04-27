@@ -8,7 +8,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
-matplotlib.style.use("dark_background")
 
 # T == y[0]
 # dT/dx == y[1]
