@@ -1,3 +1,6 @@
+# FIXME: Broken in SymPy v1.9 and v.10
+# works with v1.7
+
 from sympy import *
 x = symbols("x", real=True)
 T = symbols("T", cls=Function)

@@ -1,6 +1,11 @@
 from math import sin
 import numpy as np
+
 import matplotlib.pyplot as plt
+plt.rcParams.update({
+    "text.usetex": True,
+    "font.size": 14}
+)
 
 def pendulum_ode(x, y):
     Nvec = len(y)
@@ -57,7 +62,9 @@ plt.plot(x, y[:,3], label="y4")
 plt.title("Small displacement case")
 plt.ylim(-4,4) # The same for both small and large displacement (to match the figure in the book)
 plt.legend()
-plt.savefig("IMG_example_25_11_v1.png", dpi=150)
+plt.tight_layout()
+plt.grid(True)
+plt.savefig("IMG_chapra_example_25_11_small.pdf")
 
 
 # initial cond
@@ -77,4 +84,6 @@ plt.plot(x, y[:,3], label="y4")
 plt.title("Large displacement case")
 plt.ylim(-4,4) # The same for both small and large displacement (to match the figure in the book)
 plt.legend()
-plt.savefig("IMG_example_25_11_v2.png", dpi=150)
+plt.tight_layout()
+plt.grid(True)
+plt.savefig("IMG_chapra_example_25_11_large.pdf")

@@ -6,9 +6,12 @@
 #   T(10) = 200
 
 import numpy as np
+
 import matplotlib.pyplot as plt
-import matplotlib
-matplotlib.style.use("dark_background")
+plt.rcParams.update({
+    "text.usetex": True,
+    "font.size": 14
+})
 
 h = 0.01
 T_a = 20.0
@@ -50,18 +53,28 @@ f[0] = h*Δx**2*T_a + T0
 # From the right BC 
 f[-1] = h*Δx**2*T_a + Tf
 # Display
-print(f)
+print("f = ", f)
 
 # Solve the linear equations
 T[1:Npoints-1] = np.linalg.solve(d2dx2,f)
+
+def exact_sol(x):
+    return 20*((1 - np.exp(2))*np.exp(x/10) + (1 - 9*np.e)*np.exp(x/5) + \
+            np.e*(9 - np.e))*np.exp(-x/10)/(1 - np.exp(2))
+
 x = np.zeros(Npoints)
 for i in range(Npoints):
     x[i] = x0 + i*Δx
-    print("%f %f" % (x[i], T[i]))
+    T_exact = exact_sol(x[i])
+    error = abs(T[i] - T_exact)
+    print("%18.10f %18.10f %18.10f %18.10e" % (x[i], T[i], T_exact, error))
+
 
 plt.clf()
 plt.plot(x, T, marker="o", label="Temperature")
 plt.xlabel("x")
 plt.ylabel("T")
 plt.legend()
+plt.grid(True)
+plt.savefig("IMG_example_27_3.pdf")
 plt.savefig("IMG_example_27_3.png", dpi=150)

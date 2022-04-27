@@ -114,4 +114,6 @@ for i,f in enumerate(one_step_funcs):
 plt.xlabel("Effort")
 plt.ylabel("log10(ε_t)")
 plt.legend()
-plt.savefig("IMG_example_25_8.png", dpi=150)
+plt.grid(True)
+plt.tight_layout()
+plt.savefig("IMG_chapra_example_25_8.pdf")

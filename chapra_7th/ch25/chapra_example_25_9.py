@@ -39,7 +39,7 @@ Nstep = 4
 x, y = ode_solve(deriv, ode_euler_1step, x0, y0, h, Nstep)
 print("")
 print("---------------------------")
-print(" x         y1         y2")
+print("   x       y1         y2")
 print("---------------------------")
 for i in range(len(x)):
     print("%5.1f %10.6f %10.6f" % (x[i], y[i,0], y[i,1]))

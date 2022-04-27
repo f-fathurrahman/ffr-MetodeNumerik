@@ -6,9 +6,12 @@
 #   T(10) = 200
 
 import numpy as np
+
 import matplotlib.pyplot as plt
-import matplotlib
-matplotlib.style.use("dark_background")
+plt.rcParams.update({
+    "text.usetex": True,
+    "font.size": 14
+})
 
 
 # T == y[0]
@@ -70,6 +73,10 @@ plt.ylim(25, 300)
 plt.xlabel("x")
 plt.ylabel("T")
 plt.legend(loc=2)
+plt.tight_layout()
+plt.grid(True)
+plt.title("1st guess")
+plt.savefig("IMG_example_27_1_v2_1st.pdf")
 plt.savefig("IMG_example_27_1_v2_1st.png", dpi=150)
 
 
@@ -87,6 +94,10 @@ plt.ylim(25, 300)
 plt.xlabel("x")
 plt.ylabel("T")
 plt.legend(loc=2)
+plt.tight_layout()
+plt.grid(True)
+plt.title("2nd guess")
+plt.savefig("IMG_example_27_1_v2_2nd.pdf")
 plt.savefig("IMG_example_27_1_v2_2nd.png", dpi=150)
 
 
@@ -107,5 +118,23 @@ plt.ylim(25, 300)
 plt.xlabel("x")
 plt.ylabel("T")
 plt.legend(loc=2)
+plt.tight_layout()
+plt.grid(True)
+plt.title("3rd guess")
+plt.savefig("IMG_example_27_1_v2_3rd.pdf")
 plt.savefig("IMG_example_27_1_v2_3rd.png", dpi=150)
+
+def exact_sol(x):
+    #return 73.4532*np.exp(0.1*x) - 53.4523*np.exp(-0.1*x) + 20.0
+    return 20*((1 - np.exp(2))*np.exp(x/10) + (1 - 9*np.e)*np.exp(x/5) + \
+            np.e*(9 - np.e))*np.exp(-x/10)/(1 - np.exp(2))
+
+T_exact = exact_sol(x)
+T_num = y[:,0]
+error = np.abs(T_exact - T_num)
+for i in range(len(x)):
+    print("%18.10f %18.10f %18.10f %15.10e" % (x[i], T_num[i], T_exact[i], error[i]))
+
+#print("T_exact = ", T_exact)
+#print("T_num   = ", T_num)
 

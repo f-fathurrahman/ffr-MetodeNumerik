@@ -31,6 +31,10 @@ Nstep = int(xf/h)
 
 x = x0
 y = y0
+print("------------------------------------------")
+print("  x         y_true      y_Heun_iter    ε_t")
+print("------------------------------------------")
+print("%f %12.7f" % (x, y)) # initial
 for i in range(0,Nstep):
     xp1 = x + h
     yp1 = ode_heun_1step_iterative(deriv, x, y, h)
