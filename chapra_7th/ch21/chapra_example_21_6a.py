@@ -3,16 +3,6 @@ import numpy as np
 def my_func(x):
     return 0.2 + 25*x - 200*x**2 + 675*x**3 - 900*x**4 + 400*x**5
 
-def integ_simpson13( f, a, b ):
-    #
-    h = (b - a)/3
-    x0 = a
-    x1 = a + h
-    x2 = b
-    #
-    I = h/3 * ( f(x0) + 4*f(x1) + f(x2) )
-    return I
-
 def integ_simpson38( f, a, b ):
     #
     h = (b - a)/3
