@@ -2,8 +2,8 @@
 
 \begin{document}
 
-\title{Numerical Methods}
-\subtitle{Ordinary Differential Equation}
+\title{Metode Numerik}
+\subtitle{Persamaan Diferensial Biasa}
 \author{Fadjar Fathurrahman}
 \institute{
 Teknik Fisika \\
@@ -16,24 +16,24 @@ Institut Teknologi Bandung
 
 
 \begin{frame}
-\frametitle{Examples}
+\frametitle{Contoh}
 
-Newton's equation of motion
+Persamaan gerak Newton:
 \begin{equation*}
 \frac{\mathrm{d}v}{\mathrm{d}t} = \frac{F}{m}
 \end{equation*}
 
-Fourier's heat law:
+Persamaan kalor Fourier:
 \begin{equation*}
 q = -k \frac{\mathrm{d}T}{\mathrm{d}x}
 \end{equation*}
 
-Fick's law of diffusion:
+Hukum difusi Fick:
 \begin{equation*}
 J = -D \frac{\mathrm{d}c}{\mathrm{d}x}
 \end{equation*}
 
-Faraday's law:
+Hukum Faraday:
 \begin{equation*}
 \Delta V_{L} = L \frac{\mathrm{d}i}{\mathrm{d}t}
 \end{equation*}
@@ -43,20 +43,22 @@ Faraday's law:
 
 % ----------------------------------------------------
 \begin{frame}
-\frametitle{General form of initial value problem}
+\frametitle{Bentuk umum permasalahan nilai awal}
 
-Solve the ODE:
+Permasalahan nilai awal: \textit{initial value problem} (IVP)
+
+Selesaikan persamaan diferensial
 \begin{equation}
 \frac{\mathrm{d}y}{\mathrm{d}x} = f(x,y)
 \label{eq:ode_gen01}
 \end{equation}
-given the initial condition $y(x=x_0) = y_0$.
+diberikan syarat awal: $y(x=x_0) = y_0$.
 
-$y(x)$ is the dependent variable (or the function that we search for)
-and $x$ is the independent variable.
+$y(x)$ adalah variabel dependen (atau fungsi yang ingin dicari)
+dan $x$ adalah variabel independen.
 
-For initial value problem it is usually
-more common to use $t$ as the independent variable:
+Untuk masalah nilai awal, biasanya lebih sering menggunakan $t$ sebagai
+variabel independen:
 \begin{equation}
 \frac{\mathrm{d}y}{\mathrm{d}t} = f(t,y)
 \label{eq:ode_gen02}
@@ -67,12 +69,12 @@ more common to use $t$ as the independent variable:
 % -----------------------
 
 \begin{frame}
-\frametitle{Methods to solve IVP}
+\frametitle{Metode-metode untuk IVP}
   
 \begin{itemize}
-\item one-step methods
-\item multi-step methods
-\item implicit methods for stiff ODEs
+\item Metode satu-langkah
+\item Metode multi-langkah
+\item Metode implisit
 \end{itemize}
 
 \end{frame}
@@ -82,39 +84,39 @@ more common to use $t$ as the independent variable:
 % -----------------------
 
 \begin{frame}
-\frametitle{One-step methods}
+\frametitle{Metode satu langkah}
 
-A simple method:
+Bentuk umum:
 \begin{equation*}
 y_{i+1} = y_{i} + \phi h
 \end{equation*}
 
-$y_{i}$: old value
+$y_{i}$: nilai lama
 
-$y_{i+1}$: new value
+$y_{i+1}$: nilai baru
 
-$\phi$: slope estimate
+$\phi$: estimasi kemiringan (\textit{slope})
 
 \end{frame}
 
 
 \begin{frame}
-\frametitle{Euler's method}
+\frametitle{Metode Euler}
 
 \begin{columns}
 
 \begin{column}{0.5\textwidth}
   {\centering
-  \includegraphics[width=0.9\textwidth]{images_priv/Chapra_Fig_25_1.pdf}
+  \includegraphics[width=0.9\textwidth]{../../images_priv/Chapra_Fig_25_1.pdf}
   \par}    
 \end{column}
 
 \begin{column}{0.5\textwidth}
-  Use the 1st derivative as direct estimate of slope at $x_i$:
+  Menggunakan turunan pertama pada $x_i$ sebagai estimasi langsung dari kemiringan $\phi$:
   \begin{equation*}
   \phi = f(x_i, y_i)
   \end{equation*}
-  or
+  sehingga diperoleh:
   \begin{equation*}
   y_{i+1} = y_{i} + f(x_i, y_i) h
   \end{equation*}
@@ -128,21 +130,22 @@ $\phi$: slope estimate
 % ------------------------------------
 
 \begin{frame}
-\frametitle{Example}
-Solve
+\frametitle{Contoh}
+Cari solusi numerik dari IVP
 \begin{equation*}
 \frac{\mathrm{d}y}{\mathrm{d}x} = -2x^3 + 12x^2 - 20x + 8.5
 \end{equation*}
-from $x = 0$ to $x = 4$ with a step size $h=0.5$.
-Initial condition: $y(x=0) = 1$.
+dari $x = 0$ sampai $x = 4$ dengan ukuran langkah $h=0.5$.
+Syarat awal: $y(x=0) = 1$.
 
-Comparing with general form of ODE \eqref{eq:ode_gen01}, we have:
+Dengan membandingkan bentuk umum dari ODE \eqref{eq:ode_gen01}, diperoleh:
 \begin{equation*}
 f(x,y) = -2x^3 + 12x^2 - 20x + 8.5
 \end{equation*}
-Note that in this case $f(x,y)$ does not depend of $y$.
+Perhatikan bahwa pada kasus pada contoh ini, fungsi $f(x,y)$
+tidak bergantung dari $y$.
 
-Compare the obtained numerical solution with exact solution:
+Bandingkan solusi numerik yang diperoleh dengan solusi eksak:
 \begin{equation*}
 y(x) = -0.5x^4 + 4x^3 - 10x^2 + 8.5x + 1
 \end{equation*}
@@ -150,48 +153,48 @@ y(x) = -0.5x^4 + 4x^3 - 10x^2 + 8.5x + 1
 \end{frame}
 
 
+
 \begin{frame}[fragile]
-\frametitle{Implementation}
+\frametitle{Implementasi}
 
-Let's make define several functions that we will use later.
+Pertama, kita akan mendefinisikan beberapa fungsi yang akan digunakan nantinya.
 
-First the one-step application of Euler's method.
-
-This code fragment implements one-step application of Euler's method for ODE
+Pertama, kita akan mendefinisikan fungsi untuk aplikasi metode Euler satu langkah:
 \begin{equation*}
 y_{i+1} = y_{i} + f(x_i, y_i) h
 \end{equation*}
-
+dengan menggunakan fungsi berikut:
 \begin{pythoncode}
 def ode_euler_1step(dfunc, xi, yi, h):
     return yi + dfunc(xi,yi)*h
 \end{pythoncode}
 
-The passed function \pyinline{dfunc} implement the RHS $f(x,y)$. It should be defined like:
+Fungsi yang dilemparkan \pyinline{dfunc} mengimplementasikan fungsi pada ruas kanan,
+yaitu $f(x,y)$. Fungsi ini harus diimplementasikan dalam bentuk sebagai berikut.
 \begin{pythoncode}
 def dfunc(x,y):
     return ... # implement f(x,y)
 \end{pythoncode}
 
-We can call \pyinline{ode_euler_1step} multiple times to advance the solution from initial
-condition until the required $x$ (independent variable).
+Kita dapat memanggil \pyinline{ode_euler_1step} beberapa kali dari kondisi awal
+sampai jumlah langkah yang diperlukan.
 
 \end{frame}
 
 
 \begin{frame}[fragile]
-The previous code fragments are quite general. Now let's code specific
-details for our current problem, i.e:
+Potongan kode yang diberikan sebelumnya cukup umum. Sekarang kita akan
+memberikan kode untuk kasus yang diberikan pada contoh, yaitu:
 \begin{equation*}
 \frac{\mathrm{d}y}{\mathrm{d}x} = -2x^3 + 12x^2 - 20x + 8.5
 \end{equation*}
 
-The following implement the RHS function $f(x,y)$:
+Fungsi berikut ini mendefinisikan fungsi pada ruas kanan $f(x,y)$
 \begin{pythoncode}
 def deriv(x, y):
     return -2*x**3 + 12*x**2 - 20*x + 8.5
 \end{pythoncode}
-and the exact solution:
+Solusi eksak didefinisikan pada fungsi berikut.
 \begin{pythoncode}
 def exact_sol(x):
     return -0.5*x**4 + 4*x**3 - 10*x**2 + 8.5*x + 1
@@ -201,7 +204,7 @@ def exact_sol(x):
 
 \begin{frame}[fragile]
 
-Test \pyinline{ode_euler_1step}:
+Pengujian \pyinline{ode_euler_1step}:
 \begin{pythoncode}
 x0 = 0.0; y0 = 1.0 # Initial condition
 x = x0; y = y0; h = 0.5 # Using step of 0.5, starting from x0 and y0
@@ -213,10 +216,10 @@ print("First step : x = %f y_true = %.5f y = %.5f ε_t = %.1f %%" %
   (xp1, y_true, yp1, ε_t))
 \end{pythoncode}
 
-Your task: continue this for the next steps.
-You can use loop.
+Tugas: lanjutkan sampai langkah-langkah selanjutnya.
+Anda dapat menggunakan loop.
 
-Example output (including 2nd step):
+Contoh keluaran (dua langkah):
 \begin{textcode}
 First step : x = 0.500000 y_true = 3.21875 y = 5.25000 ε_t = -63.1 %
 Second step: x = 1.000000 y_true = 3.00000 y = 5.87500 ε_t = -95.8 %
@@ -228,7 +231,7 @@ Second step: x = 1.000000 y_true = 3.00000 y = 5.87500 ε_t = -95.8 %
 
 \begin{frame}[fragile]
 
-Example of calling \pyinline{ode_euler_1step} several times.
+Contoh pemanggilan \pyinline{ode_euler_1step} beberapa kali.
 \begin{pythoncode}
 x = x0; y = y0; h = 0.5
 for i in range(0,Nsteps):
@@ -242,9 +245,10 @@ for i in range(0,Nsteps):
     x = xp1; y = yp1
 \end{pythoncode}
 
-Your task: Save the calculation results (x and y) to array and make a plot.
+Tugas: simpan hasil kalkulasi, yaitu \pyinline{x} dan
+\pyinline{y} ke array dan buat plot.
 
-You also can wrap this in a function.
+Anda juga dapat mengimplementasikan ini dalam suatu fungsi.
 
 \end{frame}
 
