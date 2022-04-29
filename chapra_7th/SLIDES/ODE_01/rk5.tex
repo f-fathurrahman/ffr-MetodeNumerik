@@ -1,0 +1,65 @@
+\begin{frame}
+\frametitle{Metode Runge-Kutta Orde 5}
+\fontsize{9pt}{8.0}\selectfont
+
+Skema (Butcher 1964):
+\begin{equation*}
+y_{i+1} = y_i + \frac{1}{90} ( 7 k_1 + 32 k_3 + 12 k_4 + 32 k_5 + 7 k_6) h
+\end{equation*}
+dengan:
+\begin{align*}
+k_1 & = f(x_i, y_i) \\
+k_2 & = f\left( x_i + \frac{1}{4}h, y_i + \frac{1}{4} k_1 h \right) \\
+k_3 & = f\left( x_i + \frac{1}{4}h, y_i + \frac{1}{8} k_1 h + \frac{1}{8} k_2 h \right) \\
+k_4 & = f\left( x_i + \frac{1}{2}h, y_i - \frac{1}{2} k_2 h + k_3 h \right) \\
+k_5 & = f\left( x_i + \frac{3}{4}h, y_i + \frac{3}{16} k_1 h + \frac{9}{16} k_4 h \right) \\
+k_6 & = f\left( x_i + h, y_i - \frac{3}{7} k_1 h + \frac{2}{7} k_2 h +
+\frac{12}{7}k_3 h - \frac{12}{7}k_4 h + \frac{8}{7}k_5 h \right)
+\end{align*}
+
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+\frametitle{Implementasi Metode Runge-Kutta Orde 5}
+
+\begin{pythoncode}
+def ode_rk5_1step(dfunc, xi, yi, h):
+    k1 = dfunc(xi, yi)
+    k2 = dfunc(xi + h/4, yi + k1*h/4)
+    k3 = dfunc(xi + h/4, yi + k1*h/8 + k2*h/8)
+    k4 = dfunc(xi + h/2, yi - k2*h/2 + k3*h)
+    k5 = dfunc(xi + 3*h/4, yi + 3*k1*h/16 + 9*k4*h/16)
+    k6 = dfunc(xi + h, yi - 3*k1*h/7 + 2*k2*h/7 + 12*k3*h/7 - 12*k4*h/7 + 8*k5*h/7)
+    yip1 = yi + (7*k1 + 32*k3 + 12*k4 + 32*k5 + 7*k6)*h/90
+    return yip1
+\end{pythoncode}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Contoh}
+
+Gunakan metode \textit{midpoint}, Ralston, Runge-Kutta orde-3, -4, dan -5 untuk
+menyelesaikan persamaan diferensial yang sama pada Chapra Contoh 25.5.
+
+\begin{pythoncode}
+def deriv(x, y):
+    return 4*exp(0.8*x) - 0.5*y
+    
+def exact_sol(x):
+    return 4.0/1.3*( exp(0.8*x) - exp(-0.5*x) ) + 2*exp(-0.5*x)
+
+# .... sama dengan kode sebelumnya
+    
+x = x0; y = y0
+for i in range(0,Nstep):
+    xp1 = x + h
+    yp1 = ode_midpoint_1step(deriv, x, y, h) # ganti bagian ini
+# .... sama dengan kode sebelumnya
+#
+\end{pythoncode}
+
+\end{frame}

@@ -1,0 +1,21 @@
+\begin{frame}[fragile]
+\frametitle{Metode titik tengah (\textit{midpoint})}
+
+Skema:
+\begin{align*}
+y_{i+1/2} & = y_{i} + f(x_i, y_i) \frac{h}{2} \\
+y_{i+1} & = y_{i} + f(x_{i+1/2}, y_{i+1/2}) h
+\end{align*}
+
+Implementasi:
+\begin{pythoncode}
+def ode_midpoint_1step(dfunc, xi, yi, h):
+    yip12 = yi + deriv(xi,yi)*h/2  # midpoint value
+    xip12 = xi + 0.5*h             # midpoint
+    yip1 = yi + deriv(xip12,yip12)*h
+    return yip1
+\end{pythoncode}
+
+\end{frame}
+
+
