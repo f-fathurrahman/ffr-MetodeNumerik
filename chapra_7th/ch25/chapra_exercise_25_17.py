@@ -24,17 +24,19 @@ def ode_rk5_1step(dfunc, xi, yi, h):
 t0 = 0.0
 y0 = 3.0
 yf = 0.0
-h = 0.5
+h = 0.5 # try to change this
 
 t = t0
 y = y0
 NstepMax = 1000
-SMALL = 1e-4
-for i in range(0,NstepMax): # or use while True
+SMALL = 1e-5
+print("%18.10f %18.10f" % (t, y))
+#for i in range(0,NstepMax): # or use while True
+while True:
     tp1 = t + h
     yp1 = ode_euler_1step(deriv, t, y, h)
     #yp1 = ode_rk5_1step(deriv, t, y, h)
-    print("%f %f" % (tp1, yp1))
+    print("%18.10f %18.10f" % (tp1, yp1))
     if yp1 <= SMALL:
         break
     # For the next step
