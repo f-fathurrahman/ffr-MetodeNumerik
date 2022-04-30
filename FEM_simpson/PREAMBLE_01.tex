@@ -1,0 +1,82 @@
+\documentclass[a4paper,10pt,bahasa]{extarticle} % screen setting
+\usepackage[a4paper]{geometry}
+
+%\documentclass[b5paper,11pt,bahasa]{article} % screen setting
+%\usepackage[b5paper]{geometry}
+
+%\geometry{verbose,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm}
+
+\geometry{verbose,tmargin=2.0cm,bmargin=2.0cm,lmargin=2.0cm,rmargin=2.0cm}
+
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+
+%\usepackage{cmbright}
+%\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+%\usepackage[libertine]{newtxmath}
+%\usepackage[no-math]{fontspec}
+%\setmainfont{Linux Libertine O}
+
+\usepackage{fontspec}
+\usepackage{lmodern}
+\setmonofont{JuliaMono-Regular}
+
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{mhchem}
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{minted}
+
+\newminted{julia}{breaklines,fontsize=\footnotesize,linenos}
+\newminted{python}{breaklines,fontsize=\footnotesize,linenos}
+
+\newminted{bash}{breaklines,fontsize=\footnotesize}
+\newminted{text}{breaklines,fontsize=\footnotesize}
+
+\newcommand{\txtinline}[1]{\mintinline[breaklines,fontsize=\footnotesize]{text}{#1}}
+\newcommand{\jlinline}[1]{\mintinline[breaklines,fontsize=\footnotesize]{julia}{#1}}
+\newcommand{\pyinline}[1]{\mintinline[breaklines,fontsize=\footnotesize]{python}{#1}}
+
+\newmintedfile[juliafile]{julia}{breaklines,fontsize=\footnotesize}
+\newmintedfile[pythonfile]{python}{breaklines,fontsize=\footnotesize}
+\newmintedfile[fortranfile]{fortran}{breaklines,fontsize=\footnotesize}
+
+\usepackage{mdframed}
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage{babel}
+\usepackage{appendix}
+
+\newcommand{\highlighteq}[1]{\colorbox{blue!25}{$\displaystyle#1$}}
+\newcommand{\highlight}[1]{\colorbox{red!25}{#1}}
+
+\newcounter{soal}%[section]
+\newenvironment{soal}[1][]{\refstepcounter{soal}\par\medskip
+   \noindent \textbf{Soal~\thesoal. #1} \sffamily}{\medskip}
+
+
+\definecolor{mintedbg}{rgb}{0.9,0.9,0.9}
+\BeforeBeginEnvironment{minted}{
+    \begin{mdframed}[backgroundcolor=mintedbg,%
+        topline=false,bottomline=false,%
+        leftline=false,rightline=false]
+}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+
+
+\BeforeBeginEnvironment{soal}{
+    \begin{mdframed}[%
+        topline=true,bottomline=false,%
+        leftline=true,rightline=false]
+}
+\AfterEndEnvironment{soal}{\end{mdframed}}

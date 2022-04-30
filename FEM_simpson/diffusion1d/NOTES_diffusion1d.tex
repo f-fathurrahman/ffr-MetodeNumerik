@@ -8,7 +8,7 @@
 \date{}
 \maketitle
 
-Difusi Transien 1d
+\section*{Pendahuluan}
 
 Persamaan yang ingin diselesasikan adalah:
 \begin{equation*}
@@ -31,7 +31,7 @@ Syarat batas:
 T(x=0,t) = 0 \,\, \text{dan} \,\, T(x=L_{x},t) = 0
 \end{equation*}
 
-
+\section*{Ekspansi fungsi basis}
 Ekspansi solusi dengan fungsi basis (fungsi bentuk, \textit{shape functions}):
 \begin{equation*}
 T(x) \approx \sum_{i=1}^{n} N_{i}(x) T_{i}
@@ -45,8 +45,7 @@ T_{1} \\ T_{2}
 \end{bmatrix}
 \end{equation*}
 
-
-Elemen linear
+Kita akan menggunakan elemen linear:
 \begin{align*}
 N_{1}(x) & = 1 - \frac{x}{L} \\
 N_{2}(x) & = \frac{x}{L}
@@ -221,6 +220,99 @@ Sistem global (menggunakan matriks dan vektor global):
 \par}
 \caption{Ilustrasi assembli matriks dan vektor global}
 \end{figure}
+
+
+Gauss-Legendre quadrature
+
+Tinjau integral:
+$$
+\int_{-1}^{1} f(\xi)\ \mathrm{d}\xi
+$$
+Aturan integral Gauss-Legendre:
+$$
+\int_{-1}^{1} f(\xi)\ \mathrm{d}\xi \approx
+\sum_{k=1}^{n} w_{k} f(\xi_{k})
+$$
+
+Koordinat Lokal
+
+Pemetaan dari $[0,L]$ ke $[-1,1]$:
+$$
+x = \frac{L}{2}(\xi + 1)
+$$
+Dengan mensubstitusikan ini ke definisi dari shape function, kita memperoleh definisi shape function pada koordinat lokal:
+$$
+N_1(\xi) = \frac{1 - \xi}{2} \\
+N_2(\xi) = \frac{1 + \xi}{2}
+$$
+Fungsi pada koordinat lokal dapat digunakan untuk memetakan koordinat dari koordinat lokal ke koordinat ruang fisis. Misalkan jika $x_1$ dan $x_2$ adalah koordinat nodal pada ruang fisis dan $N_1$ dan $N_2$ dievaluasi pada posisi tertentu $\xi$ pada domain $[-1,1]$, maka dengan menggunakan
+$$
+x = N_1(\xi) x_1 + N_2(\xi) x_{2} = \mathbf{N}\mathbf{x}
+$$
+memberikan koordinat $x$ pada ruang fisis yang berkorespondensi dengan $\xi$. (dot product?, karena $\mathbf{N}$ adalah vektor baris, $\mathbf{x}$ adalah vektor kolom).
+
+Persamaan ini memiliki bentuk yang sama dengan persamaan yang digunakan untuk mengaproksimasi solusi FEM. Elemen yang memiliki sifat ini disebut sebagai isoparametrik.
+
+Turunan dari shape function dapat didefinisikan pada koordinat lokal.
+$$
+\frac{\partial N_i}{\partial x} =
+\frac{\partial N_i}{\partial \xi}
+\frac{\partial \xi}{\partial x}
+$$
+Dengan menggunakan pemetaan dari $x$ ke $\xi$ diperoleh:
+$$
+\frac{\partial x}{\partial \xi} = \frac{L}{2}
+$$
+ Sedangkan:
+$$
+\frac{\partial N_1}{\partial \xi} = -\frac{1}{2} \\
+\frac{\partial N_2}{\partial \xi} = \frac{1}{2}
+$$
+
+Evaluasi integral
+
+Misalkan kita ingin menghitung integral:
+$$
+\int_{0}^{L} N_{1}(x) N_{1}(x)\ \mathrm{d}x
+$$
+Pertama, kita mentransformasi integral in ke domain $[-1,1]$ sehingga dapat dievaluasi dengan kuadratur Gauss-Legendre, yang diperoleh dengan mengganti $N_1(x)$ dengan $N_{2}(\xi)$ mensubstitusikan $\mathrm{d}x = (L/2)\mathrm{d}\xi$, sehingga diperoleh
+$$
+\int_{0}^{L} N_{1}(x) N_{1}(x)\ \mathrm{d}x = \frac{L}{2}
+\int_{-1}^{1} N_{1}(\xi) N_{1}(\xi)\ \mathrm{d}\xi
+$$
+Aplikasi kuadratur Gauss-Legendre:
+$$
+\frac{L}{2}
+\int_{-1}^{1} N_{1}(\xi) N_{1}(\xi)\ \mathrm{d}\xi \approx
+\frac{L}{2} \sum_{k=1}^{n} w_{k} N_{1}(\xi_{k}) N_{1}(\xi_{k})
+$$
+Tinjau integral:
+$$
+\int_{0}^{L} \kappa \frac{\partial N_2}{\partial x}
+\frac{\partial N_2}{\partial x} \ \mathrm{d}x =
+\frac{2}{L} \int_{-1}^{1} \kappa \frac{\partial N_2}{\partial \xi}
+\frac{\partial N_2}{\partial \xi} \ \mathrm{d}\xi
+$$
+yang dapat diaproksimasi dengan kuadratur Gauss-Legendre:
+$$
+\frac{2}{L} \int_{-1}^{1} \kappa \frac{\partial N_2}{\partial \xi}
+\frac{\partial N_2}{\partial \xi} \ \mathrm{d}\xi \approx
+\frac{2}{L} \sum_{k=1}^{n} \kappa \ w_{k}
+\frac{\partial N_2}{\partial \xi_{k}}
+\frac{\partial N_2}{\partial \xi_{k}}
+$$
+
+Variable material properties
+
+Tinjau integral:
+$$
+\int_{0}^{L} H(x) N_{2}(x)\ \mathrm{d}x = \frac{L}{2}\int_{-1}^{1} \approx
+\frac{L}{2}\sum_{k=1}^{n} w_{k} H(\xi_{k}) N_{2}(\xi_{k})
+$$
+dengan mengasumsikan nilai $H_1 = H(\xi_1)$ dan $H_2 = H(\xi_2)$ diketahui, kita dapat menggunaan interpolasi
+$$
+H(\xi_{k}) = H_1 N_{1}(\xi_{k}) + H_2 N_{2}(\xi_{k})
+$$
 
 
 %\bibliographystyle{unsrt}
