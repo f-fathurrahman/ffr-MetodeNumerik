@@ -115,6 +115,16 @@ The derivatives:
 
 \end_inset
 
+Normal equations:
+\begin_inset Formula 
+\begin{align*}
+(n)a_{0}+\left(\sum x_{i}\right)a_{1}+\left(\sum x_{i}^{2}\right)a_{2} & =\sum y_{i}\\
+\left(\sum x_{i}\right)a_{0}+\left(\sum x_{i}^{2}\right)a_{1}+\left(\sum x_{i}^{3}\right)a_{2} & =\sum x_{i}y_{i}\\
+\left(\sum x_{i}^{2}\right)a_{0}+\left(\sum x_{i}^{3}\right)a_{1}+\left(\sum x_{i}^{4}\right)a_{2} & =\sum x_{i}^{2}y_{i}
+\end{align*}
+
+\end_inset
+
 
 \end_layout
 
