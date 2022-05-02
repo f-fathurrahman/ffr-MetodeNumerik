@@ -1,0 +1,118 @@
+%\input{../PREAMBLE_tufte}
+\input{../PREAMBLE_article}
+
+\begin{document}
+
+\title{Pengenalan Metode Elemen Hingga: Difusi Transien 2d}
+\author{Fadjar Fathurrahman}
+\date{}
+\maketitle
+
+\begin{equation*}
+\rho c \frac{\partial T}{\partial t} = -\nabla \cdot \mathbf{q} + A = 
+\begin{bmatrix}\frac{\partial}{\partial x} \\
+\frac{\partial}{\partial y} \end{bmatrix} \cdot
+\begin{bmatrix} q_x \\ q_y \end{bmatrix}
+\end{equation*}
+
+Hubungan konstitutif (Hukum Fourier):
+\begin{equation*}
+\mathbf{q} = \begin{bmatrix}
+q_x \\ q_y \end{bmatrix} = 
+-\begin{bmatrix} k & 0 \\ 0 & k \end{bmatrix}
+\begin{bmatrix} \frac{\partial}{\partial x} \\ \frac{\partial}{\partial y} \end{bmatrix} T =
+-\mathbf{K} \nabla T
+\end{equation*}
+
+diperoleh:
+\begin{equation*}
+\frac{\partial T}{\partial t} = \nabla \cdot (\mathbf{K} \nabla T) + \frac{A}{\rho c}
+\end{equation*}
+
+$\mathbf{K}$: tensor difusivitas termal, dengan entri diagonal $k_x/\rho c$ dan
+$k_y/\rho c$, dan nol pada entri lainnya.
+
+Jika difusivitas termal adalah konstan, persamaan ini dapat ditulis menjadi:
+\begin{equation*}
+\frac{\partial T}{\partial t} = \kappa \left(
+\frac{\partial^2 T}{\partial x^2} + \frac{\partial^2 T}{\partial y^2}
+\right) + H
+\end{equation*}
+
+Syarat awal:
+\begin{equation*}
+T(x,y,t=0) = 1 \,\, \forall x \in [0,L_x], \forall y \in [0,L_y]
+\end{equation*}
+
+Kondisi batas Dirichlet:
+\begin{align*}
+T(x=0,y,t)   & = 0 \\
+T(x=L_x,y,t) & = 0 \\
+T(x,y=0,t)   & = 0 \\
+T(x,y=L_y,t) & = 0 \\
+\end{align*}
+
+Diskritisasi
+
+Fungsi basis:
+\begin{equation*}
+\mathbf{N}^{\mathsf{T}} = \begin{bmatrix}
+N_1 & N_2 & N_3 & N_4
+\end{bmatrix}
+\end{equation*}
+
+\begin{equation*}
+T \approx \begin{bmatrix}
+N_1 & N_2 & N_3 & N_4
+\end{bmatrix}
+\begin{bmatrix}
+T_1 \\ T_2 \\ T_3 \\ T_4
+\end{bmatrix} = 
+\mathbf{N}^{\mathsf{T}} \mathbf{T}
+\end{equation*}
+
+
+Substitusi, untuk menghitung residual:
+\begin{equation*}
+R =
+\frac{\partial}{\partial t} \mathbf{N}^{\mathsf{T}} \mathbf{T} -
+\nabla \cdot (\mathbf{K} \nabla \mathbf{N}^{\mathsf{T}} \mathbf{T}) - H
+\end{equation*}
+
+
+\begin{equation*}
+\nabla \mathbf{N}^{\mathsf{T}} = 
+\begin{bmatrix}
+\frac{\partial}{\partial x} \\ \frac{\partial}{\partial y}
+\end{bmatrix}
+\begin{bmatrix}
+N_1 & N_2 & N_3 & N_4
+\end{bmatrix} = 
+\begin{bmatrix}
+\frac{\partial N_1}{\partial x} & \frac{\partial N_2}{\partial x} &
+\frac{\partial N_3}{\partial x} & \frac{\partial N_4}{\partial x} \\
+\frac{\partial N_1}{\partial y} & \frac{\partial N_2}{\partial y} &
+\frac{\partial N_3}{\partial y} & \frac{\partial N_4}{\partial y} \\
+\end{bmatrix}
+\end{equation*}
+
+
+Galerkin:
+\begin{equation*}
+\int \mathbf{N} \frac{\partial}{\partial t} \mathbf{N}^{\mathsf{T}}
+\mathbf{T} \, \mathrm{d}x \, \mathrm{d}y - 
+\int \mathbf{N} \nabla \cdot
+(\mathbf{K} \nabla \mathbf{N}^{\mathsf{T}} \mathbf{T}
+\, \mathrm{d}x \, \mathrm{d}y = 
+\int H \mathbf{N} \, \mathrm{d}x \, \mathrm{d}y
+\end{equation*}
+
+Menggunakan integral parsial dan mengabaikan integral batas (boundary integral):
+\begin{equation*}
+\int \mathbf{N} \mathbf{N}^{\mathsf{T}} \, \mathrm{d}x \, \mathrm{d}y
+\frac{\partial}{\partial t} \mathbf{T} +
+\int ( \nabla \mathbf{N}^{\mathsf{T}} )^{\mathsf{T}} \mathbf{K}
+( \nabla \mathbf{N}^{\mathsf{T}}) \, \mathrm{d}x \, \mathrm{d}y \mathbf{T}
+\end{equation*}
+
+\end{document}

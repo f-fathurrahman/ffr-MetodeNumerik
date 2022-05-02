@@ -2,9 +2,6 @@ using Printf
 using LinearAlgebra
 using SparseArrays
 
-import PyPlot
-const plt = PyPlot
-
 function calc_analytic_solution!( κ, Lx, Ly, t, xgrid, ygrid, Texact )
     Nterms = 100 # HARDCODED
     x = xgrid .- Lx/2
@@ -98,7 +95,6 @@ function main()
     bcdof = unique(vcat(bx0, bxn, by0, byn))  # boundary nodes
     Nbcdof = length(bcdof)
     bcval = Tb*ones(Nbcdof)  # boundary temperatures
-    println("Nbcdof = ", Nbcdof)
 
     NintegPoints = 4
     # gauss integration data
@@ -139,10 +135,6 @@ function main()
         der[2,4] = -ξp
         der_s[:,:,k] = der # derivatives of shape function
     end
-    #for i in 1:NintegPoints
-    #    println("\ni = ", i)
-    #    display(der_s[:,:,i]); println()
-    #end
 
     # Matrices and vectors
     ff = zeros(Float64, NnodesTotal)  # system load vector
@@ -176,9 +168,16 @@ function main()
             F = F + fun*H*detjac*wIntegPoints[k]
         end
         # assemble global matrices and vector
-        LHS[num,num] = LHS[num,num] + MM/dt + KM
-        RHS[num,num] = RHS[num,num] + MM/dt
-        ff[num] = ff[num] + F
+        for j in 1:NnodesPerElement, i in 1:NnodesPerElement
+            ii = num[i]
+            jj = num[j]
+            LHS[ii,jj] = LHS[ii,jj] + MM[i,j]/dt + KM[i,j]
+            RHS[ii,jj] = RHS[ii,jj] + MM[i,j]/dt
+        end
+        for i in 1:NnodesPerElement
+            ii = num[i]
+            ff[ii] = ff[ii] + F[i]
+        end
     end
 
     displ = Ti*ones(NnodesTotal) # initial condition
@@ -197,29 +196,14 @@ function main()
     factorLHS = lu(LHS)
 
     for n in 1:Ntime
-        t = t + dt # update time
-        #println(displ[100])
+        t = t + dt
         b[:] = RHS*displ + ff # form rhs global vector
         b[bcdof] = bcval # set boundary values
         #
-        #displ = LHS \ b # solve system of equations
         ldiv!(displ, factorLHS, b)
-
-        #calc_analytic_solution!( κ, Lx, Ly, t, xgrid, ygrid, Texact )
-        #data = reshape(displ, (NnodesY,NnodesX))
-        #diffT = sum(abs.( Texact .- data ))/(NnodesTotal)
-        #println("diffT = ", diffT)
-
     end
-
-    #data = reshape(displ, (NnodesY,NnodesX))
-    #plt.clf()
-    #plt.contour(xgrid, ygrid, data)
-    #plt.savefig("IMG_contour.pdf")
-    #plt.clf()
-    #plt.contour(xgrid, ygrid, data)
-    #plt.savefig("IMG_exact.pdf")
 
 end
 
+@time main()
 @time main()
