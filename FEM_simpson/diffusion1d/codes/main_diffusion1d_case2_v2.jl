@@ -99,40 +99,43 @@ function main(; do_plot=false)
     end
 
     Texact = zeros(NnodesTotal)
-    # Initial condition
     Tnum = zeros(NnodesTotal)
     for i in 1:NnodesTotal
         Tnum[i] = sin(π*g_coord[i])
     end
     b = zeros(NnodesTotal)
 
-    if do_plot
-        plt.clf()
-        plt.plot(g_coord, Tnum, marker="o")
-        plt.grid(true)
-        plt.savefig("IMG_case2_initial.png", dpi=150)
-    end
+    LHS[1,2] = 0.0
+    LHS[1,1] = 1.0
+    LHS[NnodesTotal,NnodesTotal-1] = 0.0
+    LHS[NnodesTotal,NnodesTotal] = 1.0
+    factorLHS = lu(LHS)
+
+    plt.clf()
+    plt.plot(g_coord, Tnum, marker="o")
+    plt.grid(true)
+    plt.savefig("IMG_case2_initial.png", dpi=150)
 
     # Time loop
     t = 0.0
+    for ni in 1:Ntime
 
-    for tstep in 1:Ntime
+        t = t + dt
 
-        t = t + dt # increment time
+        # Boundary condition, pulled out from the time loop
+        #LHS[1,2] = 0.0
+        #LHS[1,1] = 1.0
+        #LHS[NnodesTotal,NnodesTotal-1] = 0.0
+        #LHS[NnodesTotal,NnodesTotal] = 1.0
+
+        #println("After setting BC, RHS = ")
+        #display(RHS); println()
 
         @views b[:] = RHS*Tnum + ff
-
-        # Set up Dirichlet BC
-        # The LHS matrix
-        LHS[1,2] = 0.0
-        LHS[1,1] = 1.0
-        LHS[NnodesTotal,NnodesTotal-1] = 0.0
-        LHS[NnodesTotal,NnodesTotal] = 1.0
-        # b vector is set to T values given by BC
         b[bcdof] .= bcval
 
-        # Solve the linear system
-        Tnum[:] = LHS\b
+        ldiv!(Tnum, factorLHS, b)
+        #Tnum[:] = LHS\b
     end
 
     println("t = ", t)
@@ -143,14 +146,12 @@ function main(; do_plot=false)
     rmse = sqrt( sum((Texact - Tnum).^2)/NnodesTotal )
     println("RMS error = ", rmse)
 
-    if do_plot
-        plt.clf()
-        plt.plot(g_coord, Tnum, label="numeric")
-        plt.plot(g_coord, Texact, label="exact")
-        plt.grid(true)
-        plt.legend()
-        plt.savefig("IMG_case2_final.png", dpi=150)
-    end
+    plt.clf()
+    plt.plot(g_coord, Tnum, label="numeric")
+    plt.plot(g_coord, Texact, label="exact")
+    plt.grid(true)
+    plt.legend()
+    plt.savefig("IMG_case2_final.png", dpi=150)
 
 end
 
