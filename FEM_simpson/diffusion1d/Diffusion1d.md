@@ -209,7 +209,9 @@ dengan mengasumsikan nilai $H_1 = H(\xi_1)$ dan $H_2 = H(\xi_2)$ diketahui, kita
 $$
 H(\xi_{k}) = H_1 N_{1}(\xi_{k}) + H_2 N_{2}(\xi_{k})
 $$
-Analytic Solution (from Jaeger)
+
+
+## Analytic Solution (from Jaeger)
 
 The slab with heat produced within it.
 $$

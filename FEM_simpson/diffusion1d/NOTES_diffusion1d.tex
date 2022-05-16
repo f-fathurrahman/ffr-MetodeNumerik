@@ -10,26 +10,30 @@
 
 \section*{Pendahuluan}
 
-Persamaan yang ingin diselesasikan adalah:
+Tinjau persamaan konduksi kalor transien pada 1d (persamaan diferensial parabolik):
 \begin{equation*}
 \frac{\partial T}{\partial t} = \kappa \frac{\partial^2 T}{\partial x^2} + H
 \end{equation*}
+dengan syarat awal:
+\begin{equation*}
+T(x,t=0) = 0 \,\, \forall x \in [0,L_{x}]
+\end{equation*}
+dan syarat batas:
+\begin{equation*}
+T(x=0,t) = 0 \,\, \text{dan} \,\, T(x=L_{x},t) = 0
+\end{equation*}
+$T(x,t)$ adalah distribusi temperatur yang tidak diketahui.
+$\kappa$ adalah difusivitas termal ($m^2 s^{-1}$).
+$H$ adalah pembangkitan atau pelepasan kalor (heat source or sink).
 
 \begin{figure}[h]
 {\centering
 \includegraphics[width=\textwidth]{images_priv/Simpson_Fig_2_1.pdf}
 \par}
+\caption{Ilustrasi domain, syarat batas dan syarat awal untuk konduksi kalor transien pada
+1d}
 \end{figure}
 
-Syarat awal:
-\begin{equation*}
-T(x,t=0) = 0 \,\, \forall x \in [0,L_{x}]
-\end{equation*}
-
-Syarat batas:
-\begin{equation*}
-T(x=0,t) = 0 \,\, \text{dan} \,\, T(x=L_{x},t) = 0
-\end{equation*}
 
 \section*{Ekspansi fungsi basis}
 Ekspansi solusi dengan fungsi basis (fungsi bentuk, \textit{shape functions}):
@@ -42,16 +46,18 @@ T(x) \approx \begin{bmatrix}
 N_{1}(x) & N_{2}(x)
 \end{bmatrix} \begin{bmatrix}
 T_{1} \\ T_{2}
-\end{bmatrix}
+\end{bmatrix} = \mathbf{N}^{\mathsf{T}} \mathbf{T}
 \end{equation*}
+(semua vektor adalah diasumsikan sebagai vektor kolom).
 
-Kita akan menggunakan elemen linear:
+Kita akan menggunakan elemen linear yang memiliki bentuk sebagai berikut.
 \begin{align*}
 N_{1}(x) & = 1 - \frac{x}{L} \\
 N_{2}(x) & = \frac{x}{L}
 \end{align*}
 
-Residual:
+Untuk mendapatkan gambaran mengenai akurasi dari aproksimasi yang digunakan, kita
+dapat mendefisinikan suatu kuantitas yang akan dinamai sebagai residual:
 \begin{equation*}
 R(x) \equiv
 \frac{\partial}{\partial t} \begin{bmatrix}
@@ -59,12 +65,23 @@ N_{1}(x) & N_{2}(x) \end{bmatrix} \begin{bmatrix} T_{1} \\ T_{2} \end{bmatrix} -
 \kappa \frac{\partial^2}{\partial x^2} \begin{bmatrix}
 N_{1}(x) & N_{2}(x) \end{bmatrix} \begin{bmatrix} T_{1} \\ T_{2} \end{bmatrix} - H
 \end{equation*}
+Jika aproksimasi yang digunakan adalah sempurna, maka residual akan bernilai nol
+untuk semua nilai $x$. Akan tetapi hal ini secara umum tidak dapat dicapai. Oleh karena
+itu kita akan mencari solusi berdasarkan prinsip lain yang akan dijelaskan sebagai
+berikut.
 
-Integral residual terbobot ($i=1,2$):
+Residual dikalikan dengan suatu fungsi bobot, kemudian diintegralkan untuk seluruh
+domain, kemudia disamakan dengan nol, hal ini dikenal sebagai
+integral residual terbobot ($i=1,2$):
 \begin{equation}
 \int_{0}^{L} R(x) w_{i}(x) \, \mathrm{d}x
 \end{equation}
+Dari integral ini kita akan mendapatkan dua persamaan untuk dua kuantitas yang tidak diketahui
+yaitu $T_1$ dan $T_2$.
+Pada metode Galerkin, fungsi bobot ini sama dengan fungsi basis:
+$w_{i}(x) \equiv N_{i}(x)$.
 
+Dengan mensubstitusikan ekspresi $R(x)$ pada integral terbobot diperoleh:
 \begin{align*}
 \int_{0}^{L} \begin{bmatrix} N_{1}(x) \\ N_{2}(x) \end{bmatrix}
 \frac{\partial}{\partial t}
