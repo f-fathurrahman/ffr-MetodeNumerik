@@ -35,7 +35,7 @@ Nstep = int(xf/h)
 x = x0
 y = y0
 #yim1 = -0.3929953 # value of solution at y(x=-1)
-yim1 = exact_sol(-1.0)
+yim1 = exact_sol(-1.0) # using value from exact solution
 for i in range(0,Nstep):
     xp1 = x + h
     yp1 = ode_heun_1step_iterative(deriv, x, y, yim1, h)

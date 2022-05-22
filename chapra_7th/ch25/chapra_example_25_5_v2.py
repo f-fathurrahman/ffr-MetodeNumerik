@@ -10,7 +10,7 @@ def ode_heun_1step_iterative(dfunc, xi, yi, h, NiterMax=100, Δ=1e-6):
         y0ip1 = yi + avg
         diff = abs(y0ip1 - y0ip1_old)
         # Uncomment this to see the iteration process
-        #print("iter: %2d y0ip1 = %12.7f  diff = %12.7e" % (i+1, y0ip1, diff))
+        print("iter: %2d y0ip1 = %12.7f  diff = %12.7e" % (i+1, y0ip1, diff))
         if diff <= Δ:
             break
         y0ip1_old = y0ip1
