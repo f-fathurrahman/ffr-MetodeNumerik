@@ -1,9 +1,9 @@
 % ----------------------------------
-Menggunakan deret Taylor orde-tinggi
+\subsection*{Menggunakan deret Taylor orde-tinggi}
 
 Misalnya, menggunakan orde dua:
 \begin{equation*}
-y_{i+1} = y_{i} + f(x_i, y_i) + \frac{f'(x_i, y_i)}{2!}h^2
+y_{i+1} = y_{i} + f(x_i, y_i)h + \frac{f'(x_i, y_i)}{2!}h^2
 \end{equation*}
 dengan kesalahan pemotongan lokal:
 \begin{equation*}
@@ -14,13 +14,15 @@ Dengan menggunakan aturan rantai untuk turunan:
 f'(x_i, y_i) = \frac{\partial f(x,y)}{\partial x} +
 \frac{\partial f(x,y)}{\partial y}\frac{\mathrm{d}y}{\mathrm{d}x}
 \end{equation*}
-Metode Runge-Kutta
+
+
+\subsection*{Metode Runge-Kutta}
 
 \begin{equation*}
 y_{i+1} = y_{i} + \phi(x_i, y_i, h) h
 \end{equation*}
 
-$\phi(x_i, y_i, h)$: fungsi inkremen
+$\phi(x_i, y_i, h)$: fungsi kenaikan (\textit{increment})
 
 \begin{equation*}
 \phi = a_1 k_1 + a_2 k_2 + \cdots + a_n k_n
@@ -37,7 +39,8 @@ k_n & = f(x_i + p_{n-1}h, y_i + q_{n-1,1} k_1 h + q_{n-1,2} k_2 h + \cdots + q_{
 di mana $p$ dan $q$ adalah konstanta.
 Perhatikan bahwa $k$ memiliki hubungan rekurensi (perulangan).
 
-Runge-Kutta orde 2
+
+\subsection{Runge-Kutta orde 2}
 
 \begin{equation*}
 y_{i+1} = y_i + (a_1 k_1 + a_2 k_2) h
@@ -111,9 +114,7 @@ k_2 = f\left( x_i + \frac{3}{4}h, y_i + \frac{3}{4}k_1 h \right)
 
 
 
-
-
-Persamaan diferensial orde dua
+\subsection*{Persamaan diferensial orde dua}
 
 Contoh:
 \begin{equation*}
@@ -135,3 +136,153 @@ y'_{1}(t) & = y_{2}(t) \\
 y'_{2}(t) & = -\frac{c y_{2}(t) + k y_{1}(t)}{m}
 \end{align*}
 %m \frac{\mathrm{d}^2 x}{\mathrm{d}t^2} + c \frac{\mathrm{d}x}{\mathrm{d}t} + kx = 0
+
+
+\subsection*{Metode multilangkah}
+
+Pada metode satu langkah, kita menggunakan informasi sebelumnya pada satu titik $x_i$ untuk
+memprediksi nilai dari variabel dependen $y_{i+1}$ pada titik depan $x_{i+1}$.
+
+Pada metode multilangkah (\textit{multistep}), kita menggunakan informasi sebelumnya
+yang diperoleh pada beberapa titik sebelumnya.
+
+\subsection*{Metode Heun \textit{non-self-starting}}
+
+Ingat bahwa metode Heun menggunakan metode Euler sebagai prediktor:
+\begin{equation*}
+y_{i+1}^{0} = y_{i} + f(x_i, y_i) h
+\end{equation*}
+dan aturan trapesium sebagai korektor:
+\begin{equation*}
+y_{i+1} = y_{i} + \frac{f(x_i,y_i) + f(x_{i+1},y^{0}_{i+1})}{2} h 
+\end{equation*}
+Prediktor dan korektor memiliki kesalahan pemotongan lokal $\mathcal{O(h^2)}$
+dan $\mathcal{O}(h^3)$. Hal ini menyarankan bahwa prediktor merupakan
+hubungan yang lemah pada metode ini karena memiliki kesalahan yang terbesar.
+Kelemahan ini signifikan karena efisiensi dari korektor iteratif bergantung
+pada akurasi dari prediksi awal.
+Salah satu cara untuk memperbaiki metode Heun adalah dengan mengembangkan prediktor
+yang memiliki kesalahan pemotongan lokal $\mathcal{O}(h^3)$.
+Hal ini dapat dicapai dengan menggunakan metode Euler dan kemiringan pada $y_i$ dan
+informasi tambahan dari titik sebelumnya $y_{i-1}$ sebagai berikut:
+\begin{equation*}
+y^{0}_{i+1} = y_{i-1} + f(x_i, y_i)2h
+\end{equation*}
+Perhatikan bahwa persamaan diatas memiliki kesalahan lokal $\mathcal{O}(h^3)$
+dengan menggunakan ukuran langkah yang lebih besar $2h$. Selain itu, persamaan
+ini tidak self-starting karena melibatkan nilai sebelumnya, $y_{i-1}$.
+Informasi ini tidak tersedia pada permasalahan nilai awal. Oleh karena itu
+skema yang dihasilkan disebut sebagai metode Heun non-self-starting.
+
+\begin{align*}
+y^{0}_{i+1} = y^{m}_{i-1} + f(x_i,y^{m}_i)2h \\
+y^{j}_{i+1} = y^{m}_{i} + \frac{f(x_i,y^{m}_i) + f(x_{i+1},y^{j-1}_{i+1})}{2} h 
+\end{align*}
+
+$m$: indeks iterasi
+
+Perhatikan bahwa $y^{m}_{i}$ dan $y^{m}_{i-1}$
+
+
+\subsection*{Formula Adams-Bashforth}
+
+Ekspansi Taylor:
+\begin{equation*}
+y_{i+1} = y_{i} + f_{i} h + \frac{f'_{i}}{2!} h^2 + \frac{f''_{i}}{3!} h^3 + \cdots
+\end{equation*}
+yang juga dapat dituliskan sebagai:
+\begin{equation*}
+y_{i+1} = y_{i} + h\left( f_i + \frac{h}{2}f'_{i} + \frac{h^2}{3!} + \cdots \right)
+\end{equation*}
+
+Backward difference:
+\begin{equation*}
+f'_{i} = \frac{f_i - f_{i-1}}{h} + \frac{f''_{i}}{2!} + \mathcal{O}(h^2)
+\end{equation*}
+
+Substitusi:
+\begin{equation*}
+y_{i+1} = y_{i} + h \left(
+f_{i} + \frac{h}{2} \left[ \frac{f_i - f_{i-1}}{h} + \frac{f''_{i}}{2} + \mathcal{O}(h^2) \right]
++ \frac{h^2}{6} f''_{i} + \cdots \right)
+\end{equation*}
+atau:
+\begin{equation*}
+y_{i+1} = y_{i} + h \left( \frac{3}{2} f_{i} - \frac{1}{2} f_{i-1} \right) +
+\frac{5}{12} h^3 f''_{i} + \mathcal{O}(h^4)
+\end{equation*}
+(2nd order open Adams formula)
+or Adams-Bashforth formula.
+
+Bentuk umum formula Adams-Bashforth:
+\begin{equation*}
+y_{i+1} = y_{i} + h \sum_{k=0}^{n-1} \beta_{k} f_{i-k} + \mathcal{O}(h^{n+1})
+\end{equation*}
+
+
+
+\subsection*{Formula Adams-Moulton}
+
+Deret Taylor mundur disekitar $x_{i+1}$:
+\begin{equation*}
+y_{i} = y_{i+1} - f_{i+1}h + \frac{f'_{i+1}}{2!} h^2 - \frac{f''_{i+1}}{3!} h^3 + \cdots
+\end{equation*}
+
+Cari $y_{i+1}$:
+\begin{equation*}
+y_{i+1} = y_i + h \left( f_{i+1} - \frac{h}{2}f'_{i+1} + \frac{h^2}{6} f''_{i+1} + \cdots \right)
+\end{equation*}
+
+Aproksimasi turunan pertama:
+\begin{equation*}
+f'_{i+1} = \frac{f_{i+1} - f_{i}}{h} + \frac{f''_{i+1}}{2}h + \mathcal{O}(h^2)
+\end{equation*}
+Substitusi:
+\begin{equation*}
+y_{i+1} = y_{i} + h \left( \frac{1}{2}f_{i+1} + \frac{1}{2}f_{i} \right) - 
+\frac{1}{12} h^3 f''_{i+1} - \mathcal{O}(h^4)
+\end{equation*}
+
+Formula Adams tertutup orde-2 atau
+Formula Adams-Moulton orde-2
+
+Bentuk umum:
+\begin{equation*}
+y_{i+1} = y_{i} + h \sum_{k=0}^{n-1} \beta_{k} f_{i+1-k} + \mathcal{O}(h^{n+1})
+\end{equation*}
+
+
+\subsection*{Metode Milne}
+
+Menggunakan formula Newton-Cotes terbuka tiga-titik sebagai prediktor:
+\begin{equation*}
+y^{0}_{i+1} = y^{m}_{i-3} + \frac{4h}{3}\left(
+2f^{m}_{i} - f^{m}_{i-1} + 2f^{m}_{i-2}
+\right)
+\end{equation*}
+dan Newton-Cotes tertutup tiga-titik sebagai korektor:
+\begin{equation*}
+y^{j}_{i+1} = y^{m}_{i-1} + \frac{h}{3} \left(
+f^{m}_{i-1} + 4f^{m}_{i} + f^{j-1}_{i+1}
+\right)
+\end{equation*}
+$j$ adalah indeks iterasi.
+
+\subsection*{Metode Adams orde-4}
+
+Menggunakan formula Adams-Bashforth orde-4 sebagai prediktor:
+\begin{equation*}
+y^{0}_{i+1} = y^{m}_{i} + h \left(
+\frac{55}{24} f^{m}_{i} - \frac{59}{24}f^{m}_{i-1} + \frac{37}{24}f^{m}_{i-2}
+- \frac{9}{24} f^{m}_{i-3}
+\right)
+\end{equation*}
+dan formula Adams-Moulton orde-4 sebagai korektor:
+\begin{equation*}
+y^{j}_{i+1} = y^{m}_{i} + h \left( 
+\frac{9}{24} f^{j-1}_{i+1} + \frac{19}{24} f^{m}_{i} - \frac{5}{24} f^{m}_{i-1}
++ \frac{1}{24} f^{m}_{i-2}
+\right)
+\end{equation*}
+
+
