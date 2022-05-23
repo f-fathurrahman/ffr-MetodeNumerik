@@ -1,0 +1,178 @@
+\begin{frame}
+\frametitle{Persamaan diferensial orde dua}
+
+Suatu persamaan diferensial biasa orde dua dapat diubah menjadi sistem persamaan
+diferensial biasa orde 1.
+
+Sebagai contoh, perhatikan persamaan diferensial biasa orde 2 berikut:
+\begin{equation*}
+m \frac{\mathrm{d}^2 x}{\mathrm{d}t^2} + c \frac{\mathrm{d}x}{\mathrm{d}t} + kx = 0
+\end{equation*}
+$x$: simpangan dari keadaan setimbang, $m$: massa benda, $c$: koefisien redaman, $k$ konstanta pegas.
+
+{\centering
+\includegraphics[scale=0.2]{../../images_priv/Chapra_Fig_P25_16.pdf}
+\par}
+
+\end{frame}
+
+
+
+
+\begin{frame}
+\frametitle{Persamaan diferensial orde dua}
+
+\begin{columns}
+
+\begin{column}{0.5\textwidth}
+Definisikan:
+\begin{align*}
+y_{1}(t) & = x(t) \\
+y_{2}(t) & = x'(t)
+\end{align*}
+%
+sehingga:
+%
+\begin{align*}
+y'_{1}(t) & = x'(t) = y_{2}(t) \\
+y'_{2}(t) & = x''(t)
+\end{align*}
+Persamaan diferensial:
+\begin{equation*}
+m \frac{\mathrm{d}^2 x}{\mathrm{d}t^2} + c \frac{\mathrm{d}x}{\mathrm{d}t} + kx = 0
+\end{equation*}
+dituliskan menjadi:
+\begin{equation*}
+m y'_{2}(t) + c y_{2}(t) + k y_{1}(t) = 0
+\end{equation*}
+
+\end{column}
+
+
+\begin{column}{0.5\textwidth}
+Atau:
+\begin{equation*}
+y'_{2}(t) = -\frac{c y_{2}(t) + k y_{1}(t)}{m}
+\end{equation*}
+Sehingga diperoleh sistem persamaan diferensial biasa orde-1:
+\begin{align*}
+y'_{1}(t) & = y_{2}(t) \\
+y'_{2}(t) & = -\frac{c y_{2}(t) + k y_{1}(t)}{m}
+\end{align*}
+\end{column}
+
+\end{columns}
+
+\end{frame}
+
+
+
+% -----------------------------
+\begin{frame}
+
+
+{\centering
+\includegraphics[scale=0.2]{../../images_priv/Chapra_Fig_P25_16.pdf}
+\par}
+
+$x$: simpangan dari keadaan setimbang, $m$: massa benda, $c$: koefisien redaman, $k$ konstanta pegas.
+
+Solusi akan dicari untuk tiga kasus koefisien redaman (dalam Ns/m):
+5 (\textit{underdamped}), 40 (\textit{critically damped}), and 200 (\textit{overdamped}).
+Nilai parameter lain adalah: $m = 20$ kg dan $k = 20$ N/m
+
+Kecepatan awal adalah 0 dan simpangan awal adalah $x_0$ = 1 m. Persamaan
+ingin diselesaikan pada rentang waktu $0 \leq t \leq 15$ s.
+
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+
+Contoh kasus vibrasi \textit{underdamped}: $m = 20$ kg, $k = 20$ N/m dan $c = 5$ Ns/m
+
+\begin{pythoncode}
+def deriv_underdamped(x, y):
+    # Parameters (local)
+    m = 20.0   # kg
+    k = 20.0   # N/m    
+    c = 5.0    # Ns/m underdamped
+    Nvec = len(y)
+    assert Nvec == 2
+    # Output array
+    dydx = np.zeros(Nvec)
+    dydx[0] = y[1]
+    dydx[1] = -(c*y[1] + k*y[0])/m
+    #
+    return dydx
+\end{pythoncode}
+
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+
+Contoh kasus vibrasi \textit{overdamped}: $m = 20$ kg, $k = 20$ N/m dan $c = 200$ Ns/m
+
+\begin{pythoncode}
+def deriv_overdamped(x, y):
+    # Parameters (local)
+    m = 20.0   # kg
+    k = 20.0   # N/m    
+    c = 200.0  # Ns/m overdamped
+    Nvec = len(y)
+    assert Nvec == 2
+    # Output array
+    dydx = np.zeros(Nvec)
+    dydx[0] = y[1]
+    dydx[1] = -(c*y[1] + k*y[0])/m
+    #
+    return dydx
+\end{pythoncode}
+
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+
+Contoh kasus vibrasi \textit{critically damped}: $m = 20$ kg, $k = 20$ N/m dan $c = 40$ Ns/m
+
+\begin{pythoncode}
+def deriv_critical_damped(x, y):
+    # Parameters (local)
+    m = 20.0   # kg
+    k = 20.0   # N/m    
+    c = 40.0   # Ns/m critically damped
+    Nvec = len(y)
+    assert Nvec == 2
+    # Output array
+    dydx = np.zeros(Nvec)
+    dydx[0] = y[1]
+    dydx[1] = -(c*y[1] + k*y[0])/m
+    #
+    return dydx
+\end{pythoncode}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+
+\begin{pythoncode}
+t0 = 0.0
+initial_displ = 1.0
+initial_vel = 0.0
+x0 = np.array([initial_displ, initial_vel]) # initial conditions
+Δt = 0.01 # try playing with this parameter
+tf = 15.0
+Nstep = int(tf/Δt)
+t, x = ode_solve(deriv_underdamped, ode_rk4_1step, t0, x0, Δt, Nstep)
+\end{pythoncode}
+
+Tugas: selesaikan untuk kasus lain (crictically damped dan overdamped) serta
+buat plot perbandingan tiga kasus tersebut.
+
+\end{frame}
