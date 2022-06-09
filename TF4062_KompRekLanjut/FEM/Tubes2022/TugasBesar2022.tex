@@ -1,0 +1,77 @@
+%\documentclass[a4paper,11pt]{article} % print setting
+\documentclass[a4paper,12pt]{article} % screen setting
+
+\usepackage[a4paper]{geometry}
+\geometry{verbose,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm}
+
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{minted}
+\newminted{julia}{breaklines,fontsize=\small}
+\newminted{bash}{breaklines,fontsize=\small}
+\newminted{text}{breaklines,fontsize=\small}
+
+\newcommand{\txtinline}[1]{\mintinline{text}{#1}}
+\newcommand{\jlinline}[1]{\mintinline{julia}{#1}}
+
+\newmintedfile[juliafile]{julia}{breaklines,fontsize=\small}
+
+\definecolor{mintedbg}{rgb}{0.90,0.90,0.90}
+\usepackage{mdframed}
+
+\BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=mintedbg]}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+
+\usepackage{setspace}
+
+\onehalfspacing
+
+\usepackage{appendix}
+
+
+\begin{document}
+
+
+\title{Tugas Besar TF4062 - 2022}
+\author{Iwan Prasetyo \\
+Fadjar Fathurrahman}
+\date{}
+\maketitle
+
+
+Buat implementasi solusi persamaan diferensial parsial pada 2d.
+\begin{itemize}
+\item Kasus difusi 2d: \txtinline{diffusion2d}
+\item Kasus potential aliran: \txtinline{elliptic2d}
+\end{itemize}
+dengan menggunakan bahasa pemrograman Julia atau Python.
+Progaram dan penjelasan dapat dikerjakan dalam Jupyter Notebook.
+
+Untuk setiap kasus berikan penjelasan sebagai berikut.
+\begin{itemize}
+\item Persamaan diferensial yang diselesaikan (dengan kondisi batas) dan penurunan
+weak form.
+\item Jenis elemen dan fungsi basis atau \textit{shape functions} yang digunakan
+\item Visualisasi hasil (dapat menggunakan Matplotlib atau Paraview).
+\item Penjelasan mengenai program yang ditulis: struktur data, algorithma, dll.
+\end{itemize}
+
+Anda dapat menggunakan file *.jl yang diberikan dan melengkapinya dan memberikan
+modifikasi jika diperlukan.
+
+Tugas dikumpulkan melalui email ke \texttt{fadjar.fathurrahman@gmail.com} paling
+lambat tanggal 29 Mei 2022 pukul 23.59.
+
+
+\end{document}
