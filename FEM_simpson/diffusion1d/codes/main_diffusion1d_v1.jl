@@ -106,7 +106,7 @@ function main()
         # Impose BC (this is special case, can be moved outside the time loop)
         LHS[1,2] = 0.0
         LHS[1,1] = 1.0
-        LHS[NnodesTotal,2] = 0.0
+        LHS[NnodesTotal,NnodesTotal-1] = 0.0
         LHS[NnodesTotal,NnodesTotal] = 1.0
         
         b[bcdof] .= bcval
