@@ -1,0 +1,415 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip smallskip
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+Persamaan difusi:
+\begin_inset Formula 
+\[
+\frac{\partial u}{\partial t}=\alpha\frac{\partial^{2}u}{\partial x^{2}}+f(x,t)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Aproksimas turunan pertama terhadap waktu (backward diff)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\partial u}{\partial t}\approx\frac{u_{i}^{n}-u_{i}^{n-1}}{\Delta t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Aproksimasi turunan kedua terhadap 
+\begin_inset Formula $x$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\partial^{2}u}{\partial x^{2}}=\frac{u_{i+1}^{n}-2u_{i}^{n}+u_{i-1}^{n}}{\Delta x^{2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Diperoleh
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{u_{i}^{n}-u_{i}^{n-1}}{\Delta t}=\alpha\frac{u_{i+1}^{n}-2u_{i}^{n}+u_{i-1}^{n}}{\Delta x^{2}}+f_{i}^{n}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $N_{x}=3$
+\end_inset
+
+, kita memiliki 4 titik:
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Formula $u_{0}^{n},u_{1}^{n},u_{2}^{n},u_{3}^{n}$
+\end_inset
+
+ (dua titik ujung diketahui nilainya).
+ Yang ingin dicari adalah 
+\begin_inset Formula $u_{1}^{n},u_{2}^{n}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Untuk 
+\begin_inset Formula $i=1$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+\frac{u_{1}^{n}-u_{1}^{n-1}}{\Delta t}=\alpha\frac{u_{2}^{n}-2u_{1}^{n}+u_{0}^{n}}{\Delta x^{2}}+f_{1}^{n}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Untuk 
+\begin_inset Formula $i=2:$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{u_{2}^{n}-u_{2}^{n-1}}{\Delta t}=\alpha\frac{u_{3}^{n}-2u_{2}^{n}+u_{1}^{n}}{\Delta x^{2}}+f_{2}^{n}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Rearrange: gunakan nilai batas: 
+\begin_inset Formula $u_{0}^{n}=0$
+\end_inset
+
+ dan 
+\begin_inset Formula $u_{3}^{n}=0$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+u_{1}^{n}-u_{1}^{n-1}=\alpha\Delta t\frac{u_{2}^{n}-2u_{1}^{n}}{\Delta x^{2}}+\Delta tf_{1}^{n}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+u_{1}^{n}-\alpha\Delta t\frac{u_{2}^{n}-2u_{1}^{n}}{\Delta x^{2}}=u_{1}^{n-1}+\Delta tf_{1}^{n}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+u_{1}^{n}-F\left(u_{2}^{n}-2u_{1}^{n}\right)=u_{1}^{n-1}+\Delta tf_{1}^{n}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+u_{1}^{n}+2Fu_{1}^{n}-Fu_{2}^{n}=u_{1}^{n-1}+\Delta tf_{1}^{n}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+(1+2F)u_{1}^{n}-Fu_{2}^{n}=u_{1}^{n-1}+\Delta tf_{1}^{n}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dapat dituliskan juga untuk 
+\begin_inset Formula $i=2$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+-Fu_{1}^{n}+(1+2F)u_{2}^{n}=u_{2}^{n-1}+\Delta tf_{2}^{n}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Diperoleh sistem persamaan linear: 
+\begin_inset Formula $2\times2$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+(1+2F)u_{1}^{n}-Fu_{2}^{n}=u_{1}^{n-1}+\Delta tf_{1}^{n}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+-Fu_{1}^{n}+(1+2F)u_{2}^{n}=u_{2}^{n-1}+\Delta tf_{2}^{n}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dalam bentuk matriks:
+\begin_inset Formula 
+\[
+\left(\begin{array}{cc}
+1+2F & -F\\
+-F & 1+2F
+\end{array}\right)\left(\begin{array}{c}
+u_{1}^{n}\\
+u_{2}^{n}
+\end{array}\right)=\left(\begin{array}{c}
+u_{1}^{n-1}+\Delta tf_{1}^{n}\\
+u_{2}^{n-1}+\Delta tf_{2}^{n}
+\end{array}\right)
+\]
+
+\end_inset
+
+Diketahui 
+\begin_inset Formula $u_{i}^{0}$
+\end_inset
+
+ kita dapat memperoleh 
+\begin_inset Formula $u_{i}^{1}$
+\end_inset
+
+ dengan cara menyelesaikan sistem persamaan persamaan linear.
+ 
+\end_layout
+
+\begin_layout Standard
+Untuk kasus yang lebih yang lebih umum:
+\begin_inset Formula 
+\[
+-Fu_{i-1}^{n}+(1+2F)u_{i}^{n}-Fu_{i+1}^{n}=u_{i}^{n-1}+\Delta tf_{i}^{n}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Jika ingin memasukkan juga titik-titik ujung, misalnya untuk 
+\begin_inset Formula $N_{x}=3$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\left(\begin{array}{cccc}
+1 & 0 & 0 & 0\\
+0 & 1+2F & -F & 0\\
+0 & -F & 1+2F & 0\\
+0 & 0 & 0 & 1
+\end{array}\right)\left(\begin{array}{c}
+u_{0}^{n}\\
+u_{1}^{n}\\
+u_{2}^{n}\\
+u_{3}^{n}
+\end{array}\right)=\left(\begin{array}{c}
+u_{0}^{n-1}+\Delta tf_{0}^{n}\\
+u_{1}^{n-1}+\Delta tf_{1}^{n}\\
+u_{2}^{n-1}+\Delta tf_{2}^{n}\\
+u_{3}^{n-1}+\Delta tf_{3}^{n}
+\end{array}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Untuk kasus 
+\begin_inset Formula $N_{x}=4$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\left(\begin{array}{ccc}
+1+2F & -F & 0\\
+-F & 1+2F & -F\\
+0 & -F & 1+2F
+\end{array}\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula $ $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+c
+\end_layout
+
+\begin_layout Standard
+c
+\end_layout
+
+\begin_layout Standard
+c
+\end_layout
+
+\begin_layout Standard
+c
+\end_layout
+
+\begin_layout Standard
+c
+\end_layout
+
+\begin_layout Standard
+c
+\end_layout
+
+\begin_layout Standard
+c
+\end_layout
+
+\begin_layout Standard
+c
+\end_layout
+
+\end_body
+\end_document
