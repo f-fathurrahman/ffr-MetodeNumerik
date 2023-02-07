@@ -1,0 +1,26 @@
+\subsection{Metode titik tengah}
+
+Metode titik tengah (midpoint atau improved polygon)
+menggunakan metode Euler untuk memprediksi nilai $y$ pada titik tengah
+interval:
+\begin{equation*}
+y_{i+1/2} = y_{i} + f(x_i, y_i) \frac{h}{2}
+\end{equation*}
+Kemudian nilai ini digunakan untuk menghitung kemiringan pada titik tengah:
+\begin{equation*}
+y'_{i+1/2} = f(x_{i+1/2}, y_{i+1/2})
+\end{equation*}
+yang diasumsikan sebagai aproksimasi dari rata-rata kemiringan untuk pada interval.
+Kemiringan ini kemudian digunakan untuk mengekstrapolasi linear dari $x_i$ ke $x_{i+1}$:
+\begin{equation}
+y_{i+1} = y_{i} + f(x_{i+1/2}, y_{i+1/2}) h
+\end{equation}
+
+Implementasi:
+\begin{pythoncode}
+def ode_midpoint_1step(dfunc, xi, yi, h):
+    yip12 = yi + deriv(xi,yi)*h/2  # midpoint value
+    xip12 = xi + 0.5*h             # midpoint
+    yip1 = yi + deriv(xip12,yip12)*h
+    return yip1
+\end{pythoncode}
