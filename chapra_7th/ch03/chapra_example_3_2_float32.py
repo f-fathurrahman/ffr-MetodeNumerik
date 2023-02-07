@@ -11,9 +11,10 @@ def approx_exp(x, N):
     return s
 
 x = np.float32(0.5)
-true_val = np.exp(x) # from np module
+#true_val = np.exp(x) # from np module
+true_val = np.exp(np.float64(x))
 
-n_digit = 3
+n_digit = 10
 # Equation 3.7
 ε_s_percent = np.float32(0.5)*np.float32(10**(2-n_digit))
 
