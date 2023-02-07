@@ -1,0 +1,193 @@
+\section{Aturan Simpson}
+
+\begin{soal}
+Hitung integral yang dikerjakan pada Soal Chapra 21.1 dengan menggunakan aturan 1/3 Simpson
+untuk satu selang. Perhatikan bawah aturan 1/3 Simpson memerlukan 3 titik dasar sedangkan
+aturan trapesium hanya memerlukan 2 titik.
+Bandingkan hasilnya dengan hasil eksak dan aturan trapesium.
+\end{soal}
+
+\begin{pythoncode}
+def my_func(x):
+    return 0.2 + 25*x - 200*x**2 + 675*x**3 - 900*x**4 + 400*x**5
+
+a = 0.0
+b = 0.8
+h = (b-a)/2
+# Base points for Simpson 1/3 rule
+x0 = a
+x1 = a + h
+x2 = b
+# We have three points or two segments with equal length
+
+I_exact = 1.640533
+
+# Hitung aproksimasi dengan aturan 1/3 Simpson di sini
+I = .... # LENGKAPI
+# Anda dapat menggunakan Pers. 21.14 atau 21.15
+
+E_t = (I_exact - I)
+ε_t = E_t/I_exact * 100
+print("Integral result = %.7f" % I)
+print("True integral   = %.6f" % I_exact)
+print("True error      = %.7f" % E_t)
+print("ε_t             = %.1f%%" % ε_t)
+
+import sympy
+x = sympy.symbols("x")
+f = 0.2 + 25*x - 200*x**2 + 675*x**3 - 900*x**4 + 400*x**5
+d4f = f.diff(x,4)
+avg_d4f_xi = sympy.integrate( d4f, (x,a,b) )/(b - a)
+E_a = -1/2880*avg_d4f_xi*(b - a)**5 # Pers. 21.16
+print("Approx error    = %.7f" % E_a)
+\end{pythoncode}
+
+\begin{soal}
+Ulangi soal sebelumnya dengan menggunakan aturan 1/3 Simpson dengan
+jumlah segmen 4 atau $n = 4$ pada Persamaan 21.18 di Chapra (ada 5 titik
+dasar yang diperlukan). Coba variasikan jumlah segmen dan bandingkan
+hasil yang Anda peroleh dengan hasil analitik.
+\end{soal}
+
+Anda dapat melengkapi kode berikut ini
+\begin{pythoncode}
+    import numpy as np
+
+    def my_func(x):
+        return 0.2 + 25*x - 200*x**2 + 675*x**3 - 900*x**4 + 400*x**5
+    
+# Using equation 21.18
+def integ_simpson13_multiple( f, a, b, N ):
+    # N: is number of segments
+    assert N >= 2
+    assert N % 2 == 0 # must be an even number
+
+    x0 = a
+    xN = b
+    h = (b - a)/N
+    x = np.linspace(a, b, N+1)
+    # Total number of base points is N+1 (an odd number)
+
+    ss_odd = 0.0
+    for i in range(....):
+        ss_odd = .... # Lengkapi
+    
+    ss_even = 0.0
+    for i in range(....):
+        ss_even = .... # Lengkapi
+
+    I = (b - a)/(3*N) * ( f(x0) + 4*ss_odd + 2*ss_even + f(xN) )
+    return I
+    
+a = 0.0
+b = 0.8
+I_exact = 1.640533
+Nsegments = 4
+    
+I = integ_simpson13_multiple(my_func, a, b, Nsegments)
+E_t = (I_exact - I)
+ε_t = E_t/I_exact * 100
+print("Nsegments = ", Nsegments)
+print("Integral result = %.7f" % I)
+print("True error      = %.7f" % E_t)
+print("ε_t             = %.2f%%" % ε_t)
+    
+import sympy
+x = sympy.symbols("x")
+f = 0.2 + 25*x - 200*x**2 + 675*x**3 - 900*x**4 + 400*x**5
+d4f = f.diff(x,4)
+avg_d4f_xi = sympy.integrate( d4f, (x,a,b) )/(b - a)
+E_a = -avg_d4f_xi*(b - a)**5 / (180*Nsegments**4)
+print("Approx error    = %.7f" % E_a)    
+\end{pythoncode}
+
+\begin{soal}[Chapra Contoh 21.6a]
+Gunakan aturan 3/8 Simpson untuk integral pada soal sebelumnya.
+Perhatikan bahwa satu kali aplikasi aturan 3/8 Simpson (pada satu interval
+$[a,b]$) memerlukan 4 titik atau 3 segmen dengan panjang yang sama.
+\end{soal}
+
+Anda dapat melengkapi kode berikut.
+\begin{pythoncode}
+import numpy as np
+
+def my_func(x):
+    return 0.2 + 25*x - 200*x**2 + 675*x**3 - 900*x**4 + 400*x**5
+
+# One application of Simpson 3/8 rule
+def integ_simpson38( f, a, b ):
+    h = (b - a)/3
+    # Four points are needed
+    x0 = a
+    x1 = a + h
+    x2 = a + 2*h
+    x3 = b
+    #
+    I = .... # Lengkapi
+    return I
+    
+a = 0.0
+b = 0.8
+I_exact = 1.640533 # from the book
+    
+I = integ_simpson38(my_func, a, b)
+E_t = (I_exact - I)
+ε_t = E_t/I_exact * 100
+print("Integral result = %.7f" % I)
+print("True error      = %.7f" % E_t)
+print("ε_t             = %.2f%%" % ε_t)
+    
+import sympy
+x = sympy.symbols("x")
+f = 0.2 + 25*x - 200*x**2 + 675*x**3 - 900*x**4 + 400*x**5
+d4f = f.diff(x,4)
+avg_d4f_xi = sympy.integrate( d4f, (x,a,b) )/(b - a)
+E_a = -avg_d4f_xi*(b - a)**5 / 6480
+print("Approx error    = %.7f" % E_a)    
+\end{pythoncode}
+
+
+\begin{soal}
+Melanjutkan soal sebelumnya, menggunakan lima segmen (6 titik),
+kombinasi antara aturan 1/3 dan 3/8 Simpson.
+\end{soal}
+
+Anda dapat melengkapi kode berikut.
+\begin{pythoncode}
+# Definisi fungsi yang akan dicari nilai integralnya
+
+def integ_simpson13( f, a, b ):
+    #
+    h = (b - a)/2
+    x0 = a
+    x1 = a + h
+    x2 = b
+    #
+    I = .... # lengkapi
+    return I
+    
+# ... Definisi integ_simpson38
+    
+import numpy as np
+a = 0.0
+b = 0.8
+Nsegments = 5
+x = np.linspace(a, b, Nsegments+1)
+I_exact = 1.640533
+
+print(x)
+# Tampilkan titik-titik yang digunakan, bandingkan dengan Chapra
+    
+I_13 = integ_simpson13(my_func, x[0], x[2]) # first two segments
+print("I_13 = %.7f" % I_13 )
+    
+I_38 = integ_simpson38(my_func, x[2], x[Nsegments])
+print("I_38 = %.7f" % I_38 )
+    
+I = I_13 + I_38
+E_t = (I_exact - I)
+ε_t = E_t/I_exact * 100
+print("Integral result = %.7f" % I)
+print("True error      = %.7f" % E_t)
+print("ε_t             = %.2f%%" % ε_t)    
+\end{pythoncode}

@@ -1,0 +1,62 @@
+\begin{soal}[Chapra Contoh 25.4]
+Bandingkan solusi yang diperoleh dari model linear dengan persamaan diferensial:
+\begin{equation*}
+\frac{\mathrm{d}v}{\mathrm{d}t} = g - \frac{c}{m}v
+\end{equation*}
+dan model nonlinear yang memperhitungkan gaya gesek akibat angin:
+\begin{equation*}
+\frac{\mathrm{d}v}{\mathrm{d}t} = g - \frac{c}{m}\left[
+v + a\left(\frac{v}{v_{\mathrm{max}}}\right)^b
+\right]
+\end{equation*}
+dengan parameter $g = 9.81$, $c=12.5$, $m=68.1$, and kondisi awal $v=0$ pada $t=0$
+(satuan dalam SI).
+Parameter tambahan untuk model nonlinear adalah sebagai berikut: $a=8.3$, $b=2.2$,
+$v_{\mathrm{max}}=46$.
+Gunakan metode Euler dengan ukuran langkah 0.1 untuk menyelesaikan persamaan
+diferensial secara numerik.
+\end{soal}
+
+
+\begin{pythoncode}
+# .... import library yang diperlukan
+# .... definisi fungsi-fungsi yang diperlukan
+
+def model_linear(t, v):
+    g = 9.81; c = 12.5; m = 68.1
+    return g - c*v/m
+
+def model_nonlinear(t, v):
+    g = 9.81; c = 12.5; m = 68.1
+    a = 8.3; b = 2.2; vmax = 46
+    return g - c/m*( v + a*(v/vmax)**b )
+    
+t0 = 0.0; v0 = 0.0 # initial cond
+tf = 15.0
+h = 0.1
+Nstep = int(tf/h)
+
+t_linear, v_linear = ode_euler(....) # Lengkapi
+t_nonlinear, v_nonlinear = ode_euler(....) # Lengkapi
+    
+# Plot
+plt.clf()
+plt.plot(t_linear, v_linear, label="model linear")
+plt.plot(t_nonlinear, v_nonlinear, label="model nonlinear")
+plt.xlabel("t (s)")
+plt.ylabel("y (m)")
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+\end{pythoncode}
+
+Hasil dapat dilihat pada Gambar \ref{fig:example_25_4}.
+
+\begin{figure}[h]
+{\centering
+\includegraphics[scale=0.7]{../../chapra_7th/ch25/IMG_chapra_example_25_4.pdf}
+\par}
+\caption{Perbandingan hasil metode Euler untuk model linear dan nonlinear
+dengan ukuran langkah $h=0.1$}
+\label{fig:example_25_4}
+\end{figure}

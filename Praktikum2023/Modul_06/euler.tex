@@ -1,0 +1,232 @@
+\subsection{Metode Euler}
+
+Pada metode Euler, turunan pertama sebagai estimasi kemiringan pada
+$x_i$:
+\begin{equation*}
+\phi = f(x_i, y_i)
+\end{equation*}
+sehingga diperoleh skema berikut.
+\begin{equation}
+y_{i+1} = y_{i} + f(x_i, y_i) h
+\label{eq:euler_1step}
+\end{equation}
+
+Pada contoh berikut ini kita akan mendemonstrasikan penggunaan metode Euler.
+
+\begin{soal}[Chapra Contoh 25.1]
+Gunakan metode Euler untuk menyelesaikan persamaan diferensial berikut:
+\begin{equation*}
+\frac{\mathrm{d}y}{\mathrm{d}x} = -2x^3 + 12x^2 - 20x + 8.5
+\end{equation*}
+dari $x=0$ sampai $x=4$ dengan ukuran langkah 0.5.
+Syarat awal adalah $y(x=0) = 1$.
+Bandingkan dengan solusi eksak:
+\begin{equation*}
+y(x) = -0.5x^4 + 4x^3 - 10x^2 + 8.5x + 1
+\end{equation*}
+\end{soal}
+
+Pada kode berikut ini kita akan melakukan dua langkah dari metode Euler.
+\begin{pythoncode}
+# initial cond
+x0 = 0.0
+y0 = 1.0
+
+# Using step of 0.5, starting from x0 and y0
+x = x0
+y = y0
+h = 0.5
+xp1 = x + h # we are searching for solution at x = 0.5
+ϕ = -2*x**3 + 12*x**2 - 20*x + 8.5
+yp1 = y + ϕ*h
+y_true = -0.5*xp1**4 + 4*xp1**3 - 10*xp1**2 + 8.5*xp1 + 1
+ε_t = (y_true - yp1)/y_true * 100
+print("First step : x = %f y_true = %.5f y = %.5f ε_t = %.1f %%" % (xp1, y_true, yp1, ε_t))
+
+# Second step
+x = xp1 # x from the previous step
+y = yp1 # y from the previous step
+h = 0.5
+xp1 = x + h # we are searching for solution at x = 1.0
+ϕ = -2*x**3 + 12*x**2 - 20*x + 8.5
+yp1 = y + ϕ*h
+y_true = -0.5*xp1**4 + 4*xp1**3 - 10*xp1**2 + 8.5*xp1 + 1
+ε_t = (y_true - yp1)/y_true * 100
+print("Second step: x = %f y_true = %.5f y = %.5f ε_t = %.1f %%" % (xp1, y_true, yp1, ε_t))
+\end{pythoncode}
+
+Contoh keluaran:
+\begin{textcode}
+First step : x = 0.500000 y_true = 3.21875 y = 5.25000 ε_t = -63.1 %
+Second step: x = 1.000000 y_true = 3.00000 y = 5.87500 ε_t = -95.8 %
+\end{textcode}
+
+Anda dapat melanjutkan kode di atas sampai $x=4$.
+
+
+Pada kode yang baru saja kita gunakan, perhitungan $\phi$ dilakukan secara
+manual dengan memberikan ekspresinya secara eksplisit. Hal yang sama juga
+kita lakukan untuk perhitungan solusi eksak \pyinline{y_true}.
+Jika kita memiliki
+persamaan diferensial yang lain kita perlu mengubah bagian ini. Jika kita melakukan
+banyak perhitungan dengan menggunakan ekspresi yang sama, maka kita juga harus melakukan
+perubahannya pada seluruh program kita.
+Hal ini tentu saja akan menyulitkan kita nanti ketika kita ingin menyelesaikan
+persamaan diferensial yang berbeda.
+Oleh karena itu, kita akan mengimplementasikan skema metode Euler yang diberikan pada
+Persamaan \eqref{eq:euler_1step} pada suatu fungsi.
+\begin{pythoncode}
+# One-step aplication of Euler's method for ODE
+def ode_euler_1step(dfunc, xi, yi, h):
+    return yi + dfunc(xi,yi)*h
+\end{pythoncode}
+Fungsi ini memiliki argumen sebagai berikut.
+\begin{itemize}
+\item \pyinline{dfunc}: expresi dari $\mathrm{d}y/\mathrm{d}x$, yaitu ruas kanan
+dari Persamaan \eqref{eq:dydx_umum}. Tipe dari \pyinline{dfunc} adalah fungsi.
+\pyinline{dfunc} harus didefinisikan sebagai fungsi yang menerima dua argumen.
+\item \pyinline{xi} dan \pyinline{yi}: titik $x_{i}$ dan $y_{i}$ pada
+Persamaan \eqref{eq:euler_1step}
+\item \pyinline{h}: ukuran langkah.
+\end{itemize}
+Fungsi ini mengembalikan nilai $y_{i+1}$.
+
+Sebagai contoh, kita akan memodifikasi program sebelumnya dengan menggunakan
+\pyinline{ode_euler_1step}.
+Untuk ini kita akan mendefinisikan dua fungsi: untuk perhitungan
+$\mathrm{d}y/\mathrm{d}x$ dan solusi eksak.
+\begin{pythoncode}
+# the left hand side of dy/dx=... (in general depends on x and y)
+# In the present case it only depends on x
+def deriv(x, y):
+    return -2*x**3 + 12*x**2 - 20*x + 8.5
+
+def exact_sol(x):
+    return -0.5*x**4 + 4*x**3 - 10*x**2 + 8.5*x + 1
+\end{pythoncode}
+
+Pada program sebelumnya, kita mengganti bagian berikut:
+\begin{pythoncode}
+ϕ = -2*x**3 + 12*x**2 - 20*x + 8.5
+yp1 = y + ϕ*h
+y_true = -0.5*xp1**4 + 4*xp1**3 - 10*xp1**2 + 8.5*xp1 + 1
+\end{pythoncode}
+menjadi:
+\begin{pythoncode}
+yp1 = ode_euler_1step(deriv, x, y, h)
+y_true = exact_sol(xp1)
+\end{pythoncode}
+Keluaran yang diperoleh seharusnya sama dengan cara manual (tanpa fungsi).
+
+
+Akan lebih baik lagi jika kita menggunakan loop, seperti pada potongan
+program berikut.
+\begin{pythoncode}
+print("   x     y_true   y_Euler       ε_t")
+print("-----------------------------------")
+
+print("%5.1f  %8.5f  %8.5f" % (x0, y0, y0)) # Initial cond
+
+# Start from initial condition
+x = x0; y = y0
+h = 0.5 # step size
+for i in range(0,8):
+    xp1 = x + h
+    yp1 = ode_euler_1step(deriv, x, y, h)
+    y_true = exact_sol(xp1)
+    ε_t = (y_true - yp1)/y_true * 100 # in percent
+    print("%5.1f  %8.5f  %8.5f  %8.1f%%" % (xp1, y_true, yp1, ε_t))
+    # Update x and y for the next step
+    x = xp1
+    y = yp1
+\end{pythoncode}
+
+Contoh keluaran:
+\begin{textcode}
+   x     y_true   y_Euler       ε_t 
+------------------------------------
+  0.0   1.00000   1.00000
+  0.5   3.21875   5.25000     -63.1%
+  1.0   3.00000   5.87500     -95.8%
+  1.5   2.21875   5.12500    -131.0%
+  2.0   2.00000   4.50000    -125.0%
+  2.5   2.71875   4.75000     -74.7%
+  3.0   4.00000   5.87500     -46.9%
+  3.5   4.71875   7.12500     -51.0%
+  4.0   3.00000   7.00000    -133.3%
+\end{textcode}
+
+
+%\input{error_euler}
+
+
+
+
+
+\subsection*{Subrutin untuk metode satu langkah}
+Kita juga dapat menggunakan fungsi atau subrutin berikut sebagai implementasi
+metode Euler.
+\begin{pythoncode}
+def ode_euler(dfunc, x0, y0, h, Nstep):
+    x = np.zeros(Nstep+1)
+    y = np.zeros(Nstep+1)
+    # Start with initial cond
+    x[0] = x0
+    y[0] = y0
+    for i in range(0,Nstep):
+        x[i+1] = x[i] + h
+        y[i+1] = ode_euler_1step(dfunc, x[i], y[i], h)
+    return x, y
+\end{pythoncode}
+Fungsi ini memiliki argumen sebagai berikut yang sama dengan \pyinline{ode_euler_1step}
+dengan satu tambahan argumen \pyinline{Nstep}, yaitu jumlah langkah yang dilakukan.
+Perbedaan lain adalah fungsi ini mengembalikan array solusi \pyinline{x} dan \pyinline{y}
+yang dapat diproses lebih lanjut, misalnya divisualisasikan dalam bentuk plot.
+
+Perhatikan bahwa kode ini dapat digeneralisasi untuk metode satu langkah lain yang akan
+diberikan dalam modul ini.
+
+Sebagai contoh penggunakan \pyinline{ode_euler}, kita akan mengerjakan Chapra Contoh 25.3,
+di mana dilakukan perbandingan hasil metode Euler untuk ukuran langkah yang berbeda, yaitu
+$h=0.5$ dan $h=0.25$.
+\begin{pythoncode}
+# .... Definisi dan/atau import fungsi-fungsi yang diperlukan
+
+x0 = 0.0; y0 = 1.0 # initial cond
+xf = 4.0 # last or final x
+
+# Using h=0.5
+h = 0.5
+Nstep = int(xf/h)
+xs1, ys1 = ode_euler(deriv, x0, y0, h, Nstep)
+
+# Using h=0.25
+h = 0.25
+Nstep = int(xf/h)
+xs2, ys2 = ode_euler(deriv, x0, y0, h, Nstep)
+
+# True solution
+x_true = np.linspace(0.0, 4.0, 200)
+y_true = exact_sol(x_true)
+
+# Plot
+plt.clf()
+plt.plot(xs1, ys1, label="h=0.5", marker="o")
+plt.plot(xs2, ys2, label="h=0.5", marker="o")
+plt.plot(x_true, y_true, label="true") # Do not show the markers
+plt.legend()
+plt.tight_layout()
+\end{pythoncode}
+Hasil dari program ini dapat dilihat pada Gambar \ref{fig:example_25_3}.
+
+
+\begin{figure}[h]
+{\centering
+\includegraphics[scale=0.7]{../../chapra_7th/ch25/IMG_chapra_example_25_3.pdf}
+\par}
+\caption{Perbandingan hasil metode Euler dengan ukuran langkah yang berbeda}
+\label{fig:example_25_3}
+\end{figure}
+
+
+\input{Chapra_example_25_4}
