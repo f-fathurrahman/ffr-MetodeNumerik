@@ -24,7 +24,7 @@ approx_val = ( f(x) - f(x-h) )/h
 print("Using backward diff: ", approx_val)
 print("ε_t (in percent) = ", (true_val - approx_val)/true_val*100)
 
-# Backward diff
+# Centered diff
 approx_val = ( f(x+h) - f(x-h) )/(2*h)
 print("Using centered diff: ", approx_val)
 print("ε_t (in percent) = ", (true_val - approx_val)/true_val*100)
