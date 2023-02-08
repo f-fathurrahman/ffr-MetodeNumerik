@@ -1,0 +1,153 @@
+\section{Metode Bairstow}
+
+\textbf{Chapra Contoh 7.3}
+Kode berikut ini adalah implementasi Python (belum lengkap)
+dari metode Bairstow pada Chapra Gambar 7.5 dengan sedikit modifikasi.
+
+\begin{pythoncode}
+import numpy as np
+
+# a_ is an array containing coefficients of the polynomial, starting
+# from the lowest power.
+# rr and ss are initial values of r and s (quadratic polynomial used for
+# dividing the polynomial defined by a_).
+# SMALL is a tolerance parameter
+def root_bairstow( a_, rr=1.0, ss=1.0, NiterMax=100, SMALL=1e-10 ):
+    
+    a = np.copy(a_) # do not modify the input
+    Ndeg = len(a) - 1
+    
+    re = np.zeros(Ndeg)
+    im = np.zeros(Ndeg)
+    
+    b = np.zeros(Ndeg+1)
+    c = np.zeros(Ndeg+1)
+    
+    r = rr
+    s = ss
+    n = Ndeg
+    ier = 0
+    
+    iteration = 0
+    
+    while True:
+        # Break out from the loop if reduced degree is less than 3
+        # or number of iterations exceeds NiterMax    
+        if (n < 3) or (iteration >= NiterMax) :
+            break
+    
+        iteration = 0
+        while True:
+            iteration = iteration + 1
+            if iteration >= NiterMax:
+                break
+            
+            b[n]   = a[n]
+            b[n-1] = ....
+            c[n]   = b[n]
+            c[n-1] = ....
+            for i in range(n-2,-1,-1):
+                b[i] = ....
+                c[i] = ....
+            # Solve the linear equations for dr and ds
+            det = ....
+            if abs(det) >= SMALL:
+                dr = ....
+                ds = ....
+                r = r + dr
+                s = s + ds
+            else:
+                # Update with different initial r and s
+                r = r + 1.0
+                s = s + 1.0
+                iteration = 0
+            
+            # Stop the iteration if s and r did not changed much
+            # NOTE: In the original algorithm (Chapra Fig. 7.5) relative
+            # error is used, here we directly use the values of dr and ds
+            if (abs(dr) <= SMALL) and (abs(ds) <= SMALL):
+                break
+        
+        # Up to this points, we already found r and s of the quadratic
+        # polynomial that factors or divide the original polynomial
+        # We call quadroot to find the roots of this quadratic polynomial.
+        r1, i1, r2, i2  = quadroot(r, s)
+        re[n-1] = r1
+        im[n-1] = i1
+        re[n-2] = r2
+        im[n-2] = i2
+        
+        # Update the original polynomial (using the quotient)
+        # The degree of the original polynomial is reduced by 2.
+        n = n - 2
+        for i in range(0,n+1):
+            a[i] = b[i+2]
+    
+    # Up to this point, n (the degree of the reduced polynomial should be
+    # less than 3, i.e. it becomes quadratic or linear polynomial)
+    # We solve for the remaining roots.
+    if iteration < NiterMax:
+        if n == 2:
+            r = -a[1]/a[2]
+            s = -a[0]/a[2]
+            r1, i1, r2, i2 = quadroot(r, s)
+            re[n-1] = r1
+            im[n-1] = i1
+            re[n-2] = r2
+            im[n-2] = i2
+        else:
+            re[n-1] = -a[0]/a[1]
+            im[n-1] = 0.0
+    else:
+        print("WARNING: there are some unknown errors")
+        print("WARNING: probably NiterMax is exceeded.)
+        ier = 1
+    
+    # Convert to complex-valued array
+    zroots = np.zeros(Ndeg, dtype=np.complex128)
+    # `numpy.complex128`: Complex number type composed
+    # of 2 64-bit-precision floating-point numbers.
+    for i in range(Ndeg):
+        zroots[i] = complex(re[i], im[i])
+    return zroots
+    
+    
+def quadroot(r, s):
+    disc = r**2 + 4.0*s
+    if disc > 0:
+        # real part of the roots
+        r1 = ....
+        r2 = ....
+        # imaginary part of the roots (set to zero)
+        i1 = 0.0
+        i2 = 0.0
+    else:
+        r1 = ....
+        r2 = ....
+        i1 = ....
+        i2 = ....
+    #
+    return r1, i1, r2, i2    
+\end{pythoncode}
+
+\begin{soal}
+Lengkapi kode untuk \pyinline{root_bairstow} dan aplikasikan untuk
+mencari akar-akar dari polinomial:
+\begin{equation*}
+f(x) = x^5 - 3.5x^4 + 2.75x^3 + 2.125x^2 - 3.875x + 1.25
+\end{equation*}
+\end{soal}
+
+\begin{soal}
+Gunakan \pyinline{root_bairstow} dan fungsi yang tersedia pada Numpy
+(lihat bagian mengenai penggunakan pustaka Python)
+untuk menentukan akar-akar dari polinomial berikut:
+\begin{itemize}
+\item $f(x) = x^3 - x^2 + 2x - 2$
+\item $f(x) = 2x^4 + 6x^2 + 8$
+\item $f(x) = x^4 - 2x^3 + 6x^2 - 2x + 5$
+\item $f(x) = -2 + 6.2x - 4x^2 + 0.7x^3$
+\item $f(x) = 9.34 - 21.97x + 16.3x^2 - 3.704x^3$
+\item $f(x) = 10x^5 - 2x^3 + 6x^2 - 2x + 5$
+\end{itemize}
+\end{soal}

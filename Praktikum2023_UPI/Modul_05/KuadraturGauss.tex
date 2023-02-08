@@ -1,0 +1,106 @@
+\section{Kuadratur Gauss-Legendre}
+
+\begin{soal}[Chapra Contoh 22.3 dan 22.4]
+Aplikasikan kuadratur Gauss-Legendre dengan dua dan tiga titik untuk
+menghitung integral dari fungsi pada Chapra Contoh 21.1
+\end{soal}
+
+Anda dapat melengkapi kode berikut.
+\begin{pythoncode}
+# .... Definisikan atau import fungsi-fungsi yang diperlukan
+
+a = 0.0
+b = 0.8
+
+a_0 = (b + a)/2
+a_1 = (b - a)/2
+
+# mapping from x_d -> x
+# NOTE: using a_0 and a_1 as global variables
+def mapping_func(x_d):
+    return a_0 + a_1*x_d
+    
+dx_dx_d = (b - a)/2 # Eq. (22.30)
+
+NGaussPoints = 2
+GAUSS2_c = [1.0, 1.0]
+GAUSS2_x = [-1.0/sqrt(3), 1.0/sqrt(3)]
+    
+I_exact = 1.640533
+    
+I = 0.0
+for i in range(NGaussPoints):
+    x_d = GAUSS2_x[i]
+    c = GAUSS2_c[i]
+    I = .... # LENGKAPI
+    
+ε_t = (I_exact - I)/I_exact * 100
+print("I = %.6f, ε_t = %.1f%%" % (I, ε_t))
+\end{pythoncode}
+
+Untuk tiga titik, Anda dapat mengganti daftar titik-titik Gauss sebagai berikut.
+\begin{pythoncode}
+# Can be found for example at:
+# https://en.wikipedia.org/wiki/Gaussian_quadrature#Gauss%E2%80%93Legendre_quadrature
+NGaussPoints = 3
+GAUSS3_c = [5/9, 8/9, 5/9]
+GAUSS3_x = [-sqrt(3/5), 0, sqrt(3/5)]
+\end{pythoncode}
+
+Untuk mendapatkan jumlah titik Gauss-Legendre yang lebih lengkap, kita dapat
+menggunakan fungsi yang tersedia pada Numpy seperti pada contoh berikut.
+
+\begin{soal}[Chapra Contoh 22.5]
+Hitung integral berikut ini dengan menggunakan kuadratur Gauss-Legendre
+\begin{equation*}
+d = \frac{gm}{c} \int_{0}^{10} (1 - e^{-(c/m)t}) \, \mathrm{d}t
+\end{equation*}
+Variasikan jumlah titik yang digunakan dan
+bandingkan hasil yang diperoleh dengan hasil analitik.
+\end{soal}
+
+Anda dapat melengkapi kode berikut.
+\begin{pythoncode}
+import numpy as np
+from math import exp
+    
+def my_func(t):
+    g = 9.8
+    m = 68.1
+    c = 12.5
+    return g*m/c * (1 - exp(-(c/m)*t) )
+    
+def calc_exact_sympy():
+    # Calculate "Exact" result using SymPy
+    import sympy
+    g = 9.8
+    m = 68.1
+    c = 12.5
+    t = sympy.symbols("t")
+    f = g*m/c * (1 - sympy.exp(-(c/m)*t) )
+    d_sympy = sympy.integrate( f, (t,0,10))
+    return d_sympy
+    
+I_exact = calc_exact_sympy()
+    
+a = 0.0
+b = 10.0
+
+a_0 = (b + a)/2
+a_1 = (b - a)/2
+
+def mapping_func(x_d):
+    return a_0 + a_1*x_d
+
+dx_dx_d = (b - a)/2
+    
+for NGaussPoints in range(2,7):
+    GAUSS_x, GAUSS_c = np.polynomial.legendre.leggauss(NGaussPoints)
+    I = 0.0
+    for i in range(NGaussPoints):
+        x_d = GAUSS_x[i]
+        c = GAUSS_c[i]
+        I = .... # LENGKAPI
+    Δ = abs(I_exact-I)
+    print("NGaussPoints = %d, I = %15.10f, err = %10.5e" % (NGaussPoints,I,Δ))
+\end{pythoncode}

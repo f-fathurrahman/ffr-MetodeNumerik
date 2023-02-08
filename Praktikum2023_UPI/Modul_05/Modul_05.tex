@@ -1,0 +1,64 @@
+\input{../PREAMBLE}
+
+\begin{document}
+
+\title{%
+{\small TF2202 Komputasi Rekayasa}\\
+Integral dan Diferensiasi Numerik
+}
+\author{Tim Praktikum Komputasi Rekayasa 2023\\
+Teknik Fisika\\
+Institut Teknologi Bandung}
+\date{}
+\maketitle
+
+
+\input{AturanTrapesium}
+\input{AturanSimpson}
+\input{DataTabel_v1}
+\input{IntegrasiRomberg}
+\input{KuadraturGauss}
+
+\section{Soal tambahan}
+
+\input{Chapra_exercise_21_1_7}
+\input{Chapra_exercise_21_10_11}
+\input{Chapra_exercise_22_1_2_3}
+\input{Chapra_exercise_22_8}
+\input{Chapra_exercise_22_9}
+
+\begin{soal}[Chapra Latihan 23.8]
+Hitung turunan pertama dari fungsi-fungsi berikut dengan menggunakan metode beda hingga
+tengah $\mathcal{O}(h^4)$:
+\begin{itemize}
+\item $y = x^3 + 4x - 15$ pada $x=0$ dengan $h=0.25$
+\item $y = x^2 \cos(x)$ pada $x=0.4$ dengan $h=0.1$
+\item $y = \tan(x/3)$ pada $x=3$ dengan $h=0.5$
+\item $y = \sin(0.5\sqrt{x})/x$ pada $x=1$ dengan $h=0.2$
+\item $y = e^{x} + x$ pada $x=2$ dengan $h=0.2$
+\end{itemize}
+Bandingkan hasil yang Anda peroleh dengan hasil analitik atau SymPy.
+\end{soal}
+
+
+\begin{soal}[Chapra Latihan 23.9]
+Diketahui data jarak dan waktu yang ditempuh pada suatu roket.
+
+{\centering
+\begin{tabular}{|c|cccccc|}
+\hline
+t (s)  & 0 & 25 & 50 & 75 & 100 & 125 \\
+y (km) & 0 & 32 & 58 & 78 &  92 & 100 \\
+\hline
+\end{tabular}
+\par}
+
+Gunakan metode numerik untuk untuk mengestimasi kecepatan dan percepatan roket
+pada masing-masing waktu pada tabel (jika memungkinkan dengan metode yang Anda
+gunakan).
+\end{soal}
+
+
+\input{CatatanTambahan}
+
+\end{document}
