@@ -1,0 +1,160 @@
+\input{../PREAMBLE}
+
+% -------------------------
+\begin{document}
+
+\title{%
+{\small TF2202 Komputasi Rekayasa}\\
+Sistem Persamaan Linear
+}
+\author{Tim Praktikum Komputasi Rekayasa 2023\\
+Teknik Fisika\\
+Institut Teknologi Bandung}
+\date{}
+\maketitle
+
+
+\section{Eliminasi Gauss}
+
+\begin{soal}
+Implementasikan suatu fungsi untuk menghitung solusi persamaan linear:
+\begin{equation*}
+\mathbf{A}\mathbf{x} = \mathbf{b}
+\end{equation*}
+di mana $\mathbf{A}$ adalah suatu matriks berukuran $n \times n$, 
+$\mathbf{x}$ dan $\mathbf{b}$ adalah vektor kolom.
+Anda dapat menggunakan pseudocode yang dijelaskan pada Gambar 9.6
+pada buku Chapra dengan mengingat bahwa untuk Python indeks dimulai dari 0.
+Lakukan modifikasi jika Anda anggap perlu.
+Fungsi Anda harus memiliki opsi atau argumen opsional \pyinline{verbose}.
+Jika \pyinline{verbose=True}, maka ketika fungsi yang Anda panggil juga
+memberikan informasi mengenai langkah-langkah yang dilakukan, misalnya
+menunjukkan matriks dalam proses eliminasi, apakah perlu tukar baris atau tidak,
+dan substitusi balik. Uji hasil program Anda dengan menggunakan salah satu contoh
+yang ada pada slide.
+\end{soal}
+
+Anda dapat menggunakan kode berikut ini jika diperlukan (silakan dimodifikasi sesuai
+keperluan.)
+\begin{pythoncode}
+import numpy as np
+
+def linsolve_gauss_elim(A_, b_, verbose=False):
+
+    N = b_.shape[0]
+    # we assume that we only wave one RHS, i.e second dimension of b is 1
+
+    # Copy the arguments, we don't change the input
+    A = np.copy(A_)
+    b = np.copy(b_)
+    
+    # Elimination (note that pivoting is not done)
+    verbose and print("\nForward elimination")
+    for k in range(0,N-1):
+        for i in range(k+1,N):
+            if A[i,k] != 0.0:
+                α = A[i,k]/A[k,k]
+                verbose and print("\nα = ", α)
+                A[i,:] = .... # Lengkapi
+                b[i]   = .... # Lengkapi
+            verbose and print("Matrix A = \n", A)
+            verbose and print("Vector b = \n", b)
+    
+    verbose and print("\nBack substitution ...")
+    x = np.zeros((N,1)) # Column vector
+    # The last equation
+    x[N-1] = b[N-1]/A[N-1,N-1] # second index of x is taken to be 0
+    # The remaining equations
+    for i in range(N-2,-1,-1): # from N-2, N-1, ..., 0
+        ss = 0.0
+        for j in range(i+1,N):
+            ss = .... # Lengkapi
+        x[i] = (b[i] - ss)/A[i,i]
+    verbose and print("Done")
+    verbose and print("Solution x = \n", x)
+    return x    
+\end{pythoncode}
+
+Pengujian, misalnya menggunakan permasalahan pada Chapra Contoh 9.11:
+\begin{pythoncode}
+import numpy as np
+    
+A = np.array([
+    [70, 1.0, 0.0],
+    [60, -1.0, 1.0],
+    [40.0, 0.0, -1.0]
+])
+    
+b = np.array([
+    [636.7],
+    [518.6],
+    [307.4]
+])
+    
+x = linsolve_gauss_elim(A, b, verbose=True)
+print("Solution x = ")
+print(x)
+    
+print("Check: (should be close to zero)")
+print(A @ x - b)
+\end{pythoncode}
+
+\section{Dekomposisi LU}
+
+\begin{soal}
+Lakukan hal yang sama dengan soal sebelumnya, namun dengan menggunakan
+dekomposisi LU.
+Anda dapat menggunakan pseudocode yang ada pada Gambar 10.2 pada Chapra.
+Uji fungsi yang Anda implementasikan dan gunakan untuk menyelesaikan
+kasus atau contoh sama yang Anda gunakan pada soal pertama.
+\end{soal}
+
+\begin{soal}
+Apakah penggunaan dekomposisi LU untuk menyelesaikan sistem persamaan linear memiliki keuntungan
+dibandingkan dengan metode eliminasi Gauss? Jelaskan jawaban Anda (misalnya dengan menjelaskan
+situasi atau masalah tertentu di mana metode dekomposisi LU memiliki keuntungan dibandingkan
+dengan eliminasi Gauss).
+\end{soal}
+
+\begin{soal}
+Jelaskan bagaiman cara mendapatkan invers matriks dengan menggunakan
+dekomposisi LU. Gunakan fungsi dekomposisi LU yang Anda implementasikan
+untuk mencari invers matriks yang Anda gunakan pada soal sebelumnya.
+\end{soal}
+
+\input{Using_Library}
+
+\section{Soal tambahan}
+
+Gunakan salah satu dari fungsi atau subrutin Python yang sudah Anda tulis
+pada soal-soal sebelumnya untuk menyelesaikan soal-soal berikut.
+
+\begin{soal}
+Hitung invers dari matrix berikut (jika ada):
+\begin{equation*}
+\mathbf{A} = \begin{bmatrix}
+10 & 3 & -9 & 6 & 4 \\
+2 & -1 & 6 & 7 & 1 \\
+3 & 2 & -3 & 15 & 5 \\
+8 & -1 & 1 & 4 & 2 \\
+11 & 1 & -2 & 18 & 7
+\end{bmatrix}
+\end{equation*}
+\end{soal}
+
+\input{Chapra_exercise_12_29}
+
+\input{Chapra_exercise_12_35}
+
+\input{Chapra_exercise_12_37}
+
+\input{Chapra_exercise_12_38}
+
+\input{Chapra_exercise_12_39}
+
+\begin{soal}
+Apa keuntungan dan kekurangan dari metode Gauss-Seidel (dan metode iteratif lainnya)
+dibandingkan dengan metode eliminasi Gaussian?
+\end{soal}
+
+\end{document}

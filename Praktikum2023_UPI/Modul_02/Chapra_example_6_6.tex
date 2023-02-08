@@ -1,0 +1,42 @@
+\section{Metode \textit{secant}}
+
+\textbf{Chapra Contoh 6.6}
+Salah satu kekurangan dari metode Newton-Raphson
+adalah perlunya menghitung turunan
+pertama dari fungsi yang ingin dicari akarnya. Hal ini biasanya tidak dapat 
+Metode \textit{secant} memiliki bentuk iterasi yang mirip dengan metode
+Newton-Raphson, namun turunan fungsi diaproksimasi dengan menggunakan:
+\begin{equation*}
+f'(x_{i}) \approx \frac{f(x_{i-1}) - f(x_{i})}{x_{i-1} - x_{i}}
+\end{equation*}
+sehingga kita memperoleh bentuk iterasi sebagai berikut:
+\begin{equation}
+x_{i+1} = x_{i} - \frac{f(x_{i}) (x_{i-1} - x_{i})}{f(x_{i-1}) - f(x_{i})}
+\end{equation}
+Metode \textit{secant} memerlukan dua titik $x_{-1}$ dan $x_{0}$
+sebagai tebakan akar awal. Berbeda
+dengan metode \textit{bracketing}, nilai fungsi $f(x_{-1})$ dan $f(x_{0})$
+tidak diharuskan memiliki tanda yang berbeda.
+
+\begin{pythoncode}
+# ... definisi f dan df sama dengan contoh Newton-Raphson
+x0 = 0.0
+x1 = 1.0
+for i in range(1,6):
+    # approximation of derivative of f(x)
+    dfx = (f(x0) - f(x1))/(x0 - x1)
+    #
+    xnew = ... # lengkapi
+    fxnew = f(xnew)
+    print("%3d %18.10f %18.10e" % (i, xnew, fxnew))
+    x0 = x1
+    x1 = xnew    
+\end{pythoncode}
+
+\begin{soal}
+Lengkapi program Python untuk metode \textit{secant} di atas.
+Implementasikan program Anda sehingga
+dapat melakukan iterasi sampai nilai kesalahan menjadi lebih kecil dari
+suatu nilai tertentu yang diberikan. Anda dapat menggunakan loop \txtinline{while}
+atau loop \txtinline{for} dengan jumlah iterasi maksimum tertentu.
+\end{soal}
