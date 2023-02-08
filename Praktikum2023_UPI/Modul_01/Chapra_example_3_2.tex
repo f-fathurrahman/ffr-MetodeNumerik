@@ -2,14 +2,55 @@
 
 \textbf{Chapra Contoh 3.2}
 
+Hubungan antara nilai eksak atau benar dan aproksimasi dapat dinyatakan
+sebagai:
+\begin{equation*}
+\text{nilai benar} = \text{aproksimasi} + \text{error atau galat}
+\end{equation*}
+Dari persamaan di atas, diberikan nilai benar dan aproksimasi, kita dapat menghitung
+kesalahan sebenarnya, dilambangkan dengan $E_t$ (subskrip $t$: \textit{true}):
+\begin{equation}
+E_t = \text{nilai benar} - \text{aproksimasi}
+\end{equation}
+Terkadang, kita juga dapat menggunakan nilai relatif, dengan cara membandingkannya
+dengan nilai benar:
+\begin{equation}
+\epsilon_{t} = \frac{\text{error sebenarnya}}{\text{nilai sebenarnya}}\times 100\%
+\end{equation}
+yang dapat dinyatakan dalam persentase.
+
+Dalam banyak kasus, kita tidak memiliki nilai sebenarnya sehingga $\epsilon_t$
+tidak dapat dihitung. Sebagai alternatif, kita dapat menggunakan error relatif:
+\begin{equation}
+\epsilon_{a} = \frac{\text{error aproksimasi}}{\text{nilai aproksimasi}}
+\end{equation}
+Ada beberapa cara untuk mengestimasi error aproksimasi. Dalam kasus proses iteratif,
+kita dapat menggunakan persamaan berikut.
+\begin{equation}
+\epsilon_{a} = \frac{\text{aproksimasi sekarang} - \text{aproksimasi sebelumnya}}%
+{\text{aproksimasi sekarang}} \times 100\%
+\end{equation}
+Dalam konteks perhitungan iteratif, biasanya perhitungan dilakukan sampai:
+\begin{equation}
+|\epsilon_{a}| < \epsilon_{s}
+\end{equation}
+di mana $\epsilon_{s}$ adalah suatu nilai toleransi yang sudah ditentukan.
+
+Scarborough memberikan suatu kriteria yang menghubungkan antara jumlah digit signifikan
+dengan dan nilai aproksimasi. Menurut kriteria ini, jika menggunakan:
+\begin{equation}
+\epsilon_{s} = (0.5 \times 10^{2-n})\%
+\end{equation}
+maka hasil yang diperoleh akan benar untuk setidaknya $n$ digit signifikan.
+
 Fungsi eksponensial dapat dihitung dengan menggunakan deret sebagai berikut:
 \begin{equation}
 e^{x} = 1 + x + \frac{x^2}{2} + \frac{x^3}{3!} + \cdots + \frac{x^n}{n!}
 \label{eq:exp-deret}
 \end{equation}
 Kita ingin menggunakan Persamaan \eqref{eq:exp-deret} untuk menghitung estimasi
-dari $e^{0.5}$.
-Dengan menggunakan kriteria dari Scarborough:
+dari $e^{0.5}$ untuk setidaknya tiga digit signifikan.
+Dengan menggunakan kriteria dari Scarborough, nilai $n=3$ diperoleh:
 \begin{equation*}
 \epsilon_{s} = (0.5 \times 10^{2-3}) \% = 0.05 \%
 \end{equation*}
