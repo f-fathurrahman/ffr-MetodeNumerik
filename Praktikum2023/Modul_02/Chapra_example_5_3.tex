@@ -1,4 +1,4 @@
-\section{Metode \textit{bisection}}
+\section{Metode bagi dua (\textit{bisection})}
 
 \textbf{Chapra Contoh 5.3}
 Kita ingin mencari nilai dari $c$ dari persamaan
@@ -11,7 +11,7 @@ Nilai $c$ dapat dicari sebagai akar dari persamaan:
 f(c) \equiv \frac{gm}{c}(1 - e^{-(c/m)t}) - v(t)
 \end{equation*}
 
-Kita akan menggunakan metode \textit{bisection} untuk mengaproksimasi akar atau solusi dari
+Kita akan menggunakan metode bagi dua atau \textit{bisection} untuk mengaproksimasi akar atau solusi dari
 persamaan $f(c) = 0$. Diberikan dua nilai $x_{l}$ (lower) dan $x_{u}$ (upper), di mana
 $x_{u} > x_{l}$ dan $f(c=x_{l})f(c=x_{u}) < 0$, metode \textit{bisection} memberikan
 aproksimasi akar $x_{r}$ sebagai berikut:
@@ -19,7 +19,7 @@ aproksimasi akar $x_{r}$ sebagai berikut:
 x_{r} = \frac{x_{l} + x_{u}}{2}
 \end{equation}
 
-Kode Python berikut ini mengilustrasikan penggunaan 
+Kode Python berikut ini mengilustrasikan penggunaan metode \textit{bisection}:
 \begin{pythoncode}
 import numpy as np
 
