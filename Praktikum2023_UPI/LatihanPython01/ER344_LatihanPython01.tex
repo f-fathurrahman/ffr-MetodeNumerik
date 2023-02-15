@@ -1,0 +1,77 @@
+\input{../PREAMBLE}
+
+% -------------------------
+\begin{document}
+
+\title{%
+{\small ER344 Komputasi dan Analisis Numerik}\\
+Latihan Python
+}
+\author{Mariya Al Qibtiya Nasution}
+\date{}
+\maketitle
+
+\section{Soal 1}
+Buat program Python sederhana untuk menentukan akar-akar dari polinomial
+kuadrat:
+\begin{equation*}
+ax^2 + bx + c = 0
+\end{equation*}
+Input dari koefisien-koefisien $a$, $b$, dan $c$ diperoleh dari pengguna.
+Pada bagian awal jalannya program, nama-nama dari anggota kelompok harus
+ditampilkan.
+
+
+\section{Soal 2}
+Buatlah suatu plot (menggunakan Python dan Matplotlib)
+dari fungsi sinus dan cosinus (dalam satu plot).
+Anda dapat menetapkan sendiri parameter-parameter terkait seperti
+periode, rentang nilai pada sumbu-$x$ dan sumbu-$y$, warna garis yang
+digunakan, serta parameter lain yang mungkin diperlukan.
+Lengkapi plot Anda dengan label para sumbu-$x$ dan sumbu-$y$, legenda,
+dan judul yang menampilkan nama-nama dari anggota kelompok.
+Simpan plot yang dihasilkan dalam format JPG, PNG dan PDF.
+
+Anda dapat menggunakan referensi yang banyak ditemukan pada web, misalnya:
+
+{\footnotesize
+\url{https://matplotlib.org/stable/gallery/lines_bars_and_markers/simple_plot.html}}
+
+\section{Soal 3}
+Buat plot permukaan (\textit{surface}) dan kontur (\textit{contour})
+dari fungsi dua variabel berikut:
+\begin{equation*}
+f(x,y) = A_{1} \exp\left[ -\frac{(x-1)^2 + (y-3)^2}{\sigma_{1}^{2}} \right]
+A_{2} \exp\left[ -\frac{(x+1)^2 + (y+2)^2}{\sigma_{2}^{2}} \right]
+\end{equation*}
+Anda dapat memilih nilai dari parameter-parameter $A_{1}$, $\sigma_{1}$,
+$A_{2}$, dan $\sigma_{2}$.
+Lengkapi plot-plot Anda dengan keterangan nama dari anggota kelompok.
+
+Beberapa referensi yang mungkin dapat Anda gunakan:
+
+{\footnotesize
+  \url{https://matplotlib.org/stable/gallery/mplot3d/surface3d.html}
+}
+
+{\footnotesize
+  \url{https://matplotlib.org/stable/gallery/images_contours_and_fields/contour_demo.html}
+}
+
+\section{Soal 4}
+Tinjau salah satu dari representasi fungsi periodik yang diberikan dalah deret Fourier, misalnya
+yang ditampilkan pada laman:
+{\footnotesize
+\url{https://en.wikipedia.org/wiki/Fourier_series#Table_of_common_Fourier_series}}
+Seperti yang telah dipelajari dalam Matematika Teknik II, deret Fourier melibatkan
+suku ekspansi yang tak hingga, akan tetapi hal ini tidak dapat diperoleh pada perhitungan
+numerik. Oleh karena itu, kita biasanya membatasi penjumlahan deret ini hanya sampai beberapa
+suku saja.
+Buat plot dari fungsi tersebut dengan menggunakan Matplotlib untuk beberapa
+suku ekspansi, dan bandingkan hasilnya, misalnya perbandingan hasil plot menggunakan satu suku
+dengan dua suku, tiga suku dan seterusnya. Semakin banyak suku yang Anda masukkan
+dalam perhitungan, maka plot yang Anda tampilkan akan semakin mendekati fungsi periodik atau sinyal
+yang diinginkan.
+
+
+\end{document}
