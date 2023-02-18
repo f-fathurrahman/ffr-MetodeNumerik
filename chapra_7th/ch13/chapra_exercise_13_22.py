@@ -1,5 +1,5 @@
 import numpy as np
-from optim_golden_ratio import *
+from optim_golden_ratio_max import *
 
 def ladder_length(x):
     h = 4.0
