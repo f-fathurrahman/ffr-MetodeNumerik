@@ -1,5 +1,5 @@
 import numpy as np
-from optim_golden_ratio import *
+from optim_golden_ratio_max import *
 
 def f(x):
     return 2*np.sin(x) - x**2/10

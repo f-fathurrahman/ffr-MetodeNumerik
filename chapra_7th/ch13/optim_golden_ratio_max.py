@@ -1,12 +1,9 @@
 import numpy as np
 
-# This will search for minimum value
-# If you want to use this for searching maximum value please
-# define f = -f_actual, where f_actual is the function you want
-# to maximize.
-# The sign keyword argument is not implemented here.
+# This will search for maximum value if sign=1
+# To find the minimum value, please use sign=-1
 
-def optim_golden_ratio(f, xlow, xhigh, NiterMax=100, TOL=1e-10):
+def optim_golden_ratio(f, xlow, xhigh, NiterMax=100, TOL=1e-10, sign=1):
 
     SMALL = np.finfo(np.float64).resolution
 
@@ -17,8 +14,8 @@ def optim_golden_ratio(f, xlow, xhigh, NiterMax=100, TOL=1e-10):
     d = ϕ*(xu - xl)
     x1 = xl + d
     x2 = xu - d
-    f1 = f(x1)
-    f2 = f(x2)
+    f1 = sign*f(x1)
+    f2 = sign*f(x2)
     
     fx_old = np.nan # use this for evaluating convergence?
 
@@ -32,20 +29,20 @@ def optim_golden_ratio(f, xlow, xhigh, NiterMax=100, TOL=1e-10):
     for iiter in range(NiterMax):
         d = ϕ*d
         xint = xu - xl
-        if f1 < f2:
+        if f1 > f2:
             xl = x2
             x2 = x1
             x1 = xl + d
             f2 = f1
-            f1 = f(x1)
+            f1 = sign*f(x1)
         else:
             xu = x1
             x1 = x2
             x2 = xu - d
             f1 = f2
-            f2 = f(x2)
+            f2 = sign*f(x2)
         # Update iiter?
-        if f1 < f2:
+        if f1 > f2:
             xopt = x1
             fx = f1
         else:
