@@ -1,0 +1,232 @@
+\section{Metode rasio emas (\textit{golden section})}
+
+Berikut ini adalah implementasi dari metode rasio emas,
+diadaptasi dari Chapra 7th (Gambar 13.5) untuk mencari
+\textbf{nilai minimum} dari suatu fungsi.
+
+\begin{pythoncode}
+import numpy as np
+
+# This will search for minimum value
+# If you want to use this for searching maximum value please
+# define f = -f_actual, where f_actual is the function you want
+# to maximize.
+# The sign keyword argument is not implemented here.
+
+def optim_golden_ratio(f, xlow, xhigh, NiterMax=100, TOL=1e-10, verbose=True):
+
+    SMALL = np.finfo(np.float64).resolution
+
+    ϕ = .... # lengkapi
+    xl = xlow
+    xu = xhigh
+    iiter = 1
+    d = ϕ*(xu - xl)
+    x1 = xl + d
+    x2 = xu - d
+    f1 = f(x1)
+    f2 = f(x2)
+
+    if verbose:
+        print("Iteration: ", 0)
+        print()
+        print("xl = %18.10f xu = %18.10f" % (xl, xu))
+        print("-"*47)
+        print("x2 = %18.10f x1 = %18.10f" % (x2, x1))
+        print("f2 = %18.10f f1 = %18.10f" % (f2, f1))
+
+    if f1 < f2:
+        xopt = x1
+        fxopt = f1
+        if verbose:
+            print("-"*47)
+            print("f1 is the current optimum value")
+            print("(xopt,fxopt) = (%18.10f,%18.10f)" % (xopt, fxopt))
+    else:
+        xopt = x2
+        fxopt = f2
+        if verbose:
+            print("-"*47)
+            print("f2 is the current optimum value")
+            print("(xopt,fxopt) = (%18.10f,%18.10f)" % (xopt, fxopt))
+
+    for iiter in range(1,NiterMax+1):
+
+        d = ϕ*d
+        xint = xu - xl
+
+        if f1 < f2:
+            xl = x2
+            x2 = x1
+            x1 = .... # lengkapi
+            f2 = f1
+            f1 = f(x1)
+            if verbose:
+                print("")
+                print("For next iteration: ")
+                print("- Replacing xl with x2")
+                print("- New point: x1 = %18.10f" % x1)
+                print("- xu is not changed")
+                print("- Replacing x2 with x1")
+        else:
+            xu = x1
+            x1 = x2
+            x2 = .... # lengkapi
+            f1 = f2
+            f2 = f(x2)
+            if verbose:
+                print("")
+                print("For next iteration: ")
+                print("- xl is not changed")
+                print("- x1 is replaced by x2")
+                print("- New point: x2 = %18.10f" % x2)
+                print("- xu is replaced by x1")
+
+        if verbose:
+            print("")
+            print("Iteration: ", iiter)
+            print("xl = %18.10f xu = %18.10f" % (xl, xu))
+            print("-"*47)
+            print("x2 = %18.10f x1 = %18.10f" % (x2, x1))
+            print("f2 = %18.10f f1 = %18.10f" % (f2, f1))
+
+        #
+        if f1 < f2:
+            xopt = x1
+            fxopt = f1
+            if verbose:
+                print("-"*47)
+                print("f1 is the current optimum value")
+                print("(xopt,fxopt) = (%18.10f,%18.10f)" % (xopt, fxopt))
+        else:
+            xopt = x2
+            fxopt = f2
+            if verbose:
+                print("-"*47)
+                print("f2 is the current optimum value")
+                print("(xopt,fxopt) = (%18.10f,%18.10f)" % (xopt, fxopt))
+
+        if abs(xopt) > SMALL:
+            ea = (1 - ϕ)*abs(xint/xopt)
+        else:
+            # The above might fail if xopt is very close to zero
+            # We set xint as the convergence criteria
+            ea = xint
+
+        if verbose:
+            print("Interval length = %18.10e" % xint)
+            print("ea              = %18.10e" % ea)
+
+        if ea <= TOL:
+            if verbose:
+                print("Converged")
+            break
+
+    return xopt, fxopt
+\end{pythoncode}
+
+Contoh penggunaan pada kasus Chapra Contoh 13.1, di mana kita ingin mencari
+nilai maksimum dari fungsi:
+\begin{equation*}
+f(x) = 2\sin(x) - \frac{x}{10}
+\end{equation*}
+pada selang $x \in [0,4]$.
+Pada program berikut, selain mendefinisikan fungsi \pyinline{my_func},
+kita juga mendefinisikan fungsi \pyinline{m_my_func} yang mengembalikan
+$-f(x)$ karena pada fungsi \pyinline{optim_golden_ratio} akan
+mencari nilai minumum. Ingat bahwa nilai maksimum dari $f(x)$ sama
+dengan nilai minimum dari $-f(x)$.
+
+\begin{pythoncode}
+import numpy as np
+
+# definisikan atau import modul yang berisi optim_golden_ratio
+
+def my_func(x):
+    return 2*np.sin(x) - x**2/10
+
+def m_my_func(x):
+    return -my_func(x)
+
+xopt, fx = optim_golden_ratio(m_my_func, 0.0, 4.0, TOL=1e-10, verbose=True)
+
+print("\nOptimization result")
+print("xopt    = %18.10f" % xopt)
+print("f(xopt) = %18.10f" % my_func(xopt))
+# gunakan fungsi asal, yaitu my_func
+\end{pythoncode}
+
+
+Contoh keluaran:
+\begin{textcode}
+Iteration:  0
+
+xl =       0.0000000000 xu =       4.0000000000
+-----------------------------------------------
+x2 =       1.5278640450 x1 =       2.4721359550
+f2 =      -1.7647202483 f1 =      -0.6299744700
+-----------------------------------------------
+f2 is the current optimum value
+(xopt,fxopt) = (      1.5278640450,     -1.7647202483)
+
+For next iteration: 
+- xl is not changed
+- x1 is replaced by x2
+- New point: x2 =       0.9442719100
+- xu is replaced by x1
+
+Iteration:  1
+xl =       0.0000000000 xu =       2.4721359550
+-----------------------------------------------
+x2 =       0.9442719100 x1 =       1.5278640450
+f2 =      -1.5309755469 f1 =      -1.7647202483
+-----------------------------------------------
+f1 is the current optimum value
+(xopt,fxopt) = (      1.5278640450,     -1.7647202483)
+Interval length =   4.0000000000e+00
+ea              =   1.0000000000e+00
+
+For next iteration: 
+- Replacing xl with x2
+- New point: x1 =       1.8885438200
+- xu is not changed
+- Replacing x2 with x1
+
+Iteration:  2
+xl =       0.9442719100 xu =       2.4721359550
+-----------------------------------------------
+x2 =       1.5278640450 x1 =       1.8885438200
+f2 =      -1.7647202483 f1 =      -1.5432233694
+-----------------------------------------------
+f2 is the current optimum value
+(xopt,fxopt) = (      1.5278640450,     -1.7647202483)
+Interval length =   2.4721359550e+00
+ea              =   6.1803398875e-01
+
+For next iteration: 
+- xl is not changed
+- x1 is replaced by x2
+- New point: x2 =       1.3049516850
+- xu is replaced by x1
+
+...... # dan seterusnya
+
+Iteration:  49
+xl =       1.4275517651 xu =       1.4275517653
+-----------------------------------------------
+x2 =       1.4275517652 x1 =       1.4275517652
+f2 =      -1.7757256531 f1 =      -1.7757256531
+-----------------------------------------------
+f2 is the current optimum value
+(xopt,fxopt) = (      1.4275517652,     -1.7757256531)
+Interval length =   3.7209457737e-10
+ea              =   9.9560299663e-11
+Converged
+
+Optimization result
+xopt    =       1.4275517652
+f(xopt) =       1.7757256531
+\end{textcode}
+
+
+
