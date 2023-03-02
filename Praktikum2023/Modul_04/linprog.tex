@@ -1,0 +1,27 @@
+\section{Pemrograman Linear}
+
+Pada bagian ini, kita akan menggunakan pustaka SciPy untuk menyelesaikan permasalahan
+pemrograman linear, di mana fungsi objektif dan kendala yang terlibat berbentuk
+persamaan dan pertidaksamaan linear. Fungsi yang akan digunakan adalah \pyinline{linprog}
+yang terdefinisi pada modul \pyinline{scipy.optimize}. Fungsi ini menyelesaikan permasalahan
+pemrograman linear yang memiliki bentuk standard sebagai berikut.
+\begin{align*}
+& \min_{x} \mathbf{c}^{\mathrm{T}} \mathbf{x} \\
+\text{dengan kendala:}\,\, & \mathbf{A}_{\mathrm{ub}} \leq \mathbf{b}_{\mathrm{ub}} \\
+& \mathbf{A}_{\mathrm{eq}} = \mathbf{b}_{\mathrm{eq}} \\
+& \mathbf{l} \leq \mathbf{x} \leq \mathbf{u}
+\end{align*}
+dengan:
+\begin{itemize}
+\item $\mathbf{x}$: (array 1d) variabel yang akan diubah-ubah
+atau dicari nilainya, atau variabel keputusan (\textit{decision variables}).
+\item $\mathbf{c}$: (array 1d)
+\item $\mathbf{A}_{\mathrm{ub}}$: (array 2d) matriks kendala batas atas
+(\pyinline{ub}: \textit{upper bound})
+\item $\mathbf{x}_{\mathrm{ub}}$: (array 1d) vektor kendala batas atas
+\item $\mathbf{A}_{\mathrm{eq}}$: (array 2d) matriks kendala persamaan
+(\pyinline{eq}: \textit{equality})
+\item $\mathbf{x}_{\mathrm{ub}}$: (array 1d) vektor kendala persamaan
+\item $\mathbf{l}$ dan $\mathbf{b}$: (array 1d) kendala rentang nilai untuk
+variabel keputusan.
+\end{itemize}

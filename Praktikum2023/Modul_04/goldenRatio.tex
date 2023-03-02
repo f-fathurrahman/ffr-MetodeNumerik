@@ -1,17 +1,21 @@
-\section{Metode rasio emas (\textit{golden section})}
+\subsection{Metode rasio emas (\textit{golden section})}
 
 Berikut ini adalah implementasi dari metode rasio emas,
 diadaptasi dari Chapra 7th (Gambar 13.5) untuk mencari
 \textbf{nilai minimum} dari suatu fungsi.
 
+\begin{soal}
+Lengkapi kode berikut dan aplikasikan untuk mencari nilai maksimum dari
+$f(x) = 2\sin(x) - \dfrac{x^2}{10}$ seperti yang dilakukan pada Chapra
+Contoh 13.1 (lihat contoh aplikasi setelah bagian ini).
+\end{soal}
+
 \begin{pythoncode}
 import numpy as np
 
-# This will search for minimum value
+# This will search for minimum value.
 # If you want to use this for searching maximum value please
-# define f = -f_actual, where f_actual is the function you want
-# to maximize.
-# The sign keyword argument is not implemented here.
+# define f = -f_actual, where f_actual is the function you want to maximize.
 
 def optim_golden_ratio(f, xlow, xhigh, NiterMax=100, TOL=1e-10, verbose=True):
 
@@ -128,7 +132,7 @@ def optim_golden_ratio(f, xlow, xhigh, NiterMax=100, TOL=1e-10, verbose=True):
 Contoh penggunaan pada kasus Chapra Contoh 13.1, di mana kita ingin mencari
 nilai maksimum dari fungsi:
 \begin{equation*}
-f(x) = 2\sin(x) - \frac{x}{10}
+f(x) = 2\sin(x) - \frac{x^2}{10}
 \end{equation*}
 pada selang $x \in [0,4]$.
 Pada program berikut, selain mendefinisikan fungsi \pyinline{my_func},
