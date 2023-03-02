@@ -1,0 +1,153 @@
+\subsection{Metode Brent}
+
+\begin{soal}
+Berikut ini adalah implementasi dari pseudocode yang diberikan pada
+Gambar 13.7 pada Chapra.
+Lengkapi kode Python yang diberikan dan uji pada fungsi
+$f(x) = 2\sin(x) - \dfrac{x^2}{10}$ (untuk mencari nilai maksimum).
+\end{soal}
+
+\begin{pythoncode}
+import numpy as np
+
+def optim_brent(f, xl, xu, TOL=1e-10, NiterMax=100, verbose=True):
+    
+    SMALL = np.finfo(np.float64).resolution
+
+    ϕ = .... # lengkapi
+    ρ = 2.0 - ϕ
+    u = .... # lengkapi
+    v = u; w = u; x = u
+    fu = f(u)
+    fv = fu; fw = fu; fx = fu
+    xm = .... # lengkapi
+    d = 0.0
+    e = 0.0
+
+    iiter = 0
+    while True:
+        iiter = iiter + 1
+        if verbose:
+            print("\nBegin iter = ", iiter)
+            print("x      = %18.10f" % x)
+            print("xm     = %18.10f" % xm)
+            print("fu     = %18.10f" % fu)
+            print("x - xm = %18.10e" % abs(x - xm))
+
+        if abs(x - xm) <= TOL:
+            if verbose:
+                print("Converged")
+            break
+
+        if iiter >= NiterMax:
+            if verbose:
+                print("WARNING: Maximum iterations reached")
+            break
+
+        para = abs(e) > TOL
+        
+        if para:
+            # Try using parabolic interp
+            r = (x - w)*(fx - fv)
+            q = (x - v)*(fx - fw)
+            p = (x - v)*q - (x - w)*r
+            s = 2*(q - r)
+            if s > 0:
+                p = -q
+            s = abs(s)
+            #
+            cond1 = abs(p) < abs(0.5*s*e)
+            cond2 = p > s*(xl - x)
+            cond3 = p < s*(xu - x)
+            para = cond1 and cond2 and cond3
+            # Parabolic interpolation step
+            if para:
+                if verbose:
+                    print("Parabolic interpolation is used")
+                e = d
+                d = p/s
+
+        if not para:
+            if verbose:
+                print("Using golden section")
+            if x >= xm:
+                e = xl - x
+            else:
+                e = xu - x
+            d = ρ*e
+
+        u = x + d
+        fu = f(u)
+
+        if fu <= fx:
+            if u >= x:
+                xl = x
+            else:
+                xu = x
+            v = w; fv = fw
+            w = x; fw = fx
+            x = u; fx = fu
+        else:
+            #
+            if u < x:
+                xl = u
+            else:
+                xu = u
+            #
+            if (fu <= fw) or (abs(w - x) <= SMALL):
+                v = w; fv = fw
+                w = u; fw = fu
+            elif (fu <= fv) or (abs(v - x) <= SMALL) or (abs(v - w) <= SMALL):
+                v = u; fv = fu
+        #
+        xm = 0.5*(xl + xu)
+
+    return xu, fu
+\end{pythoncode}
+
+Contoh pemanggilan fungsi:
+\begin{pythoncode}
+import numpy as np
+
+# definisi atau import optim_brent di sini
+
+def my_func(x):
+    return 2*np.sin(x) - x**2/10
+
+def m_my_func(x):
+    return -my_func(x)
+
+xopt, fxopt = optim_brent(m_my_func, 0.0, 4.0, TOL=1e-10)
+print()
+print("xopt    = %18.10f" % xopt)
+print("f(xopt) = %18.10f" % my_func(xopt))
+\end{pythoncode}
+
+Contoh hasil keluaran (\pyinline{verbose=True}):
+\begin{textcode}
+Begin iter =  1
+x      =       1.5278640450
+xm     =       2.0000000000
+fu     =      -1.7647202483
+x - xm =   4.7213595500e-01
+Using golden section
+
+Begin iter =  2
+x      =       1.5278640450
+xm     =       1.2360679775
+fu     =      -0.6299744700
+x - xm =   2.9179606750e-01
+Using golden section
+
+.... # dan seterusnya
+
+Begin iter =  30
+x      =       1.4275517790
+xm     =       1.4275517790
+fu     =      -1.7757256531
+x - xm =   5.9506621852e-11
+Converged
+
+xopt    =       1.4275517793
+f(xopt) =       1.7757256531
+\end{textcode}
