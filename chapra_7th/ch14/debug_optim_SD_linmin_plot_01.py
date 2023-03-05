@@ -75,3 +75,4 @@ for iiter in range(1,NiterMax+1):
     ax.plot([xprev[0], x[0]], [xprev[1], x[1]], marker="o", color="black")
     plt.savefig("IMG_optim_SD_linmin_" + str(iiter) + ".png", dpi=150)
 
+plt.savefig("IMG_debug_optim_SD_linmin.pdf")
