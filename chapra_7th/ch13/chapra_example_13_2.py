@@ -31,9 +31,9 @@ x2 = 4.0; f2 = my_func(x2)
 
 x3 = calc_parabolic_x3(x0, f0, x1, f1, x2, f2)
 f3 = my_func(x3)
-print("x3 = ", x3, " f3 = ", f3)
+print("x3 = %18.10f f3 = %18.10f" % (x3, f3))
 
-SMALL = 1e-10
+TOL = 1e-10
 NiterMax = 100
 
 for iiter in range(1,NiterMax+1):
@@ -47,9 +47,9 @@ for iiter in range(1,NiterMax+1):
 
     x3 = calc_parabolic_x3(x0, f0, x1, f1, x2, f2)
     f3 = my_func(x3)
-    print("x3 = ", x3, " f3 = ", f3)
+    print("x3 = %18.10f f3 = %18.10f" % (x3, f3))
 
-    if abs(fopt_old - f3) < SMALL:
+    if abs(fopt_old - f3) < TOL:
         print("Converged")
         break
 
