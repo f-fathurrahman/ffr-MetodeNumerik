@@ -1,0 +1,87 @@
+\subsection{Metode Gradien Konjugat (\textit{Conjugate Gradient}) (OPSIONAL)}
+
+Metode gradien konjugat merupakan modifikasi dari metode \textit{steepest descent} yang
+menambahkan informasi langkah sebelumnya. Ada banyak sekali varian dari metode ini, kita
+akan menggunakan salah satu yang paling sederhana.
+
+Berikut ini adalah implementasi dari metode gradien konjugat.
+\begin{pythoncode}
+# ... sama dengan sebelumnya
+
+# Initial point
+x0 = np.array([-1.0, 1.0])
+NiterMax = 40
+func = m_my_func
+grad_func = grad_m_my_func
+x = np.copy(x0)
+d_prev = np.zeros(np.size(x0))
+g_prev = np.zeros(np.size(x0))
+
+ax.plot(x[0], x[1], marker="o", color="black")
+ax.set_aspect("equal")
+plt.savefig("IMG_optim_CG_linmin_" + str(0) + ".png", dpi=150)
+
+for iiter in range(1,NiterMax+1):
+
+    print("\nIteration: ", iiter)
+    print("Current point: ", x)
+
+    f = func(x)
+    g = grad_func(x)
+
+    if iiter > 1:
+        # Choose one of these
+        β = np.dot(g, g)/np.dot(g_prev, g_prev) # Fletcher-Reeves
+        #β = np.dot(g-g_prev,g) / np.dot(g_prev,g_prev) # Polak-Ribiere
+    else:
+        β = 0.0
+
+    if β < 0:
+        β = 0.0
+
+    print("β = ", β)
+    d = -g + β*d_prev # step direction, we search for minimum
+
+    ax.quiver(x[0], x[1], d[0], d[1], color="blue") # also plot the direction
+
+    norm_g = np.sqrt(np.dot(g,g))
+    print("f      = %18.10f" % f)
+    print("norm g = %18.10e" % norm_g)
+    if norm_g < 1e-10:
+        print("Converged")
+        break
+
+    # Update x
+    xprev = np.copy(x)
+    α = linmin_grad(grad_func, x, g, d)
+    x = x + α*d 
+    # draw a line from xprev to x
+    ax.plot([xprev[0], x[0]], [xprev[1], x[1]], marker="o", color="black")
+    plt.savefig("IMG_optim_CG_linmin_" + str(iiter) + ".png", dpi=150)
+
+    d_prev = np.copy(d)
+    g_prev = np.copy(g)
+\end{pythoncode}
+
+Perhatikan bahwa metode gradien konjugat memerlukan variabel tambahan berupa
+gradien dan/atau arah pencarian sebelumnya: variabel \pyinline{g_prev} dan
+\pyinline{d_prev} pada program. Metode gradien konjugat akan tereduksi menjadi
+metode \textit{steepest descent} ketika variabel \pyinline{β=0}.
+
+Metode gradien konjugat memberikan konvergensi yang jauh lebih cepat daripada
+metode \textit{steepest descent}.
+\begin{textcode}
+Iteration:  3
+Current point:  [2. 1.]
+β =  4.688332967786487e-22
+f      =      -2.0000000000
+norm g =   3.6745610550e-11
+Converged
+\end{textcode}
+
+Hasil visualisasi proses optimisasi:
+
+{\centering
+\includegraphics[scale=0.75]{../../chapra_7th/ch14/IMG_debug_optim_CG_FR_linmin.pdf}
+\par}
+
