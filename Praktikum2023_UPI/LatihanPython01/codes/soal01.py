@@ -9,7 +9,7 @@ c = float(input("Masukkan koefisien c: "))
 
 D = b**2 - 4*a*c
 akar_kompleks = False
-if D > 0:
+if D >= 0:
     akar_kompleks = False
     x1 = (-b + math.sqrt(D))/(2*a)
     x2 = (-b - math.sqrt(D))/(2*a)
