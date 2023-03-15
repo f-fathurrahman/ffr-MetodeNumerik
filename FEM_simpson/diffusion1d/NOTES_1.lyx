@@ -1,0 +1,563 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{babel}
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children false
+\language american
+\language_package default
+\inputencoding iso8859-15
+\fontencoding T1
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 2
+\use_package amssymb 2
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip smallskip
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+Solusi numerik dari PDE parabolik:
+\begin_inset Formula 
+\[
+\frac{\partial T}{\partial t}=\kappa\frac{\partial^{2}T}{\partial x^{2}}+H
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+dengan kondisi awal
+\begin_inset Formula 
+\[
+T(x,t=0)=0\ \ \ \forall x\in[0,L_{x}]
+\]
+
+\end_inset
+
+and syarat batas
+\begin_inset Formula 
+\begin{align*}
+T(x=0,t) & =0\\
+T(x=L_{x},t) & =0
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Aproksimasi:
+\begin_inset Formula 
+\[
+T(x)\approx\sum_{i=1}^{n}T_{i}N_{i}(x)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $N_{i}$
+\end_inset
+
+ adalah fungsi bentuk (shape functions).
+\end_layout
+
+\begin_layout Standard
+Misalnya untuk dua titik:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+T(x)\approx T_{1}N_{1}(x)+T_{2}N_{2}(x)
+\]
+
+\end_inset
+
+yang dalam bentuk notasi matriks-vektor
+\begin_inset Formula 
+\[
+T\approx\begin{bmatrix}N_{1}(x)\  & N_{1}(x)\end{bmatrix}\begin{bmatrix}T_{1}\\
+T_{2}
+\end{bmatrix}=\mathbf{N}^{T}\mathbf{T}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fungsi bentuk biasanya dipilih dari fungsi polinomial dengan orde rendah.
+ Untuk kasus satu elemen dengan dua node, fungsi ini adalah fungsi linear:
+\begin_inset Formula 
+\begin{align*}
+N_{1}(x) & =1-\frac{x}{L}\\
+N_{2}(x) & =\frac{x}{L}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fungsi bentuk memiliki sifat-sifat penting sebagai berikut:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $N_{1}(x)=1$
+\end_inset
+
+ pada node 1, sedangkan 
+\begin_inset Formula $N_{1}(x)=0$
+\end_inset
+
+ pada node 2.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $N_{2}(x)=1$
+\end_inset
+
+ pada node 2, sedangkan 
+\begin_inset Formula $N_{2}(x)=0$
+\end_inset
+
+ pada node 1.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $N_{1}(x)+N_{2}(x)=1$
+\end_inset
+
+ untuk semua 
+\begin_inset Formula $x$
+\end_inset
+
+ pada suatu elemen.
+\end_layout
+
+\begin_layout Standard
+Substitusi bentuk solusi aproksimasi pada PDE, diperoleh
+\begin_inset Formula 
+\[
+\frac{\partial}{\partial t}\begin{bmatrix}N_{1}(x)\  & N_{1}(x)\end{bmatrix}\begin{bmatrix}T_{1}\\
+T_{2}
+\end{bmatrix}-\kappa\frac{\partial^{2}}{\partial x^{2}}\begin{bmatrix}N_{1}(x)\  & N_{1}(x)\end{bmatrix}\begin{bmatrix}T_{1}\\
+T_{2}
+\end{bmatrix}-H\equiv R
+\]
+
+\end_inset
+
+di mana 
+\begin_inset Formula $R$
+\end_inset
+
+ atau residual adalah ukuran dari kesalahan yang muncul pada diskritisasi.
+\end_layout
+
+\begin_layout Standard
+Dalam FEM, variabel nodal yang tidak diketahui dapat ditentukan dengan cara
+ meminimumkan residual dalam suatu rerata yang terbobot dalam bentuk integral.
+ Secara praktis, residual akan dikalikan dengan suatu fungsi bobot 
+\begin_inset Formula $w_{i}(x)$
+\end_inset
+
+, kemudian integral kuantitas tersebut pada satu elemen:
+\begin_inset Formula 
+\[
+\int_{0}^{L}R(x)w_{i}(x)\ \mathrm{d}x=0
+\]
+
+\end_inset
+
+untuk setiap 
+\begin_inset Formula $i=1,\ldots,n$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dari integral ini kita akan mendapatkan dua persamaan untuk dua kuantitas
+ yang tidak diketahui yaitu 
+\begin_inset Formula $T_{1}$
+\end_inset
+
+ dan 
+\begin_inset Formula $T_{2}$
+\end_inset
+
+.
+ Pada metode Galerkin, fungsi bobot ini sama dengan fungsi basis: 
+\begin_inset Formula $w_{i}(x)\equiv N_{i}(x)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Dengan mensubstitusikan ekspresi 
+\begin_inset Formula $R(x)$
+\end_inset
+
+ pada integral terbobot diperoleh:
+\begin_inset Formula 
+\[
+\int_{0}^{L}\begin{bmatrix}N_{1}(x)\\
+N_{2}(x)
+\end{bmatrix}\frac{\partial}{\partial t}\begin{bmatrix}N_{1}(x) & N_{2}(x)\end{bmatrix}\begin{bmatrix}T_{1}\\
+T_{2}
+\end{bmatrix}\,\mathrm{d}x-\int_{0}^{L}\begin{bmatrix}N_{1}(x)\\
+N_{2}(x)
+\end{bmatrix}\kappa\frac{\partial^{2}}{\partial x^{2}}\begin{bmatrix}N_{1}(x) & N_{2}(x)\end{bmatrix}\begin{bmatrix}T_{1}\\
+T_{2}
+\end{bmatrix}\,\mathrm{d}x-\int_{0}^{L}\begin{bmatrix}N_{1}(x)\\
+N_{2}(x)
+\end{bmatrix}H\,\mathrm{d}x=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ekspansi, persamaan pertama
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\begin{align*}\int_{0}^{L}N_{1}(x)N_{2}(x)\frac{\partial T_{1}}{\partial t}\,\mathrm{d}x+\int_{0}^{L}N_{1}(x)N_{2}(x)\frac{\partial T_{2}}{\partial t}\,\mathrm{d}x\\
+-\int_{0}^{L}\kappa N_{1}(x)\frac{\partial^{2}N_{1}(x)}{\partial x^{2}}T_{1}-\int_{0}^{L}\kappa N_{1}(x)\frac{\partial^{2}N_{2}(x)}{\partial x^{2}}T_{2}\\
+-\int_{0}^{L}N_{1}(x)H\,\mathrm{d}x=0
+\end{align*}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ekspansi, persamaan kedua:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\begin{align*}\int_{0}^{L}N_{2}(x)N_{1}(x)\frac{\partial T_{2}}{\partial t}\,\mathrm{d}x+\int_{0}^{L}N_{2}(x)N_{2}(x)\frac{\partial T_{2}}{\partial t}\,\mathrm{d}x\\
+-\int_{0}^{L}\kappa N_{2}(x)\frac{\partial^{2}N_{1}(x)}{\partial x^{2}}T_{1}-\int_{0}^{L}\kappa N_{2}(x)\frac{\partial^{2}N_{2}(x)}{\partial x^{2}}T_{2}\\
+-\int_{0}^{L}N_{2}(x)H\,\mathrm{d}x=0
+\end{align*}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Menggunakan integrasi parsial (integration by parts):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\int_{0}^{L}N_{i}(x)\frac{\partial^{2}N_{j}(x)}{\partial x^{2}}\,\mathrm{d}x=\left[\frac{\partial N_{j}(x)}{\partial x}N_{i}(x)\right]_{0}^{L}-\int_{0}^{L}\frac{\partial N_{i}(x)}{\partial x}\frac{\partial N_{j}(x)}{\partial x}\,\mathrm{d}x
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dalam bentuk matriks-vektor:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\begin{align*}\int_{0}^{L}\begin{bmatrix}N_{1}(x)N_{1}(x)\ \  & N_{1}(x)N_{2}(x)\\
+N_{2}(x)N_{1}(x)\ \  & N_{2}(x)N_{2}(x)
+\end{bmatrix}\,\mathrm{d}x\frac{\partial}{\partial t}\begin{bmatrix}T_{1}\\
+T_{2}
+\end{bmatrix}\\
+\int_{0}^{L}\kappa\begin{bmatrix}\dfrac{\partial N_{1}(x)}{\partial x}\dfrac{\partial N_{1}(x)}{\partial x}\ \  & \dfrac{\partial N_{1}(x)}{\partial x}\dfrac{\partial N_{2}(x)}{\partial x}\\
+\dfrac{\partial N_{2}(x)}{\partial x}\dfrac{\partial N_{1}(x)}{\partial x}\ \  & \dfrac{\partial N_{2}(x)}{\partial x}\dfrac{\partial N_{2}(x)}{\partial x}
+\end{bmatrix}\,\mathrm{d}x\begin{bmatrix}T_{1}\\
+T_{2}
+\end{bmatrix}\\
+-\int_{0}^{L}H\begin{bmatrix}N_{1}(x)\\
+N_{2}(x)
+\end{bmatrix}\,\mathrm{d}x=\begin{bmatrix}0\\
+0
+\end{bmatrix}
+\end{align*}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+atau dalam notasi matriks:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+[\mathbf{M}]\frac{\partial}{\partial t}\{\mathbf{T}\}+[\mathbf{K}]\{\mathbf{T}\}=\{\mathbf{F}\}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Matriks massa (mass matrix):
+\begin_inset Formula 
+\[
+\mathbf{M}=\int_{0}^{L}\begin{bmatrix}N_{1}(x)N_{1}(x)\ \  & N_{1}(x)N_{2}(x)\\[0.2cm]
+N_{2}(x)N_{1}(x)\ \  & N_{2}(x)N_{2}(x)
+\end{bmatrix}\,\mathrm{d}x
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Matriks kekakuan (stiffness matrix):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\int_{0}^{L}\kappa\begin{bmatrix}\dfrac{\partial N_{1}(x)}{\partial x}\dfrac{\partial N_{1}(x)}{\partial x}\ \  & \dfrac{\partial N_{1}(x)}{\partial x}\dfrac{\partial N_{2}(x)}{\partial x}\\[0.25cm]
+\dfrac{\partial N_{2}(x)}{\partial x}\dfrac{\partial N_{1}(x)}{\partial x}\ \  & \dfrac{\partial N_{2}(x)}{\partial x}\dfrac{\partial N_{2}(x)}{\partial x}
+\end{bmatrix}\,\mathrm{d}x
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Load vector:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\mathbf{F}=\int_{0}^{L}H\begin{bmatrix}N_{1}(x)\\
+N_{2}(x)
+\end{bmatrix}\,\mathrm{d}x
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Menggunakan aproksimasi beda hingga untuk turunan terhadap waktu dan metode
+ Euler implisit:
+\begin_inset Formula 
+\[
+\mathbf{M}\frac{\mathbf{T}^{n+1}-\mathbf{T}^{n}}{\Delta t}+\mathbf{K}\mathbf{T}^{n+1}=\{\mathbf{F}\}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+dapat diperoleh persamaan berikut:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\mathbf{L}\mathbf{T}^{n+1}=\mathbf{R}\mathbf{T}^{n}+\mathbf{F}
+\]
+
+\end_inset
+
+dengan:
+\begin_inset Formula 
+\[
+\mathbf{L}=\frac{\mathbf{M}}{\Delta t}+\mathbf{K}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Mass matrix:
+\begin_inset Formula 
+\[
+\mathbf{M}=\begin{bmatrix}\dfrac{\Delta x}{3}\ \  & \dfrac{\Delta x}{6}\\
+\dfrac{\Delta x}{6}\ \  & \dfrac{\Delta x}{3}
+\end{bmatrix}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\mathbf{R}=\frac{\mathbf{M}}{\Delta t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Stiffness matrix:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\mathbf{K}=\kappa\begin{bmatrix}\dfrac{1}{\Delta x} & -\dfrac{1}{\Delta x}\\[0.4cm]
+-\dfrac{1}{\Delta x} & \dfrac{1}{\Delta x}
+\end{bmatrix}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Load vector
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\mathbf{F}=H\begin{bmatrix}\dfrac{\Delta x}{2}\\
+\dfrac{\Delta x}{2}
+\end{bmatrix}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\mathbf{T}=\begin{bmatrix}T_{1}\\
+T_{2}
+\end{bmatrix}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Sistem global (menggunakan matriks dan vektor global):
+\begin_inset Formula 
+\[
+\tilde{\mathbf{L}}\tilde{\mathbf{T}}^{n+1}=\tilde{\mathbf{R}}\tilde{\mathbf{T}}^{n}+\tilde{\mathbf{F}}=\tilde{\mathbf{b}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
