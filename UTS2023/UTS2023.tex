@@ -1,0 +1,212 @@
+\input{PREAMBLE}
+
+% -------------------------
+\begin{document}
+
+\title{Ujian Tengah Semester}
+\author{TF2202 Komputasi Rekayasa}
+\date{9 Maret 2023}
+\maketitle
+
+Kerjakan dengan menggunakan Python (dalam Jupyter Notebook)
+atau Microsoft Excel atau aplikasi \textit{spreadsheet},
+silakan pilih salah satu
+jika tidak ada instruksi khusus.
+Lengkapi setiap file \txtinline{ipynb} dan \textit{spreadsheet}
+yang Anda gunakan dengan nama dan NIM.
+File yang tidak ada identitas tidak akan dinilai.
+
+
+Jawaban dan file-file terkait dikumpulkan dalam satu folder dan
+dikompres dengan ekstensi .zip dengan
+format nama \txtinline{NIM_UTS_TF2202.zip} , file dengan ekstensi lain tidak
+akan diterima.
+
+
+\begin{soal}
+Jelaskan mengenai kesalahan pemotongan (\textit{truncation error})
+dan kesalahan pembulatan (\textit{round-off error}) pada perhitungan numerik
+dan bagaimana cara mengatasi atau mengurangi masing-masing jenis-jenis
+kesalahan tersebut.
+\end{soal}
+
+
+\begin{soal}
+Bandingkan dua persamaan berikut:
+\begin{align*}
+x_{1,2} & = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \\
+x_{1,2} & = \frac{-2c}{b \pm \sqrt{b^2 - 4ac}}
+\end{align*}
+untuk mencari akar-akar pada persamaan kuadrat:
+\begin{equation*}
+x^2 - 6000.001x + 10
+\end{equation*}
+Lakukan dalam \textit{single precision} dan \textit{double precision}.
+\end{soal}
+
+
+% Chapra Latihan 4.4
+\begin{soal}
+Ekspansi deret Maclaurin untuk $\tan^{-1}(x)$ untuk $|x| \leq 1$ diberikan sebagai
+\begin{equation*}
+\tan^{-1}(x) = \sum_{n=0}^{\infty} \frac{(-1)^{n}}{2n + 1} x^{2n + 1}
+\end{equation*}
+Buatlah program Python untuk menghitung aproksimasi dari $\tan^{-1}(\pi/6)$ menggunakan deret
+Maclaurin tersebut. Hitung juga kesalahan untuk tiap penambahan suku baru dengan referensi
+nilai yang diberikan oleh fungsi \textit{built-in} pada modul \txtinline{math} atau
+\txtinline{numpy} atau pada Microsoft Excel.
+\end{soal}
+
+\begin{soal}[Fungsi Bessel bola]
+Fungsi Bessel bola (\textit{spherical Bessel}) $j_{n}(x)$ dapat dituliskan sebagai
+berikut:
+\begin{equation}
+j_{n}(x) = (-x)^{n}
+\left( \frac{1}{x} \frac{\mathrm{d}}{\mathrm{d}x} \right)^n
+\frac{\sin(x)}{x}
+\label{eq:bessel_sferis}
+\end{equation}
+Buatlah plot untuk $j_{2}(x)$ dan carilah semua akar-akarnya pada interval (0,20).
+Gunakan salah satu metode untuk mencari akar persamaan nonlinear. Jelaskan metode
+yang Anda gunakan untuk mendapatkan seluruh akar tersebut.
+(Catatan: Anda boleh menggunakan bentuk eksplisit dari $j_2(x)$ dari referensi
+tanpa menggunakan Persamaan \ref{eq:bessel_sferis})
+\end{soal}
+
+
+\begin{soal}
+Tentukan akar dari sistem persamaan nonlinear berikut
+\begin{align*}
+(x - 4)^2 + (y - 4)^2 & = 5 \\
+x^2 + y^2 & = 16
+\end{align*}
+Buatlah plot dari fungsi-fungsi tersebut dan gunakan untuk mendapatkan estimasi tebakan
+awal untuk metode Newton-Raphson.
+\end{soal}
+
+
+
+
+\begin{soal}
+Sistem pegas-beban ideal memiliki berbagai aplikasi kerekayasaan.
+Gambar di bawah ini menujukkan contohnya.
+
+{\centering
+\includegraphics[scale=1.0]{images/IMG_soal_pegas.png}
+\par}
+
+Setelah semua beban dilepaskan dan jatuh karena gravitasi,
+terjadi perpindahan $x_1$, $x_2$, $x_3$. Dengan menggunakan metode eliminasi Gauss,
+tentukan ketiga nilai perpindahan tersebut jika diketahui $m_1=10$ kg, $m_2=3.5$ kg,
+dan $m_3=2$ kg.
+Buatlah dulu skema gaya yang terjadi pada setiap beban, kemudian tentukan
+tiga persamaan linier yang merupakan fungsi dari $x_1$, $x_2$, $x_3$,
+dan tuliskan dalam file pdf/jpg (tulisan tangan difoto/scan) atau diketik.
+Tulis atau implementasikan sendiri fungsi tersebut (tidak boleh menggunakan
+\pyinline{linsolve} pada Python atau fungsi bawaan seperti MMULT atau MINVERSE
+dari Microsoft Excel).
+\end{soal}
+
+
+\begin{soal}
+Apakah penggunaan dekomposisi LU untuk menyelesaikan sistem persamaan linear memiliki keuntungan
+dibandingkan dengan metode eliminasi Gauss? Jelaskan jawaban Anda (misalnya dengan menjelaskan
+situasi atau masalah tertentu di mana metode dekomposisi LU memiliki keuntungan dibandingkan
+dengan eliminasi Gauss).
+\end{soal}
+
+
+\begin{soal}
+Cari $\mathbf{x}$ yang memenuhi persamaan linear
+\begin{equation}
+\mathbf{A} \mathbf{x} = \mathbf{b}
+\label{eq:linear_eq}
+\end{equation}
+dengan
+\begin{equation*}
+\mathbf{A} = \begin{bmatrix}
+888445 & 887112\\
+887112 & 885781
+\end{bmatrix}
+\end{equation*}
+dan
+\begin{equation*}
+\mathbf{b} = \begin{bmatrix}
+10\\
+0
+\end{bmatrix}
+\end{equation*}
+menggunakan fungsi \pyinline{linsolve} pada modul \pyinline{numpy.linalg}
+atau fungsi MINVERSE pada Microsoft Excel.
+\footnote{Misalnya: \url{https://www.excel-easy.com/examples/system-of-linear-equations.html}}
+Lakukan pengecekan hasil yang Anda
+dapatkan dengan cara mengecek apakah persamaan \ref{eq:linear_eq} terpenuhi atau tidak
+(ruas kiri sama dengan ruas kanan).
+Bandingkan hasil yang Anda peroleh dengan cara manual (menggunakan kalkulator atau
+perhitungan analitik) atau dengan bantuan SymPy (lihat kode yang diberikan).
+Apakah hasil yang Anda peroleh sama? Jika tidak apa yang
+menyebabkan perbedaan tersebut? Apa yang harus Anda lakukan agar hasilnya sama (jika
+hasil yang Anda peroleh berbeda) ?
+\end{soal}
+
+Anda dapat menggunakan kode berikut.
+\begin{pythoncode}
+from sympy import Matrix, pprint, init_printing
+
+init_printing()
+
+A = Matrix([
+    [888445, 887112],
+    [887112, 885781]
+])
+
+b = Matrix([[10], [0]])
+
+x = A.solve(b)
+print("x = ");
+pprint(x)
+\end{pythoncode}
+atau (untuk mendapatkan bentuk eksplisit dari $\mathbf{x}$ pada kasus
+ukuran matriks $\mathbf{A}$ adalah $2\times2$)
+\begin{pythoncode}
+from sympy import *
+
+# Elemen-elemen matriks dan vektor, indeks mulai dari 0.
+A00, A01, A10, A11 = symbols("A00 A01 A10 A11")
+b0, b1 = symbols("b0 b1")
+
+A = Matrix([
+    [A00, A01],
+    [A10, A11]
+])
+
+b = Matrix([[b0], [b1]])
+
+x = A.solve(b)
+print("x = ");
+print(x)
+\end{pythoncode}
+
+
+\begin{soal}
+Merujuk pada jenis kesalahan yang ditanyakan pada soal No. 1, apakah jenis kesalahan
+yang ada pada metode eliminasi Gauss untuk penyelesaian sistem persamaan linear?
+Bagaimana dengan metode iteratif, misalnya metode Gauss-Seidel? Jelaskan jawaban Anda.
+(apakah kedua jenis kesalahan ada atau hanya salah satunya saja).
+\end{soal}
+
+
+
+\begin{soal}
+Cari nilai maksimum dari
+\begin{equation*}
+f(x,y) = 4x + 2y + x^2 - 2x^4 + 2xy - 3y^2
+\end{equation*}
+dengan menggunakan metode \textit{steepest descent} atau \textit{steepest ascent}.
+Buat plot kontur
+dari $f(x,y)$ dan tunjukkan titik yang dilalui ketika proses optimisasi.
+Gunakan (0,0) sebagai titik awal.
+\end{soal}
+
+
+\end{document}
