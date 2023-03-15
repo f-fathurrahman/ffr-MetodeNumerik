@@ -1,5 +1,5 @@
-#LyX 2.2 created this file. For more info see http://www.lyx.org/
-\lyxformat 508
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
 \begin_document
 \begin_header
 \save_transient_properties true
@@ -24,6 +24,8 @@
 \font_osf false
 \font_sf_scale 100 100
 \font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -53,6 +55,7 @@
 \suppress_date false
 \justification true
 \use_refstyle 0
+\use_minted 0
 \index Index
 \shortcut idx
 \color #008000
@@ -65,7 +68,10 @@
 \tocdepth 3
 \paragraph_separation skip
 \defskip smallskip
-\quotes_language english
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
@@ -115,12 +121,95 @@ T(x=L_{x},t) & =0
 Aproksimasi:
 \begin_inset Formula 
 \[
-T\approx\sum_{i=1}^{n}T_{i}N_{i}(x)
+T(x)\approx\sum_{i=1}^{n}T_{i}N_{i}(x)
 \]
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $N_{i}$
+\end_inset
+
+ adalah fungsi bentuk (shape functions).
+\end_layout
+
+\begin_layout Standard
+Misalnya untuk dua titik:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+T(x)\approx T_{1}N_{1}(x)+T_{2}N_{2}(x)
+\]
+
+\end_inset
+
+yang dalam bentuk notasi matriks-vektor
+\begin_inset Formula 
+\[
+T\approx\begin{bmatrix}N_{1}(x)\ \ \  & N_{1}(x)\end{bmatrix}\begin{bmatrix}T_{1}\\
+T_{2}
+\end{bmatrix}=\mathbf{N}^{T}\mathbf{T}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fungsi bentuk biasanya dipilih dari fungsi polinomial dengan orde rendah.
+ Untuk kasus satu elemen dengan dua node, fungsi ini adalah fungsi linear:
+\begin_inset Formula 
+\begin{align*}
+N_{1}(x) & =1-\frac{x}{L}\\
+N_{2}(x) & =\frac{x}{L}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fungsi bentuk memiliki sifat-sifat penting sebagai berikut:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $N_{1}(x)=1$
+\end_inset
+
+ pada node 1, sedangkan 
+\begin_inset Formula $N_{1}(x)=0$
+\end_inset
+
+ pada node 2.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $N_{2}(x)=1$
+\end_inset
+
+ pada node 2, sedangkan 
+\begin_inset Formula $N_{2}(x)=0$
+\end_inset
+
+ pada node 1.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $N_{1}(x)+N_{2}(x)=1$
+\end_inset
+
+ untuk semua 
+\begin_inset Formula $x$
+\end_inset
+
+ pada suatu elemen.
 \end_layout
 
 \begin_layout Standard
