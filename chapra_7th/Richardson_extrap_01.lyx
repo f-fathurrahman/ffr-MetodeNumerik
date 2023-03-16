@@ -1,0 +1,226 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip smallskip
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+Estimasi dan kesalahan dari aturan trapesium dapat dinyatakan secara umum
+ sebagai
+\begin_inset Formula 
+\[
+I=\widetilde{I}(h)+\mathcal{E}(h)
+\]
+
+\end_inset
+
+di mana 
+\begin_inset Formula $I$
+\end_inset
+
+ adalah nilai eksak dari integral, 
+\begin_inset Formula $\widetilde{I}(h)$
+\end_inset
+
+ adalah aproksimasi dari aplikasi atuan trapesium pada 
+\begin_inset Formula $n$
+\end_inset
+
+-segment dengan ukuran langkah 
+\begin_inset Formula $h=(b-a)/h$
+\end_inset
+
+ dan 
+\begin_inset Formula $\mathcal{E}(h)$
+\end_inset
+
+ adalah kesalahan pemotongan.
+ Jika kita mempunyai dua estimasi berbeda dengan ukuran langkah 
+\begin_inset Formula $h_{1}$
+\end_inset
+
+ dan 
+\begin_inset Formula $h_{2}$
+\end_inset
+
+ dan memiliki nilai eksak untuk kesalahan, kita memiliki:
+\begin_inset Formula 
+\[
+\widetilde{I}(h_{1})+\mathcal{E}(h_{1})=\widetilde{I}(h_{2})+\mathcal{E}(h_{2})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Estimasi kesalahan untuk aplikasi berulang aturan trapesium adalah:
+\begin_inset Formula 
+\[
+\mathcal{E}(h)\approx-\frac{b-a}{12}h^{2}\bar{f}''
+\]
+
+\end_inset
+
+Jika diasumsikan bahwa 
+\begin_inset Formula $\bar{f}''$
+\end_inset
+
+ bernilai konstan dan tidak bergantung pada ukuran langkah maka rasio dari
+ dua kesalahan dapat dihitung sebagai:
+\begin_inset Formula 
+\[
+\frac{\mathcal{E}(h_{1})}{\mathcal{E}(h_{2})}\approx\frac{h_{1}^{2}}{h_{2}^{2}}
+\]
+
+\end_inset
+
+dan dapat diperoleh:
+\begin_inset Formula 
+\[
+\mathcal{E}(h_{1})\approx\mathcal{E}(h_{2})\left(\frac{h_{1}}{h_{2}}\right)^{2}
+\]
+
+\end_inset
+
+yang dapat disubstitusikan ke Persamaan XXX: sehingga diperoleh:
+\begin_inset Formula 
+\[
+\widetilde{I}(h_{1})+\mathcal{E}(h_{2})\left(\frac{h_{1}}{h_{2}}\right)^{2}=\widetilde{I}(h_{2})+\mathcal{E}(h_{2})
+\]
+
+\end_inset
+
+dan dapat diperoleh:
+\begin_inset Formula 
+\[
+\mathcal{E}(h_{2})\approx\frac{\widetilde{I}(h_{1})-\widetilde{I}(h_{2})}{1-(h_{1}/h_{2})^{2}}
+\]
+
+\end_inset
+
+Hasil ini memberikan kita suatu estimasi dari kesalahan pemotongan dalam
+ nilai aproksimasi integral dan ukuran langkahnya.
+ Estimasi ini kemudian dapat disubstitusi:
+\begin_inset Formula 
+\[
+I=\widetilde{I}(h_{2})+\mathcal{E}(h_{2})
+\]
+
+\end_inset
+
+untuk memperoleh nilai aproksimasi baru 
+\begin_inset Formula $\widetilde{I}$
+\end_inset
+
+ dari integral 
+\begin_inset Formula $I$
+\end_inset
+
+, yaitu
+\begin_inset Formula 
+\[
+I\approx\widetilde{I}=\widetilde{I}(h_{2})+\frac{\widetilde{I}(h_{1})-\widetilde{I}(h_{2})}{1-(h_{1}/h_{2})^{2}}=\widetilde{I}(h_{2})+\frac{\widetilde{I}(h_{2})-\widetilde{I}(h_{1})}{1-(h_{1}/h_{2})^{2}}
+\]
+
+\end_inset
+
+Kesalahan dari estimasi baru ini adalah 
+\begin_inset Formula $\mathcal{O}(h^{4})$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Untuk kasus khusus di mana panjang integral dibagi dua, 
+\begin_inset Formula $h_{2}=h_{1}/2$
+\end_inset
+
+ persamaan ini menjadi
+\begin_inset Formula 
+\[
+\widetilde{I}=\widetilde{I}(h_{2})+\frac{1}{2^{2}-1}\left[\widetilde{I}(h_{2})-\widetilde{I}(h_{1})\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
