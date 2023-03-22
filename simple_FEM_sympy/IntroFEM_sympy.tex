@@ -1,0 +1,90 @@
+\input{PREAMBLE}
+
+\begin{document}
+
+\title{%
+{\small TF4062 Komputasi Rekayasa Lanjut}\\
+Pengenalan Metode Elemen Hingga pada 1d dengan SymPy
+}
+\author{Fadjar Fathurrahman\\
+Teknik Fisika\\
+Institut Teknologi Bandung}
+\date{}
+\maketitle
+
+\section{Model Persamaan Diferensial}
+
+Tinjau masalah konduksi panas tunak (tidak bergantung waktu) dari suatu kawat dengan
+panjang $L$ dan penampang melintang konstan. Asumsikan bahwa bagian kiri dikenai fluks
+panas konstan $q$ dan bagian kanan dijaga pada suhu tetap, $T(x=L) = T_L$ dan
+sepanjang kawat dikelilingi oleh material insulator sehingga tidak ada
+panas yang keluar.
+
+Persamaan diferensial yang menjelaskan mengenai konduksi panas ini dapat dituliskan
+sebagai berikut.
+\begin{equation}
+-k \frac{\mathrm{d}^2 T}{\mathrm{d}x^2} = Q
+\end{equation}
+untuk $0 < x < L$, di mana $k$
+adalah konduktivitas termal dari material yang diasumsikan konstan dan
+$Q$ adalah sumber panas internal pada kawat.
+Syarat batas Neumann atau syarat batas alami (\textit{natural boundary condition})
+\begin{equation}
+-k\frac{\mathrm{d}T}{\mathrm{d}x} = q \quad \text{at } x = 0
+\end{equation}
+dan syarat batas Dirichlet atau
+ (Dirichlet BC, essential BC)
+\begin{equation}
+T = T_{L} \quad \text{pada } x = L
+\end{equation}
+
+Solusi analitik dari permasalahan ini adalah
+\begin{equation}
+T(x) = T_{L} + \frac{q}{k}(L - x) + \frac{1}{k} \int_{x}^{L}
+\left( \int_{0}^{y} Q(z)\,\mathrm{d}z \right)\,\mathrm{d}y
+\label{eq:solusi-analitik1}
+\end{equation}
+%
+Untuk $Q$ konstan, Persamaan \eqref{eq:solusi-analitik1}
+tereduksi menjadi
+\begin{equation}
+T(x) = T_{L} + \frac{q}{k}(L - x) + \frac{Q}{2k}(L^2 - x^2)
+\end{equation}
+
+
+\section{Fungsi basis linear}
+
+Untuk kasus elemen linear kita memiliki fungsi basis sebagai berikut
+Untuk titik ujung paling kiri, $i=1$, dengan $i$ adalah indeks basis titik nodal global
+\begin{equation}
+N_{1}(x) = \begin{cases}
+\dfrac{x_{2} - x}{h_1} & x_{1} \leq x \leq x_{2} \\[10pt]
+0 & \text{otherwise}
+\end{cases}
+\end{equation}
+%
+Untuk titik nodal interior:
+\begin{equation}
+N_{i}(x) = \begin{cases}
+\dfrac{x - x_{i-1}}{h_{i-1}} & x_{i-1} \leq x \leq x_{i} \\[10pt]
+\dfrac{x_{i+1} - x}{h_{i}} & x_{i} \leq x \leq x_{i+1},\quad i=2,3,\ldots,n \\[10pt]
+0 & \text{otherwise}
+\end{cases}
+\end{equation}
+%
+dan untuk titik ujung paling kanan:
+\begin{equation}
+N_{n+1}(x) = \begin{cases} \dfrac{x - x_{n}}{h_{n}} & x_{n} \leq x \leq x_{n+1} \\[10pt]
+0 & \text{otherwise}
+\end{cases}
+\end{equation}
+di mana $h_{i}$ adalah jarak antara titik nodal
+$h_{i} = x_{i+1} - x_{i}$ yang juga sama dengan panjang elemen.
+
+Perhatikan bahwa fungsi basis tersebut didefinisikan sebagai fungsi sepotong
+atau \textit{piecewise}.
+Pada SymPy kita dapat mendefinisikan fungsi basis tersebut dengan menggunakan kelas
+\pyinline{Piecewise}.
+
+
+\end{document}
