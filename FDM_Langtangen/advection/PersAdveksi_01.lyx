@@ -78,12 +78,96 @@
 \begin_body
 
 \begin_layout Standard
-Persamaan adveksi:
+Persamaan adveksi murni (tanpa difusi):
 \begin_inset Formula 
 \[
 \frac{\partial u}{\partial t}+v\frac{\partial u}{\partial x}=0
 \]
 
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+pada domain 
+\begin_inset Formula $x\in(0,L)$
+\end_inset
+
+ dan 
+\begin_inset Formula $t\in(0,T]$
+\end_inset
+
+ dengan syarat awal:
+\begin_inset Formula 
+\[
+u(x,0)=I(x)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+dan syarat batas
+\begin_inset Formula 
+\begin{align*}
+u(x,0) & =I(x)\ \ \ \ x\in(0,L)\\
+u(0,t) & =U_{0}\ \ \ \ t\in(0,T]
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Jika 
+\begin_inset Formula $v>0$
+\end_inset
+
+ maka kondisi awal akan berpindah dalam arah 
+\begin_inset Formula $x$
+\end_inset
+
+ positif.
+\end_layout
+
+\begin_layout Standard
+Solusi permasalahan adveksi murni ini lebih mudah jika kondisi batas tidak
+ ada atau proses dianggap terjadi pada domain tak-hingga 
+\begin_inset Formula $(-\infty,\infty)$
+\end_inset
+
+.
+ Solusinya adalah:
+\begin_inset Formula 
+\[
+u(x,t)=I(x-vt)
+\]
+
+\end_inset
+
+Solusi ini dapat digunakan secara lokal pada domain terbatas sebelum kondisi
+ batas sudah memodifikasi pulsa atau gelombang.
+\end_layout
+
+\begin_layout Standard
+Salah satu fitur dari solusi persamaan adveksi ini adalah
+\begin_inset Formula 
+\[
+u(x_{i},t_{n+1})=u(x_{i-1},t_{n})
+\]
+
+\end_inset
+
+dengan 
+\begin_inset Formula $x_{i}=i\Delta x$
+\end_inset
+
+ dan 
+\begin_inset Formula $t_{n}$
 \end_inset
 
 
