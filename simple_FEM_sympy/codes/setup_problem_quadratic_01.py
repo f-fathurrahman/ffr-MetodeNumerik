@@ -8,13 +8,13 @@ init_printing(use_unicode=True)
 x = Symbol("x", real=True)
 
 # Domain length
-L = Symbol("L", real=True, positive=True)
-
+#L = Symbol("L", real=True, positive=True)
+L = 1.0
 
 # Setup quadratic element
 Nelements = 1
-Nnodes = 2*Nelements + 1
 NnodesPerElement = 3
+Nnodes = (NnodesPerElement-1)*Nelements + 1
 
 #import numpy as np
 #gblNum = np.zeros(NnodesPerElement, Nelements, dtype=np.int)

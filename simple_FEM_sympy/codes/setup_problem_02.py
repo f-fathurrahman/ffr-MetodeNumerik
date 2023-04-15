@@ -12,7 +12,7 @@ L = Symbol("L", real=True, positive=True)
 
 
 # Setup linear element
-Nelements = 3
+Nelements = 1
 Nnodes = Nelements + 1
 
 # Setup the grid (same spacing)

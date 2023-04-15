@@ -1,4 +1,4 @@
-# Quadratic element, arbitrary number of nodes
+# Linear element, arbitrary number of nodes
 
 from sympy import *
 
@@ -12,10 +12,11 @@ def my_mapping(x, x1, x2, L):
     return ξ, cond1 & cond2
 
 def gen_local_basis(ξ):
-    f1 = 1 - 3*ξ + 2*ξ**2
-    f2 = 4*ξ*(1 - ξ)
-    f3 = ξ*(2*(ξ) - 1)
-    return f1, f2, f3
+    f1 = (1 - 3*ξ) * (1 - 3*ξ/2) * (1 - ξ)
+    f2 = 9*ξ * (1 - 3*ξ/2) * (1 - ξ)
+    f3 = -9*ξ/2 * (1 - 3*ξ) * (1 - ξ)
+    f4 = ξ * (1 - 3*ξ) * (1 - 3*ξ/2)
+    return f1, f2, f3, f4
 
 # Spatial variable
 x = Symbol("x", real=True)
@@ -24,19 +25,27 @@ x = Symbol("x", real=True)
 #L = Symbol("L", real=True, positive=True)
 L = 1.0
 
-# Setup quadratic element
-Nelements = 3
-NnodesPerElement = 3
+# Setup cubic element
+Nelements = 2
+NnodesPerElement = 4
 Nnodes = (NnodesPerElement-1)*Nelements + 1
+#
+# 1 2 3 4 : 1 element -> 4 (3 + 1)
+# 4 5 6 7 : 2 element -> 7 (2*3 + 1)
+# 7 8 9 10: 3 element -> 10 (3*3 + 1)
+# 10 11 12 13: 4 element -> 13 (4*3 + 1)
+
+
 
 # Mapping between element index to (global) nodes index
 elm2nodes = []
-elm2nodes.append([0,1,2])
+elm2nodes.append([0,1,2,3])
 for iel in range(1,Nelements):
-    i0 = elm2nodes[iel-1][0] + 2
-    i1 = elm2nodes[iel-1][1] + 2
-    i2 = elm2nodes[iel-1][2] + 2
-    elm2nodes.append([i0,i1,i2])
+    i0 = elm2nodes[iel-1][0] + 3
+    i1 = elm2nodes[iel-1][1] + 3
+    i2 = elm2nodes[iel-1][2] + 3
+    i3 = elm2nodes[iel-1][3] + 3
+    elm2nodes.append([i0,i1,i2,i3])
 
 
 # This loop is not efficient
@@ -44,10 +53,12 @@ nodes2elm = []
 for inode in range(Nnodes):
     idx_node = []
     for iel in range(Nelements):
-        il, im, ir = elm2nodes[iel]
+        il, im1, im2, ir = elm2nodes[iel]
         if inode == il:
             idx_node.append(iel)
-        if inode == im:
+        if inode == im1:
+            idx_node.append(iel)
+        if inode == im2:
             idx_node.append(iel)
         if inode == ir:
             idx_node.append(iel)
@@ -65,8 +76,9 @@ for i in range(Nnodes):
 h = []
 for iel in range(Nelements):
     il = elm2nodes[iel][0]
-    ir = elm2nodes[iel][2]
+    ir = elm2nodes[iel][3]
     h.append(xnodes[ir]-xnodes[il])
+
 
 assert(len(xnodes) == Nnodes)
 assert(len(h) == Nelements)
@@ -74,13 +86,14 @@ assert(len(h) == Nelements)
 funcs_elm = []
 conds_elm = [] 
 for iel in range(Nelements):
-    il, im, ir = elm2nodes[iel]
+    il, im1, im2, ir = elm2nodes[iel]
     xl = xnodes[il]
-    xm = xnodes[im]
+    xm1 = xnodes[im1]
+    xm2 = xnodes[im2]
     xr = xnodes[ir]
     ξ, cond_elm = my_mapping(x, xl, xr, L)
-    f1, f2, f3 = gen_local_basis(ξ)
-    funcs_elm.append([f1, f2, f3])
+    f1, f2, f3, f4 = gen_local_basis(ξ)
+    funcs_elm.append([f1, f2, f3, f4])
     conds_elm.append(cond_elm)
 
 idx_local_node = 0
@@ -92,8 +105,8 @@ for inode in range(Nnodes):
     func_node = []
     cond_node = []
     for iel in iels:
-        idx_local_node = idx_local_node % 3
-        #print("idx_local_node = ", idx_local_node)
+        idx_local_node = idx_local_node % 4
+        print("idx_local_node = ", idx_local_node)
         func_node.append(funcs_elm[iel][idx_local_node])
         cond_node.append(conds_elm[iel])
         idx_local_node += 1
@@ -120,5 +133,6 @@ for inode in range(Nnodes):
         f = Piecewise( (f0, c0), (f1, c1), (0, True) )
         Nfuncs.append(f)
     else:
+        # In 1d we only have at max 2 common elements
         raise RuntimeException("Not supported")
 
