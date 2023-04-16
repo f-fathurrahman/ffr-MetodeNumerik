@@ -1,0 +1,1723 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+%\documentclass[a4paper,11pt]{article} % print setting
+% screen setting
+
+
+
+
+
+
+
+
+%\usepackage{cmbright}
+%\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage[no-math]{fontspec}
+
+%\setmainfont{STIX}
+
+%\usepackage{sfmath}
+%\usepackage{mathptmx}
+%\usepackage{mathpazo}
+
+\usepackage{url}
+\usepackage{xcolor}
+
+
+
+
+\usepackage{minted}
+\newminted{julia}{breaklines,fontsize=\small}
+\newminted{bash}{breaklines,fontsize=\small}
+\newminted{text}{breaklines,fontsize=\small}
+
+\newcommand{\txtinline}[1]{\mintinline{text}{#1}}
+\newcommand{\jlinline}[1]{\mintinline{julia}{#1}}
+
+\newmintedfile[juliafile]{julia}{breaklines,fontsize=\small}
+
+\definecolor{mintedbg}{rgb}{0.90,0.90,0.90}
+\usepackage{mdframed}
+
+
+\BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=mintedbg]}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+
+
+
+
+
+\usepackage{appendix}
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package none
+\inputencoding auto
+\fontencoding default
+\font_roman "default" "Linux Libertine O"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "libertine-ntxm" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing onehalf
+\use_hyperref true
+\pdf_bookmarks false
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks false
+\pdf_backref section
+\pdf_pdfusetitle false
+\papersize a4paper
+\use_geometry true
+\use_package amsmath 2
+\use_package amssymb 2
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date true
+\justification true
+\use_refstyle 0
+\use_minted 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1.5cm
+\topmargin 1.5cm
+\rightmargin 1.5cm
+\bottommargin 1.5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip smallskip
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Diffusion Equation with Finite Element Method 
+\begin_inset Newline newline
+\end_inset
+
+ TF4062
+\end_layout
+
+\begin_layout Author
+Iwan Prasetyo 
+\begin_inset Newline newline
+\end_inset
+
+ Fadjar Fathurrahman
+\end_layout
+
+\begin_layout Standard
+ 
+\end_layout
+
+\begin_layout Section
+Steady heat equation
+\end_layout
+
+\begin_layout Standard
+As a model problem, we will consider determining the conduction of heat
+ on a slender homogeneous metal wire of length L with a constant cross section.
+ Assume that the left end is exposed to a prescribed heat flux, 
+\begin_inset Formula $q$
+\end_inset
+
+, the right end is held at a constant temperature, 
+\begin_inset Formula $T=T_{L}$
+\end_inset
+
+, and the length of the rod is surrounded by insulating material.
+ The situation is shown in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Heinrich_Fig_2_1"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Graphics
+	filename images/Heinrich_Fig_2_1.pdf
+	width 50text%
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Conduction of heat in a rod of length 
+\begin_inset Formula $L$
+\end_inset
+
+ (from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Heinrich2017"
+literal "false"
+
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Heinrich_Fig_2_1"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The differential equation that governs the distribution of temperature across
+ the rod can be written as 
+\begin_inset Formula 
+\begin{equation}
+-k\frac{\mathrm{d}^{2}T}{\mathrm{d}x^{2}}=Q
+\end{equation}
+
+\end_inset
+
+for 
+\begin_inset Formula $0<x<L$
+\end_inset
+
+, where 
+\begin_inset Formula $k$
+\end_inset
+
+ is the thermal conductivity of the material which is assumed constant and
+ 
+\begin_inset Formula $Q$
+\end_inset
+
+ is the internal heat source.
+ The boundary conditions for this problem are 
+\begin_inset Formula 
+\begin{equation}
+-k\frac{\mathrm{d}T}{\mathrm{d}x}=q\quad\text{at }x=0
+\end{equation}
+
+\end_inset
+
+and 
+\begin_inset Formula 
+\begin{equation}
+T=T_{L}\quad\text{at }x=L
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The analytical solution to this problem can be expressed as: 
+\begin_inset Formula 
+\begin{equation}
+T(x)=T_{L}+\frac{q}{k}(L-x)+\frac{1}{k}\int_{x}^{L}\left(\int_{0}^{y}Q(z)\,\mathrm{d}z\right)\,\mathrm{d}y
+\end{equation}
+
+\end_inset
+
+For constant 
+\begin_inset Formula $Q$
+\end_inset
+
+, this equation reduces to 
+\begin_inset Formula 
+\begin{equation}
+T(x)=T_{L}+\frac{q}{k}(L-x)+\frac{Q}{2k}(L^{2}-x^{2})
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Discretization and approximation
+\end_layout
+
+\begin_layout Standard
+The FEM procedure start by discretizing the spatial domain into elements
+ 
+\begin_inset Formula $e_{i}$
+\end_inset
+
+ where: 
+\begin_inset Formula 
+\begin{equation}
+e_{i}:\left\{ x_{i}\leq x\leq x_{i+1}\right\} ,\quad i=1,2,\ldots,n
+\end{equation}
+
+\end_inset
+
+The points 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+ are also called 
+\shape italic
+nodes
+\shape default
+.
+ If we have 
+\begin_inset Formula $n$
+\end_inset
+
+ elements then we have 
+\begin_inset Formula $n+1$
+\end_inset
+
+ nodes (or nodal points).
+ The solution to the PDE can be approximated as: 
+\begin_inset Formula 
+\begin{equation}
+T(x)\approx\sum_{i=1}^{n+1}T_{i}N_{i}(x)\label{eq:sol_pde_approx}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $T_{i}$
+\end_inset
+
+ are (unknown) nodal values of 
+\begin_inset Formula $T(x)$
+\end_inset
+
+ and 
+\begin_inset Formula $N_{i}(x)$
+\end_inset
+
+ are 
+\shape italic
+shape functions
+\shape default
+ (also called 
+\shape italic
+trial functions
+\shape default
+ or 
+\shape italic
+basis functions
+\shape default
+) associated with each node.
+\end_layout
+
+\begin_layout Subsection
+Linear shape functions
+\end_layout
+
+\begin_layout Standard
+The shape functions are defined such that 
+\begin_inset Formula $N_{i}(x_{i})=1$
+\end_inset
+
+ and 
+\begin_inset Formula $N_{i}(x_{j})=0$
+\end_inset
+
+ if 
+\begin_inset Formula $j\neq i$
+\end_inset
+
+.
+ In FEM, they are usually chosen to be low order, piecewise polynomials.
+ As an example, we will consider the case of one element, 
+\begin_inset Formula $n=1$
+\end_inset
+
+, or two nodes using the first order polynomial.
+ The shape functions can be defined as: 
+\begin_inset Formula 
+\begin{equation}
+\begin{cases}
+N_{1}(x) & =1-\dfrac{x}{L}\\[10pt]
+N_{2}(x) & =\dfrac{x}{L}
+\end{cases}\label{eq:linear_shape_functions}
+\end{equation}
+
+\end_inset
+
+An illustration of this case is shows in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Simpson_2_2"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Graphics
+	filename images/Simpson_Fig_2_2.pdf
+	width 50text%
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+The case of one element with linear shape functions.
+ (from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Simpson2017"
+literal "false"
+
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Simpson_2_2"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For general case of linear elements we have the following shape functions.
+ For left boundary points: 
+\begin_inset Formula 
+\begin{equation}
+N_{1}(x)=\begin{cases}
+\dfrac{x_{2}-x}{h_{1}} & x_{1}\leq x\leq x_{2}\\[10pt]
+0 & \text{otherwise}
+\end{cases}
+\end{equation}
+
+\end_inset
+
+For interior points: 
+\begin_inset Formula 
+\begin{equation}
+N_{i}(x)=\begin{cases}
+\dfrac{x-x_{i-1}}{h_{i-1}} & x_{i-1}\leq x\leq x_{i}\\[10pt]
+\dfrac{x_{i+1}-x}{h_{i}} & x_{i}\leq x\leq x_{i+1},\quad i=2,3,\ldots,n\\[10pt]
+0 & \text{otherwise}
+\end{cases}
+\end{equation}
+
+\end_inset
+
+And for right boundary points: 
+\begin_inset Formula 
+\begin{equation}
+N_{n+1}(x)=\begin{cases}
+\dfrac{x-x_{n}}{h_{n}} & x_{n}\leq x\leq x_{n+1}\\[10pt]
+0 & \text{otherwise}
+\end{cases}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $h_{i}$
+\end_inset
+
+ are the spacings between nodal points.
+ 
+\begin_inset Formula 
+\begin{equation}
+h_{i}=x_{i+1}-x_{i}
+\end{equation}
+
+\end_inset
+
+In FEM, the size or the shape of elements and thus their spacings do not
+ have to be homogeneous, i.e.
+ they can have arbitrary spacing in the case of 1d.
+ This feature of FEM is more apparent in 2d and 3d case.
+ It is one of its main strength: it can handle complex geometries by allowing
+ arbitary choices of mesh.
+\end_layout
+
+\begin_layout Subsection
+Weighted residuals
+\end_layout
+
+\begin_layout Standard
+When we approximate the solution as in the Equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:sol_pde_approx"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, in general, we cannot obtain the true solution to the differential equation.
+ So, we will not get an exact equality but some 
+\shape italic
+residual
+\shape default
+ associated with the error in the approximation.
+ This residual can be defined as: 
+\begin_inset Formula 
+\begin{equation}
+R(T,x)\equiv-k\frac{\mathrm{d}^{2}T}{\mathrm{d}x^{2}}-Q\label{eq:residual_01}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $T$
+\end_inset
+
+ in the above equation is the approximation to the true solution 
+\begin_inset Formula $T^{*}$
+\end_inset
+
+ for which we have: 
+\begin_inset Formula 
+\begin{equation}
+R(T^{*},x)\equiv0
+\end{equation}
+
+\end_inset
+
+However, for any 
+\begin_inset Formula $T\neq T^{\mathrm{*}}$
+\end_inset
+
+, we cannot force the residual to vanish at every point 
+\begin_inset Formula $x$
+\end_inset
+
+, no matter how small we make the grid or long the series expansion.
+ The idea of the 
+\shape italic
+weighted residuals method
+\shape default
+ is that we can multiply the residual by a 
+\shape italic
+weighting function
+\shape default
+ and force the integral of the weighted expression to vanish: 
+\begin_inset Formula 
+\begin{equation}
+\int_{0}^{L}w(x)R(T,x)\mathrm{d}x=0\label{eq:weighted_res}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $w(x)$
+\end_inset
+
+ is the weighting function.
+ Choosing different weighting functions and replacing each of them in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:weighted_res"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, we can then generate a system of linear equations in the unknown parameters
+ 
+\begin_inset Formula $T_{i}$
+\end_inset
+
+ that will determine an approximation T of the form of the finite series
+ given in Equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:sol_pde_approx"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ This will satisfy the differential equation in an 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+"
+\end_layout
+
+\end_inset
+
+average
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+"
+\end_layout
+
+\end_inset
+
+ or 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+"
+\end_layout
+
+\end_inset
+
+integral
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+"
+\end_layout
+
+\end_inset
+
+ sense.
+ The type of weighting function chosen depends on the type of weighted residual
+ technique selected.
+ In the 
+\shape italic
+Galerkin procedure
+\shape default
+, the weights are set equal to the shape functions 
+\begin_inset Formula $N_{i}$
+\end_inset
+
+, that is 
+\begin_inset Formula 
+\begin{equation}
+w_{i}(x)=N_{i}(x)
+\end{equation}
+
+\end_inset
+
+So we have: 
+\begin_inset Formula 
+\begin{equation}
+\int_{0}^{L}N_{i}\left[-k\frac{\mathrm{d}^{2}T}{\mathrm{d}x^{2}}-Q\right]\,\mathrm{d}x=0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since the temperature distribution must be a continuous function of 
+\begin_inset Formula $x$
+\end_inset
+
+, the simplest way to approximate it would be to use piecewise polynomial
+ interpolation over each element, in particular, piecewise linear approximation
+ (by using linear shape functions as in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:linear_shape_functions"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) provides the simplest approximation with a continuous function.
+ Unfortunately, the first derivatives of such functions are not continuous
+ at the elements' ends and, hence, second derivatives do not exist there;
+ furthermore, the second derivative of 
+\begin_inset Formula $T$
+\end_inset
+
+ would vanish inside each element.
+ However, to require the second-order derivatives to exist everywhere is
+ too restrictive.
+ We can weaken this requirement by application of integration by parts to
+ the second derivative: (
+\begin_inset Formula $\int\,u\,\mathrm{d}v=uv-\int\,v\,\mathrm{d}u$
+\end_inset
+
+): 
+\begin_inset Formula 
+\begin{equation}
+\int_{0}^{L}N_{i}\left[-k\frac{\mathrm{d}^{2}T}{\mathrm{d}x^{2}}\right]\,\mathrm{d}x=\int_{0}^{L}k\frac{\mathrm{d}N_{i}}{\mathrm{d}x}\frac{\mathrm{d}T}{\mathrm{d}x}\mathrm{d}x-\left[kN_{i}\frac{\mathrm{d}T}{\mathrm{d}x}\right]_{0}^{L}\label{eq:weak_form_01}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Substituting the Equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:sol_pde_approx"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ to the integral term at the RHS of equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:weak_form_01"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+: 
+\begin_inset Formula 
+\begin{align}
+\int_{0}^{L}k\frac{\mathrm{d}N_{i}}{\mathrm{d}x}\frac{\mathrm{d}}{\mathrm{d}x}\,\left(\sum_{j=1}^{n+1}T_{j}N_{j}\right)\mathrm{d}x & =\int_{0}^{L}k\frac{\mathrm{d}N_{i}}{\mathrm{d}x}\left(\sum_{j=1}^{n+1}\frac{\mathrm{d}N_{j}}{\mathrm{d}x}T_{j}\right)\,\mathrm{d}x\\
+ & =\int_{0}^{L}k\left(\sum_{j=1}^{n+1}\frac{\mathrm{d}N_{i}}{\mathrm{d}x}\frac{\mathrm{d}N_{j}}{\mathrm{d}x}T_{j}\right)\,\mathrm{d}x
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:weak_form_01"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ can be rewritten as 
+\begin_inset Formula 
+\begin{equation}
+\int_{0}^{L}k\left(\sum_{j=1}^{n+1}\frac{\mathrm{d}N_{i}}{\mathrm{d}x}\frac{\mathrm{d}N_{j}}{\mathrm{d}x}T_{j}\right)\,\mathrm{d}x-\int_{0}^{L}N_{i}Q\,\mathrm{d}x-\left[kN_{i}\frac{\mathrm{d}T}{\mathrm{d}x}\right]_{0}^{L}=0\label{eq:weak_form_02}
+\end{equation}
+
+\end_inset
+
+for 
+\begin_inset Formula $i=1,2,\ldots,n+1$
+\end_inset
+
+.
+ The quantities 
+\begin_inset Formula $k$
+\end_inset
+
+, 
+\begin_inset Formula $Q$
+\end_inset
+
+, 
+\begin_inset Formula $N_{i}$
+\end_inset
+
+ are known.
+ The terms containing 
+\begin_inset Formula $T_{i}$
+\end_inset
+
+ can be isolated to the LHS and the the known quantities can be moved to
+ the RHS.
+ This is a system of linear equations with 
+\begin_inset Formula $T_{i}$
+\end_inset
+
+ as the unknown variables.
+ In matrix form: 
+\begin_inset Formula 
+\begin{equation}
+\mathbf{K}\mathbf{u}=\mathbf{f}\label{eq:linear_system}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\mathbf{K}$
+\end_inset
+
+, usually called stiffness matrix, is a matrix arising from the integral
+ terms, 
+\begin_inset Formula $\mathbf{f}$
+\end_inset
+
+, usually called load vector, is column vector whose elements arise from
+ the integrals of source term and boundary terms, and 
+\begin_inset Formula $\mathbf{u}$
+\end_inset
+
+ is column vector of the the unknown 
+\begin_inset Formula $T_{i}$
+\end_inset
+
+.
+ These linear equations can be solved by standard method such as Gaussian
+ elimination and LU decomposition.
+\end_layout
+
+\begin_layout Standard
+In practice, the integral in Equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:weak_form_02"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ can be calculated analytically or by numerical methods such as Gaussian
+ quadrature.
+ In the present case, the integral can be calculated analytically.
+ The integral over all spatial domain can be divided into integrals over
+ elements: 
+\begin_inset Formula 
+\begin{equation}
+\int_{0}^{L}=\int_{x_{1}=0}^{x_{2}}+\int_{x_{2}}^{x_{3}}+\cdots+\int_{x_{n}}^{x_{n+1}=L}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For simplicity, let's consider two elements with equal spacing 
+\begin_inset Formula $h_{1}=h_{2}$
+\end_inset
+
+ with nodes 
+\begin_inset Formula 
+\begin{equation}
+x_{1}=0,x_{2}=L/2,x_{3}=L
+\end{equation}
+
+\end_inset
+
+The first integral is done over the first element.
+ In the first element, only 
+\begin_inset Formula $N_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $N_{2}$
+\end_inset
+
+ contributes to the integrals because 
+\begin_inset Formula $N_{3}$
+\end_inset
+
+ is zero in this interval.
+ So the index 
+\begin_inset Formula $i$
+\end_inset
+
+ and 
+\begin_inset Formula $j$
+\end_inset
+
+ are limited to 1 and 2 only.
+ This also applies to other elements.
+\end_layout
+
+\begin_layout Standard
+These integrals can be written as a matrix: 
+\begin_inset Formula 
+\begin{equation}
+\mathbf{K}^{e_{1}}=\int_{0}^{L/2}k\begin{bmatrix}\dfrac{\mathrm{d}N_{1}}{\mathrm{d}x}\dfrac{\mathrm{d}N_{1}}{\mathrm{d}x} & \dfrac{\mathrm{d}N_{1}}{\mathrm{d}x}\dfrac{\mathrm{d}N_{2}}{\mathrm{d}x}\\[10pt]
+\dfrac{\mathrm{d}N_{2}}{\mathrm{d}x}\dfrac{\mathrm{d}N_{1}}{\mathrm{d}x} & \dfrac{\mathrm{d}N_{2}}{\mathrm{d}x}\dfrac{\mathrm{d}N_{2}}{\mathrm{d}x}
+\end{bmatrix}\,\mathrm{d}x
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\mathbf{K}^{e_{1}}$
+\end_inset
+
+ is called the local stiffness matrix.
+\end_layout
+
+\begin_layout Standard
+The needed integrals are: 
+\begin_inset Formula 
+\begin{align*}
+\int_{0}^{L/2}\frac{\mathrm{d}N_{1}}{\mathrm{d}x}\dfrac{\mathrm{d}N_{1}}{\mathrm{d}x}\,\mathrm{d}x & =\int_{0}^{L/2}\left(-\frac{1}{h_{1}}\right)\left(-\frac{1}{h_{1}}\right)\,\mathrm{d}x\\
+ & =\int_{0}^{L/2}\frac{1}{(L/2)^{2}}\,\mathrm{d}x\\
+ & =\left[\frac{4}{L^{2}}x\right]_{0}^{L/2}\\
+ & =\frac{2}{L}
+\end{align*}
+
+\end_inset
+
+and 
+\begin_inset Formula 
+\begin{align*}
+\int_{0}^{L/2}\frac{\mathrm{d}N_{1}}{\mathrm{d}x}\dfrac{\mathrm{d}N_{2}}{\mathrm{d}x}\,\mathrm{d}x & =\int_{0}^{L/2}\left(-\frac{1}{h_{1}}\right)\left(\frac{1}{h_{1}}\right)\,\mathrm{d}x\\
+ & =-\frac{2}{L}
+\end{align*}
+
+\end_inset
+
+So the matrix elements can be written as 
+\begin_inset Formula 
+\begin{equation}
+\mathbf{K}^{e_{1}}=\frac{k}{L/2}\begin{bmatrix}1 & -1\\
+-1 & 1
+\end{bmatrix}
+\end{equation}
+
+\end_inset
+
+For more general case where 
+\begin_inset Formula $h_{1}\neq h_{2}$
+\end_inset
+
+, we obtain: 
+\begin_inset Formula 
+\begin{equation}
+\mathbf{K}^{e_{1}}=\frac{k}{h_{1}}\begin{bmatrix}1 & -1\\
+-1 & 1
+\end{bmatrix}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Source term for the first element: 
+\begin_inset Formula 
+\begin{equation}
+\mathbf{f}^{e_{1},s}=\begin{bmatrix}f_{1}^{e_{1},s}\\
+f_{2}^{e_{1},s}
+\end{bmatrix}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+f_{1}^{e_{1},s}=Q\int_{0}^{L/2}N_{1}(x)\,\mathrm{d}x=Q\int_{0}^{L/2}\left(1-\dfrac{2x}{L}\right)\,\mathrm{d}x=Q\left[x-\frac{1}{L}x^{2}\right]_{0}^{L/2}=Q\frac{L}{4}=Q\frac{h_{1}}{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+f_{2}^{e_{1},s}=Q\int_{0}^{L/2}N_{2}(x)\,\mathrm{d}x=Q\int_{0}^{L/2}\left(\dfrac{2x}{L}\right)\,\mathrm{d}x=Q\left[\frac{1}{L}x^{2}\right]_{0}^{L/2}=Q\frac{L}{4}=Q\frac{h_{1}}{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Boundary terms for the first element 
+\begin_inset Formula 
+\begin{equation}
+\mathbf{f}^{e_{1},b}=\begin{bmatrix}f_{1}^{e_{1},b}\\
+f_{2}^{e_{1},b}
+\end{bmatrix}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By using boundary condition at 
+\begin_inset Formula $x=0$
+\end_inset
+
+ and using the fact that 
+\begin_inset Formula $N_{1}(x=0)=1$
+\end_inset
+
+ and 
+\begin_inset Formula $N_{1}(x=L/2)=0$
+\end_inset
+
+: 
+\begin_inset Formula 
+\begin{equation}
+f_{1}^{e_{1},b}=\left[N_{1}(x)\left(k\frac{\mathrm{d}T}{\mathrm{d}x}\right)\right]_{0}^{L/2}=N_{1}(L/2)\left.\left(k\frac{\mathrm{d}T}{\mathrm{d}x}\right)\right|_{x=L/2}-N_{1}(0)\left.\left(k\frac{\mathrm{d}T}{\mathrm{d}x}\right)\right|_{x=0}=q
+\end{equation}
+
+\end_inset
+
+Meanwhile using using the fact that 
+\begin_inset Formula $N_{2}(x=0)=0$
+\end_inset
+
+ and 
+\begin_inset Formula $N_{2}(x=L/2)=1$
+\end_inset
+
+: 
+\begin_inset Formula 
+\begin{equation}
+f_{2}^{e_{1},b}=\left[N_{2}(x)\left(k\frac{\mathrm{d}T}{\mathrm{d}x}\right)\right]_{0}^{L/2}=N_{2}(L/2)\left.\left(k\frac{\mathrm{d}T}{\mathrm{d}x}\right)\right|_{x=L/2}-N_{2}(0)\left.\left(k\frac{\mathrm{d}T}{\mathrm{d}x}\right)\right|_{x=0}=\left.\left(k\frac{\mathrm{d}T}{\mathrm{d}x}\right)\right|_{x=L/2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can obtain similar expressions for 
+\begin_inset Formula $\mathbf{K}^{e_{2}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{f}^{e_{2}}$
+\end_inset
+
+.
+ These per-element matrices and vector must be used to build the global
+ stiffness and load vector.
+ This process is called matrix assembly process.
+ An illustration of this is given in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:assemble_2element"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Graphics
+	filename images/Heinrich_Fig_3_7.pdf
+	width 100text%
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+An illustration of matrix assembly for the case of 2 elements.
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:assemble_2element"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The global system of equations that we have to solve can be written as:
+ 
+\begin_inset Formula 
+\begin{equation}
+\frac{2k}{L}\begin{bmatrix}1 & -1 & 0\\
+-1 & 2 & -1\\
+0 & -1 & 1
+\end{bmatrix}\begin{bmatrix}T_{1}\\
+T_{2}\\
+T_{3}
+\end{bmatrix}=\frac{QL}{4}\begin{bmatrix}1\\
+2\\
+1
+\end{bmatrix}+\begin{bmatrix}q\\
+0\\
+\left(k\dfrac{\mathrm{d}T}{\mathrm{d}x}\right)_{x=L}
+\end{bmatrix}
+\end{equation}
+
+\end_inset
+
+Because 
+\begin_inset Formula $T_{3}=T_{L}$
+\end_inset
+
+ is known from the boundary conditions, the third equation can be discarded.
+ In the second equation, the term containing 
+\begin_inset Formula $T_{3}=T_{L}$
+\end_inset
+
+ can be moved to the RHS and the equations are rewritten as 
+\begin_inset Formula 
+\begin{equation}
+\frac{2k}{L}\begin{bmatrix}1 & -1\\
+-1 & 2
+\end{bmatrix}\begin{bmatrix}T_{1}\\
+T_{2}
+\end{bmatrix}=\frac{QL}{4}\begin{bmatrix}1\\
+2
+\end{bmatrix}+\begin{bmatrix}q\\
+0
+\end{bmatrix}+\frac{2k}{L}T_{L}\begin{bmatrix}0\\
+1
+\end{bmatrix}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+After 
+\begin_inset Formula $T_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $T_{2}$
+\end_inset
+
+ has been solved, we can use them to calculate the flux at the right boundary
+ (where Dirichlet boundary condition is specified): 
+\begin_inset Formula 
+\begin{equation}
+\left(k\frac{\mathrm{d}T}{\mathrm{d}x}\right)_{x=L}=\frac{2k}{L}\left(T_{2}-T_{L}\right)+\frac{QL}{4}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Non-constant or variable source term
+\end_layout
+
+\begin_layout Standard
+Now, we will consider the case where the source term 
+\begin_inset Formula $Q$
+\end_inset
+
+ is not a constant, but a function of spatial dimension: 
+\begin_inset Formula $Q(x)$
+\end_inset
+
+.
+ To handle this case, we assume that the source is continuous and we use
+ the shape functions to expand the 
+\begin_inset Formula $Q(x)$
+\end_inset
+
+: 
+\begin_inset Formula 
+\begin{equation}
+Q(x)\approx\sum_{j=1}^{n+1}Q_{j}N_{j}(x)
+\end{equation}
+
+\end_inset
+
+The equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:weak_form_02"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ becomes: 
+\begin_inset Formula 
+\begin{equation}
+\int_{0}^{L}k\left(\sum_{j=1}^{n+1}\frac{\mathrm{d}N_{i}}{\mathrm{d}x}\frac{\mathrm{d}N_{j}}{\mathrm{d}x}T_{j}\right)\,\mathrm{d}x-\int_{0}^{L}N_{i}\sum_{j=1}^{n+1}Q_{j}N_{j}(x)\,\mathrm{d}x-\left[kN_{i}\frac{\mathrm{d}T}{\mathrm{d}x}\right]_{0}^{L}=0\label{eq:weak_form_03}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $Q_{j}=Q(x_{j})$
+\end_inset
+
+, i.e.
+ the value of function 
+\begin_inset Formula $Q(x)$
+\end_inset
+
+ evaluated at node point 
+\begin_inset Formula $x_{j}$
+\end_inset
+
+.
+ Applying this to the two element case, we need to evaluate the integrals
+ which can be written in matrix form: 
+\begin_inset Formula 
+\begin{equation}
+\mathbf{M}^{e_{1}}=\int_{0}^{L/2}\begin{bmatrix}N_{1}(x)N_{1}(x) & N_{1}(x)N_{2}(x)\\
+N_{2}(x)N_{1}(x) & N_{2}(x)N_{2}(x)
+\end{bmatrix}\begin{bmatrix}Q_{1}\\
+Q_{2}
+\end{bmatrix}\,\mathrm{d}x
+\end{equation}
+
+\end_inset
+
+and similar expression for 
+\begin_inset Formula $\mathbf{M}^{e_{2}}$
+\end_inset
+
+.
+ In several literature this matrix is also known as (local) 
+\shape italic
+mass matrix
+\shape default
+.
+ The result after carrying out the integrations is: 
+\begin_inset Formula 
+\begin{equation}
+\mathbf{M}^{e_{1}}=\begin{bmatrix}\dfrac{L/2}{3} & \dfrac{L/2}{6}\\[10pt]
+\dfrac{L/2}{6} & \dfrac{L/2}{3}
+\end{bmatrix}\begin{bmatrix}Q_{1}\\[10pt]
+Q_{2}
+\end{bmatrix}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Non-constant or variable condution and convection boundary condition
+\end_layout
+
+\begin_layout Standard
+In this case, 
+\begin_inset Formula $k$
+\end_inset
+
+ is not constant but a function of 
+\begin_inset Formula $x$
+\end_inset
+
+, i.e.
+ 
+\begin_inset Formula $k(x)$
+\end_inset
+
+.
+ Now, assuming 
+\begin_inset Formula $Q=0$
+\end_inset
+
+, the steady heat equation can be written as: 
+\begin_inset Formula 
+\begin{equation}
+-\frac{\mathrm{d}}{\mathrm{d}x}\left(k(x)\frac{\mathrm{d}T}{\mathrm{d}x}\right)=0
+\end{equation}
+
+\end_inset
+
+and convection boundary condition at 
+\begin_inset Formula $x=0$
+\end_inset
+
+: 
+\begin_inset Formula 
+\begin{equation}
+-k_{0}\frac{\mathrm{d}T}{\mathrm{d}x}+h(T-T_{\infty})
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $k_{0}=k(x=0)$
+\end_inset
+
+, 
+\begin_inset Formula $h$
+\end_inset
+
+ is convective heat transfer coefficient and 
+\begin_inset Formula $T_{\infty}$
+\end_inset
+
+ is an external reference temperature.
+ At 
+\begin_inset Formula $x=L$
+\end_inset
+
+ we have 
+\begin_inset Formula $T=T_{L}$
+\end_inset
+
+.
+ The corresponding weak form is: 
+\begin_inset Formula 
+\begin{equation}
+\int_{0}^{L}k(x)\frac{\mathrm{d}N_{i}}{\mathrm{d}x}\frac{\mathrm{d}T}{\mathrm{d}x}-\left[N_{i}\left(-K(x)\frac{\mathrm{d}T}{\mathrm{d}x}\right)\right]_{x=0}+\left[N_{i}\left(-K(x)\frac{\mathrm{d}T}{\mathrm{d}x}\right)\right]_{x=L}=0
+\end{equation}
+
+\end_inset
+
+Now, we may drop the boundary term at 
+\begin_inset Formula $x=L$
+\end_inset
+
+ because the value of 
+\begin_inset Formula $T$
+\end_inset
+
+ is specified by the boundary condition and replace the boundary term at
+ 
+\begin_inset Formula $x=0$
+\end_inset
+
+: 
+\begin_inset Formula 
+\begin{equation}
+\int_{0}^{L}k(x)\frac{\mathrm{d}N_{i}}{\mathrm{d}x}\frac{\mathrm{d}T}{\mathrm{d}x}+N_{i}h(T-T_{\infty})_{x=0}=0
+\end{equation}
+
+\end_inset
+
+Using similar expansion for 
+\begin_inset Formula $k(x)$
+\end_inset
+
+ as we have done for 
+\begin_inset Formula $Q(x)$
+\end_inset
+
+: 
+\begin_inset Formula 
+\begin{equation}
+k(x)=\sum_{j=1}^{n+1}k_{j}N_{j}(x)
+\end{equation}
+
+\end_inset
+
+we can obtain similar linear system.
+ For the present case, using two elements with same spacing between nodes,
+ we have: 
+\begin_inset Formula 
+\begin{equation}
+\frac{1}{L}\begin{bmatrix}K_{1}+K_{2}+hL & -(K_{1}+K_{2}) & 0\\
+-(K_{1}+K_{2}) & K_{1}+2K_{2}+K_{3} & -(K_{2}+K_{3})\\
+0 & -(K_{2}+K_{3}) & K_{2}+K_{3}
+\end{bmatrix}\begin{bmatrix}T_{1}\\
+T_{2}\\
+T_{3}
+\end{bmatrix}=\begin{bmatrix}hT_{\infty}\\
+0\\
+0
+\end{bmatrix}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Time-dependent problem
+\end_layout
+
+\begin_layout Standard
+Consider the unsteady heat PDE in one spatial dimension 
+\begin_inset Formula $x$
+\end_inset
+
+: 
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial T}{\partial t}=k\frac{\partial^{2}T}{\partial x^{2}}+Q
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $k$
+\end_inset
+
+ is thermal diffusivity constant and 
+\begin_inset Formula $Q$
+\end_inset
+
+ is a constant heat source.
+ The initial conditions is 
+\begin_inset Formula 
+\begin{equation}
+T(x,t=0)=0,\qquad\forall\,x\in[0,L]
+\end{equation}
+
+\end_inset
+
+and the boundary conditions are 
+\begin_inset Formula 
+\begin{equation}
+T(x=0,t)=0\qquad\text{and}\qquad T(x=L,t)=0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Following the general steps outlined for the time-independent case we can
+ derive the weak form of this problem as: 
+\begin_inset Formula 
+\begin{equation}
+\int_{0}^{L}N_{i}\frac{\partial T}{\partial t}=-k\left(N_{i}\frac{\partial T}{\partial x}\right)_{x=0}+k\left(N_{i}\frac{\partial T}{\partial x}\right)_{x=L}-k\frac{\partial N_{i}}{\partial x}\frac{\partial T}{\partial x}\,\mathrm{d}x+\int_{0}^{L}N_{i}\,Q\,\mathrm{d}x\label{eq:unsteady_heat_weak_01}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the case of specified temperatures at both ends, we can drop the boundary
+ terms at the RHS of equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:unsteady_heat_weak_01"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Substituting the equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:sol_pde_approx"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, we can arrive at the following matrix equation: 
+\begin_inset Formula 
+\begin{equation}
+\mathbf{M}\frac{\partial}{\partial t}\mathbf{u}+\mathbf{K}\mathbf{u}=\mathbf{f}
+\end{equation}
+
+\end_inset
+
+Now, we need to discretize with respect to time variable 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ One way to do this is via backward difference operator
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Here 
+\begin_inset Formula $k$
+\end_inset
+
+ denotes the index of time point.
+\end_layout
+
+\end_inset
+
+: 
+\begin_inset Formula 
+\begin{equation}
+\mathbf{M}\frac{\mathbf{u}^{k+1}-\mathbf{u}^{k}}{\Delta t}+\mathbf{K}\mathbf{u}^{k+1}=\mathbf{f}
+\end{equation}
+
+\end_inset
+
+Rearranging, we obtain 
+\begin_inset Formula 
+\begin{equation}
+\left(\frac{\mathbf{M}}{\Delta t}+\mathbf{K}\right)\mathbf{u}^{k+1}=\frac{\mathbf{M}}{\Delta t}\mathbf{u}^{k}+\mathbf{f}\label{eq:unsteady_heat_linsys}
+\end{equation}
+
+\end_inset
+
+Given 
+\begin_inset Formula $\mathbf{u}^{0}$
+\end_inset
+
+, we can find 
+\begin_inset Formula $\mathbf{u}^{1}$
+\end_inset
+
+ and at later times by solving the linear system 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:unsteady_heat_linsys"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+ 
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "BIBLIO"
+options "unsrt"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
