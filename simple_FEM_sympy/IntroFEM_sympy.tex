@@ -51,10 +51,46 @@ tereduksi menjadi
 T(x) = T_{L} + \frac{q}{k}(L - x) + \frac{Q}{2k}(L^2 - x^2)
 \end{equation}
 
+\section{Diskritisasi dan aproksimasi}
+
+Prosedur metode elemen hingga dimulai dari melakukan diskritisasi domain spasial
+menjadi elemen-elemen $e_{i}$:
+\begin{equation}
+e_{i}: \left\{ x_{i} \leq x \leq x_{i+1} \right\},\quad i=1,2,\ldots,n
+\end{equation}
+Titik-titik $x_{i}$ juga sering disebut sebagai titik nodal atau \textit{nodes}. 
+Jika kita memiliki $n$ elemen maka kita memiliki $n+1$ titik nodal.
+
+Solusi dari persamaan konduksi (atau PDE lain) dapat diaproksimasi sebagai
+\begin{equation}
+T(x) \approx \sum_{i=1}^{n+1} T_{i} N_{i}(x)
+\label{eq:sol_pde_approx}
+\end{equation}
+di mana $T_i$ adalah nilai nodal dari $T(x)$ dan $N_{i}(x)$ adalah fungsi bentuk
+(\textit{shape functions}) atau fungsi basis yang terasosiasi pada masing-masing
+titik nodal.
+
 
 \section{Fungsi basis linear}
 
-Untuk kasus elemen linear kita memiliki fungsi basis sebagai berikut
+Fungsi basis atau fungsi bentuk pada metode elemen hingga biasanya dipilih sedemikian rupa
+sehingga
+memenuhi $N_{i}(x_{i}) = 1$ dan $N_{i}(x_{j})=0$
+jika $j \neq i$.
+Fungsi basis biasanya dipilih dari fungsi polinomial dengan orde rendah.
+Untuk kasus satu elemen atau dua titik nodal fungsi basis dapat didefinisikan sebagai
+\begin{equation}
+\begin{cases}
+N_{1}(x) & = 1 - \dfrac{x}{L} \\[10pt]
+N_{2}(x) & = \dfrac{x}{L}
+\end{cases}
+\label{eq:linear_shape_functions}
+\end{equation}
+Elemen dengan dua titik nodal yang memiliki bentuk fungsi basis linear
+juga dikenal disebagai \textit{elemen linear}.
+
+Untuk kasus elemen linear yang lebih dari satu, atau minimal ada dua elemen
+atau tiga titik nodal, kita memiliki fungsi basis sebagai berikut
 Untuk titik ujung paling kiri, $i=1$, dengan $i$ adalah indeks basis titik nodal global
 \begin{equation}
 N_{1}(x) = \begin{cases}
@@ -81,10 +117,211 @@ N_{n+1}(x) = \begin{cases} \dfrac{x - x_{n}}{h_{n}} & x_{n} \leq x \leq x_{n+1} 
 di mana $h_{i}$ adalah jarak antara titik nodal
 $h_{i} = x_{i+1} - x_{i}$ yang juga sama dengan panjang elemen.
 
+Definisi fungsi basis yang merujuk pada titik nodal dengan indeks global
+dikenal sebagai representasi global dari fungsi basis. 
+
 Perhatikan bahwa fungsi basis tersebut didefinisikan sebagai fungsi sepotong
 atau \textit{piecewise}.
 Pada SymPy kita dapat mendefinisikan fungsi basis tersebut dengan menggunakan kelas
 \pyinline{Piecewise}.
+
+Contoh pendefinisian elemen, titik nodal, dan fungsi basis.
+\begin{pythoncode}
+from sympy import *
+
+init_printing(use_unicode=True) # pada terminal
+# Change use_unicode to use_latex=True when using Jupyter Notebook
+
+# Spatial variable
+x = Symbol("x", real=True)
+
+# Domain length
+L = Symbol("L", real=True, positive=True)
+
+
+# Setup linear element
+Nelements = 2 
+Nnodes = Nelements + 1
+
+# Setup the grid (manually)
+xnodes = [Integer(0), L/2, L]
+# I use Integer(0) to make sure that all xnodes are SymPy objects
+h = [xnodes[i+1]-xnodes[i] for i in range(Nnodes-1)]
+
+# Some sanity checks
+assert(len(xnodes) == Nnodes)
+assert(len(h) == Nelements)
+
+
+# Setup basis functions (global representation)
+Nfuncs = []
+
+# First basis
+cond1 = (x >= xnodes[0]) & (x <= xnodes[1])
+f1 = (xnodes[1] - x)/h[0]
+Nfuncs.append( Piecewise( (f1, cond1), (0, True) ) )
+
+# Second basis
+cond1 = (x >= xnodes[0]) & (x <= xnodes[1])
+f1 = ( x - xnodes[0])/h[0]
+#
+cond2 = (x >= xnodes[1]) & (x <= xnodes[2])
+f2 = (xnodes[2] - x)/h[1]
+#
+Nfuncs.append( Piecewise( (f1, cond1), (f2, cond2), (0, True) ) )
+
+# Third basis
+cond1 = (x >= xnodes[Nnodes-2]) & (x <= xnodes[Nnodes-1])
+f1 = (x - xnodes[Nnodes-2])/h[Nnodes-2]
+Nfuncs.append( Piecewise( (f1, cond1), (0, True) ) )
+\end{pythoncode}
+
+Plot fungsi basis menggunakan Matplotlib.
+\begin{pythoncode}
+Lnum = 2.0 # why we need this?
+import numpy as np
+import matplotlib.pyplot as plt
+NptsPlot = 200
+xplt = np.linspace(0.0, Lnum, 200)
+yplt = np.zeros(NptsPlot)
+plt.clf()
+for ibasis in range(Nnodes):
+    for i in range(NptsPlot):
+        yplt[i] = Nfuncs[ibasis].subs({x: xplt[i], L: Lnum})
+    plt.plot(xplt, yplt, label="Basis-" + str(ibasis+1))
+plt.legend()
+plt.grid(True)
+\end{pythoncode}
+
+{\centering
+\includegraphics[scale=0.5]{codes/IMG_basis_lin_01.pdf}
+\par}
+
+
+\section{Integral Residual Terbobot}
+
+When we approximate the solution as in the Equation \eqref{eq:sol_pde_approx},
+in general, we cannot obtain the true solution to the differential equation.
+So, we will not get an exact equality but
+some \textit{residual} associated with the error in the approximation. This residual
+can be defined as:
+\begin{equation}
+R(T,x) \equiv -k \frac{\mathrm{d}^2 T}{\mathrm{d}x^2} - Q
+\label{eq:residual_01}
+\end{equation}
+where $T$ in the above equation is the approximation to the true solution $T^{*}$
+for which we have:
+\begin{equation}
+R(T^{*},x) \equiv 0
+\end{equation}
+However, for any $T \neq T^{\mathrm{*}}$, we cannot force the residual
+to vanish at every
+point $x$, no matter how small we make the grid or long the series expansion.
+The idea of the \textit{weighted residuals method} is that we can multiply
+the residual by a \textit{weighting function} and force the integral of the weighted
+expression to vanish:
+\begin{equation}
+\int_{0}^{L} w(x) R(T,x) \mathrm{d}x = 0
+\label{eq:weighted_res}
+\end{equation}
+where $w(x)$ is the weighting function.
+Choosing different weighting functions and replacing each of them in
+\eqref{eq:weighted_res}, we can then generate a system
+of linear equations in the unknown parameters $T_{i}$ that will determine an
+approximation T of the form of the finite series given in Equation \eqref{eq:sol_pde_approx}.
+This will satisfy the differential equation in an "average" or "integral" sense.
+The type of weighting function chosen depends on the type of weighted
+residual technique selected. In the \textit{Galerkin procedure}, the weights are set
+equal to the shape functions $N_{i}$, that is
+\begin{equation}
+w_{i}(x) = N_{i}(x)
+\end{equation}
+So we have:
+\begin{equation}
+\int_{0}^{L} N_{i} \left[
+-k\frac{\mathrm{d}^2 T}{\mathrm{d}x^2} - Q
+\right]\,\mathrm{d}x = 0
+\end{equation}
+
+Since the temperature distribution must be a continuous function of $x$,
+the simplest way to approximate it would be to use piecewise polynomial
+interpolation over each element, in particular, piecewise linear approximation
+(by using linear shape functions as in \eqref{eq:linear_shape_functions})
+provides the simplest approximation with a continuous function.
+Unfortunately, the first derivatives of such functions are not continuous
+at the elements' ends and, hence, second derivatives do not exist there;
+furthermore, the second derivative of $T$ would vanish inside each element.
+However, to require the second-order derivatives to exist everywhere is
+too restrictive.
+We can weaken this requirement by application of integration by parts to
+the second derivative: ($\int\,u\,\mathrm{d}v = uv - \int\,v\,\mathrm{d}u$):
+\begin{equation}
+\int_{0}^{L} N_{i} \left[ -k\frac{\mathrm{d}^2 T}{\mathrm{d}x^2} \right]\,\mathrm{d}x =
+\int_{0}^{L} k \frac{\mathrm{d} N_{i}}{\mathrm{d}x}
+\frac{\mathrm{d} T}{\mathrm{d}x} \mathrm{d}x -
+\left[ k N_{i} \frac{\mathrm{d}T}{\mathrm{d}x} \right]_{0}^{L}
+\label{eq:weak_form_01}
+\end{equation}
+
+Substituting the Equation \eqref{eq:sol_pde_approx} to the integral
+term at the RHS of equation \eqref{eq:weak_form_01}:
+\begin{align}
+\int_{0}^{L} k \frac{\mathrm{d} N_{i}}{\mathrm{d}x}
+\frac{\mathrm{d}}{\mathrm{d}x}\, \left( \sum_{j=1}^{n+1} T_{j} N_{j} \right) \mathrm{d}x & =
+\int_{0}^{L} k \frac{\mathrm{d} N_{i}}{\mathrm{d}x}
+\left( \sum_{j=1}^{n+1} \frac{\mathrm{d}N_{j}}{\mathrm{d}x} T_{j} \right)\, \mathrm{d}x \\
+& = \int_{0}^{L} k
+\left( \sum_{j=1}^{n+1}
+\frac{\mathrm{d} N_{i}}{\mathrm{d}x}
+\frac{\mathrm{d}N_{j}}{\mathrm{d}x} T_{j} \right)\, \mathrm{d}x
+\end{align}
+
+The Equation \eqref{eq:weak_form_01} can be rewritten as
+\begin{equation}
+\int_{0}^{L} k
+\left( \sum_{j=1}^{n+1}
+\frac{\mathrm{d} N_{i}}{\mathrm{d}x}
+\frac{\mathrm{d}N_{j}}{\mathrm{d}x} T_{j} \right)\, \mathrm{d}x -
+\int_{0}^{L} N_{i} Q\, \mathrm{d}x -
+\left[ k N_{i} \frac{\mathrm{d}T}{\mathrm{d}x} \right]_{0}^{L} = 0
+\label{eq:weak_form_02}
+\end{equation}
+for $i=1,2,\ldots,n+1$. The quantities $k$, $Q$, $N_{i}$ are known.
+The terms containing $T_{i}$ can be isolated to the LHS and the
+the known quantities can be moved to the RHS. This is a system
+of linear equations with $T_{i}$ as the unknown variables. In matrix form:
+\begin{equation}
+\mathbf{K} \mathbf{u} = \mathbf{f}
+\label{eq:linear_system}
+\end{equation}
+where $\mathbf{K}$, usually called stiffness matrix,
+is a matrix arising from the integral terms,
+$\mathbf{f}$, usually called load vector, is
+column vector whose elements arise from
+the integrals of source term and boundary terms,
+and $\mathbf{u}$ is column vector of the the unknown $T_{i}$.
+These linear equations
+can be solved by standard method such as Gaussian elimination and LU decomposition.
+
+In practice, the integral in Equation \eqref{eq:weak_form_02} can be
+calculated analytically or by numerical methods such as Gaussian quadrature.
+In the present case, the integral can be calculated analytically.
+The integral over all spatial
+domain can be divided into integrals over elements:
+\begin{equation}
+\int_{0}^{L} = \int_{x_{1}=0}^{x_{2}} + \int_{x_{2}}^{x_{3}} + \cdots +
+\int_{x_{n}}^{x_{n+1}=L}
+\end{equation}
+
+For simplicity, let's consider two elements with equal spacing
+$h_{1} = h_{2}$ with nodes
+\begin{equation}
+x_{1} = 0, x_{2} = L/2, x_{3} = L
+\end{equation}
+The first integral is done over the first element. In the first element, only
+$N_{1}$ and $N_{2}$ contributes to the integrals because $N_{3}$ is zero in
+this interval. So the index $i$ and $j$ are limited to 1 and 2 only.
+This also applies to other elements.
 
 
 \end{document}
