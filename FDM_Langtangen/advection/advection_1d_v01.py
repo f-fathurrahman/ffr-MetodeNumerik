@@ -16,7 +16,7 @@ v = 1.0
 A = 1.0
 σ = 0.02
 
-Δx = 0.001
+Δx = 0.01
 x = np.arange(0.0, 1.0, Δx)
 
 # Initial condition
