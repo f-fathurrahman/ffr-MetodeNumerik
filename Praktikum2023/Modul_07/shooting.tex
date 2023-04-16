@@ -2,8 +2,15 @@
 
 Pada metode \textit{shooting}, permasalahan nilai batas diubah menjadi permasalahan
 nilai awal. Solusi kemudian dicari dengan menggunakan metode \textit{trial-and-error}
-pada.
+pada suatu parameter atau informasi yang belum diketahui, misalnya informasi nilai
+awal dari turunan pertama. Metode ini tidak memiliki bentuk yang baku, dan sangat
+bergantung dari permasalahan yang dihadapi. Pada beberapa kasus biasanya digunakan
+informasi nilai asimptotik dari solusi atau dari konteks fisis yang ada. 
+Biasanya metode \textit{shooting} melibatkan pencarian akar dari suatu persamaan
+nonlinear sehingga diperlukan metode \textit{bisection} atau metode pencarian akar persamaan
+persamaan nonlinear yang lain.
 
+Berikut ini adalah ilustrasi penggunaan metode \textit{shooting}.
 \begin{soal}[Chapra Contoh 27.1]
 Untuk $L=10$, $T_a = 20$, $T_1 = 40$, $T_2 = 200$, dan $h' = 0.01$, solusi
 dari Persamaan \eqref{eq:chapra_eq_27_1} adalah.
