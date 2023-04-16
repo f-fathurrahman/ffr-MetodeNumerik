@@ -173,6 +173,10 @@ dengan
 
 \end_layout
 
+\begin_layout Subsection*
+Forward in time, centered in space
+\end_layout
+
 \begin_layout Standard
 Skema paling sederhana: forward in time, centered in space
 \begin_inset Formula 
@@ -186,7 +190,7 @@ Skema paling sederhana: forward in time, centered in space
 \end_layout
 
 \begin_layout Standard
-Aproksimas turunan pertama terhadap waktu
+Aproksimas turunan pertama terhadap waktu menggunakan forward difference:
 \end_layout
 
 \begin_layout Standard
@@ -205,7 +209,7 @@ Aproksimasi turunan pertama terhadap
 \begin_inset Formula $x$
 \end_inset
 
-
+ menggunakan centered difference
 \end_layout
 
 \begin_layout Standard
@@ -249,8 +253,74 @@ u_{i}^{n+1}=u_{i}^{n}-\frac{1}{2}C\left(u_{i+1}^{n}-u_{i-1}^{n}\right)
 
 \end_layout
 
+\begin_layout Subsection*
+Skema Leapfrog
+\end_layout
+
 \begin_layout Standard
-Uji kasus:
+Skema eksplisi lainnya ada dengan melakukan lompatan 
+\begin_inset Formula $2\Delta t$
+\end_inset
+
+ pada domain waktu dan menggabungkannya dengan centered difference pada
+ domain spasial.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left[D_{2t}u+vD_{2x}u=0\right]_{i}^{n}
+\]
+
+\end_inset
+
+diperoleh
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\frac{\partial u}{\partial t}+v\frac{\partial u}{\partial x} & =0\\
+\frac{u_{i}^{n+1}-u_{i}^{n-1}}{2\Delta t}+v\frac{u_{i+1}^{n}-u_{i-1}^{n}}{2\Delta x} & =0\\
+u_{i}^{n+1}-u_{i}^{n-1}+v\frac{\Delta t}{\Delta x}\left(u_{i+1}^{n}-u_{i-1}^{n}\right) & =0\\
+u_{i}^{n+1} & =u_{i}^{n-1}-v\frac{\Delta t}{\Delta x}\left(u_{i+1}^{n}-u_{i-1}^{n}\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Diperoleh skema:
+\begin_inset Formula 
+\[
+u_{i}^{n+1}=u_{i}^{n-1}-C\left(u_{i+1}^{n}-u_{i-1}^{n}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Untuk langkah waktu pertama, digunakan skema upwind:
+\begin_inset Formula 
+\[
+u_{i}^{1}=u_{i}^{0}-C\left(u_{i}^{0}-u_{i-1}^{0}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Uji kasus
+\end_layout
+
+\begin_layout Standard
+Pulsa Gaussian:
 \end_layout
 
 \begin_layout Standard
@@ -262,6 +332,10 @@ u(x,0)=A\exp\left[-\frac{1}{2}\left(\frac{x-L/10}{\sigma}\right)^{2}\right]
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Pulsa setengah cosinus
 \end_layout
 
 \begin_layout Standard
@@ -296,43 +370,70 @@ Skala:
 \end_layout
 
 \begin_layout Standard
-c
+Upwind difference pada domain spasial
 \end_layout
 
 \begin_layout Standard
-c
+Karena PDE mendeskripsikan mengenai transpor informasi pada suatu aliran
+ dalam arah 
+\begin_inset Formula $x$
+\end_inset
+
+ positif, ketika 
+\begin_inset Formula $v>0$
+\end_inset
+
+, maka biasanya digunakan skema upstream dan bukan downstream pada turunan
+ spasial untuk mengumpulkan informasi mengenai perubahan fungsi.
+ Dengan kata lain digunakan aproksimasi
+\begin_inset Formula 
+\[
+\frac{\partial u}{\partial x}(x_{i},t_{n})\approx\left[D_{x}^{-}u\right]_{i}^{n}=\frac{u_{i}^{n}-u_{i-1}^{n}}{\Delta x}
+\]
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-c
+yang dikenal sebagai upwind difference atau backward difference.
 \end_layout
 
 \begin_layout Standard
-c
+Dengan skema ini:
+\begin_inset Formula 
+\[
+\left[D_{t}^{+}u+vD_{x}^{-}u=0\right]_{i}^{n}
+\]
+
+\end_inset
+
+diperoleh
+\begin_inset Formula 
+\[
+u_{i}^{n+1}=u_{i}^{n}-C\left(u_{i}^{n}-u_{i-1}^{n}\right)
+\]
+
+\end_inset
+
+yang memberikan skema yang populer dan stabil jika 
+\begin_inset Formula $C\leq1$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
-c
-\end_layout
-
-\begin_layout Standard
-c
-\end_layout
-
-\begin_layout Standard
-c
-\end_layout
-
-\begin_layout Standard
-c
-\end_layout
-
-\begin_layout Standard
-c
-\end_layout
-
-\begin_layout Standard
-c
+As with the Leapfrog scheme, it becomes exact if C D 1, exactly as shown
+ in Fig.
+ 4.1.
+ This is easy to see since C D 1 gives the property (4.6).
+ However, any C < 1 gives a significant reduction in the amplitude of the
+ solution, which is a purely numerical effect, see Fig.
+ 4.4 and 4.5.
+ Experiments show, however, that reducing t or x, while keeping C reduces
+ the error.
 \end_layout
 
 \end_body
