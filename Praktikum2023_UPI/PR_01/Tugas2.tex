@@ -1,0 +1,89 @@
+\input{PREAMBLE}
+
+% -------------------------
+\begin{document}
+
+\title{Tugas 2}
+\author{ER344 Komputasi dan Analisis Numerik}
+\date{}
+\maketitle
+
+Kerjakan dengan menggunakan Python (dalam Jupyter Notebook).
+Lengkapi setiap file \txtinline{ipynb}
+yang Anda gunakan dengan nama dan NIM.
+File yang tidak ada identitas tidak akan dinilai.
+
+
+Jawaban dan file-file terkait dikumpulkan dalam satu folder dan
+dikompres dengan ekstensi .zip dengan
+format nama \txtinline{KelompokXX.zip} , file dengan ekstensi lain tidak
+akan diterima.
+
+
+\begin{soal}
+Jelaskan mengenai kesalahan pemotongan (\textit{truncation error})
+dan kesalahan pembulatan (\textit{round-off error}) pada perhitungan numerik
+dan bagaimana cara mengatasi atau mengurangi masing-masing jenis-jenis
+kesalahan tersebut.
+\end{soal}
+
+
+\begin{soal}
+Bandingkan dua persamaan berikut:
+\begin{align*}
+x_{1,2} & = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \\
+x_{1,2} & = \frac{-2c}{b \pm \sqrt{b^2 - 4ac}}
+\end{align*}
+untuk mencari akar-akar pada persamaan kuadrat:
+\begin{equation*}
+x^2 - 6000.001x + 10
+\end{equation*}
+Lakukan dalam \textit{single precision} dan \textit{double precision}.
+\end{soal}
+
+
+% Chapra Latihan 4.4
+\begin{soal}
+Ekspansi deret Maclaurin untuk $\tan^{-1}(x)$ untuk $|x| \leq 1$ diberikan sebagai
+\begin{equation*}
+\tan^{-1}(x) = \sum_{n=0}^{\infty} \frac{(-1)^{n}}{2n + 1} x^{2n + 1}
+\end{equation*}
+Buatlah program Python untuk menghitung aproksimasi dari $\tan^{-1}(\pi/6)$ menggunakan deret
+Maclaurin tersebut. Hitung juga kesalahan untuk tiap penambahan suku baru dengan referensi
+nilai yang diberikan oleh fungsi \textit{built-in} pada modul \txtinline{math} atau
+\txtinline{numpy} atau pada Microsoft Excel.
+\end{soal}
+
+\begin{soal}[Fungsi Bessel bola]
+Fungsi Bessel bola (\textit{spherical Bessel}) $j_{n}(x)$ dapat dituliskan sebagai
+berikut:
+\begin{equation}
+j_{n}(x) = (-x)^{n}
+\left( \frac{1}{x} \frac{\mathrm{d}}{\mathrm{d}x} \right)^n
+\frac{\sin(x)}{x}
+\label{eq:bessel_sferis}
+\end{equation}
+Buatlah plot untuk $j_{2}(x)$ dan carilah semua akar-akarnya pada interval (0,20).
+Gunakan salah satu metode untuk mencari akar persamaan nonlinear. Jelaskan metode
+yang Anda gunakan untuk mendapatkan seluruh akar tersebut.
+(Catatan: Anda boleh menggunakan bentuk eksplisit dari $j_2(x)$ dari referensi
+tanpa menggunakan Persamaan \ref{eq:bessel_sferis})
+\end{soal}
+
+
+\begin{soal}
+Tentukan akar dari sistem persamaan nonlinear berikut
+\begin{align*}
+(x - 4)^2 + (y - 4)^2 & = 5 \\
+x^2 + y^2 & = 16
+\end{align*}
+Buatlah plot dari fungsi-fungsi tersebut dan gunakan untuk mendapatkan estimasi tebakan
+awal untuk metode Newton-Raphson.
+\end{soal}
+
+
+
+
+
+
+\end{document}
