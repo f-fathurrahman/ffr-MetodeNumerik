@@ -1,0 +1,38 @@
+---
+title: "Testing SymPy"
+format:
+  html:
+    code-fold: true
+jupyter: python3
+---
+
+Testing SymPy
+
+```{python}
+from sympy import *
+
+x, y = symbols("x y")
+α = symbols("alpha")
+
+x + y + α**2
+```
+
+Another calculation
+```{python}
+integrate(x**2, x)
+```
+
+Another calculation:
+```{python}
+my_int = Integral(x**2, (x,-1,2))
+my_int
+```
+
+```{python}
+my_int.doit()
+```
+
+Some equation in markdown:
+$$
+\alpha + \beta
+$$
