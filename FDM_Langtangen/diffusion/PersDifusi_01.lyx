@@ -90,7 +90,7 @@ Persamaan difusi:
 \end_layout
 
 \begin_layout Standard
-Aproksimas turunan pertama terhadap waktu
+Aproksimasi turunan pertama terhadap waktu
 \end_layout
 
 \begin_layout Standard
@@ -218,43 +218,7 @@ f(x,t)=\frac{\partial u}{\partial t}-\alpha\frac{\partial^{2}u}{\partial x^{2}}=
 \end_layout
 
 \begin_layout Standard
-c
-\end_layout
 
-\begin_layout Standard
-c
-\end_layout
-
-\begin_layout Standard
-c
-\end_layout
-
-\begin_layout Standard
-c
-\end_layout
-
-\begin_layout Standard
-c
-\end_layout
-
-\begin_layout Standard
-c
-\end_layout
-
-\begin_layout Standard
-c
-\end_layout
-
-\begin_layout Standard
-c
-\end_layout
-
-\begin_layout Standard
-c
-\end_layout
-
-\begin_layout Standard
-c
 \end_layout
 
 \end_body
