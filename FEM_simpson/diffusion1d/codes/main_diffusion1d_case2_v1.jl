@@ -6,7 +6,7 @@ using SparseArrays
 import PyPlot as plt
 
 #=
-a^2 ∂^2/∂x^2 u(x,t) = ∂/∂t u(x,t)
+∂/∂t u(x,t) = a^2 ∂^2/∂x^2 u(x,t)
 u(x,0) = sin(πx) 
 u(0,t) = 0
 u(1,t) = 0
@@ -47,7 +47,7 @@ function main(; do_plot=false)
     Ntime = 2000
 
     # Basis
-    Nelements = 300  # Total number of elements
+    Nelements = 4  # Total number of elements
     NnodesPerElement = 2  # no. of nodes per element
     NnodesTotal = Nelements + 1  # Total number of nodes
     dx = Lx/Nelements
@@ -115,7 +115,7 @@ function main(; do_plot=false)
 
     # Time loop
     t = 0.0
-
+    tstep = 1
     for tstep in 1:Ntime
 
         t = t + dt # increment time
