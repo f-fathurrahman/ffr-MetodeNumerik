@@ -1,0 +1,326 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip smallskip
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+Kerjakan dengan menggunakan Jupyter Notebook.
+ Lengkapi jawaban Anda dengan penjelasan singkat mengenai metode yang digunakan,
+ hasil yang diperoleh, dan visualisasi.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0.5ex"
+width "100col%"
+height "1pt"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+(Chapra Latihan 25.2) Cari solusi dari persamaan diferensial berikut:
+\begin_inset Formula 
+\[
+\frac{\mathrm{d}y}{\mathrm{d}t}=(1+4t)\sqrt{y}
+\]
+
+\end_inset
+
+dengan ukuran langkah 0.25 dengan syarat awal 
+\begin_inset Formula $y(t=0)=1$
+\end_inset
+
+ dengan menggunakan metode berikut:
+\end_layout
+
+\begin_layout Itemize
+Metode Euler
+\end_layout
+
+\begin_layout Itemize
+Metode Heun
+\end_layout
+
+\begin_layout Itemize
+Metode Runge-Kutta orde-4
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0.5ex"
+width "100col%"
+height "1pt"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+(Chapra Latihan 25.18) Selesaikan persamaan diferensial orde-2 berikut ini:
+\begin_inset Formula 
+\[
+\frac{\mathrm{d}^{2}x}{\mathrm{d}t^{2}}+5x\frac{\mathrm{d}x}{\mathrm{d}t}+(x+7)\sin(\omega t)=0
+\]
+
+\end_inset
+
+dengan syarat awal:
+\begin_inset Formula 
+\[
+\frac{\mathrm{d}x}{\mathrm{d}t}(0)=1.5
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+x(0)=6
+\]
+
+\end_inset
+
+dengan 
+\begin_inset Formula $\omega=1$
+\end_inset
+
+.
+ Selesaikan untuk rentang waktu 
+\begin_inset Formula $t=0$
+\end_inset
+
+ sampai 
+\begin_inset Formula $t=15$
+\end_inset
+
+ dan buat plot dari hasil yang diperoleh.4
+\end_layout
+
+\begin_layout Standard
+Misalkan:
+\begin_inset Formula 
+\[
+u_{1}(t)=x(t)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+u_{2}(t)=\frac{\mathrm{d}x(t)}{\mathrm{d}t}=\frac{\mathrm{d}u_{1}(t)}{\mathrm{d}t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\mathrm{d}u_{2}(t)}{\mathrm{d}t}=\frac{\mathrm{d}}{\mathrm{d}t}\frac{\mathrm{d}x(t)}{\mathrm{d}t}=\frac{\mathrm{d}^{2}x(t)}{\mathrm{d}t^{2}}=-5x\frac{\mathrm{d}x}{\mathrm{d}t}-(x+7)\sin(\omega t)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+——————————
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\mathrm{d}u_{1}(t)}{\mathrm{d}t}=u_{2}(t)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\mathrm{d}u_{2}(t)}{\mathrm{d}t}=-5u_{1}(t)u_{2}(t)-(u_{1}(t)+7)\sin(\omega t)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0.5ex"
+width "100col%"
+height "1pt"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+(Kiusalaas 7.1 Soal 11) Selesaikan persamaan diferensial dengan menggunakan
+ metode numerik
+\begin_inset Formula 
+\[
+y'=\sin(xy)
+\]
+
+\end_inset
+
+dengan syarat awal 
+\begin_inset Formula $y(x=0)=2.0$
+\end_inset
+
+, 2.5, 3.0, 3.5.
+ Plot solusinya untuk 
+\begin_inset Formula $0\leq x\leq10$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0.5ex"
+width "100col%"
+height "1pt"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+(Kiusalaas 7.1 Soal 8) Seorang penerjun payung dengan massa 
+\begin_inset Formula $m$
+\end_inset
+
+ jatuh secara vertikal dan mengalami gaya gesek 
+\begin_inset Formula $F_{D}=c_{D}\dot{y}^{2}$
+\end_inset
+
+, dengan 
+\begin_inset Formula $y$
+\end_inset
+
+ diukur ke arah bawah diukur dari titik awal jatuh.
+ Persamaan diferensial yang menjelaskan gerakan jatuh ini adalah
+\begin_inset Formula 
+\[
+\ddot{y}=g-\frac{c_{D}}{m}\dot{y}^{2}
+\]
+
+\end_inset
+
+Tentukan waktu yang diperlukan untuk mencapai jarak jatuh sebesar 
+\begin_inset Formula $5000$
+\end_inset
+
+ m.
+ Gunakan 
+\begin_inset Formula $g=9.80665$
+\end_inset
+
+ 
+\begin_inset Formula $\mathrm{m/s^{2}}$
+\end_inset
+
+, 
+\begin_inset Formula $c_{D}=0.2028$
+\end_inset
+
+ kg/m, dan 
+\begin_inset Formula $m=80$
+\end_inset
+
+ kg.
+\end_layout
+
+\end_body
+\end_document
