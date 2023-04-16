@@ -1,5 +1,25 @@
 \subsection{Metode Beda Hingga}
 
+Alternatif lain yang dapat digunakan untuk menyelesaikan persoalan nilai
+batas yang melibatkan persamaan diferensial adalah metode beda hingga.
+Pada metode ini, operasi turunan diganti dengan aproksimasi
+beda hingga yang melibatkan titik-titik diskrit.
+Misalnya:
+\begin{equation*}
+\frac{\mathrm{d}^2 T}{\mathrm{d}x^2} = \frac{T_{i+1} - 2T_{i} + T_{i-1}}{\Delta x^2}
+\end{equation*} 
+yang dapat disubstitusikan kedalam persamaan 27.1 (pada buku Chapra) menjadi:
+\begin{equation*}
+\frac{T_{i+1} - 2T_{i} + T_{i-1}}{\Delta x^2} - h'(T_i - T_a) = 0
+\end{equation*}
+yang dapat disusun ulang menjadi sistem persamaan linear
+\begin{equation*}
+-T_{i-1} + (2 + h'\Delta x^2)T_i - T_{i+1} = h' \Delta x^2 T_a
+\end{equation*}
+Persamaan ini diaplikasikan pada setiap titik interior. Titik pertama dan
+titik terakhir diperoleh nilainya dari syarat batas.
+
+
 \begin{soal}
 Gunakan metode beda hingga untuk menyelesaikan persoalan nilai
 batas pada Chapra Contoh 27.1
@@ -27,12 +47,12 @@ Nstep = int( (xf-x0)/Δx )
 Npoints = Nstep + 1
 
 T = np.zeros(Npoints)
-T[0] = T0
-T[-1] = Tf
+T[0] = T0 # first point
+T[-1] = Tf # last point 
 
-# Finite-difference operator of second derivative matrix
+# Finite-difference operator of second derivative matrix.
 # In general we should use sparse matrix. However, because
-# The size is rather small, we use full (dense) matrix
+# the size is rather small, we use full (dense) matrix.
 # Please refer to the left-hand-side of Eq. 27.3 for the matrix elements.
 Npointsm2 = Npoints-2 # Number of interior points
 d2dx2 =  np.zeros((Npointsm2,Npointsm2))
