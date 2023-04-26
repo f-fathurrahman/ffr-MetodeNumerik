@@ -1,0 +1,126 @@
+---
+title: "Persamaan Diferensial Parsial: Difusi pada 1d"
+format:
+  html:
+    code-fold: true
+jupyter: python3
+---
+
+
+# Pendahuluan
+
+Persamaan difusi dalam satu dimensi (spasial) dapat dituliskan
+sebagai:
+$$
+\alpha \frac{\partial^{2}}{\partial x^2} u(x,t) = \frac{\partial}{\partial t} u(x,t)
+$$
+
+$u(x,t)$ ingin dicari pada domain:
+- spasial: $0 \leq x \leq x_{f}$
+- temporal: $0 \leq t \leq t_{f}$.
+
+Syarat batas:
+- $u(0,t) = b_{0}(t)$
+- $u(x_{f},t) = b_{x_f}(t)$
+
+Syarat awal ($t = 0$):
+- $u(x,0) = u_{0}(x)$ 
+
+Contoh fenomena difusi adalah konduksi kalor tidak tunak
+(*unsteady heat conduction*). Pada kasus ini, $u(x,t)$
+merepresentasikan distribusi temperatur pada suatu domain. 
+
+## Contoh persamaan difusi
+
+Dengan $\alpha = 1$:
+$$
+\frac{\partial^{2}}{\partial x^2} u(x,t) = \frac{\partial}{\partial t} u(x,t)
+$$
+
+pada domain:
+
+- spasial: $0 \leq x \leq 1$
+- temporal: $0 \leq t \leq 0.1$.
+
+dengan syarat batas:
+
+- $u(0,t) = 0$
+- $u(1,t) = 0$
+
+dan syarat awal:
+
+- $u(x,0) = \sin(\pi x)$ 
+
+Solusi analitik dari persamaan ini adalah:
+$$
+u(x,t) = \sin(\pi x) \exp(-\pi^2 t)
+$$
+
+TUGAS: Verifikasi bahwa $u(x,t)$ ini memenuhi persamaan difusi. 
+
+
+## Metode beda hingga
+
+Terdapat banyak metode numerik yang dapat digunakan untuk menyelesaikan
+persamaan difusi, salah satu yang paling sederhana adalah
+metode beda hingga. Kita akan mempelajari tiga varian metode
+beda hingga yang dapat digunakan untuk menyelesaikan persamaan
+difusi:
+
+- metode Euler eksplisit
+- metode Euler implisit
+- metode Crank-Nicolson
+
+Pada metode beda hingga yang akan kita gunakan, akan dilakukan diskritisasi
+pada domain spasial dan domain waktu sebagai berikut:
+
+- Domain spasial dibagi menjadi $N_{x}$ segmen dengan $\Delta x = x_{f}/N_{x}$.
+- Domain temporal dibagi menjadi $N_{t}$ segmen dengan $\Delta t = t_{f}/N_{t}$.
+
+
+
+# Metode Euler Eksplisit
+
+Turunan parsial kedua terhadap $x$ diaproksimasi dengan menggunakan central difference.
+
+Turunan parsial pertama terhadap $t$ diaproksimasi dengan forward difference.
+
+Dengan menggunakan notasi berikut:
+
+- $u(x,t) = u^{k}_{i}$
+- $u(x+\Delta x,t) = u^{k}_{i+1}$
+- $u(x-\Delta x,t) = u^{k}_{i-1}$
+- $u(x,t+\Delta t) = u^{k+1}_{i}$
+- $u(x,t-\Delta t) = u^{k-1}_{i}$
+
+dapat dituliskan:
+$$
+\alpha \frac{u^{k}_{i+1} - 2u^{k}_{i} + u^{k}_{i-1}}{(\Delta x)^2} =
+\frac{u^{k+1}_{i} - u^{k}_{i}}{\Delta t}
+$$
+
+Dengan menggunakan definisi:
+$$
+r = \alpha \frac{\Delta t}{(\Delta x)^2}
+$$
+
+Persamaan ini dapat dipecahkan untuk mendapatkan $u^{k+1}_{i}$
+
+$$
+u^{k+1}_{i} = r \left( u^{k}_{i+1} + u^{k}_{i-1} \right) + (1 - 2r) u^{k}_{i} 
+$$
+
+untuk $i = 1, 2, \ldots, N_{x}-1$.
+
+Dapat ditunjukkan bahwa skema ini akan stabil jika:
+
+$$
+r = \alpha \frac{\Delta t}{(\Delta x)^2} \leq \frac{1}{2}
+$$
+
+
+```{python}
+print("Hello efefer")
+```
+
+
