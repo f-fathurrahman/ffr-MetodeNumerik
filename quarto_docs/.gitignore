@@ -1,3 +1,4 @@
 *.docx
 *.ipynb
-
+*_files
+*.html
