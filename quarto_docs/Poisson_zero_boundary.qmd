@@ -1,0 +1,220 @@
+---
+title: "Regresi Linear"
+format:
+  html:
+    code-fold: false
+jupyter: python3
+---
+
+Sumber
+```
+https://john-s-butler-dit.github.io/NumericalAnalysisBook/Chapter%2009%20-%20Elliptic%20Equations/902_Poisson%20Equation-Zero%20Boundary%20Conditions.html
+```
+
+# Persamaan Poisson
+
+Pada 2d:
+$$
+\frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} = f(x,y)
+$$
+pada domain: $(x,y) \in \Omega = (0,1) \times (0,1)$
+dengan syarat batas:
+$$
+U(x,y) = g(x,y), \qquad (x,y) \in \delta\Omega
+$$ 
+
+Sebagai contoh, kita akan mengambil:
+$$
+f(x,y) = x^2 + y^2
+$$
+dan syarat batas $u(x,y) = 0$ pada semua batas domain.
+
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+```
+
+Set tema untuk Matplotlib
+```{python}
+import matplotlib
+matplotlib.style.use("dark_background")
+matplotlib.rcParams["grid.color"] = "gray"
+```
+
+
+# Diskritisasi
+
+Daerah $\Omega = (0,1) \times (0,1)$ didiskritisasi pada mesh seragam $\Omega_{h}$.
+Secara umum, kita dapat menuliskan pada arah $x$:
+$$
+h_{x} = \frac{x_{\mathrm{max}} - x_{\mathrm{min}}}{N_x}
+$$
+dan pada arah-$y$:
+$$
+h_{y} = \frac{y_{\mathrm{max}} - y_{\mathrm{min}}}{N_y}
+$$
+
+Untuk mudahnya akan diambil $N_x = N_y = N$ sehingga $h_x = h_y = h$
+dengan titik grid:
+$$
+x_{i} = ih, \qquad i = 0,1,\ldots,N
+$$
+dan
+$$
+y_{j} = jh, \qquad j = 0,1,\ldots,N
+$$
+
+Plot titik grid
+```{python}
+N = 5
+h = 1/N
+x = np.linspace(0.0, 1.0, N+1)
+y = np.linspace(0.0, 1.0, N+1)
+
+X, Y = np.meshgrid(x, y)
+fig = plt.figure()
+plt.plot(x[1], y[1], "ro", label="unknown");
+plt.plot(X, Y, "ro");
+plt.plot(np.ones(N+1), y, "go", label="Boundary Condition");
+plt.plot(np.zeros(N+1), y, "go");
+plt.plot(x,np.zeros(N+1), "go");
+plt.plot(x, np.ones(N+1), "go");
+plt.xlim(-0.1, 1.1)
+plt.ylim(-0.1, 1.1)
+plt.xlabel("x")
+plt.ylabel("y")
+plt.gca().set_aspect("equal", adjustable="box")
+plt.legend(loc="center left", bbox_to_anchor=(1, 0.5))
+plt.title(r"Discrete Grid $\Omega_h,$ h= %s"%(h),fontsize=24,y=1.08)
+plt.show();
+```
+
+## Plot batas
+
+```{python}
+w = np.zeros((N+1, N+1))
+
+for i in range(0,N):
+    w[i,0] = 0.0 # left Boundary
+    w[i,N] = 0.0 # Right Boundary
+
+for j in range(0,N):
+    w[0,j] = 0.0 #Lower Boundary
+    w[N,j] = 0.0 #Upper Boundary
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection="3d")
+
+# Plot a basic wireframe.
+#ax.plot_wireframe(X, Y, w,color="r", rstride=10, cstride=10)
+
+# Gunakan hanya boundary untuk w
+# diperlukan row stride dan column stride
+ax.plot_wireframe(X, Y, w, color="cyan", rstride=N, cstride=N)
+
+ax.set_xlabel("x")
+ax.set_ylabel("y")
+ax.set_zlabel("w")
+plt.title(r"Boundary Values", fontsize=20, y=1.08)
+plt.show()
+```
+
+
+## Sistem persamaan linear
+
+```{python}
+N2 = (N-1)*(N-1)
+A = np.zeros((N2,N2))
+
+# Diagonal            
+for i in range(0,N-1):
+    for j in range(0,N-1):
+        idx_row = i + (N-1)*j
+        idx_col = i + (N-1)*j
+        print("idx = [%3d,%3d]" % (idx_row,idx_col) )
+        A[idx_row,idx_col] = -4.0
+
+plt.imshow(A, interpolation="none")
+```
+
+```{python}
+# Lower diagonal
+for i in range(1,N-1):
+    for j in range(0,N-1):
+        idx_row = i + (N-1)*j
+        idx_col = i + (N-1)*j - 1
+        print("idx = [%3d,%3d]" % (idx_row,idx_col) )
+        A[idx_row,idx_col] = 1.0
+
+plt.imshow(A, interpolation="none")
+```
+
+```{python}
+# Upper diagonal
+for i in range(0,N-2):
+    for j in range(0,N-1):
+        idx_row = i + (N-1)*j
+        idx_col = i + (N-1)*j + 1
+        print("idx = [%3d,%3d]" % (idx_row,idx_col) )
+        A[idx_row,idx_col] = 1.0
+
+plt.imshow(A, interpolation="none")
+```
+
+```{python}
+# Lower identity
+for i in range(0,N-1):
+    for j in range(1,N-1):
+        idx_row = i + (N-1)*j
+        idx_col = i + (N-1)*(j-1)
+        print("idx = [%3d,%3d]" % (idx_row,idx_col) )
+        A[idx_row,idx_col] = 1.0
+
+# Upper
+for i in range(0,N-1):
+    for j in range(0,N-2):
+        idx_row = i + (N-1)*j
+        idx_col = i + (N-1)*(j+1)
+        print("idx = [%3d,%3d]" % (idx_row,idx_col) )
+        A[idx_row,idx_col] = 1.0
+
+plt.imshow(A, interpolation="none")
+```
+
+
+## Menggunakan matrix sparse
+
+$$
+D^{(2)}_{xy} = D^{(2)}_{x} \otimes \mathbb{I}_{y} + \mathbb{I}_{x} \otimes D^{(2)}_{y} 
+$$
+
+```{python}
+import scipy.sparse
+Nm1 = N - 1 
+D2x = scipy.sparse.lil_matrix((Nm1,Nm1))
+# first row
+D2x[0,0:2] = np.array([-2.0, 1.0])
+
+for irow in range(1,Nm1-1):
+    D2x[irow,irow-1:irow+2] = np.array([1.0, -2.0, 1.0])
+    #print("irow = ", irow)
+
+# last row
+D2x[Nm1-1,Nm1-2:Nm1] = np.array([1.0, -2.0])
+D2x.todense()
+```
+
+```{python}
+D2y = D2x.copy()
+Ix = scipy.sparse.diags(np.ones(Nm1))
+Iy = scipy.sparse.diags(np.ones(Nm1))
+
+D2xy = scipy.sparse.kron(D2x, Iy) + scipy.sparse.kron(Ix, D2y)
+
+plt.imshow(D2xy.todense(), interpolation="none")
+```
+
+```{python}
+D2xy.todense() - A
+```
