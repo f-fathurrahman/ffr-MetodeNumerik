@@ -1,0 +1,94 @@
+---
+title: "Regresi Linear"
+format:
+  html:
+    code-fold: true
+jupyter: python3
+---
+
+# Pencocokan kurva polinom linear (polinom orde-1)
+
+$$
+\begin{align*}
+\frac{\partial S_{r}}{\partial a_{0}} & =-2\sum\left(y_{i}-a_{0}-a_{1}x_{i}\right)=0\\
+\frac{\partial S_{r}}{\partial a_{1}} & =-2\sum x_{i}\left(y_{i}-a_{0}-a_{1}x_{i}\right)=0
+\end{align*}
+$$
+
+$$
+\begin{align}
+\sum y_{i} - \sum a_{0} - \sum a_{1} x_{i} & = 0 \\
+\sum y_{i} x_{i} - \sum a_{0} x_{i} - \sum a_1 x_{i}^{2} & = 0
+\end{align}
+$$
+
+$$
+\begin{align}
+na_0 + \left( \sum x_i \right) a_1 & = \sum y_i \\
+\left( \sum x_i \right) a_0 + \left( \sum x_i^2 \right) a_1 & = \sum x_i y_i
+\end{align}
+$$
+
+
+$$
+a_1 = \frac{n \sum x_i y_i - \sum x_i \sum y_i}{n\sum x_i^2 - \left(\sum x_i\right)^2}
+$$
+
+$$
+a_0 = \overline{y} - a_1 \overline{x}
+$$
+dengan $\overline{x}$ menyatakan nilai rata-rata, misalnya:
+$$
+\overline{x} = \frac{\sum_{i=1}^{N} x_i}{N}
+$$
+
+## Contoh
+
+Menggunakan data sintetik:
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use("dark_background")
+matplotlib.rcParams["grid.color"] = "gray"
+
+a0 = 0.2
+a1 = 1.0
+x = np.array([0.0, 1.1, 2.3, 3.0, 4.4])
+y = a0 + a1*x + 0.5*np.random.randn(len(x))
+
+plt.plot(x, y, marker="o")
+plt.grid(True)
+```
+
+# Pencocokan kurva polinom kuadrat (polinom orde-2)
+
+Kita ingin mencocokkan data ke suatu kurva polinomial kuadrat
+$$
+y = a_{0} + a_{1}x + a_{2}x^{2} + e
+$$
+Untuk menggunakan metode kuadrat terkecil, kita perlu menghitung terlebih
+dahulu jumlah kuadrat dari residual (atau error):
+$$
+S_{r} = \sum_{i=1}^{n} \left( y_{i} - a_{0} - a_{1}x_{i} - a_{2}x_{i}^{2} \right)^{2}
+$$
+Dari turunan:
+$$
+\begin{align*}
+\frac{\partial S_{r}}{\partial a_{0}} & =-2\sum\left(y_{i}-a_{0}-a_{1}x_{i}-a_{2}x_{i}^{2}\right)\\
+\frac{\partial S_{r}}{\partial a_{1}} & =-2\sum x_{i}\left(y_{i}-a_{0}-a_{1}x_{i}-a_{2}x_{i}^{2}\right)\\
+\frac{\partial S_{r}}{\partial a_{0}} & =-2\sum x_{i}^{2}\left(y_{i}-a_{0}-a_{1}x_{i}-a_{2}x_{i}^{2}\right)
+\end{align*}
+$$
+Diperoleh persamaan normal
+$$
+\begin{align*}
+(n)a_{0}+\left(\sum x_{i}\right)a_{1}+\left(\sum x_{i}^{2}\right)a_{2} & =\sum y_{i}\\
+\left(\sum x_{i}\right)a_{0}+\left(\sum x_{i}^{2}\right)a_{1}+\left(\sum x_{i}^{3}\right)a_{2} & =\sum x_{i}y_{i}\\
+\left(\sum x_{i}^{2}\right)a_{0}+\left(\sum x_{i}^{3}\right)a_{1}+\left(\sum x_{i}^{4}\right)a_{2} & =\sum x_{i}^{2}y_{i}
+\end{align*}
+$$
+
+Diperoleh tiga persamaan linear dengan tiga parameter: $a_{0}$, $a_{1}$
+dan $a_{2}$ yang perlu dicari.
+
