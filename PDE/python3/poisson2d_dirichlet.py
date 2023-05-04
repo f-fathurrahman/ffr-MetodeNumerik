@@ -60,19 +60,19 @@ u0[:,0] = 0.0
 u0[Nx-1,:] = 0.0
 u0[:,Ny-1] = 0.0
 
-u = poisson2d_dirichlet(u0,x,y,Nx,Ny,1e-5,func)
+u = poisson2d_dirichlet(u0, x, y, Nx, Ny, 1e-5, gauss)
 
 X, Y = np.meshgrid(x, y)
 
-from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 
 fig = plt.figure()
 plt.clf()
-ax = fig.gca(projection='3d')
+ax = fig.subplots(subplot_kw={"projection": "3d"})
 
+# This is not used
 F = np.zeros((Nx,Ny))
 G = np.zeros((Nx,Ny))
 for j in range(Ny):
@@ -83,7 +83,7 @@ for j in range(Ny):
 # Plot the surface.
 #surf = ax.plot_surface(X, Y, u, cmap=cm.coolwarm,
 #                       linewidth=0, antialiased=True)
-surf = ax.plot_surface(X, Y, u, linewidth=1, cmap=cm.jet, antialiased=True)
+surf = ax.plot_surface(X, Y, u, linewidth=1, cmap=cm.coolwarm, antialiased=True)
 
 # Customize the z axis.
 #ax.set_zlim(-1.01, 1.01)
@@ -93,4 +93,5 @@ surf = ax.plot_surface(X, Y, u, linewidth=1, cmap=cm.jet, antialiased=True)
 # Add a color bar which maps values to colors.
 #fig.colorbar(surf, shrink=0.5, aspect=5)
 
-plt.savefig('poisson2d.png',dpi=200)
+plt.show()
+plt.savefig('IMG_poisson2d.png', dpi=200)
