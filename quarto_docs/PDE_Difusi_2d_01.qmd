@@ -1,0 +1,23 @@
+---
+title: "Persamaan Diferensial Parsial: Difusi pada 2d"
+format:
+  html:
+    code-fold: true
+jupyter: python3
+---
+
+# Pendahuluan
+
+Persamaan difusi pada 2d:
+$$
+\frac{\partial u}{\partial t} = \alpha \left(
+\frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2}
+\right) + f(x,y)
+$$
+pada domain:
+$$
+(x,y) \in (0,L_x) \times (0,L_y), \,\,\, t \in (0,T]
+$$
+dengan syarat batas $u = 0$ pada garis batas dan
+$u(x,y,0) = I(x,y)$ sebagai kondisi awal.
+

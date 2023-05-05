@@ -1,0 +1,27 @@
+---
+title: "Test Javascript Observable"
+format:
+  html:
+    code-fold: false
+jupyter: python3
+---
+
+```{ojs}
+1 + 3
+3 * 2.1
+```
+
+```{ojs}
+console.log("Hello from efefer") // undefined
+```
+
+```{ojs}
+{
+  const myObj = {firstname:"John", lastname:"Doe"};
+  myObj
+}
+```
+
+```{ojs}
+console.log(5 + 6);
+```
