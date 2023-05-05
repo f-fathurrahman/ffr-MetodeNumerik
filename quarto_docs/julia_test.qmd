@@ -1,0 +1,72 @@
+---
+title: "Test Julia Programming"
+format:
+  html:
+    code-fold: true
+jupyter: julia-1.8
+---
+
+```{julia}
+using Pkg
+Pkg.activate(raw"C:\Users\Fadjar Fathurrahman\.julia\environments\statistics")
+```
+
+Important notes:
+No space between `]` and `activate` in `]activate`.
+
+Test load package:
+```{julia}
+using StatsBase, Plots
+using PlotThemes
+theme(:dark)
+```
+
+Lalala
+
+```{julia}
+using Random
+A = rand(3,3)
+println("A = ", A)
+```
+
+Test plot:
+```{julia}
+p1 = plot(rand(10))
+plot(p1)
+```
+
+```{julia}
+x = range(0, 10, length=100)
+y = sin.(x)
+plot(x, y)
+plot!(x, cos.(x))
+```
+
+
+Some math:
+$$
+\nabla^2 \psi(\mathbf{r}) + V(\mathbf{r})\psi(\mathbf{r}) = E\psi(\mathbf{r})
+$$
+
+
+Add one curve again
+```{julia}
+y3 = @. sin(x)^2 - 1/2   # equivalent to y3 = sin.(x).^2 .- 1/2
+plot!(x, y3)
+```
+
+Alternative
+```{julia}
+x = range(0, 10, length=100)
+y1 = sin.(x)
+y2 = cos.(x)
+p = plot(x, [y1 y2])
+
+y3 = @. sin(x)^2 - 1/2
+plot!(p, x, y3, fontfamily="serif-roman")
+```
+
+Save current plot to file:
+```{julia}
+savefig("myplot.pdf")
+```
