@@ -1,0 +1,345 @@
+---
+title: "PDE Eliptik"
+format:
+  html:
+    code-fold: true
+jupyter: python3
+---
+
+# Persamaan Helmholtz, Poisson, dan Laplace
+
+Secara umum kita memiliki Persamaan Helmholtz:
+$$
+\frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} + g(x,y)u(x,y) = f(x,y)
+$$
+pada domain segiempat: $(x,y) \in \Omega = (x_0, x_f) \times (y_0, y_f)$
+dengan syarat batas:
+$$
+\begin{align}
+u(x_0, y) & = b_{x0}(y) \\
+u(x_f, y) & = b_{xf}(y) \\
+u(x, y_0) & = b_{y0}(x) \\
+u(x, y_f) & = b_{yf}(x)
+\end{align}
+$$
+
+Jika $g(x,y) = 0$ dan $f(x,y) \neq 0$ maka persamaan ini tereduksi menjadi Persamaan Poisson.
+
+Jika $g(x,y) = 0$ dan $f(x,y) = 0$ maka persamaan ini tereduksi menjadi Persamaan Laplace.
+
+Domain dibagi menjadi $N_{x}$ bagian pada arah sumbu-$x$ dan
+$N_{y}$ pada arah sumbu-$y$ dengan panjang interval
+$$
+\begin{align}
+\Delta x = \frac{x_f - x_0}{N_{x}} \\
+\Delta y = \frac{y_f - y_0}{N_{y}}
+\end{align}
+$$
+
+Dengan mengaproksimasi turunan kedua menggunakan beda hingga tengah (yang
+melibatkan tiga titik) pada sumbu-$x$:
+$$
+\frac{\partial^2 u}{\partial x^2} \approx \frac{u_{i+1,j} - 2u_{i,j} + u_{i-1,j}}{\Delta x^2}
+$$
+dan pada sumbu-$y$:
+$$
+\frac{\partial^2 u}{\partial y^2} \approx \frac{u_{i,j+1} - 2u_{i,j} + u_{i,j-1}}{\Delta y^2}
+$$
+Diperoleh persamaan diskrit untuk titik interior $(x_i, y_j)$ dengan
+$1 \leq i \leq N_x - 1$ dan $1 \leq j \leq N_y - 1$:
+$$
+\frac{u_{i+1,j} - 2u_{i,j} + u_{i-1,j}}{\Delta x^2} + 
+\frac{u_{i,j+1} - 2u_{i,j} + u_{i,j-1}}{\Delta y^2} + g_{i,j} u_{i,j} = f_{i,j}
+$$
+Persamaan diskrit ini dapat disusun menjadi suatu sistem persamaan linear
+dalam jumlah variabel yang tidak diketahui sebanyak
+$(N_x - 1) \times (N_y - 1)$, yaitu:
+$$
+\left\{ u_{1,1}, u_{1,2}, \ldots, u_{N_x - 1, N_y - 1} \right\}
+$$
+
+Bentuk persamaan linear ini secara umum dapat dituliskan sebagai berikut
+$$
+\mathbf{A} \mathbf{u} = \mathbf{x}
+$$
+dengan $\mathbf{A}$ adalah matriks dengan ukuran $N_{xy} \times N_{xy}$,
+$N_{xy} = (N_x - 1) \times (N_y - 1)$, $\mathbf{u}$ dan $\mathbf{x}$ adalah vektor
+dengan ukuran $N_{xy}$. Vektor $\mathbf{u}$ adalah solusi yang ingin dicari.
+Secara umum matriks $\mathbf{A}$ memiliki dimensi yang besar
+dan bersifat _sparse_ (sebagian besar elemen matriks adalah nol).
+Metode standard untuk penyelesaian sistem persamaan linear, seperti eliminasi
+Gauss dan dekomposisi LU yang biasa digunakan untuk matriks _dense_ (kebalikan
+dari matriks _sparse_), tidak praktis untuk digunakan. Biasanya digunakan algoritma
+khusus untuk matriks _sparse_, yang memerlukan kita untuk membangun matriks
+$\mathbf{A}$ dapat format khusus matriks _sparse_.
+
+Alternatif lainnya adalah menggunakan algoritma iteratif tertentu
+yang menghindari konstruksi matriks $\mathbf{A}$. Metode yang akan
+kita gunakan.
+
+## Metode iteratif
+
+Kita dapat menuliskan kembali persamaan terdiskritisasi yang diperoleh
+sebagai berikut.
+$$
+\frac{u_{i+1,j} - 2u_{i,j} + u_{i-1,j}}{\Delta x^{2} } +
+\frac{u_{i,j+1}-2u_{i,j}+u_{i,j-1}}{\Delta y^{2}} + 
+g_{i,j}u_{i,j} = f_{i,j}
+$$
+
+$$
+\Delta y^{2}\frac{u_{i+1,j} - 2u_{i,j}+u_{i-1,j}}{\Delta x^{2}\Delta y^{2}} +
+\Delta x^{2}\frac{u_{i,j+1}-2u_{i,j}+u_{i,j-1}}{\Delta x^{2}\Delta y^{2}} = f_{i,j} - g_{i,j}u_{i,j}
+$$
+
+$$
+\Delta y^{2}\left(u_{i+1,j}-2u_{i,j}+u_{i-1,j}\right) +
+\Delta x^{2}\left(u_{i,j+1}-2u_{i,j}+u_{i,j-1}\right) =
+\Delta x^{2}\Delta y^{2}\left(f_{i,j}-g_{i,j}u_{i,j}\right)
+$$
+
+$$
+-2u_{i,j}\left(\Delta x^{2}+\Delta y^{2}\right)+\Delta y^{2}\left(u_{i+1,j}+u_{i-1,j}\right)+\Delta x^{2}\left(u_{i,j+1}+u_{i,j-1}\right)=\Delta x^{2}\Delta y^{2}\left(f_{i,j}-g_{i,j}u_{i,j}\right)
+$$
+
+
+$$
+-2u_{i,j}\left(\Delta x^{2}+\Delta y^{2}\right) =
+\Delta x^{2}\Delta y^{2}\left(f_{i,j}-g_{i,j}u_{i,j}\right) -
+\Delta y^{2}\left(u_{i+1,j}+u_{i-1,j}\right)-\Delta x^{2}\left(u_{i,j+1}+u_{i,j-1}\right)
+$$
+
+$$
+2u_{i,j}\left(\Delta x^{2}+\Delta y^{2}\right) =
+\Delta x^{2}\Delta y^{2}\left(g_{i,j}u_{i,j}-f_{i,j}\right) +
+\Delta y^{2}\left(u_{i+1,j}+u_{i-1,j}\right)+\Delta x^{2}\left(u_{i,j+1}+u_{i,j-1}\right)
+$$
+
+$$
+2u_{i,j}\left(\Delta x^{2}+\Delta y^{2}\right) = \Delta x^{2}\left(u_{i,j+1}+u_{i,j-1}\right) +
+\Delta y^{2}\left(u_{i+1,j}+u_{i-1,j}\right) +
+\Delta x^{2}\Delta y^{2}\left(g_{i,j}u_{i,j}-f_{i,j}\right)
+$$
+
+$$
+u_{i,j} = \dfrac{\Delta x^{2}\left(u_{i,j+1}+u_{i,j-1}\right) +
+\Delta y^{2} \left(u_{i+1,j} + u_{i-1,j}\right) +
+\Delta x^{2}\Delta y^{2}\left(g_{i,j}u_{i,j}-f_{i,j}\right)}{2\left(\Delta x^{2}+\Delta y^{2}\right)}
+$$
+sehingga diperoleh skema iterasi:
+$$
+u_{i,j} = r_{x}\left( u_{i,j+1} + u_{i,j-1} \right) + 
+r_{y}\left( u_{i+1,j} + u_{i-1,j} \right) +
+r_{xy}\left( g_{i,j}u_{i,j}-f_{i,j} \right)
+$$
+dengan:
+$$
+\begin{align}
+r_{x} & = \frac{\Delta x^{2}}{2\left(\Delta x^{2}+\Delta y^{2}\right)} \\
+r_{y} & = \frac{\Delta y^{2}}{2\left(\Delta x^{2}+\Delta y^{2}\right)} \\
+r_{xy} & = \frac{\Delta x^{2}\Delta y^{2}}{2\left(\Delta x^{2}+\Delta y^{2}\right)}
+\end{align}
+$$
+
+## Contoh
+
+Sebagai contoh, kita akan mencoba mencari solusi dari Persamaan Laplace berikut.
+$$
+\frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} = 0
+$$
+pada domain $(0 \leq x \leq \pi) \times (0 \leq y \leq \pi)$ dengan syarat batas:
+$$
+\begin{align}
+u(0, y) & = 0 \\
+u(\pi, y) & = 0 \\
+u(x, 0) & = \sin(2x) \\
+u(x, y_f) & = 0
+\end{align}
+$$
+
+Solusi analitik untuk masalah ini adalah:
+$$
+u(x,y) = \frac{1}{\sinh(2\pi)} \sin(2x) \sinh(2(\pi-y))
+$$
+
+Kita akan menggunakan metode iteratif untuk menyelesaikan persoalan ini secara numerik
+dan membandingkannya dengan solusi analitik.
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+```
+
+```{python}
+import matplotlib_inline
+matplotlib_inline.backend_inline.set_matplotlib_formats("svg")
+```
+
+```{python}
+import matplotlib
+matplotlib.style.use("dark_background")
+matplotlib.rcParams["grid.color"] = "gray"
+```
+
+```{python}
+def u_exact(x, y):
+    return 1/np.sinh(2*np.pi) * np.sin(2*x) * np.sinh(2*(np.pi-y))
+```
+
+Definisi syarat batas:
+```{python}
+bx0 = lambda y: 0.0
+bxf = lambda y: 0.0
+by0 = lambda x: np.sin(2*x)
+byf = lambda x: 0.0
+```
+
+Perhatikan bahwa
+```python
+def bx0(y):
+    return 0
+```
+juga dapat digunakan untuk menggantikan:
+```python
+bx0 = lambda y: return 0
+``` 
+Begitu juga untuk definisi dari `bxf`, `by0`, dan `byf`. 
+
+Definisi domain:
+```{python}
+x0 = 0.0; xf = np.pi
+y0 = 0.0; yf = np.pi
+```
+
+
+```{python}
+Nx = 50; Ny = 50
+TOL = 1e-5
+NMaxIter = 10000
+```
+
+
+```{python}
+dx = (xf-x0)/Nx
+x = np.linspace(x0, xf, Nx+1)
+
+dy = (yf - y0)/Ny
+y = np.linspace(y0, yf, Ny+1)
+```
+
+```{python}
+Nx1 = Nx + 1
+Ny1 = Ny + 1
+
+u = np.zeros( (Nx+1,Ny+1) )
+```
+
+
+Aplikasi syarat batas:
+```{python}
+for j in range(Ny1):
+    u[0,j] = bx0(y[j])
+    u[Nx1-1,j] = bxf(y[j])
+
+for i in range(Nx1):
+    u[i,0] = by0(x[i])
+    u[i,Ny-1] = byf(x[i])
+```
+
+Buat plot _wireframe_
+```{python}
+fig = plt.figure()
+ax = fig.add_subplot(111, projection="3d")
+X, Y = np.meshgrid(x, y)
+
+# Notice the transpose for u
+ax.plot_wireframe(X, Y, u.T, color="cyan", rstride=Ny, cstride=Nx)
+
+ax.set_xlabel("x")
+ax.set_ylabel("y");
+```
+
+Set value of `u` for the before iterative method starts.
+```{python}
+sum_of_bv = np.sum(u[0,:]) + np.sum(u[Nx,:]) + \
+            np.sum(u[:,0]) + np.sum(u[:,Ny])
+u[1:Nx,1:Ny] = sum_of_bv/(2*(Nx + Ny - 2))
+print(np.sum(abs(u[1:Nx,1:Ny]))) # should be close to zero
+print(np.sum(abs(u))) # should not be zero
+```
+
+```{python}
+dx2 = dx*dx; dy2 = dy*dy; dxy2 = 2*(dx2 + dy2)
+rx = dx2/dxy2; ry = dy2/dxy2; rxy = rx*dy2
+```
+
+Kasus khusus untuk Persamaan Laplace:
+```{python}
+g = np.zeros( (Nx+1,Ny+1) )
+f = np.zeros( (Nx+1,Ny+1) )
+```
+
+```{python}
+u0 = np.copy(u)
+is_converged = False
+for iiter in range(NMaxIter):
+    for i in range(1,Nx):
+        for j in range(1,Ny):
+            u[i,j] = ry*( u[i,j+1] + u[i,j-1] ) + \
+                     rx*( u[i+1,j] + u[i-1,j] ) + \
+                     rxy*( g[i,j]*u[i,j] - f[i,j] )
+    max_error = np.max(abs(u0 - u))
+    #print("Iterasi = %d, max_error = %18.10e" % (iiter, max_error))
+    if max_error < TOL:
+        is_converged = True
+        print("Konvergen pada iterasi = %d, max_error = %18.10e" % (iiter, max_error))
+        break
+    u0 = np.copy(u)
+
+if not is_converged:
+    print("WARNING: Iterasi tidak konvergen dalam NMaxIter = ", NMaxIter)
+```
+
+
+```{python}
+fig = plt.figure()
+ax = fig.add_subplot(111, projection="3d")
+X, Y = np.meshgrid(x, y)
+
+# Notice the transpose for u
+ax.plot_surface(X, Y, u.T, cmap="coolwarm")
+
+ax.set_title("Solusi numerik")
+ax.set_xlabel("x")
+ax.set_ylabel("y");
+```
+
+Perbedaan norm rata-rata antara solusi numerik dan eksak:
+```{python}
+du = u_exact(X, Y) - u.T
+np.dot(du.flatten(), du.flatten())/len(du)
+```
+
+```{python}
+fig = plt.figure()
+ax = fig.add_subplot(111, projection="3d")
+X, Y = np.meshgrid(x, y)
+
+# Notice the transpose for u
+ax.plot_surface(X, Y, u_exact(X,Y), cmap="cool")
+
+ax.set_title("Solusi eksak")
+ax.set_xlabel("x")
+ax.set_ylabel("y");
+```
+
+
+## Matriks sparse
+
+$$
+\begin{bmatrix}
+u_{0,0} \\
+u_{1,0} \\
+u_{2,0}
+\end{bmatrix}
+$$
