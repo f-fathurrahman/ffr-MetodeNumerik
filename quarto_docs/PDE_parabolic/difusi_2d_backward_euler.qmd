@@ -1,0 +1,47 @@
+---
+title: "Persamaan Difusi 2d: Metode Implisit"
+format:
+  html:
+    code-fold: true
+jupyter: python3
+---
+
+# Pendahuluan
+
+Persamaan difusi pada 2d:
+$$
+\frac{\partial u}{\partial t} = \alpha \left(
+\frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2}
+\right) + f(x,y,t)
+$$
+pada domain:
+$$
+(x,y) \in (0,L_x) \times (0,L_y), \,\,\, t \in (0,T]
+$$
+dengan syarat batas $u = 0$ pada garis batas dan
+$u(x,y,0) = I(x,y)$ sebagai kondisi awal.
+
+
+$$
+\frac{u^{k}_{i,j} - u^{k-1}_{i,j}}{\Delta t} = 
+\alpha \left(
+\frac{u^{k}_{i+1,j} - 2u^{k}_{i,j} + u^{k}_{i-1,j}}{\Delta x^2} +
+\frac{u^{k}_{i,j+1} - 2u^{k}_{i,j} + u^{k}_{i,j-1}}{\Delta y^2}
+\right) + f^{k}_{i,j}
+$$
+
+$$
+u^{k}_{i,j} - u^{k-1}_{i,j} = 
+\alpha \Delta t \left(
+\frac{u^{k}_{i+1,j} - 2u^{k}_{i,j} + u^{k}_{i-1,j}}{\Delta x^2} +
+\frac{u^{k}_{i,j+1} - 2u^{k}_{i,j} + u^{k}_{i,j-1}}{\Delta y^2}
+\right) + f^{k}_{i,j} \Delta t
+$$
+
+
+$$
+u^{k}_{i,j} - \alpha \Delta t \left(
+\frac{u^{k}_{i+1,j} - 2u^{k}_{i,j} + u^{k}_{i-1,j}}{\Delta x^2} +
+\frac{u^{k}_{i,j+1} - 2u^{k}_{i,j} + u^{k}_{i,j-1}}{\Delta y^2}
+\right) - f^{k}_{i,j} \Delta t = u^{k-1}_{i,j} 
+$$
