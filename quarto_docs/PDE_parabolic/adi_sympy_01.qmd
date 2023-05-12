@@ -1,0 +1,108 @@
+---
+title: "ADI symbolic"
+format:
+  html:
+    code-fold: true
+jupyter: python3
+---
+
+
+```{python}
+from sympy import *
+```
+
+
+```{python}
+Nx = 4
+Ny = 5
+
+uk = MatrixSymbol("u^{k}", Nx+1, Ny+1)
+ukp1 = MatrixSymbol("u^{k+1}", Nx+1, Ny+1)
+```
+
+```{python}
+rx = symbols("r_x")
+ry = symbols("r_y")
+```
+
+## Kasus $j=1$
+
+```{python}
+eqn_list = []
+j = 1
+for i in range(1,Nx):
+    lhs = -ry*(ukp1[i,j+1] + ukp1[i,j-1]) + (1 + 2*ry)*ukp1[i,j]
+    rhs = rx*(uk[i+1,j] + uk[i-1,j]) + (1 - 2*rx)*uk[i,j]
+    eqn = Equality(lhs, rhs)
+    eqn_list.append(eqn)
+```
+
+```{python}
+for eqn in eqn_list:
+    print(latex(eqn))
+```
+
+Manually copy the result here:
+$$
+- r_{y} \left(u^{k+1}_{1, 0} + u^{k+1}_{1, 2}\right) + \left(2 r_{y} + 1\right) u^{k+1}_{1, 1} = r_{x} \left(u^{k}_{0, 1} + u^{k}_{2, 1}\right) + \left(1 - 2 r_{x}\right) u^{k}_{1, 1}
+$$
+
+$$
+- r_{y} \left(u^{k+1}_{2, 0} + u^{k+1}_{2, 2}\right) + \left(2 r_{y} + 1\right) u^{k+1}_{2, 1} = r_{x} \left(u^{k}_{1, 1} + u^{k}_{3, 1}\right) + \left(1 - 2 r_{x}\right) u^{k}_{2, 1}
+$$
+
+$$
+- r_{y} \left(u^{k+1}_{3, 0} + u^{k+1}_{3, 2}\right) + \left(2 r_{y} + 1\right) u^{k+1}_{3, 1} = r_{x} \left(u^{k}_{2, 1} + u^{k}_{4, 1}\right) + \left(1 - 2 r_{x}\right) u^{k}_{3, 1}
+$$
+
+
+```{python}
+eqn_list[1]
+```
+
+Search for boundary points:
+```{python}
+bc_pts_list = []
+ip = 0
+for i in range(Nx+1):
+    for j in range(Ny+1):
+        if (i == 0) or (i == Nx):
+            bc_pts_list.append(ip)
+        elif (j == 0) or (j == Ny):
+            bc_pts_list.append(ip)
+        ip += 1
+```
+
+Index-$i = 0$ dan indeks-$i=N_x$ adalah BC.
+
+Index-$j = 0$ dan indeks-$j=N_y$ adalah BC.
+
+## Kasus $j=2$
+
+```{python}
+eqn_list = []
+j = 2
+for i in range(1,Nx):
+    lhs = -ry*(ukp1[i,j+1] + ukp1[i,j-1]) + (1 + 2*ry)*ukp1[i,j]
+    rhs = rx*(uk[i+1,j] + uk[i-1,j]) + (1 - 2*rx)*uk[i,j]
+    eqn = Equality(lhs, rhs)
+    eqn_list.append(eqn)
+```
+
+```{python}
+for eqn in eqn_list:
+    print(latex(eqn))
+```
+
+$$
+- r_{y} \left(u^{k+1}_{1, 1} + u^{k+1}_{1, 3}\right) + \left(2 r_{y} + 1\right) u^{k+1}_{1, 2} = r_{x} \left(u^{k}_{0, 2} + u^{k}_{2, 2}\right) + \left(1 - 2 r_{x}\right) u^{k}_{1, 2}
+$$
+
+$$
+- r_{y} \left(u^{k+1}_{2, 1} + u^{k+1}_{2, 3}\right) + \left(2 r_{y} + 1\right) u^{k+1}_{2, 2} = r_{x} \left(u^{k}_{1, 2} + u^{k}_{3, 2}\right) + \left(1 - 2 r_{x}\right) u^{k}_{2, 2}
+$$
+
+$$
+- r_{y} \left(u^{k+1}_{3, 1} + u^{k+1}_{3, 3}\right) + \left(2 r_{y} + 1\right) u^{k+1}_{3, 2} = r_{x}
+\left(u^{k}_{2, 2} + u^{k}_{4, 2}\right) + \left(1 - 2 r_{x}\right) u^{k}_{3, 2}
+$$

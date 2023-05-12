@@ -1,0 +1,76 @@
+---
+title: "Persamaan Diferensial Parsial: Difusi pada 2d"
+format:
+  html:
+    code-fold: true
+jupyter: python3
+---
+
+
+$$
+a^2 \left(
+  \frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2}
+\right) + f(x,y,t) =
+\frac{\partial u}{\partial t}
+$$
+atau dalam notasi singkat:
+$$
+a^2\left( u_{xx} + u_{yy} \right) = u_{t}
+$$
+
+Turunan terhadap waktu diaproksimasi dengan beda-hingga tengah 3-titik
+pada titik tengah $(t_{k+1} + t_{k})/2$ sebagaimana pada
+metode Crank-Nicolson. Turunan kedua diganti
+dengan beda-hingga tengah 3-titik pada waktu $t_k$ pada arah sumbu-$x$
+dan pada waktu $t_{k+1}$ pada arah sumbu-$y$:
+$$
+a^2 \left(
+\frac{u^{k}_{i+1,j} - 2u^{k}_{i,j} + u^{k}_{i-1,j}}{\Delta x^2} +
+\frac{u^{k+1}_{i,j+1} - 2u^{k+1}_{i,j} + u^{k+1}_{i,j-1}}{\Delta y^2}
+\right) + f^{k}_{i,j} =
+\frac{u^{k+1}_{i,j} - u^{k}_{i,j}}{\Delta t}
+$$
+Persamaan terdikritisasi ini dapat dituliskan menjadi sistem tridiagonal dalam
+$u^{k+1}_{i,j+1}$, $u^{k+1}_{i,j}$, dan $u^{k+1}_{i,j-1}$.
+
+$$
+r_x \left(
+  u^{k}_{i+1,j} - 2u^{k}_{i,j} + u^{k}_{i-1,j} \right) +
+r_y \left(
+  u^{k+1}_{i,j+1} - 2u^{k+1}_{i,j} + u^{k+1}_{i,j-1}
+\right) = u^{k+1}_{i,j} - u^{k}_{i,j}
+$$
+dengan:
+$$
+\begin{align}
+r_x & = a^2\frac{\Delta t}{\Delta x^2} \\
+r_y & = a^2\frac{\Delta t}{\Delta y^2}
+\end{align}
+$$
+diperoleh sistem tridiagonal:
+$$
+-r_{y}\left( u^{k+1}_{i,j+1} + u^{k+1}_{i,j-1} \right) + 
+(1 + 2r_{y}) u^{k+1}_{i,j} =
+r_{x} \left( u^{k}_{i+1,j} + u^{k}_{i-1,j} \right) +
+(1 - 2r_{x})u^{k}_{i,j}
+$$
+untuk $i = 1,2,\ldots,N_x - 1$
+
+Tidak ada alasan khusus untuk memilih $u_{xx}$ dievaluasi pada $t_{k}$
+dan $u_{yy}$ pada $t_{k+1}$. Kita juga dapat memilih sebaliknya untuk
+waktu selanjutnya.
+$$
+r_x \left(
+  u^{k+2}_{i+1,j} - 2u^{k+2}_{i,j} + u^{k+2}_{i-1,j} \right) +
+r_y \left(
+  u^{k+1}_{i,j+1} - 2u^{k+1}_{i,j} + u^{k+1}_{i,j-1}
+\right) = u^{k+2}_{i,j} - u^{k+1}_{i,j}
+$$
+sehingga diperoleh:
+$$
+-r_{x}\left( u^{k+2}_{i+1,j} + u^{k+2}_{i-1,j} \right) + 
+(1 + 2r_{x}) u^{k+2}_{i,j} =
+r_{y} \left( u^{k+1}_{i,j+1} + u^{k+1}_{i,j-1} \right) +
+(1 - 2r_{y})u^{k+1}_{i,j}
+$$
+untuk $j = 1,2,\ldots,M_y - 1$
