@@ -1,0 +1,90 @@
+---
+title: "Persamaan Diferensial Parsial: Difusi pada 1d"
+format:
+  html:
+    code-fold: true
+jupyter: python3
+---
+
+
+# Pendahuluan
+
+Persamaan difusi pada 1d:
+$$
+\alpha \frac{\partial^{2}}{\partial x^2} u(x,t) = \frac{\partial}{\partial t} u(x,t)
+$$
+
+Pada metode Crank-Nicolson, kita mensyaratkan bahwa PDE dipenuhi pada titik-titik
+spasial, namun di antara titik-titik pada grid temporal:
+$$
+\frac{\partial}{\partial t} u\left(x_i, t_{n+\frac{1}{2}}\right) =
+\alpha \frac{\partial^2}{\partial x^2} u\left(x_i, t_{n+\frac{1}{2}}\right) +
+f\left(x_i, t_{n+\frac{1}{2}}\right)
+$$
+untuk $i = 1,\ldots,N_x - 1$ dan $n = 0, \ldots, N_t - 1$.
+
+Dengan menggunakan beda hingga tengah pada spasial dan temporal:
+$$
+\left[ D_{t} u = \alpha D_x D_x u + f \right]^{n+\frac{1}{2}}_{i}
+$$
+
+Pada RHS diperoleh ekspresi berikut:
+$$
+\frac{1}{\Delta x^2} \left( u^{n+\frac{1}{2}}_{i-1} - 2u^{n+\frac{1}{2}}_{i} +
+u^{n+\frac{1}{2}}_{i+1} \right) +
+f^{n+\frac{1}{2}}_{i}
+$$
+Hal ini bermasalah karena $2u^{n+\frac{1}{2}}_{i}$ bukan merupakan
+salah satu variabel yang dihitung, karena tidak berada pada grid temporal.
+Untuk mengatasi masalah ini, kita dapat menggunakan rata-rata aritmatika:
+$$
+u^{n+\frac{1}{2}}_{i} \approx \frac{1}{2}\left(
+u^{n}_{i} + u^{n+1}_{i} \right)
+$$
+Dalam notasi singkat dapat digunakan $\overline{u}^{t}$ untuk rata-rata
+sehingga dapat dituliskan:
+$$
+\left[
+D_{t} u = \alpha D_x D_x \overline{u}^{t} + f
+\right]_{i}^{n+\frac{1}{2}}
+$$
+Untuk suku sumber juga dapat digunakan rata-rata sehigga:
+$$
+\left[
+D_{t} u = \alpha D_x D_x \overline{u}^{t} + \overline{f}^{t}
+\right]_{i}^{n+\frac{1}{2}}
+$$
+
+Diperoleh skema:
+$$
+u^{n+1}_{i} - \frac{1}{2} F \left(
+u^{n+1}_{i-1} - 2 u^{n+1}_{i} + u^{n+1}_{i+1} \right) =
+u^{n}_{i} + \frac{1}{2} F \left(
+u^{n}_{i-1} - 2 u^{n}_{i} + u^{n}_{i+1} \right) +
+\frac{1}{2}\left( f^{n+1}_{i} + f^{n}_{i} \right)
+$$
+
+$$
+F = \alpha \frac{\Delta t}{\Delta x^2}
+$$
+
+# Another derivation
+
+Gunakan rata-rata dari beda hindda tengah pada LHS di titik tengah antara $k+1$ dan $k$:
+
+$$
+\frac{\alpha}{2} \left(
+\frac{u^{k+1}_{i-1} - 2u^{k+1}_{i} + u^{k+1}_{i+1}}{\Delta x^2} +
+\frac{u^{k}_{i-1} - 2u^{k}_{i} + u^{k}_{i+1}}{\Delta x^2}
+\right) =
+\frac{u^{k+1}_{i} - u^{k}_{i}}{\Delta t}
+$$
+diperoleh skema:
+$$
+-r u^{k+1}_{i-1} + 2(1 + r)u^{k+1}_{i} - ru^{k+1}_{i+1} =
+r u^{k}_{i-1} + 2(1 - r)u^{k}_{i} + r u^{k}_{i+1}
+$$
+dengan
+$$
+r = \alpha \frac{\Delta t}{\Delta x^2}
+$$

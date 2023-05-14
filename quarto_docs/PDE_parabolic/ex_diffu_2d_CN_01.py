@@ -100,11 +100,12 @@ ax.set_xlabel("x")
 ax.set_ylabel("y")
 plt.show()
 
-D2xy = scipy.sparse.lil_matrix(create_laplacian2d(Nx1, Ny1, dx, dy))
+D2xy = create_laplacian2d(Nx1, Ny1, dx, dy)
 
 # Build b vector (zeros in case of Laplace equation)
 b = np.zeros( Nx1*Ny1 )
-f = np.zeros( Nx1*Ny1 )
+f1 = np.zeros( Nx1*Ny1 )
+f2 = np.zeros( Nx1*Ny1 )
 
 Ixy = scipy.sparse.diags(np.ones(Nx1*Ny1))
 
@@ -115,13 +116,14 @@ for ik in range(1,NtimeSteps+1):
 
     print("Begin t = ", t)
 
-    # Build LHS
-    LHS = scipy.sparse.lil_matrix( Ixy - α*D2xy*dt )
+    # Build LHS and RHS
+    LHS = scipy.sparse.lil_matrix( Ixy - 0.5*α*D2xy*dt )
 
     # b-vector
     uflat = u.flatten()
-    f[:] = f_source(X, Y, t).T.flatten()
-    b[:] = uflat[:] + f*dt
+    f1[:] = f_source(X, Y, t - dt).T.flatten()
+    f2[:] = f_source(X, Y, t).T.flatten()
+    b[:] = uflat[:] + 0.5*α*dt*( D2xy @ uflat ) + 0.5*dt*(f1 + f2)
 
     #
     # Apply BC for next time step
