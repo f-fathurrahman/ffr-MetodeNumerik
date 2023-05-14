@@ -123,7 +123,7 @@ for ik in range(1,NtimeSteps+1):
     # b-vector
     uflat = u.flatten()
     f[:] = f_source(X, Y, t).T.flatten()
-    b[:] = uflat[:] + f*dt # previous u, flattened
+    b[:] = uflat[:] + f*dt
 
     #
     # Apply BC for next time step
@@ -177,4 +177,4 @@ ax2.set_ylabel("y")
 plt.show()
 
 du = (u.T - u_exact(X,Y,t)).flatten()
-print("norm diff = ", np.norm(du)/len(du))
+print("norm diff = ", np.linalg.norm(du)/len(du))
