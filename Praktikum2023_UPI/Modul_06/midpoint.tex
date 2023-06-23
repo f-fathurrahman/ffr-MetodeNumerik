@@ -19,8 +19,8 @@ y_{i+1} = y_{i} + f(x_{i+1/2}, y_{i+1/2}) h
 Implementasi:
 \begin{pythoncode}
 def ode_midpoint_1step(dfunc, xi, yi, h):
-    yip12 = yi + deriv(xi,yi)*h/2  # midpoint value
+    yip12 = yi + dfunc(xi,yi)*h/2  # midpoint value
     xip12 = xi + 0.5*h             # midpoint
-    yip1 = yi + deriv(xip12,yip12)*h
+    yip1 = yi + dfunc(xip12,yip12)*h
     return yip1
 \end{pythoncode}
