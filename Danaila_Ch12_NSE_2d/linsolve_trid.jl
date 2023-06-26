@@ -13,24 +13,23 @@ function linsolve_trid!(
 
     N = length(b)
 
-    β = zeros(N)
+    β = zeros(Float64, N)
+    γ = zeros(Float64, N)
+
     β[1] = b[1]
     for k in 2:N
         β[k] = b[k] - c[k-1]/β[k-1]*a[k]
     end
 
-    γ = zeros(N)    
     γ[1] = f[1]/β[1]
     for k in 2:N
         γ[k] = ( f[k] - a[k]*γ[k-1] )/β[k]
     end
-    println("γ = ", γ)
 
+    # Back-substitution
     x[N] = γ[N]
     for k in (N-1):-1:1
         x[k] = γ[k] - c[k]/β[k]*x[k+1]
-        println("k = ", k)
-        println("x[k] = ", x[k])
     end
 
     return
