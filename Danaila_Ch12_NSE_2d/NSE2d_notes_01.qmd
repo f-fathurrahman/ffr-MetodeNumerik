@@ -1,0 +1,142 @@
+%% LyX 2.3.7 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[american]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,tmargin=3cm,bmargin=3cm,lmargin=3cm,rmargin=3cm}
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usepackage{babel}
+
+\makeatother
+
+\usepackage{babel}
+\begin{document}
+Aliran fluida 2d, vektor kecepatan:
+\[
+q=\left\{ u(x,y),v(x,y)\right\} \in\mathbb{R}^{2}
+\]
+
+dan tekanan (scalar field)
+\[
+p(x,y)\in\mathbb{R}
+\]
+
+Penulisan alternatif (vector field):
+\[
+\mathbf{q}=u(x,y)\widehat{\mathbf{i}}+v(x,y)\widehat{\mathbf{j}}
+\]
+
+Konvervasi massa: 
+\[
+\nabla\cdot\mathbf{q}=0
+\]
+atau:
+\[
+\frac{\partial u}{\partial x}+\frac{\partial v}{\partial y}=0
+\]
+
+Konvervasi momentum:
+\[
+\frac{\partial q}{\partial t}+\mathrm{\nabla\cdot}(\mathbf{q}\otimes\mathbf{q})=-\nabla p+\frac{1}{\mathrm{Re}}\nabla\mathbf{q}
+\]
+atau dalam bentuk eksplisit:
+\begin{align*}
+\frac{\partial u}{\partial t}+\frac{\partial u^{2}}{\partial x}+\frac{\partial uv}{\partial y} & =-\frac{\partial p}{\partial x}+\frac{1}{\mathrm{Re}}\left(\frac{\partial^{2}u}{\partial x^{2}}+\frac{\partial^{2}u}{\partial y^{2}}\right)\\
+\frac{\partial v}{\partial t}+\frac{\partial uv}{\partial x}+\frac{\partial v^{2}}{\partial y} & =-\frac{\partial p}{\partial y}+\frac{1}{\mathrm{Re}}\left(\frac{\partial^{2}v}{\partial x^{2}}+\frac{\partial^{2}v}{\partial y^{2}}\right)
+\end{align*}
+
+dengan bilangan Reynolds:
+\[
+\mathrm{Re}=\frac{V_{0}L}{\nu}
+\]
+Menggunakan metode \emph{fractional-step}:
+\begin{itemize}
+\item Predictor step, menyelesaikan persamaan momentum yang ditulis dalam
+bentuk:
+\[
+\frac{\partial q}{\partial t}=-\mathcal{G}p+\mathcal{H}+\frac{1}{\mathrm{Re}}\nabla^{2}q
+\]
+\end{itemize}
+Algoritma Thomas
+
+\[
+\begin{bmatrix}b_{1} & c_{1} & 0 & \cdots & \cdots & 0 & 0\\
+a_{2} & b_{2} & c_{2} & 0 & \cdots & 0 & 0\\
+\cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots\\
+\cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots\\
+0 & 0 & 0 & 0 & a_{n-1} & b_{n-1} & c_{n-1}\\
+0 & 0 & 0 & 0 & \cdots & a_{n} & b_{n}
+\end{bmatrix}\begin{bmatrix}X_{1}\\
+X_{2}\\
+\vdots\\
+\vdots\\
+X_{n-1}\\
+X_{n}
+\end{bmatrix}=\begin{bmatrix}f_{1}\\
+f_{2}\\
+\vdots\\
+\vdots\\
+f_{n-1}\\
+f_{n}
+\end{bmatrix}
+\]
+
+dengan menggunakan relasi pengulangan (recurred relation):
+\[
+\begin{align}X_{k} & =\gamma_{k}-\frac{c_{k}}{\beta_{k}}X_{k+1},\qquad k=1,\ldots,(n-1)\\
+X_{n} & =\gamma_{n}
+\end{align}
+\]
+Dapat diperoleh:
+\[
+\begin{align}\beta_{1}=b_{1}\\
+\beta_{k}=b_{k}-\frac{c_{k-1}}{\beta_{k-1}}a_{k},\qquad k=2,\ldots,n
+\end{align}
+\]
+dan
+\[
+\begin{align}\gamma_{1}=\frac{f_{1}}{\beta_{1}}=\frac{f_{1}}{b_{1}}\\
+\gamma_{k}=\frac{f_{k}-a_{k}\gamma_{k-1}}{\beta_{k}}
+\end{align}
+\]
+
+Persamaan pertama:
+\[
+b_{1}X_{1}+c_{1}X_{2}=f_{1}
+\]
+Substitusi $X_{1}=\gamma_{1}-\dfrac{c_{1}}{\beta_{1}}X_{2}$:
+\[
+b_{1}(\gamma_{1}-\dfrac{c_{1}}{\beta_{1}}X_{2})+c_{1}X_{2}=f_{1}
+\]
+
+\[
+\frac{\partial u}{\partial t}-\nabla^{2}u(t,x,y)=f(x,y)
+\]
+
+untuk $(x,y)\in\Omega=\left[0,L_{x}\right]\times\left[0,L_{y}\right]$
+menggunakan syarat batas periodik.
+
+Pada keadaan tunak:
+\[
+-\nabla^{2}u_{s}(x,y)=f(x,y)
+\]
+
+Fungsi untuk RHS:
+\[
+f(x,y)=(a^{2}+b^{2})\sin(ax)\cos(by)
+\]
+dengan $a=\dfrac{2\pi}{L_{x}}$ dan $b=\dfrac{2\pi}{L_{y}}$.
+
+Solusi eksak:
+\[
+u_{\mathrm{exact}}(x,y)=\sin(ax)\cos(by)
+\]
+
+\end{document}
