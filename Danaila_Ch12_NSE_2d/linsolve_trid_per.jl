@@ -11,10 +11,10 @@ function linsolve_trid_per!(
     x::Vector{Float64}
 )
 
-    b = copy(b_)
+    b = copy(b_) # b_ is not modified
     N = length(b)
 
-    v = zeros(N)
+    v = zeros(Float64, N)
     v[1] = a[1]
     v[N] = c[N]
 
@@ -22,8 +22,8 @@ function linsolve_trid_per!(
     b[1] = b[1] - a[1]
     b[N] = b[N] - c[N]
 
-    Xone = zeros(N)
-    Xtwo = zeros(N)
+    Xone = zeros(Float64, N)
+    Xtwo = zeros(Float64, N)
 
     linsolve_trid!(a, b, c, f, Xone)
     linsolve_trid!(a, b, c, v, Xtwo)
