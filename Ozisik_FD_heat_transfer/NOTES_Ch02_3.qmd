@@ -1,0 +1,159 @@
+---
+title: "Syarat batas dan syarat awal"
+author: "Fadjar Fathurrahman"
+format:
+  revealjs:
+    smaller: true
+---
+
+
+## Pendahuluan {.scrollable}
+
+Formulasi matematis dari persoalan fisis yang dimodelkan dengan
+persamaan diferensial parsial, agar bersifat _well-posed_
+memerlukan spesifikasi syarat batas pada permukaan dari suatu volume
+dan juga syarat awal.
+
+Syarat awal hanya diperlukan untuk solusi dari masalah transien. Syarat
+awal ini diberikan sebagai distribusi spasial dari variabel dependen
+dan juga turunan waktunya (jika diperlukan).
+
+## Syarat batas {.scrollable}
+
+- Tipe pertama: nilai dari variabel dependen diberikan
+
+- Tipe kedua: turunan normal dari variabel dependen diberikan
+
+- Tipe ketiga: kombinasi linear dari variabel dependen dan turunan normalnya diberikan
+
+Contoh, tinjaau persamaan konduksi panas tunak pada 1d:
+$$
+\frac{\mathrm{d}}{\mathrm{d}x} \left( k \frac{\mathrm{d}T}{\mathrm{d}x} \right) +
+g(x) = 0 \qquad \text{pada } 0 < x < L
+$$
+atau, untuk konduktivitas termal yang konstan:
+$$
+\frac{\mathrm{d}^2 T}{\mathrm{d}x^2} + \frac{1}{k} g(x) = 0
+\qquad \text{pada } 0 < x < L
+$$
+
+## Syarat batas {.scrollable}
+
+Tipe pertama
+$$
+\begin{align}
+T & = \theta_{0} \quad \text{pada } x = 0 \\
+T & = \theta_{L} \quad \text{pada } x = L
+\end{align}
+$$
+
+Tipe kedua, dengan fluks panas yang diberikan pada $x = 0$ dan $x = L$:
+$$
+\begin{align}
+-k \frac{\mathrm{d}T}{\mathrm{d}x} = q_0 \quad \text{pada } x = 0 \\
+ k \frac{\mathrm{d}T}{\mathrm{d}x} = q_L \quad \text{pada } x = L
+\end{align}
+$$
+
+Tipe ketiga, kasus transfer kalor konvektif pada $x = 0$ dan $x = L$, dengan
+koefisien transfer $h_0$ dan temperator lingkungan $T_{\infty,0}$ pada $x = 0$:
+$$
+-k \frac{\mathrm{d}T}{\mathrm{d}x} + h_0 T = h_0 T_{\infty,0}
+$$
+Dengan notasi yang mirip, untuk $x = L$:
+$$
+k \frac{\mathrm{d}T}{\mathrm{d}x} + h_L T = h_L T_{\infty,L}
+$$
+
+Syarat batas tipe kedua dan ketiga dapat digabung menjadi satu dengan
+menuliskan:
+$$
+\begin{align}
+-k \frac{\mathrm{d}T}{\mathrm{d}x} + a_0 T & = f_{0} \\
+ k \frac{\mathrm{d}T}{\mathrm{d}x} + a_L T & = f_{L}
+\end{align}
+$$
+
+## Diskritisasi {.scrollable}
+
+$$
+T_{i-1} - 2T_{i} + T_{i+1} + \frac{g_i}{k} \Delta x^2 = 0
+$$
+
+Interior node: $1 \leq i \leq M-1$
+
+Boundary node: $i = 0$ dan $i = M$.
+
+Kondisi batas jenis pertama.
+
+Untuk node $i = 1$:
+$$
+T_{0} - 2T_{1} + T_{2} + \frac{g_1}{k} \Delta x^2 = 0
+$$
+di mana $T_0$ diperoleh dari syarat batas:
+$$
+-2T_{1} + T_{2} + \frac{g_1}{k} \Delta x^2 + \theta_{0} = 0
+$$
+
+Demikian pula untuk $i = M-1$:
+$$
+T_{M-2} - 2T_{M-1} + T_{M} + \frac{g_{M-1}}{k} \Delta x^2 = 0
+$$
+atau
+$$
+T_{M-2} - 2T_{M-1} + \frac{g_{M-1}}{k} \Delta x^2 + \theta_{L} = 0
+$$
+
+## Kondisi batas tipe kedua
+
+Untuk $i = 0$, digunakan node fiktif pada $i=-1$:
+$$
+T_{-1} - 2T_{0} + T_{1} + \frac{g_0}{k} \Delta x^2 = 0
+$$
+Untuk $i = M$:
+$$
+T_{M-1} - 2T_{M} + T_{M+1} + \frac{g_M}{k} \Delta x^2 = 0
+$$
+
+Pada keadaan batas dengan menggunakan beda hingga tengah, untuk $i = 0$:
+$$
+-k \frac{\mathrm{d}T}{\mathrm{d}x} + a_{0} T_{0} = f_{0}
+$$
+diaproksimasi menjadi:
+$$
+-k \frac{T_{1} - T_{-1}}{2\Delta x} + a_{0} T_{0} = f_{0}
+$$
+Diperoleh:
+$$
+\begin{align}
+k \left(T_{-1} - T_{1} \right) = 2\Delta x \left( f_{0} - a_{0} T_{0} \right) \\
+T_{-1} - T_{1} = \frac{2\Delta x}{k} \left( f_{0} - a_{0} T_{0} \right) \\
+T_{-1} = T_{1} + \frac{2\Delta x}{k} \left( f_{0} - a_{0} T_{0} \right) 
+\end{align}
+$$
+
+$$
+T_{1} + \frac{2\Delta x}{k} \left( f_{0} - a_{0} T_{0} \right) - 2T_{0} + T_{1} + \frac{g_0}{k} \Delta x^2 = 0
+$$
+
+$$
+\frac{2\Delta x}{k} f_{0} - \frac{2\Delta x}{k} a_{0} T_{0} - 2T_{0} + 2T_{1} + \frac{g_0}{k} \Delta x^2 = 0
+$$
+
+$$
+-2T_{0} \left( 1 + \frac{\Delta x}{k} a_{0} \right) +
+ 2T_{1} + \frac{g_0}{k} \Delta x^2 + \frac{2\Delta x}{k} f_{0} = 0
+$$
+
+
+Begitu juga untuk $i = M$:
+$$
+k \frac{T_{M+1} - T_{M-1}}{2\Delta x} + a_{L} T_{M} = f_{L}
+$$
+diperoleh:
+$$
+\begin{align}
+T_{M+1} - T_{M-1} = \frac{2\Delta x}{k} \left( f_{L} - a_{L} T_{M} \right) \\
+T_{M+1} = T_{M-1} + \frac{2\Delta x}{k} \left( f_{L} - a_{L} T_{M} \right)
+\end{align}
+$$
