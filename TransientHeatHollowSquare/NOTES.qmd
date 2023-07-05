@@ -1,0 +1,37 @@
+---
+title: "2d Heat Equation with Neuman BC"
+author: "efefer"
+format:
+  revealjs:
+    smaller: true
+    scrollable: true
+---
+
+## Neumann BC
+
+Assume zero Neumann boundary condition:
+$$
+\frac{\mathrm{d}T}{\mathrm{d}x} = 0
+$$
+
+At point $(x_i,y_j)$ we apply zero Neumann BC along $x$ direction:
+$$
+\frac{T_{i+1,j} - T_{i-1,j}}{2\Delta x} = 0
+$$
+or:
+$$
+T_{i+1,j} = T_{i-1,j}
+$$
+
+Discretized equation for $x$ direction
+$$
+\alpha \frac{T_{i+1,j} - 2T_{i,j} + T_{i-1,j}}{\Delta x^2}
+$$
+becomes:
+$$
+\alpha \frac{2T_{i+1,j} - 2T_{i,j}}{\Delta x^2}
+$$
+or
+$$
+\alpha \frac{2T_{i-1,j} - 2T_{i,j}}{\Delta x^2}
+$$
