@@ -23,15 +23,29 @@ $$
 T_{i+1,j} = T_{i-1,j}
 $$
 
-Discretized equation for $x$ direction
+Discretized equation for node $(i,j)$
 $$
-\alpha \frac{T_{i+1,j} - 2T_{i,j} + T_{i-1,j}}{\Delta x^2}
+\frac{T_{i+1,j} - 2T_{i,j} + T_{i-1,j}}{\Delta x^2} +
+\frac{T_{i,j+1} - 2T_{i,j} + T_{i,j-1}}{\Delta y^2}
 $$
+or:
+$$
+\frac{1}{\Delta x^2 \Delta y^2}
+\left[
+    \Delta y^2 \left( T_{i+1,j} + T_{i-1,j} \right) +
+    \Delta x^2 \left( T_{i,j+1} + T_{i,j-1} \right) +
+    (\Delta x^2 + \Delta y^2) T_{i,j}
+\right]
+$$
+
+
 becomes:
 $$
-\alpha \frac{2T_{i+1,j} - 2T_{i,j}}{\Delta x^2}
+\frac{2T_{i+1,j} - 2T_{i,j}}{\Delta x^2}
 $$
 or
 $$
 \alpha \frac{2T_{i-1,j} - 2T_{i,j}}{\Delta x^2}
 $$
+
+At row linearindex(i,j), we set Laplacian operator
