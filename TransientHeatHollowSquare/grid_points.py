@@ -33,13 +33,19 @@ print("Δy = ", Δy)
 
 print("xgrid = ", xgrid)
 
+# Setup grid data (rectangular)
 Npoints = Nx*Ny
 rgrid = np.zeros((Npoints,2))
 ip = 0
+ip2xy = np.zeros((Npoints,2), dtype=np.int32)
+xy2ip = np.zeros((Nx,Ny), dtype=np.int32)
 for i in range(Nx):
     for j in range(Ny):
         rgrid[ip,0] = xgrid[i]
         rgrid[ip,1] = ygrid[j]
+        ip2xy[ip,0] = i
+        ip2xy[ip,1] = j
+        xy2ip[i,j] = ip
         ip += 1
 
 SMALL = 1e-10
