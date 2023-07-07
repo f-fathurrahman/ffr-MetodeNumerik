@@ -7,13 +7,13 @@ Lx = 1.0
 Ly = 1.0
 
 # Hollow square, centered at (Lx/2,Ly/2)
-a = 0.5
-b = 0.5
+a = 0.25
+b = 0.25
 cx = Lx/2
 cy = Ly/2
 
-NsegX = 8
-NsegY = 8
+NsegX = 16
+NsegY = 16
 
 # Current limitation
 assert NsegX % 4 == 0
