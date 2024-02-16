@@ -1,0 +1,135 @@
+\section{Pemrograman Linear}
+
+Pada bagian ini, kita akan menggunakan pustaka SciPy untuk menyelesaikan permasalahan
+pemrograman linear, di mana fungsi objektif dan kendala yang terlibat berbentuk
+persamaan dan pertidaksamaan linear. Fungsi yang akan digunakan adalah \pyinline{linprog}
+yang terdefinisi pada modul \pyinline{scipy.optimize}.
+Deklarasi API (\textit{application programming interface}) dari fungsi ini adalah sebagai berikut.
+%
+\begin{pythoncode}
+scipy.optimize.linprog(
+    c, A_ub=None, b_ub=None, A_eq=None, b_eq=None, bounds=None,
+    method='highs', callback=None, options=None, x0=None, integrality=None)
+\end{pythoncode}
+%
+Fungsi ini menyelesaikan permasalahan
+pemrograman linear yang memiliki bentuk standard sebagai berikut.
+\begin{align*}
+& \min_{x} \mathbf{c}^{\mathrm{T}} \mathbf{x} \\
+\text{dengan kendala:}\,\, & \mathbf{A}_{\mathrm{ub}} \leq \mathbf{b}_{\mathrm{ub}} \\
+& \mathbf{A}_{\mathrm{eq}} = \mathbf{b}_{\mathrm{eq}} \\
+& \mathbf{l} \leq \mathbf{x} \leq \mathbf{u}
+\end{align*}
+dengan:
+\begin{itemize}
+\item $\mathbf{x}$: (output, array 1d) variabel yang akan diubah-ubah
+atau dicari nilainya, atau variabel keputusan (\textit{decision variables}).
+\item $\mathbf{c}$: (argumen \pyinline{c}, array 1d) koefisien fungsi objektif (linear).
+\item $\mathbf{A}_{\mathrm{ub}}$: (argumen \pyinline{A_ub}, array 2d) matriks kendala batas atas
+(\pyinline{ub}: \textit{upper bound})
+\item $\mathbf{b}_{\mathrm{ub}}$: (argumen \pyinline{b_ub}, array 1d) vektor kendala batas atas
+\item $\mathbf{A}_{\mathrm{eq}}$: (argumen \pyinline{A_eq}, array 2d) matriks kendala persamaan
+(\pyinline{eq}: \textit{equality})
+\item $\mathbf{b}_{\mathrm{eq}}$: (argumen \pyinline{b_eq}, array 1d) vektor kendala persamaan
+\item $\mathbf{l}$ dan $\mathbf{u}$: (argumen \pyinline{l} dan \pyinline{b},
+array 1d) kendala rentang nilai untuk
+variabel keputusan.
+\end{itemize}
+
+Untuk selengkapnya silakan membaca dokumentasi terkait
+\footnote{\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html}}.
+
+Sebagai contoh, kita ingin mencari nilai minimum dari
+\begin{equation*}
+f(x_0, x_1) = -x_0 + 4x_1
+\end{equation*}
+dan $x_0$ serta $x_1$ yang membuat $f(x_0, x_1)$ minimum dengan kendala sebagai
+berikut:
+\begin{align*}
+-3x_0 + x_1 & \leq 6 \\
+-x_0 - 2x_1 & \geq -4 \\
+x_1 \geq -3
+\end{align*}
+Bentuk di atas belum sesuai dengan bentuk standard yang diasumsikan oleh
+\pyinline{linprog}. Oleh karena itu kita perlu mengubah terlebih dahulu bentuk kendala
+standard. Kendala kedua dikalikan dulu dengan -1 sehingga kendala menjadi
+sebagai berikut.
+\begin{align*}
+-3x_0 + x_1 & \leq 6 \\
+x_0 + 2x_1 & \leq 4 \\
+x_1 \geq -3
+\end{align*}
+Pertidaksamaan terakhir memberikan batas untuk bawah untuk $x_1$.
+Kita tidak diberikan bentuk kendala persamaan sehingga \pyinline{A_eq=None} dan
+\pyinline{b_eq=None}, yang sudah merupakan nilai \textit{default} dari \pyinline{linprog}.
+
+Kode berikut ini akan mencari solusi dari permasalahan di atas.
+\begin{pythoncode}
+from scipy.optimize import linprog
+c = [-1, 4] # perhatikan bentuk fungsi objektif
+# Matriks pertidaksamaan A_ub,
+# perhatikan kendala pertidaksamaan untuk variabel keputusan dalam bentuk standard.
+A = [
+    [-3, 1],
+    [1, 2]
+]
+# Vektor pertidaksamaan A_ub,
+b = [6, 4]
+x0_bounds = (None, None) # tidak ada batasan untuk x0
+x1_bounds = (-3, None) # batas untuk x1, hanya batas bawah yang diberikan
+
+res = linprog(c, A_ub=A, b_ub=b, bounds=[x0_bounds, x1_bounds])
+
+print("Min value: ", res.fun)
+print("Decision variables: ", res.x)
+\end{pythoncode}
+
+Contoh keluaran:
+\begin{textcode}
+Min value:  -22.0
+Decision variables:  [10. -3.]
+\end{textcode}
+
+
+\begin{soal}
+Selesaikan masalah pemrograman linear yang diberikan pada Chapra Contoh 15.2
+dengan menggunakan \pyinline{linprog}.
+Pada contoh ini kita diminta untuk mencari \textbf{nilai maksimum} dari:
+\begin{equation*}
+Z = 150x_1 + 175x_2
+\end{equation*}
+dengan kendala
+\begin{align*}
+7x_1 + 11x_2 & \leq 77 \\
+10x_1 + 8x_2 & \leq 80
+\end{align*}
+serta $0 \leq x_1 \leq 9$, $0 \leq x_1 \leq 9$ dan bandingkan hasil yang Anda
+peroleh dengan metode grafis dan simplex seperti pada buku.
+\end{soal}
+
+Anda dapat melengkapi kode berikut.
+\begin{pythoncode}
+from scipy.optimize import linprog
+
+c = [-150, -175]
+# menggunakan tanda berlawan (negatif) karena kita ingin mencari nilai maksimum
+# sedangkan bentuk standard linprog hanya menerima masalah minimisasi.
+
+# Bentuk kendala pertidaksamaan sudah dalam bentuk standard yang diasumsikan
+# oleh linprog.
+A = [
+    [7, 11],
+    [10, 8]
+]
+b = [..., ...] # lengkapi
+
+x0_bounds = (0, 9)
+x1_bounds = (0, 6)
+
+res = linprog(c, A_ub=A, b_ub=b, bounds=[x0_bounds, x1_bounds])
+
+# We search for max, the result is negative the minimum we found from linprog
+print("Max value: ", -res.fun)
+print("Decision variables: ", res.x)
+\end{pythoncode}
+

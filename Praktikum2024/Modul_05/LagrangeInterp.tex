@@ -1,0 +1,30 @@
+\section{Polinomial Interpolasi Lagrange}
+\begin{soal}
+Implementasikan fungsi atau subroutin dalam Python untuk implementasi algoritma
+pada Gambar 18.11 untuk implementasi polinomial Lagrange.
+Uji hasil yang Anda dapatkan dengan menggunakan data-data yang diberikan pada contoh
+18.2 (polinomial kuadrat) dan 18.3 (polinomial kubik) pada Chapra.
+\end{soal}
+
+\begin{soal}
+Kerjakan Contoh 18.7 pada Chapra dengan menggunakan fungsi/subrutin interpolasi Lagrange
+yang sudah Anda buat pada soal sebelumnya sehingga Anda dapat mereproduksi Gambar 18.12
+pada Chapra. Pada Contoh 18.17 Anda diminta untuk mengestimasi kecepatan penerjun
+pada $t=10$ s, yang berada di antara dua titik data terakhir.
+Untuk polinom orde-1, gunakan dua titik data terakhir, untuk orde-2 gunakan tiga titik
+data terakhir, dan seterusnya sampai orde-4.
+\end{soal}
+
+\begin{pythoncode}
+def lagrange_interp(x, y, xx):
+    assert(len(x) == len(y))
+    N = len(x) - 1  # length of array is (N + 1)
+    ss = 0.0
+    for i in range(0,N+1):
+        pp = ....
+        for j in range(0,N+1):
+            if i != j:
+                ....
+        ss = ....
+    return ss
+\end{pythoncode}

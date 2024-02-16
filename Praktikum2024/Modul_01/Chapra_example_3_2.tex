@@ -1,0 +1,118 @@
+\subsection{Aproksimasi dengan deret Taylor}
+
+\textbf{Chapra Contoh 3.2}
+
+Hubungan antara nilai eksak atau benar dan aproksimasi dapat dinyatakan
+sebagai:
+\begin{equation*}
+\text{nilai benar} = \text{aproksimasi} + \text{error atau galat}
+\end{equation*}
+Dari persamaan di atas, diberikan nilai benar dan aproksimasi, kita dapat menghitung
+kesalahan sebenarnya, dilambangkan dengan $E_t$ (subskrip $t$: \textit{true}):
+\begin{equation}
+E_t = \text{nilai benar} - \text{aproksimasi}
+\end{equation}
+Terkadang, kita juga dapat menggunakan nilai relatif, dengan cara membandingkannya
+dengan nilai benar:
+\begin{equation}
+\epsilon_{t} = \frac{\text{error sebenarnya}}{\text{nilai sebenarnya}}\times 100\%
+\end{equation}
+yang dapat dinyatakan dalam persentase.
+
+Dalam banyak kasus, kita tidak memiliki nilai sebenarnya sehingga $\epsilon_t$
+tidak dapat dihitung. Sebagai alternatif, kita dapat menggunakan error relatif:
+\begin{equation}
+\epsilon_{a} = \frac{\text{error aproksimasi}}{\text{nilai aproksimasi}}
+\end{equation}
+Ada beberapa cara untuk mengestimasi error aproksimasi. Dalam kasus proses iteratif,
+kita dapat menggunakan persamaan berikut.
+\begin{equation}
+\epsilon_{a} = \frac{\text{aproksimasi sekarang} - \text{aproksimasi sebelumnya}}%
+{\text{aproksimasi sekarang}} \times 100\%
+\end{equation}
+Dalam konteks perhitungan iteratif, biasanya perhitungan dilakukan sampai:
+\begin{equation}
+|\epsilon_{a}| < \epsilon_{s}
+\end{equation}
+di mana $\epsilon_{s}$ adalah suatu nilai toleransi yang sudah ditentukan.
+
+Scarborough memberikan suatu kriteria yang menghubungkan antara jumlah digit signifikan
+dengan dan nilai aproksimasi. Menurut kriteria ini, jika menggunakan:
+\begin{equation}
+\epsilon_{s} = (0.5 \times 10^{2-n})\%
+\end{equation}
+maka hasil yang diperoleh akan benar untuk setidaknya $n$ digit signifikan.
+
+Fungsi eksponensial dapat dihitung dengan menggunakan deret sebagai berikut:
+\begin{equation}
+e^{x} = 1 + x + \frac{x^2}{2} + \frac{x^3}{3!} + \cdots + \frac{x^n}{n!}
+\label{eq:exp-deret}
+\end{equation}
+Kita ingin menggunakan Persamaan \eqref{eq:exp-deret} untuk menghitung estimasi
+dari $e^{0.5}$ untuk setidaknya tiga digit signifikan.
+Dengan menggunakan kriteria dari Scarborough, nilai $n=3$ diperoleh:
+\begin{equation*}
+\epsilon_{s} = (0.5 \times 10^{2-3}) \% = 0.05 \%
+\end{equation*}
+Kita akan menambahkan suku-suku pada Persamaan \eqref{eq:exp-deret} sampai $\epsilon_{a}$
+lebih kecil dari $\epsilon_{s}$.
+
+Program Python berikut ini dapat digunakan untuk melakukan perhitungan yang ada pada buku teks.
+\begin{pythoncode}
+from math import factorial, exp
+
+def approx_exp(x, N):
+    assert(N >= 0)
+    if N == 0:
+        return 1
+    s = 0.0
+    for i in range(N+1):
+        s = s + x**i/factorial(i)
+    return s
+  
+x = 0.5
+true_val = exp(x) # from math module
+  
+n_digit = 3
+# Equation 3.7
+ε_s_percent = 0.5*10**(2-n_digit)
+  
+prev_approx = 0.0
+for N in range(50):
+    approx_val = approx_exp(x, N)
+    ε_t_percent = abs(approx_val - true_val)/true_val * 100
+    if N > 0:
+        ε_a_percent = abs(approx_val - prev_approx)/approx_val * 100
+    else:
+        ε_a_percent = float('nan')
+    prev_approx = approx_val
+    print("%3d %18.10f %10.5f%% %10.5f%%" % (N+1, approx_val, ε_t_percent, ε_a_percent))
+    if ε_a_percent < ε_s_percent:
+        print("Converged within %d significant digits" % n_digit)
+        break
+
+print("true_val   is %18.10f" % true_val)
+print("approx_val is %18.10f" % approx_val)
+\end{pythoncode}
+
+Catatan: Pada program di atas, \pyinline{for}-loop digunakan dengan jumlah iterasi yang relatif
+besar. Anda dapat menggunakan \pyinline{while}-loop sebagai gantinya.
+
+Contoh output:
+\begin{textcode}
+  1       1.0000000000   39.34693%        nan%
+  2       1.5000000000    9.02040%   33.33333%
+  3       1.6250000000    1.43877%    7.69231%
+  4       1.6458333333    0.17516%    1.26582%
+  5       1.6484375000    0.01721%    0.15798%
+  6       1.6486979167    0.00142%    0.01580%
+Converged within 3 significant digits
+true_val   is       1.6487212707
+approx_val is       1.6486979167
+\end{textcode}
+
+
+\begin{soal}
+Ulangi perhitungan ini untuk jumlah digit signifikan yang berbeda, misalnya 5, 8, dan 10
+digit signifikan. Silakan melakukan modifikasi terhadap program yang diberikan.
+\end{soal}

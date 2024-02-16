@@ -1,0 +1,331 @@
+\subsection{Metode Penurunan Paling Tajam (\textit{steepest descent})}
+
+Metode \textit{steepest descent} (SD) adalah salah satu metode berbasis gradien
+yang paling sederhana dan banyak digunakan dalam optimisasi multivariabel.
+Pada metode ini, selain fungsi objektif, kita juga memerlukan gradien dari
+fungsi objektif. Gradien fungsi objektif ini sendiri merupakan vektor yang
+elemen-elemennya merupakan turunan parsial dari fungsi objektif terhadap
+variabel independennya.
+
+\begin{soal}[Chapra Contoh 14.2]
+Berikut ini adalah contoh perhitungan gradien dari:
+\begin{equation*}
+f(x,y) = xy^2
+\end{equation*}
+pada titik (2,2).
+Lengkapi kode Python berikut ini. Variasikan nilai \pyinline{Δ} untuk
+ukuran langkah, misalnya \pyinline{1e-2},
+\pyinline{1e-1}, \pyinline{1e0}, \pyinline{1e1}, \pyinline{1e2},
+dan \pyinline{1e3}.
+\end{soal}
+
+
+\begin{pythoncode}
+import numpy as np
+import matplotlib.pyplot as plt
+
+def my_func(x,y):
+    return x*y**2
+
+def grad_my_func(x,y):
+    dfdx = .... # LENGKAPI
+    dfdy = .... # LENGKAPI
+    return dfdx, dfdy
+
+
+x = np.linspace(0.0, 4.0, 100)
+y = np.linspace(0.0, 4.0, 100)
+X, Y = np.meshgrid(x, y)
+FXY = my_func(X, Y)
+
+# Calc the gradient at (2,2)
+x0, y0 = 2.0, 2.0
+gx, gy = grad_my_func(x0, y0)
+
+fig, ax = plt.subplots()
+my_contour = ax.contour(X, Y, FXY, levels=np.linspace(8.0, 40.0, 5), colors="black")
+ax.quiver(x0, y0, gx, gy, color="blue")
+ax.set_aspect("equal", "box")
+ax.clabel(my_contour, inline=True, fontsize=10)
+
+plt.show()
+
+Δ = 1.0 # Try to vary this value
+
+# Now suppose that we want to search for MAXIMUM value
+# We want to search for new point: (x0 + Δ*gx, y0 + Δ*gy)
+# or we move in the direction of STEEPEST ASCENT
+# which gives larger value than current value
+
+f1 = my_func(x0, y0) # Value of the function at (x0,y0)
+f2 = my_func(x0 + Δ*gx, y0 + Δ*gy) # Value of the function at new point
+print("\nTrying to find maximum")
+print("Old value: %18.10f" % f1)
+print("New value: %18.10f" % f2)
+if f2 > f1:
+    print("Good: Function value is increasing")
+else:
+    print("Bad: Function value is decreasing")
+    print("Step length is too large") # or Δ is too large
+
+# Now suppose that we want to search for MINIMUM value
+# We want to search for new point: (x0 - Δ*gx, y0 - Δ*gy)
+# or we move in the direction of STEPEEST DESCENT
+# which gives smaller value than current value
+
+f1 = my_func(x0, y0) # Value of the function at (x0,y0)
+f2 = my_func(x0 - Δ*gx, y0 - Δ*gy) # Value of the function at new point
+print("\nTrying to find minimum")
+print("Old value: %18.10f" % f1)
+print("New value: %18.10f" % f2)
+if f2 < f1:
+    print("Good: Function value is decreasing")
+else:
+    print("Bad: Function value is increasing")
+    print("Step length is too large") # or Δ is too large
+\end{pythoncode}
+
+
+Berikut ini adalah contoh plot yang dihasilkan.
+
+{\centering
+\includegraphics[scale=0.5]{../../chapra_7th/ch14/IMG_chapra_example_14_2.pdf}
+\par}
+
+\begin{soal}
+Ulangi yang dilakukan pada soal sebelumnya untuk fungsi berikut ini.
+\begin{equation*}
+f(x,y) = 2xy + 2x - x^2 - 2y^2
+\end{equation*}
+Anda perlu mengganti definisi fungsi dan gradien.
+\end{soal}
+
+Dari soal sebelumnya kita akan mengimplementasikan metode \textit{steepest descent}
+untuk mencari minimum sebuah fungsi.
+
+\begin{soal}[Chapra Latihan 14.4]
+Lengkapi program Python berikut. Program ini
+mencari nilai maksimum dari
+\begin{equation*}
+f(x,y) = 2xy + 2x - x^2 - 2y^2
+\end{equation*}
+dengan menggunakan metode \textit{steepest descent} dengan ukuran langkah tetap.
+Perhatikan bahwa program ini dapat diubah menjadi subrutin atau fungsi, namun
+kita lebih memilih untuk tidak melakukannya supaya lebih mudah untuk dilakukan
+visualisasi langkah-langkah yang ditempuh.
+Coba lakukan variasi ukuran langkah, variabel \pyinline{α},
+dan jumlah iterasi maksimum.
+\end{soal}
+
+\begin{pythoncode}
+import numpy as np
+import matplotlib.pyplot as plt
+
+def my_func(X): # input as vector X
+    x, y = X[0], X[1]
+    return .... # LENGKAPI: gunakan x dan y 
+
+def my_func_plot(X, Y): # for plotting purpose
+    return 2*X*Y + 2*X - X**2 - 2*Y**2
+
+def grad_my_func(X): # input as vector X
+    x, y = X[0], X[1]
+    dfdx = .... # LENGKAPI: gunakan x dan y
+    dfdy = .... # LENGKAPI: gunakan x dan y
+    return np.array([dfdx, dfdy]) # return as numpy array
+
+# Definisikan negatif dari fungsi dan gradien yang ingin
+# dicari nilai maksimumnya. Hal ini diperlukan karena
+# kita mengimplementasikan steepest descent yang akan mencari
+# nilai MINIMUM dari suatu fungsi
+def m_my_func(X):
+    return -my_func(X)
+
+def grad_m_my_func(X):
+    return -grad_my_func(X)
+
+xgrid = np.linspace(-2.0, 4.5, 100)
+ygrid = np.linspace(-1.0, 3.0, 100)
+Xgrid, Ygrid = np.meshgrid(xgrid, ygrid)
+
+fig, ax = plt.subplots()
+ax.contour(Xgrid, Ygrid, my_func_plot(Xgrid, Ygrid), levels=10)
+
+x0 = np.array([-1.0, 1.0]) # Initial point
+NiterMax = 40
+α = 0.1 # ukuran langkah
+func = m_my_func # fungsi yang akan dimininumkan
+grad_func = grad_m_my_func  # gradien
+x = np.copy(x0)
+
+ax.plot(x[0], x[1], marker="o", color="black")
+ax.set_aspect("equal")
+plt.savefig("IMG_optim_SD_" + str(0) + ".png", dpi=150)
+
+for iiter in range(1,NiterMax+1):
+
+    print("\nIteration: ", iiter)
+    print("Current point: ", x)
+
+    f = func(x)
+    g = grad_func(x)
+    d = -g # step direction, we search for minimum
+
+    ax.quiver(x[0], x[1], d[0], d[1], color="blue") # also plot the direction
+
+    norm_g = np.sqrt(np.dot(g,g))
+    print("f      = %18.10f" % f)
+    print("norm g = %18.10e" % norm_g)
+    if norm_g < 1e-10:
+        print("Converged")
+        break
+
+    # Update x
+    xprev = np.copy(x)
+    x = x + α*d
+
+    # draw a line from xprev to x
+    ax.plot([xprev[0], x[0]], [xprev[1], x[1]], marker="o", color="black")
+    plt.savefig("IMG_optim_SD_" + str(iiter) + ".png", dpi=150)
+\end{pythoncode}
+
+Contoh hasil visualisasi yang diperoleh \pyinline{NiterMax = 40}
+dan \pyinline{α = 0.1}.
+
+{\centering
+\includegraphics[scale=0.75]{../../chapra_7th/ch14/IMG_debug_optim_SD.pdf}
+\par}
+
+Hasil akhir yang diperoleh:
+\begin{pythoncode}
+....
+Iteration:  40
+Current point:  [1.90213631 0.93951691]
+f      =      -1.9949444864
+norm g =   8.7887071781e-02
+\end{pythoncode}
+sudah cukup dekat dengan hasil analitik namun belum cukup konvergen.
+
+Jika kita menggunakan \pyinline{α = 0.01} dan \pyinline{NiterMax = 40}
+berikut hasil visualisasi yang diperoleh.
+
+{\centering
+\includegraphics[scale=0.75]{../../chapra_7th/ch14/IMG_debug_optim_SD_alpha_001.pdf}
+\par}
+dan hasil akhir yang diperoleh adalah
+\begin{textcode}
+....
+Iteration:  40
+Current point:  [0.28853671 0.1698791 ]
+f      =      -0.5341348867
+norm g =   1.7656591408e+00
+\end{textcode}
+yang masih cukup jauh dari nilai analitik.
+
+
+Jika kita menggunakan ukuran langkah yang digunakan terlalu besar,
+misalnya \pyinline{α = 0.4} dan \pyinline{NiterMax = 5} (dibatasi agar tidak
+terlalu besar)
+berikut hasil visualisasi yang diperoleh.
+
+{\centering
+\includegraphics[scale=0.75]{../../chapra_7th/ch14/IMG_debug_optim_SD_alpha_04.pdf}
+\par}
+
+dan hasil akhir yang diperoleh adalah
+\begin{textcode}
+....
+Iteration:  5
+Current point:  [0.3056 2.6128]
+f      =      11.5386956800
+norm g =   1.1856470274e+01
+\end{textcode}
+yang menunjukkan bahwa iterasi terlihat akan divergen.
+
+Dari soal ini kita dapat melihat bahwa ukuran langkah yang diambil pada metode berbasis gradien,
+misalnya \textit{steepest descent} akan mempengarui konvergensi dari algoritma.
+Jika terlalu kecil konvergensi akan lambat diperoleh, sedangkan jika terlalu besar ada kemungkinan
+algoritma akan divergen.
+
+Dalam literatur, penentuan ukuran langkah pada metode berbasis gradien
+dikenal sebagai \textit{line minimization}. Pada buku Chapra, pengambilan ukuran langkah dilakukan dengan cara
+proyeksi ke fungsi 1-d dimensi atau suatu \emph{garis} (karena itu dinamakan \textit{line minimization}),
+kemudian menentukan nilai langkah
+dari optimum fungsi 1-d ini secara analitik, yang dalam hal ini dapat dibantu dengan perhitungan simbolik,
+misalnya dengan menggunakan SymPy.
+Hal ini dapat dilakukan untuk fungsi-fungsi dengan variabel
+yang relatif sedikit dan/atau cukup sederhana untuk dimanipulasi secara simbolik.
+Akan tetapi manipulasi ini tidak praktis untuk dilakukan pada optimisasi numerik sehingga
+banyak dikembangkan banyak metode untuk \textit{line minimization} ini dalam literatur.
+Pada modul ini kita akan menggunakan metode yang memerlukan evaluasi gradien pada suatu titik uji.
+Berikut ini adalah implementasi yang siap untuk kita gunakan, yang akan kita namai
+\pyinline{linmin_grad}:
+\begin{pythoncode}
+def linmin_grad(grad_func, x, g, d, αt=1e-5):
+    xt = x + αt*d
+    gt = grad_func(xt)
+    denum = np.dot(g - gt, d)
+    if denum != 0.0:
+        α = abs( αt * np.dot(g, d)/denum )
+    else:
+        α = 0.0
+    return α
+\end{pythoncode}
+
+Program \textit{steepest descent} yang kita gunakan sebelumnya dapat dimodifikasi menjadi sebagai
+berikut.
+\begin{pythoncode}
+# ... sama seperti sebelumnya
+
+x0 = np.array([-1.0, 1.0]) # Initial point
+NiterMax = 40
+func = m_my_func
+grad_func = grad_m_my_func
+x = np.copy(x0)
+# Tidak ada definisi α
+
+ax.plot(x[0], x[1], marker="o", color="black")
+ax.set_aspect("equal")
+plt.savefig("IMG_optim_SD_linmin_" + str(0) + ".png", dpi=150)
+# ubah nama untuk plot yang dihasilkan
+
+for iiter in range(1,NiterMax+1):
+
+    # ... sama seperti sebelumnya
+
+    # Update x
+    xprev = np.copy(x)
+    α = linmin_grad(grad_func, x, g, d) # hitung ukuran langkah
+    x = x + α*d 
+    # draw a line from xprev to x
+    ax.plot([xprev[0], x[0]], [xprev[1], x[1]], marker="o", color="black")
+    plt.savefig("IMG_optim_SD_linmin_" + str(iiter) + ".png", dpi=150)
+\end{pythoncode}
+
+\begin{soal}
+Modifikasi kode yang Anda buat sehingga menggunakan \pyinline{linmin_grad}.
+\end{soal}
+
+Kita memperoleh nilai minimum (konvergen) yang diperlukan dalam iterasi ke-32.
+\begin{textcode}
+Iteration:  32
+Current point:  [2. 1.]
+f      =      -2.0000000000
+norm g =   7.1152888650e-11
+Converged
+\end{textcode}
+dengan visualisasi langkah pada gambar berikut.
+
+{\centering
+\includegraphics[scale=0.75]{../../chapra_7th/ch14/IMG_debug_optim_SD_linmin.pdf}
+\par}
+
+Pada gambar terlihat bahwa ukuran langkah yang diambil cukup bagus pada bagian awal,
+tetapi metode ini masih mengalami kesulitan untuk konvergen ketika sudah cukup dekat
+dengan minimum. Hal ini disebabkan karena metode \textit{steepest descent} hanya
+menggunakan informasi yang ada pada langkah saat sekarang dan mengabaikan
+informasi pada langkah-langkah sebelumnya. Selain itu, langkah yang diambil oleh metode
+ini akan tegak lurus terhadap langkah sebelumnya, hal ini dapat menyebabkan masalah
+konvergensi. Meskipun demikian metode \textit{steepest descent} dengan penentuan
+langkah adaptif (menggunakan \pyinline{linmin_grad}) sudah cukup bagus digunakan
+untuk minimisasi fungsi.
