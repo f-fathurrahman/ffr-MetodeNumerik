@@ -1,0 +1,135 @@
+\section{Polinomial Interpolasi Newton}
+
+\begin{soal}
+Implementasikan fungsi atau subroutin dalam Python untuk implementasi algoritma
+pada Gambar 18.7 untuk implementasi polinomial Newton.
+Uji hasil yang Anda dapatkan dengan menggunakan data-data yang diberikan pada contoh
+18.2 (polinomial kuadrat) dan 18.3 (polinomial kubik) pada Chapra.
+Lengkapi jawaban Anda dengan membuat plot seperti pada Gambar 18.4 dan 18.6 pada Chapra.
+\end{soal}
+
+\begin{soal}
+Gunakan data pada soal Chapra 18.5 untuk mengevaluasi nilai $f(x) = \mathrm{ln}(x)$
+pada $x = 2$ dengan menggunakan polinomial kubik. Coba variasikan titik-titik
+yang digunakan (\textit{base points}) dan perhatikan nilai estimasi
+kesalahan yang diberikan oleh
+fungsi/subrutin yang sudah Anda buat pada soal sebelumnya.
+\end{soal}
+
+Anda dapat melengkapi kode berikut ini untuk soal-soal di atas.
+\begin{pythoncode}
+import numpy as np
+def newton_interp(x, y, xi):
+    assert(len(x) == len(y))
+    N = len(x) - 1  # length of the array is (N + 1)
+    yint = np.zeros(N+1)
+    ea = np.zeros(N)
+    # finite divided difference table
+    fdd = np.zeros((N+1,N+1))
+    for i in range(0,N+1):
+        fdd[i,0] = y[i]
+    for j in range(1,N+1):
+        for i in range(0,N-j+1):
+            fdd[i,j] = .... # lengkapi
+    # Evaluate the polynomial
+    xterm = 1.0
+    yint[0] = fdd[0,0]  
+    for order in range(1,N+1):
+        xterm = xterm * ( xi - x[order-1] )
+        yint2 = .... # lengkapi
+        ea[order-1] = .... # lengkapi
+        yint[order] = yint2 
+    #
+    return yint, ea  
+\end{pythoncode}
+
+Contoh kode untuk memanggil \pyinline{newton_interp} (Chapra Contoh 18.5):
+\begin{pythoncode}
+import numpy as np
+# ... Define newton_interp or import it here
+
+x = np.array([1.0, 4.0, 6.0 , 5.0, 3.0, 1.5, 2.5, 3.5])
+y = np.array([0.0, 1.386294, 1.791759, 1.609438, 1.0986123, 0.4054641, 0.9162907, 1.2527630])
+    
+N = len(x)
+xi = 2.0
+true_val = np.log(xi)
+print("True value = ", true_val)
+
+yint, ea1 = newton_interp(x, y, xi)
+print()
+print("Original ordering:")
+print("-----------------------------------------------")
+print("Order        yint          ea        true error")
+print("-----------------------------------------------")
+errors1 = true_val - yint # true error
+for i in range(0,N):
+    if i != (N-1):
+        print("%2d %18.10f %12.5e %12.5e" % (i, yint[i], ea1[i], errors1[i]))
+    else:
+        print("%2d %18.10f %12.5e %12.5e" % (i, yint[i], np.nan, errors1[i]))
+# We use if-else here because ea is only given up to N-1 for order N interpolation.
+
+
+yint, ea2 = newton_interp(x[::-1], y[::-1], xi)
+print()
+print("Reversed ordering:")
+print("-----------------------------------------------")
+print("Order        yint          ea        true error")
+print("-----------------------------------------------")
+errors2 = true_val - yint # true error
+for i in range(0,N):
+    if i != (N-1):
+        print("%2d %18.10f %12.5e %12.5e" % (i, yint[i], ea2[i], errors2[i]))
+    else:
+        print("%2d %18.10f %12.5e %12.5e" % (i, yint[i], np.nan, errors2[i]))
+
+import matplotlib.pyplot as plt
+plt.clf()
+plt.plot(ea1, label="est. error (original)", marker="o")
+plt.plot(ea2, label="est. error (reversed)", marker="o")
+plt.plot(np.abs(errors1), label="abs. true error (original)", marker="o")
+plt.grid(True)
+plt.xlabel("Order of interpolation")
+plt.ylabel("Error")
+plt.legend()
+plt.tight_layout()
+\end{pythoncode}
+
+Contoh keluaran program:
+\begin{textcode}
+True value =  0.6931471805599453
+
+Original ordering:
+-----------------------------------------------
+Order        yint          ea        true error
+-----------------------------------------------
+ 0       0.0000000000  4.62098e-01  6.93147e-01
+ 1       0.4620980000  1.03746e-01  2.31049e-01
+ 2       0.5658442000  6.29232e-02  1.27303e-01
+ 3       0.6287674000  4.69554e-02  6.43798e-02
+ 4       0.6757228000  2.17907e-02  1.74244e-02
+ 5       0.6975134781 -3.61629e-03 -4.36630e-03
+ 6       0.6938971924 -4.58678e-04 -7.50012e-04
+ 7       0.6934385143          nan -2.91334e-04
+    
+Reversed ordering:
+-----------------------------------------------
+Order        yint          ea        true error
+-----------------------------------------------
+ 0       1.2527630000 -5.04708e-01 -5.59616e-01
+ 1       0.7480545500 -6.53829e-02 -5.49074e-02
+ 2       0.6826716875  7.70884e-03  1.04755e-02
+ 3       0.6903805250  1.29898e-03  2.76666e-03
+ 4       0.6916795029  5.74909e-04  1.46768e-03
+ 5       0.6922544114  4.96086e-04  8.92769e-04
+ 6       0.6927504971  6.88017e-04  3.96683e-04
+ 7       0.6934385143          nan -2.91334e-04    
+\end{textcode}
+
+Contoh plot:
+
+{\centering
+\includegraphics[width=0.7\textwidth]{../../chapra_7th/ch18/IMG_chapra_example_18_5.pdf}
+\par}
+

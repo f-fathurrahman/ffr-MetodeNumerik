@@ -1,0 +1,343 @@
+\subsection{Metode \textit{shooting}}
+
+Pada metode \textit{shooting}, permasalahan nilai batas diubah menjadi permasalahan
+nilai awal. Solusi kemudian dicari dengan menggunakan metode \textit{trial-and-error}
+pada suatu parameter atau informasi yang belum diketahui, misalnya informasi nilai
+awal dari turunan pertama. Metode ini tidak memiliki bentuk yang baku, dan sangat
+bergantung dari permasalahan yang dihadapi. Pada beberapa kasus biasanya digunakan
+informasi nilai asimptotik dari solusi atau dari konteks fisis yang ada. 
+Biasanya metode \textit{shooting} melibatkan pencarian akar dari suatu persamaan
+nonlinear sehingga diperlukan metode \textit{bisection} atau metode pencarian akar persamaan
+persamaan nonlinear yang lain.
+
+Berikut ini adalah ilustrasi penggunaan metode \textit{shooting}.
+\begin{soal}[Chapra Contoh 27.1]
+Untuk $L=10$, $T_a = 20$, $T_1 = 40$, $T_2 = 200$, dan $h' = 0.01$, solusi
+dari Persamaan \eqref{eq:chapra_eq_27_1} adalah.
+\begin{equation*}
+T(x) = 73.4523 e^{0.1x} - 53.4523 e^{-0.1x} + 20
+\end{equation*}
+Gunakan metode \textit{shooting} untuk menyelesaikan persamaan ini secara numerik
+\end{soal}
+
+
+Kita mengubah persamaan diferensial orde-2 menjadi sistem persamaan diferensial
+orde-1 sebagai berikut:
+\begin{align*}
+\frac{\mathrm{d}T}{\mathrm{d}x} & = z \\
+\frac{\mathrm{d}z}{\mathrm{d}x} & = h'(T - T_a)
+\end{align*}
+Berikut ini adalah implementasi dari persamaan di atas:
+\begin{pythoncode}
+# T == y[0]
+# dT/dx == y[1]
+# d2T/dx2 == dydx[1]
+def deriv(x, y):
+    #
+    Nvec = len(y)
+    assert Nvec == 2
+    dydx = np.zeros(Nvec)
+    # Parameters
+    h = 0.01
+    T_a = 20.0
+    #
+    dydx[0] = y[1]
+    dydx[1] = h*(y[0] - T_a)
+    return dydx
+\end{pythoncode}
+
+Kita juga mendefinisikan beberapa variabel yang akan digunakan nanti.
+\begin{pythoncode}
+x0 = 0.0 # Initial cond
+y0 = np.zeros(2) # y0[0] should be equal to T(x=) and y0[1] will be set later
+xf = 10.0  # end interval
+Tf = 200.0 # Boundary condition, T(10) = 200
+\end{pythoncode}
+
+
+Nilai $T(x=0)$ sudah diberikan. Akan tetapi untuk menyelesaikan persamaan nilai
+awal, kita juga memerlukan nilai $\frac{\mathrm{d}T}{\mathrm{d}x} = z$ pada $x=0$.
+Misalkan kita menebaknya dengan nilai $z(0) = 10$.
+Dengan menggunakan metode Runge-Kutta orde-4 dengan ukuran langkah 2 kita dapat memperoleh
+nilai $T(x=L)$. Potongan kode berikut ini dapat digunakan:
+\begin{pythoncode}
+y0[0] = 40.0 # from the boundary condition, T(0) = 40
+z0_1 = 10.0 # Guess for z = dT/dx == y[1], save to it variable for later use
+y0[1] = z0_1
+
+h = 2.0 # Step size
+Nstep = int( (xf-x0)/h )
+x, y = ode_solve(deriv, ode_rk4_1step, x0, y0, h, Nstep)
+# At the end of the interval
+Tf_1 = y[-1,0]
+print("First guess: T(10) = y[-1,0] = ", Tf_1)
+\end{pythoncode}
+Keluaran:
+\begin{textcode}
+First guess: T(10) = y[-1,0] =  168.37965867134406
+\end{textcode}
+Diperleh $T(x=L)$ sekitar 168.3797. Ini masih berbeda dengan nilai yang kita perlukan
+yaitu 200.
+
+Berikut ini adalah plot dari solusi yang diperoleh (belum memenuhi syarat batas).
+
+{\centering
+\includegraphics[scale=0.7]{../../chapra_7th/ch27/IMG_example_27_1_v2_1st.pdf}
+\par}
+
+Karena masih berbeda, kita akan menggunakan tebakan lain, misalnya $z=10$:
+\begin{pythoncode}
+# Integrate again, now with new guess for z(0) = y0[1]
+z0_2 = 20.0
+y0[1] = z0_2 # Guess for z = dT/dx == y[1]
+x, y = ode_solve(deriv, ode_rk4_1step, x0, y0, h, Nstep)
+# At the end of the interval
+Tf_2 = y[-1,0]
+print("Second guess: T(10) = y[-1,0] = ", Tf_2)
+\end{pythoncode}
+Diperoleh:
+\begin{textcode}
+Second guess: T(10) = y[-1,0] =  285.89795359537567
+\end{textcode}
+Hasil yang diperoleh masih belum sama dengan yang diperlukan, yaitu 200.
+
+Berikut ini adalah plot dari solusi yang diperoleh (belum memenuhi syarat batas).
+
+{\centering
+\includegraphics[scale=0.7]{../../chapra_7th/ch27/IMG_example_27_1_v2_2nd.pdf}
+\par}
+
+Karena persamaan diferensial \eqref{eq:chapra_eq_27_1} adalah linear, maka
+dua solusi tersebut saling terkait.
+Kita dapat menggunakan interpolasi linear untuk mendapatkan nilai dari $z(0)$.
+Berikut adalah data yang sudah diperoleh.
+
+{\centering
+\begin{tabular}{|c|c|}
+\hline
+$z(0) = 10$ & $T(10) = 168.3797$ \\
+$z(0) = 20$ & $T(10) = 285.8980$ \\
+$z(0) = ??$ & $T(10) = 200$ \\
+\hline
+\end{tabular}
+\par}
+
+Kode Python:
+\begin{pythoncode}
+# Using linear interp to guess what value of z(0) which gives T(10) = 200
+z0_new = z0_1 + (z0_2 - z0_1)/(Tf_2 - Tf_1) * (Tf - Tf_1)
+print("z0_new = ", z0_new)
+\end{pythoncode}
+Diperoleh:
+\begin{textcode}
+z0_new =  12.690673937117328
+\end{textcode}
+
+Nilai ini dapat digunakan sebagai syarat awal.
+\begin{pythoncode}
+# Now solve the IVP using z0_new
+y0[1] = z0_new # Guess for z = dT/dx == y[1]
+x, y = ode_solve(deriv, ode_rk4_1step, x0, y0, h, Nstep)
+# At the end of the interval
+Tf_3 = y[-1,0]
+print("Third guess: T(10) = y[-1,0] = ", Tf_3)
+\end{pythoncode}
+Akhirnya kita mendpatkan nilai yang diinginkan:
+\begin{textcode}
+Third guess: T(10) = y[-1,0] =  200.0
+\end{textcode}
+
+Solusi yang diperoleh dapat diplot pada gambar berikut (sudah memenuhi syarat batas).
+
+{\centering
+\includegraphics[scale=0.7]{../../chapra_7th/ch27/IMG_example_27_1_v2_3rd.pdf}
+\par}
+
+
+Berikut ini perbandingannya dengan solusi eksak:
+\begin{pythoncode}
+def exact_sol(x):
+    #return 73.4532*np.exp(0.1*x) - 53.4523*np.exp(-0.1*x) + 20.0 # from book
+    # Using SymPy
+    return 20*((1 - np.exp(2))*np.exp(x/10) + (1 - 9*np.e)*np.exp(x/5) + \
+            np.e*(9 - np.e))*np.exp(-x/10)/(1 - np.exp(2))
+
+T_exact = exact_sol(x)
+T_num = y[:,0]
+error = np.abs(T_exact - T_num)
+for i in range(len(x)):
+    print("%18.10f %18.10f %18.10f %15.10e" % (x[i], T_num[i], T_exact[i], error[i]))
+\end{pythoncode}
+
+Hasil keluaran ($x$, numerik, eksak, error):
+\begin{textcode}
+    0.0000000000      40.0000000000      40.0000000000 0.0000000000e+00
+    2.0000000000      65.9518901934      65.9517913981 9.8795269608e-05
+    4.0000000000      93.7479650466      93.7477895327 1.7551381092e-04
+    6.0000000000     124.5037505132     124.5035454074 2.0510586421e-04
+    8.0000000000     159.4535539523     159.4533954960 1.5845629972e-04
+   10.0000000000     200.0000000000     200.0000000000 0.0000000000e+00
+\end{textcode}
+
+
+Untuk persamaan diferensial nonlinear, interpolasi linear biasanya
+tidak cukup untuk mendapatkan solusi yang memenuhi nilai batas.
+Kita perlu menggunakan metode pencarian akar seperti metode bagi
+dua untuk mendapatkan solusi.
+
+\begin{soal}
+Dengan menggunakan parameter numerik yang sama dengan soal sebelumnya, namun
+persamaan diferensial yang digunakan adalah:
+\begin{equation*}
+\frac{\mathrm{d}^2 T}{\mathrm{d}x^2} + h''(T_a - T)^4 = 0
+\end{equation*}
+dengan $h'' = 5\times 10^{-8}$
+\end{soal}
+
+
+\begin{pythoncode}
+# .... import dan definisi fungsi yang digunakan
+
+# T == y[0]
+# dT/dx == y[1]
+# d2T/dx2 == dydx[1]
+def deriv(x, y):
+    Nvec = len(y)
+    assert Nvec == 2
+    dydx = np.zeros(Nvec)
+    h = 5e-8
+    T_a = 20.0
+    dydx[0] = y[1]
+    dydx[1] = h*(y[0] - T_a)**4
+    return dydx
+
+def obj_func(z0_guess):
+    # Initial cond
+    x0 = 0.0
+    y0 = np.zeros(2)
+    y0[0] = 40.0 # from the boundary condition, T(0) = 40
+    y0[1] = z0_guess
+    xf = 10.0  # end interval
+    Tf = 200.0 # Boundary condition, T(10) = 200
+    #
+    h = 2.0 # Step size
+    Nstep = int( (xf-x0)/h )
+    x, y = ode_solve(deriv, ode_rk4_1step, x0, y0, h, Nstep)
+    # At the end of the interval
+    Tf_guess = y[-1,0]
+    return Tf_guess - Tf
+
+
+# For testing values of z0_1 and z0_2 which brackets obj_func
+z0_1 = 5.0
+Tf_1 = obj_func(z0_1)
+z0_2 = 11.0
+Tf_2 = obj_func(z0_2)
+print("Tf_1 = ", Tf_1)
+print("Tf_2 = ", Tf_2)
+
+z0 = root_bisection(obj_func, z0_1, z0_2, TOL=1.0e-9)
+
+# Now solve the ODE with the obtained z0
+x0 = 0.0
+y0 = np.zeros(2)
+y0[0] = 40.0 # from the boundary condition, T(0) = 40
+y0[1] = z0
+xf = 10.0  # end interval
+#
+h = 2.0 # Step size
+Nstep = int( (xf-x0)/h )
+x, y = ode_solve(deriv, ode_rk4_1step, x0, y0, h, Nstep)
+print("Tf = ", y[-1,0])  # CHECK: Should give a value close to 200.0
+
+# Now plot the solution
+plt.clf()
+plt.plot(x, y[:,0], marker="o", label="Temperature")
+# ....
+\end{pythoncode}
+
+
+Contoh hasil keluaran:
+\begin{textcode}
+Tf_1 =  -101.16453273552762
+Tf_2 =  98.71355087438758
+             Iter      Estimated          f(x)
+             ----      ---------          ----
+
+bisection:     1       8.0000000000     4.37036e+01
+bisection:     2       9.5000000000     6.70737e+00
+......  # output removed
+bisection:    36       9.3398893460     3.14060e-10
+
+bisection is converged in 36 iterations
+Tf =  200.00000000031406
+\end{textcode}
+
+
+Berikut ini adalah plot solusi yang diperoleh.
+
+{\centering
+\includegraphics[scale=0.7]{../../chapra_7th/ch27/IMG_example_27_2.pdf}
+\par}
+
+Anda dapat menggunakan jumlah titik yang lebih banyak (ukuran langkah yang lebih
+kecil untuk mendapatkan solusi yang lebih akurat).
+
+Implementasi \pyinline{root_bisection} (jika diperlukan)
+\begin{pythoncode}
+from math import ceil, log10
+
+def root_bisection(f, x1, x2, TOL=1.0e-9, NiterMax=None ):
+    f1 = f(x1)
+    if abs(f1) <= TOL:
+        return x1, 0.0
+    f2 = f(x2)
+    if abs(f2) <= TOL:
+        return x2, 0.0
+    if f1*f2 > 0.0:
+        raise RuntimeError("Root is not bracketed")
+
+    # No NiterMax is provided
+    # We calculate the default value here.
+    if NiterMax == None:
+        NiterMax = int(ceil( log10(abs(x2-x1)/TOL) )/ log10(2.0) ) + 10
+        # extra 10 iterations
+
+    # For the purpose of calculating relative error
+    x3 = 0.0
+    x3_old = 0.0
+
+    print(13*" "+"Iter      Estimated          f(x)")
+    print(13*" "+"----      ---------          ----")
+    print("")
+
+    for i in range(1,NiterMax+1):
+
+        x3_old = x3
+        x3 = 0.5*(x1 + x2)
+        f3 = f(x3)
+
+        print("bisection: %5d %18.10f %15.5e" % (i, x3, abs(f3)))
+
+        if abs(f3) <= TOL:
+            print("")
+            print("bisection is converged in %d iterations" % i)
+            # return the result
+            return x3
+
+        if f2*f3 < 0.0:
+            # sign of f2 and f3 is different
+            # root is in [x2,x3]
+            # change the interval bound of x1 to x3
+            x1 = x3
+            f1 = f3
+        else:
+            # sign of f1 and f3 is different
+            # root is in [x1,x3]
+            # change the interval bound of x2 to x3
+            x2 = x3
+            f2 = f3
+
+    print("No root is found")
+    return None
+\end{pythoncode}

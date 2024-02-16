@@ -1,0 +1,43 @@
+\subsection{Pencarian Acak (\textit{random search})}
+
+\begin{soal}[Chapra Contoh 14.1]
+Lengkapi kode program berikut ini yang mengimplementasikan metode
+pencarian acak untuk mencari nilai maksimum dari:
+\begin{equation*}
+f(x,y) = y - x - 2x^2 - 2xy - y^2
+\end{equation*}
+Coba variasikan nilai tebakan awal dan jumlah sampel yang digunakan.
+\end{soal}
+
+\begin{pythoncode}
+import numpy as np
+
+np.random.seed(13306023) # optional, for reproducibility
+# silakan coba ganti dengan seed yang lain, misalnya dengan NIM Anda.
+
+def my_func(x, y):
+    return ... # LENGKAPI
+
+xmin, xmax = -2.0, 2.0
+ymin, ymax = 1.0, 3.0
+
+Nsample = 10000
+
+# First sample
+x = xmin + (xmax - xmin)*np.random.rand()
+y = ymin + (ymax - ymin)*np.random.rand()
+
+fopt = my_func(x, y)
+xopt, yopt = x, y
+
+for i in range(1, Nsample+1):
+    x = .... # LENGKAPI
+    y = .... # LENGKAPI
+    f = my_func(x, y)
+    if f > fopt: # we search for max, if you search for min, use <
+        fopt = f
+        xopt, yopt = x, y
+    if i % 1000 == 0:
+        print("Current no. sample = ", i)
+        print("Current max: fopt = ", fopt, " at xopt = ", xopt, " yopt = ", yopt)
+\end{pythoncode}

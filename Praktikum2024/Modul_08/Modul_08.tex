@@ -1,0 +1,191 @@
+\input{../PREAMBLE}
+
+\begin{document}
+
+\title{%
+{\small TF2202 Komputasi Rekayasa}\\
+Persamaan Diferensial Parsial
+}
+\author{Tim Praktikum Komputasi Rekayasa 2024\\
+Teknik Fisika\\
+Institut Teknologi Bandung}
+\date{}
+\maketitle
+
+Persamaan difusi pada 1d dapat dituliskan sebagai:
+\begin{equation*}
+\frac{\partial u}{\partial t} =\alpha\frac{\partial^{2}u}{\partial x^{2}}+f(x,t)
+\end{equation*}
+
+Aproksimasi turunan pertama terhadap waktu
+\begin{equation*}
+\frac{\partial u}{\partial t}\approx\frac{u_{i}^{n+1}-u_{i}^{n}}{\Delta t}    
+\end{equation*}
+
+Aproksimasi turunan kedua terhadap $x$
+\begin{equation*}
+\frac{\partial^{2}u}{\partial x^{2}}=\frac{u_{i+1}^{n}-2u_{i}^{n}+u_{i-1}^{n}}{\Delta x^{2}}
+\end{equation*}
+
+Diperoleh
+\begin{equation*}
+\frac{u_{i}^{n+1}-u_{i}^{n}}{\Delta t}=\alpha\frac{u_{i+1}^{n}-2u_{i}^{n}+u_{i-1}^{n}}{\Delta x^{2}}+f_{i}^{n}
+\end{equation*}
+
+Skema eksplisit (Forward Euler):
+\begin{equation*}
+u_{i}^{n+1}-u_{i}^{n}=F\left(u_{i+1}^{n}-2u_{i}^{n}+u_{i-1}^{n}\right)+\Delta t\ f_{i}^{n}
+\end{equation*}
+
+
+menjadi
+\begin{equation*}
+u_{i}^{n+1} = u_{i}^{n} + F\left(u_{i+1}^{n} - 2u_{i}^{n} + u_{i-1}^{n}\right)+\Delta t\ f_{i}^{n}
+\end{equation*}
+
+\begin{equation*}
+F = \alpha\frac{\Delta t}{\Delta x^{2}}
+\end{equation*}
+
+Syarat kestabilan: $F\leq\dfrac{1}{2}$.
+
+Contoh, menggunakan solusi buatan:
+\begin{equation*}
+u(x,t) = 5tx(L-x)    
+\end{equation*}
+
+\begin{equation*}
+\frac{\partial u}{\partial t} = 5x(L-x)    
+\end{equation*}
+
+\begin{equation*}
+\frac{\partial^{2}u}{\partial x^{2}} = -10t
+\end{equation*}
+
+\begin{equation*}
+f(x,t) = \frac{\partial u}{\partial t} - \alpha\frac{\partial^{2}u}{\partial x^{2}}=5tx(L-x)+10t
+\end{equation*}
+
+
+
+Aproksimasi turunan pertama terhadap waktu menggunakan beda-hingga mundur
+\textit{backward finite difference}:
+\begin{equation*}
+\frac{\partial u}{\partial t}\approx\frac{u_{i}^{n}-u_{i}^{n-1}}{\Delta t}
+\end{equation*}
+
+Aproksimasi turunan kedua terhadap $x$
+\begin{equation*}
+\frac{\partial^{2}u}{\partial x^{2}}=\frac{u_{i+1}^{n}-2u_{i}^{n}+u_{i-1}^{n}}{\Delta x^{2}}
+\end{equation*}
+
+Diperoleh
+\begin{equation*}
+\frac{u_{i}^{n}-u_{i}^{n-1}}{\Delta t}=\alpha\frac{u_{i+1}^{n}-2u_{i}^{n}+u_{i-1}^{n}}{\Delta x^{2}}+f_{i}^{n}
+\end{equation*}
+
+$N_{x}=3$, kita memiliki 4 titik:~$u_{0}^{n},u_{1}^{n},u_{2}^{n},u_{3}^{n}$
+(dua titik ujung diketahui nilainya). Yang ingin dicari adalah $u_{1}^{n},u_{2}^{n}$.
+
+Untuk $i=1$:
+\begin{equation*}
+\frac{u_{1}^{n}-u_{1}^{n-1}}{\Delta t}=\alpha\frac{u_{2}^{n}-2u_{1}^{n}+u_{0}^{n}}{\Delta x^{2}}+f_{1}^{n}
+\end{equation*}
+
+Untuk $i=2:$
+\begin{equation*}
+\frac{u_{2}^{n}-u_{2}^{n-1}}{\Delta t}=\alpha\frac{u_{3}^{n}-2u_{2}^{n}+u_{1}^{n}}{\Delta x^{2}}+f_{2}^{n}
+\end{equation*}
+
+
+Rearrange: gunakan nilai batas: $u_{0}^{n}=0$ dan $u_{3}^{n}=0$
+\begin{equation*}
+u_{1}^{n}-u_{1}^{n-1}=\alpha\Delta t\frac{u_{2}^{n}-2u_{1}^{n}}{\Delta x^{2}}+\Delta tf_{1}^{n}
+\end{equation*}
+
+\begin{equation*}
+u_{1}^{n}-\alpha\Delta t\frac{u_{2}^{n}-2u_{1}^{n}}{\Delta x^{2}}=u_{1}^{n-1}+\Delta tf_{1}^{n}
+\end{equation*}
+
+\begin{equation*}
+u_{1}^{n}-F\left(u_{2}^{n}-2u_{1}^{n}\right)=u_{1}^{n-1}+\Delta tf_{1}^{n}
+\end{equation*}
+
+\begin{equation*}
+u_{1}^{n} + 2Fu_{1}^{n} - Fu_{2}^{n} = u_{1}^{n-1} + \Delta t f_{1}^{n}
+\end{equation*}
+
+\begin{equation*}
+(1 + 2F)u_{1}^{n} - Fu_{2}^{n} = u_{1}^{n-1} + \Delta t f_{1}^{n}
+\end{equation*}
+
+
+Dapat dituliskan juga untuk $i=2$
+\begin{equation*}
+-Fu_{1}^{n}+(1+2F)u_{2}^{n}=u_{2}^{n-1}+\Delta tf_{2}^{n}
+\end{equation*}
+
+
+Diperoleh sistem persamaan linear: $2\times2$
+\begin{align*}
+(1+2F)u_{1}^{n} - Fu_{2}^{n} & = u_{1}^{n-1} + \Delta t f_{1}^{n} \\
+-Fu_{1}^{n} + (1+2F)u_{2}^{n} & = u_{2}^{n-1} + \Delta t f_{2}^{n}
+\end{align*}
+
+Dalam bentuk matriks:
+\[
+\left(\begin{array}{cc}
+1+2F & -F\\
+-F & 1+2F
+\end{array}\right) = \left(\begin{array}{c}
+u_{1}^{n}\\
+u_{2}^{n}
+\end{array}\right)=\left(\begin{array}{c}
+u_{1}^{n-1}+\Delta tf_{1}^{n}\\
+u_{2}^{n-1}+\Delta tf_{2}^{n}
+\end{array}\right)
+\]
+Diketahui $u_{i}^{0}$ kita dapat memperoleh $u_{i}^{1}$ dengan cara
+menyelesaikan sistem persamaan persamaan linear. 
+
+Untuk kasus yang lebih yang lebih umum:
+\[
+-Fu_{i-1}^{n}+(1+2F)u_{i}^{n}-Fu_{i+1}^{n}=u_{i}^{n-1}+\Delta tf_{i}^{n}
+\]
+
+Jika ingin memasukkan juga titik-titik ujung, misalnya untuk $N_{x}=3$
+\[
+\left(\begin{array}{cccc}
+1 & 0 & 0 & 0\\
+0 & 1+2F & -F & 0\\
+0 & -F & 1+2F & 0\\
+0 & 0 & 0 & 1
+\end{array}\right)\left(\begin{array}{c}
+u_{0}^{n}\\
+u_{1}^{n}\\
+u_{2}^{n}\\
+u_{3}^{n}
+\end{array}\right)=\left(\begin{array}{c}
+u_{0}^{n-1}+\Delta tf_{0}^{n}\\
+u_{1}^{n-1}+\Delta tf_{1}^{n}\\
+u_{2}^{n-1}+\Delta tf_{2}^{n}\\
+u_{3}^{n-1}+\Delta tf_{3}^{n}
+\end{array}\right)
+\]
+
+Untuk kasus $N_{x}=4$
+\[
+\left(\begin{array}{ccc}
+1+2F & -F & 0\\
+-F & 1+2F & -F\\
+0 & -F & 1+2F
+\end{array}\right)
+\]
+
+
+
+
+
+
+
+\end{document}
