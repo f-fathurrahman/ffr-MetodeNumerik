@@ -27,6 +27,10 @@ $x_{1} = -0.001$ dan $x_2 = -3000$.
 Buat program Python dengan menggunakan \textit{single precision} dan
 \textit{double precision} untuk melihat perbedaan hasil yang diberikan 
 dari Persamaan \eqref{eq:quadeq1} dan Persamaan \eqref{eq:quadeq2}.
+Bandingkan akar-akar yang Anda peroleh dengan akar-akar eksak.
+Untuk masing-masing akar, formula mana yang memberikan hasil yang paling dekat dengan
+hasil eksak?
+\end{soal}
 
 Program berikut ini adalah dalam \textit{single precision}
 yang dapat Anda lengkapi. Anda juga dapat menggunakan program yang Anda tulis sendiri
@@ -63,16 +67,15 @@ print("Using 2nd formula: approx roots: ", x1, " ", x2)
 print("True roots: ", x1_true, " ", x2_true)
 \end{pythoncode}
 
-Bandingkan akar-akar yang Anda peroleh dengan akar-akar eksak.
-Untuk masing-masing akar, formula mana yang memberikan hasil yang paling dekat dengan
-hasil eksak?
-\end{soal}
 
 \begin{soal}
 Program berikut ini, kita akan menggunakan CAS atau \textit{computer algebra system}
 untuk memastikan bahwa formula \eqref{eq:quadeq1} dan \eqref{eq:quadeq2} memberikan
 hasil yang identik. Lengkapi kode berikut ini dan cek apakah hasil yang diberikan
 dari kedua formula tersebut adalah sama.
+Selain itu coba turunkan formula \eqref{eq:quadeq2} dari \eqref{eq:quadeq1}.
+\end{soal}
+
 \begin{pythoncode}
 from sympy import *
 
@@ -109,5 +112,3 @@ Pada SymPy, tipe untuk integer dan rasional adalah:
 \begin{textcode}
 <class 'sympy.core.numbers.Integer'> <class 'sympy.core.numbers.Rational'>
 \end{textcode}
-Coba turunkan formula \eqref{eq:quadeq2} dari \eqref{eq:quadeq1}.
-\end{soal}
