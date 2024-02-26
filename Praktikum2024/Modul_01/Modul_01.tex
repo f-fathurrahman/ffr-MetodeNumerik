@@ -150,4 +150,93 @@ Ulangi soal sebelumnya dengan $g = 9.81$, $t = 6$, $c = 12.5 \pm 1.5$,
 dan $m = 50 \pm 2$.
 \end{soal}
 
+
+\begin{soal}
+\textbf{UTS 2023}
+Cari $\mathbf{x}$ yang memenuhi persamaan linear
+\begin{equation}
+\mathbf{A} \mathbf{x} = \mathbf{b}
+\label{eq:linear_eq}
+\end{equation}
+dengan
+\begin{equation*}
+\mathbf{A} = \begin{bmatrix}
+888445 & 887112\\
+887112 & 885781
+\end{bmatrix}
+\end{equation*}
+dan
+\begin{equation*}
+\mathbf{b} = \begin{bmatrix}
+10\\
+0
+\end{bmatrix}
+\end{equation*}
+menggunakan fungsi \pyinline{linsolve} pada modul \pyinline{numpy.linalg}
+atau fungsi MINVERSE pada Microsoft Excel.
+\footnote{Misalnya: \url{https://www.excel-easy.com/examples/system-of-linear-equations.html}}
+Lakukan pengecekan hasil yang Anda
+dapatkan dengan cara mengecek apakah persamaan \ref{eq:linear_eq} terpenuhi atau tidak
+(ruas kiri sama dengan ruas kanan).
+Bandingkan hasil yang Anda peroleh dengan cara manual (menggunakan kalkulator atau
+perhitungan analitik) atau dengan bantuan SymPy (lihat kode yang diberikan).
+Apakah hasil yang Anda peroleh sama? Jika tidak apa yang
+menyebabkan perbedaan tersebut? Apa yang harus Anda lakukan agar hasilnya sama (jika
+hasil yang Anda peroleh berbeda)? Catatan: Hasil yang Anda peroleh dapat dianggap
+akurat jika perbedaan antara
+hasil eksak (analitik, dengan SymPy) dan numerik berada dalam orde $10^{-10}$ atau lebih
+kecil.
+\end{soal}
+    
+Untuk soal ini Andas dapat menggunakan kode Python berikut.
+\begin{pythoncode}
+from sympy import Matrix, pprint, init_printing
+init_printing()
+    
+A = Matrix([
+    [888445, 887112],
+    [887112, 885781]
+])
+
+b = Matrix([[10], [0]])
+    
+x = A.solve(b)
+print("x = ");
+pprint(x)
+\end{pythoncode}
+atau (untuk mendapatkan bentuk eksplisit dari $\mathbf{x}$ pada kasus
+ukuran matriks $\mathbf{A}$ adalah $2\times2$)
+\begin{pythoncode}
+from sympy import *
+    
+# Elemen-elemen matriks dan vektor, indeks mulai dari 0.
+A00, A01, A10, A11 = symbols("A00 A01 A10 A11")
+b0, b1 = symbols("b0 b1")
+    
+A = Matrix([
+    [A00, A01],
+    [A10, A11]
+])
+    
+b = Matrix([[b0], [b1]])
+    
+x = A.solve(b)
+print("x = ");
+print(x)
+\end{pythoncode}
+
+
+\begin{soal}
+Baca sumber-sumber di Internet mengenai \textit{floating-point arithmetic} (tidak
+harus menggunakan Python), seperti:
+\begin{itemize}
+\item {\small\url{https://discourse.julialang.org/t/psa-floating-point-arithmetic/8678}}
+\item {\small\url{https://discourse.julialang.org/t/incorrect-summation-of-float64/93376/6}}
+\item {\small\url{https://0.30000000000000004.com/}}
+\end{itemize}
+kemudian tuliskan apa saja yang harus Anda perhatikan jika bekerja dengan
+dengan bilangan \textit{floating-point}.
+\end{soal}
+
+
 \end{document}
