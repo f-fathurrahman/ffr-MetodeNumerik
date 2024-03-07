@@ -23,7 +23,7 @@ Implementasikan suatu fungsi untuk menghitung solusi persamaan linear:
 \end{equation*}
 di mana $\mathbf{A}$ adalah suatu matriks berukuran $n \times n$, 
 $\mathbf{x}$ dan $\mathbf{b}$ adalah vektor kolom.
-Anda dapat menggunakan pseudocode yang dijelaskan pada Gambar 9.6
+Anda dapat menggunakan \textit{pseudocode} yang dijelaskan pada Gambar 9.6
 pada buku Chapra dengan mengingat bahwa untuk Python indeks dimulai dari 0.
 Lakukan modifikasi jika Anda anggap perlu.
 Fungsi Anda harus memiliki opsi atau argumen opsional \pyinline{verbose}.
@@ -98,6 +98,28 @@ print(x)
 print("Check: (should be close to zero)")
 print(A @ x - b)
 \end{pythoncode}
+
+Jika Anda tidak ingin menampilkan langkah-langkah yang diambil, parameter
+\pyinline{verbose} diatur menjadi \pyinline{False} (ini adalah nilai \textit{default}
+sehingga Anda juga dapat memanggil \pyinline{linsolve_gauss_elim} tanpa parameter ini).
+Parameter \pyinline{verbose} dimaksudkan agar kita dapat melihat
+proses pada matriks $\mathbf{A}$ dan vektor $\mathbf{b}$ ketika
+proses eliminasi Gauss dan melihat apakah proses berjalan
+sesuai dengan yang diinginkan.
+Dalam komunitas \textit{programmer}, teknik ini dikenal
+dengan nama \textit{printf debugging}. Teknik ini adalah
+teknik \textit{debugging} (mencari tahu apa yang salah pada program)
+paling sederhana. Untuk program yang lebih besar biasanya digunakan
+suatu program lain yang disebut sebagai \textit{debugger}.
+Anda dapat membaca lebih lanjut mengenai
+hal ini di beberapa sumber di internet, di antaranya pada sumber
+berikut.
+\begin{itemize}
+\item {\footnotesize\url{https://stackoverflow.com/questions/189562/what-is-the-proper-name-for-doing-debugging-by-adding-print-statements}}
+\item {\footnotesize\url{https://www.youtube.com/watch?v=r0JvqH6OWKQ}}
+\end{itemize}
+
+
 
 \section{Dekomposisi LU}
 
