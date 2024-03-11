@@ -41,7 +41,7 @@ NiterMax = 100
 while (d[-1] >= SMALL) and (k <= NiterMax): # termination criterion
 
     x1 = γ*a + (1 - γ)*b
-    x2 = (1-γ)*a + γ*b
+    x2 = (1 - γ)*a + γ*b
     
     if k == 1:
         f1 = my_func01(x1)
