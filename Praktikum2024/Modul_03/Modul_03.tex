@@ -34,6 +34,11 @@ dan substitusi balik. Uji hasil program Anda dengan menggunakan salah satu conto
 yang ada pada slide.
 \end{soal}
 
+{\centering
+\includegraphics[width=0.8\textwidth]{images_priv/Chapra_Fig_9_4.png}
+\par}
+
+
 Anda dapat menggunakan kode berikut ini jika diperlukan (silakan dimodifikasi sesuai
 keperluan.)
 \begin{pythoncode}
@@ -128,8 +133,17 @@ Lakukan hal yang sama dengan soal sebelumnya, namun dengan menggunakan
 dekomposisi LU.
 Anda dapat menggunakan pseudocode yang ada pada Gambar 10.2 pada Chapra.
 Uji fungsi yang Anda implementasikan dan gunakan untuk menyelesaikan
-kasus atau contoh sama yang Anda gunakan pada soal pertama.
+kasus atau contoh sama yang Anda gunakan pada soal pertama. Jika Anda kesulitan
+Anda dapat mengabaikan operasi pivoting.
 \end{soal}
+
+\begin{figure}
+{\centering
+\includegraphics[width=\textwidth]{images_priv/Chapra_Fig_10_2.png}
+\par}
+\caption{Chapra Gambar 10.2}
+\end{figure}
+
 
 \begin{soal}
 Apakah penggunaan dekomposisi LU untuk menyelesaikan sistem persamaan linear memiliki keuntungan
@@ -178,5 +192,18 @@ Hitung invers dari matrix berikut (jika ada):
 Apa keuntungan dan kekurangan dari metode Gauss-Seidel (dan metode iteratif lainnya)
 dibandingkan dengan metode eliminasi Gaussian?
 \end{soal}
+
+
+\begin{soal}
+Catatan: Kerjakan secara numerik (dengan pustaka NumPy) dan simbolik (dengan
+menggunakan pustaka SymPy).
+Cari informasi mengenai matriks Hilbert (berikan definisi dari
+matriks ini). Buat fungsi Python (atau gunakan pustaka)
+untuk membuat matriks ini. Kemudian coba hitung invers dari matriks ini secara
+numerik (boleh menggunakan pustaka) untuk
+ukuran matriks $n \times n$ dengan $n$ dari 10 sampai 15. Bandingkan hasil yang Anda peroleh
+secara simbolik (Anda perlu menggunakan aritmatika eksak) menggunakan SymPy.
+\end{soal}
+
 
 \end{document}
