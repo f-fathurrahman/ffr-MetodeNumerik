@@ -1,7 +1,11 @@
 # Solves the 2D Poisson equation in a rectangular domain
 import math
 import numpy as np
+
 from numba import jit
+import numba
+numba.config.DISABLE_JIT = False
+
 
 @jit(nopython=True)
 def Poisson0(u, x, y, Nx, Ny, rhs_func, NiterMax=10000, TOL=1e-5):
@@ -12,6 +16,9 @@ def Poisson0(u, x, y, Nx, Ny, rhs_func, NiterMax=10000, TOL=1e-5):
 #  precision eps. An error index is returned: 0 - normal execution.
 #  Calls: Func(x,y) - RHS of Poisson equation
 #----------------------------------------------------------------------------
+
+    SMALL = 2.220446049250313e-16
+    # SMALL = np.finfo(np.float64).eps
 
     hx = (x[Nx]-x[1])/(Nx-1)
     kx = 1/(hx*hx)
@@ -33,17 +40,18 @@ def Poisson0(u, x, y, Nx, Ny, rhs_func, NiterMax=10000, TOL=1e-5):
         for j in range(2,Ny):
             for i in range(2,Nx): # interior mesh points
                 uij = (kx*(u[i-1,j] + u[i+1,j]) + ky*(u[i,j-1] + u[i,j+1]) - f[i,j]) / kxy
-                if abs(uij) > 1e-10:
+                if abs(uij) > SMALL:
                     eij = 1.0 - u[i,j]/uij
                 else:
                     eij = uij - u[i,j]   # local error
+                # Take maximum error
                 if math.fabs(eij) > err:
-                    err = math.fabs(eij)             # maximum error
+                    err = math.fabs(eij)
                 u[i,j] = uij
 
         if err <= TOL:
-            print(iterNo)
-            print(err)
+            print("Converged")
+            # @njit or @jit(nopython=True) does not support formatted print (?)
             break
         
         iterNo += 1
@@ -51,7 +59,7 @@ def Poisson0(u, x, y, Nx, Ny, rhs_func, NiterMax=10000, TOL=1e-5):
     if iterNo > NiterMax:
         print("WARNING: Number of iterations exceed NiterMax")
 
-    return
+    return iterNo, err # return some info
 
 
 # RHS function for Poisson0
@@ -63,12 +71,12 @@ def rhs_function(x, y):
 
 # Define domain boundaries
 xmin = -math.pi; xmax = math.pi
-ymin = -math.pi; ymax = math.pi          
+ymin = -math.pi; ymax = math.pi
 # number of mesh points
 Nx = 51
 Ny = 51
 # relative solution tolerance
-TOL = 1e-5                                      
+TOL = 1e-5
 
 # solution
 u = np.zeros((Nx+1,Ny+1))
@@ -87,20 +95,25 @@ for j in range(1,Ny+1):
 
 # initial values of u are set to zeros
 
-Poisson0(u, x, y, Nx, Ny, rhs_function, TOL=TOL)
+import time
+start = time.perf_counter()
+iterNo, err = Poisson0(u, x, y, Nx, Ny, rhs_function, TOL=TOL)
+end = time.perf_counter()
+print(f"iterNo = {iterNo} err={err}")
+print("Elapsed time = {}s".format((end - start)))
 
 
 """
 out = open("Poisson.txt","w")                              # open output file
 out.write("      x         y          u\n")
 for j in range(1,ny+1):
-   for i in range(1,nx+1):
-      out.write(("{0:10.5f}{1:10.5f}{2:14.5e}\n").format(x[i],y[j],u[i][j]))
+    for i in range(1,nx+1):
+        out.write(("{0:10.5f}{1:10.5f}{2:14.5e}\n").format(x[i],y[j],u[i][j]))
 out.close()
 
 umin = umax = u[1][1]                   # minimum and maximum of the solution
 for j in range(1,ny+1):
-   for i in range(1,nx+1):
-      if (u[i][j] < umin): umin = u[i][j]
-      if (u[i][j] > umax): umax = u[i][j]
+    for i in range(1,nx+1):
+        if (u[i][j] < umin): umin = u[i][j]
+        if (u[i][j] > umax): umax = u[i][j]
 """
