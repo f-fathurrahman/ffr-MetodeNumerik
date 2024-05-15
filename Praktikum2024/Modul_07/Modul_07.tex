@@ -61,12 +61,45 @@ pada titik ke-$i$.
 \begin{itemize}
 \item Chapra Latihan 25.16, 25.17, 25.18, 25.19
 \item Chapra Latihan 27.28, 27.29, 27.30
-\item Lakukan seperti pada {\footnotesize \url{https://scipython.com/blog/the-double-pendulum/}},
-namun dengan menggunakan fungsi penyelesaian ODE yang Anda buat sendiri (silakan pilih
-metodenya), tidak menggunakan \txtinline{odeint}. Silakan lakukan modifikasi yang diperlukan
+\end{itemize}
+
+
+\section{\textit{Mini Project}}
+
+Untuk soal-soal berikut menggunakan fungsi penyelesaian ODE yang Anda buat sendiri (silakan pilih
+metodenya), tidak menggunakan \txtinline{odeint}, \txtinline{solve-ivp}, ataupun fungsi
+dari pustaka lain (selain Numpy).
+Lengkapi jawaban Anda dengan visualisasi dan atau animasi serta komentar singkat
+mengenai hasil yang diperoleh.
+
+\textbf{Pendulum Ganda}
+Car model matematika untuk pendulum ganda seperti
+pada {\footnotesize \url{https://scipython.com/blog/the-double-pendulum/}},.
+Silakan lakukan modifikasi yang diperlukan
 pada kode asli jika diperlukan.
 Anda juga dapat menggunakan referensi yang lain, misalnya:
 {\footnotesize \url{https://matplotlib.org/stable/gallery/animation/double_pendulum.html}}
+atau referensi lainnya.
+
+\textbf{Pendulum Terbalik} Cari model matematika untuk pendulum terbalik pada suatu
+kereta yang bergerak dan
+buat simulasi dengan cara menyelesaikan model matematika tersebut secara numerik.
+Anda dapat menggunakan referensi seperti pada tautan berikut
+{\footnotesize \url{https://github.com/mpkuse/inverted_pendulum/tree/master}}
+atau referensi lainnya (Anda dapat mengabaikan bagian mengenai
+\textit{state-space} dan kontrol, Anda hanya diminta sampai membuat simulasi dinamiknya
+dengan keadaan awal dan input yang Anda pilih).
+
+\textbf{Gravitational Three Body Problem} Cari model matematik dari
+masalah tiga benda yang saling berinteraksi melalui gravitasi. Anda dapat
+menggunakan beberapa sumber seperti pada tautan berikut (Ada banyak variasi
+untuk masalah ini, Anda dapat memilih satu kasus saja):
+\begin{itemize}
+\item {\footnotesize\url{https://github.com/zaman13/Three-Body-Problem-Gravitational-System}}
+\item {\footnotesize\url{https://blbadger.github.io/3-body-problem.html}}
+\item {\footnotesize\url{https://evgenii.com/blog/three-body-problem-simulator/}}
+ (dalam Javascript, Anda perlu mengadaptasi kodenya ke Python)
+ \item Anda dapat menggunakan sumber lain
 \end{itemize}
 
 
