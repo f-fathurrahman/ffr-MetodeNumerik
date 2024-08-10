@@ -1,0 +1,27 @@
+/*
+Adding the named parameter flags=icase with icase:
+
+0 - will produce a mesh where all quads are split
+    with diagonal x−y=constant
+
+1 - will produce a Union Jack flag type of mesh
+
+2 - will produce a mesh where all quads are split with diagonal x+y=constant
+
+3 - same as in case 0, except two corners where the triangles are
+    the same as case 2, to avoid having 3 vertices on the boundary
+
+4 - same as in case 2, except two corners where the triangles are
+    the same as case 0, to avoid having 3 vertices on the boundary
+*/
+
+real x0 = 0.0;
+real x1 = 2.0;
+real y0 = 0.0;
+real y1 = 1.0;
+int Nx = 10;
+int Ny = 5;
+mesh Th = square(Nx, Ny, [x0+(x1-x0)*x, y0+(y1-y0)*y], flags=4);
+
+plot(Th, wait=true, aspectratio=1, ps="IMG_ex_square_03_icase4.ps");
+

@@ -1,0 +1,11 @@
+// To construct Nx x Ny grid in the rectangle [x0,x1] x [y0,y1]
+real x0 = 0.0;
+real x1 = 2.0;
+real y0 = 0.0;
+real y1 = 1.0;
+int Nx = 10;
+int Ny = 5;
+mesh Th = square(Nx, Ny, [x0+(x1-x0)*x, y0+(y1-y0)*y]);
+
+plot(Th, wait=true, aspectratio=1, ps="IMG_ex_square_02.ps");
+
