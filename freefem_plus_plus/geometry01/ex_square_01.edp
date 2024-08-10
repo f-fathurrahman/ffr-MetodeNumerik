@@ -1,0 +1,3 @@
+// The following 4x5 in the unit square [0,1]^2
+mesh Th = square(4, 5);
+plot(Th, wait=true, aspectratio=1, ps="IMG_ex_square_01.ps");
