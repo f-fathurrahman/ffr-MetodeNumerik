@@ -1,0 +1,38 @@
+// Solve
+// -u_xx + u = x
+// 0 < x < 1
+// u(0) = u(1) = 0
+
+// exact solution is u(x) = x - sinh(x)/sinh(1)
+
+
+// 1d problem on long rectangular strip
+// 100 intervals in x and 1 in y
+int n = 100;
+// The [ ] option allows us to rescale X or Y.
+mesh Th = square( n, 1, [x, (-1+2*y)/10] );
+//mesh Th = square( n, 1 );
+
+plot(Th, wait=true, aspectratio=1, ps="IMG_poisson_1d_mesh.ps");
+
+// Define finite element space defined over Th, using P1 basis function
+fespace Vh(Th, P1);
+
+// Define u and v, piecewise P1 continues functions over Th
+Vh u, v;
+
+// f, the right hand side function
+func f = x;
+
+// Request a solution of discrete weak system.
+// Note that BC is included, defined on sides 2 and 4 of the square boundary
+solve Poisson (u, v , solver=LU)
+  = int2d(Th) ( dx(u)*dx(v) + u*v )
+  - int2d(Th) ( f*v )
+  + on( 2, 4, u=0.0 );
+
+// Plot the solution
+plot (u, wait=true, dim=3, fill=true, ps="IMG_poisson_1d_u.ps");
+
+
+
