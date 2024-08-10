@@ -1,0 +1,6 @@
+// Two squares
+int Nx = 5;
+int Ny = 5;
+mesh Th1 = square(Nx, Ny, [0.0+x, 1.0+y]);
+mesh Th2 = square(Nx, Ny, [2.0+x, 2.0+y]);
+plot(Th1 + Th2, aspectratio=1); // cannot do this!
