@@ -1,0 +1,177 @@
+//  channel_navier_stokes.edp
+//
+//  Discussion:
+//
+//    Solve the Navier-Stokes equations.
+//
+//  Location:
+//
+//    http://people.sc.fsu.edu/~jburkardt/freefem_src/channel_navier_stokes/channel_navier_stokes.edp
+//
+//  Licensing:
+//
+//    This code is distributed under the MIT license.
+//
+//  Modified:
+//
+//    20 June 2015
+//
+//  Author:
+//
+//    Florian De Vuyst
+//
+//  Reference:
+//
+//    Numerical modeling of transport problems using freefem++ software -
+//    with examples in biology, CFD, traffic flow and energy transfer,
+//    HAL id: cel-00842234
+//    https://cel.archives-ouvertes.fr/cel-00842234
+//
+cout << "\n";
+cout << "channel_navier_stokes:\n";
+cout << "  FreeFem++ version\n";
+cout << "  Simulate flow in a channel with a circular obstruction,\n";
+cout << "  using the Navier-Stokes equations.\n";
+
+real Re = 600.0;
+real nu = 1.0 / Re;
+real Lx = 12.0;
+real Ly = 5.0;
+real dt = 0.5;
+//
+//  Set the border.
+//
+border c1 ( t=0,1)    {x=t*Lx; y=0;}
+border c2 ( t=0,1)    {x=Lx; y=t*Ly;}
+border c3 ( t=1,0)    {x=t*Lx; y=Ly;}
+border c4 ( t=1,0)    {x=0; y=t*Ly;}
+border c5 ( t=2*pi,0) {x=4+0.2*cos(t); y=Ly/2+0.2*sin(t);}
+border c6 ( t=0,1)    {x=5+Lx/2*t; y=Ly/2+0.4;}
+border c7 ( t=0,1)    {x=5+Lx/2*t; y=Ly/2-0.4;}
+//
+//  Create the mesh.
+//
+mesh Th = buildmesh 
+(
+  c1(80)+c2(40)+c3(80)+c4(20)+c5(60)+c6(100)+c7(100)
+);
+plot ( Th, ps = "channel_navier_stokes_mesh.ps" );
+//
+//  Define the finite element spaces for velocity and pressure.
+//
+fespace Uh(Th, P2);
+fespace Vh(Th, P1);
+Uh u;
+Uh v;
+Uh uh;
+Uh vh;
+Uh uold;
+Uh vold;
+Vh p;
+Vh ph;
+Vh uplot;
+Vh vplot;
+Vh vort;
+//
+//  Set up the steady Stokes equations.
+//
+real eps = 1.0e-10;
+
+problem steadystokes([u,v,p], [uh,vh,ph]) =
+   int2d(Th) ( nu*dx(u)*dx(uh) + nu*dy(u)*dy(uh) )
+ + int2d(Th) (nu*dx(v)*dx(vh) + nu*dy(v)*dy(vh) )
+ - int2d(Th) (p*dx(uh))
+ - int2d(Th) (p*dy(vh))
+ - int1d(Th, c2) (nu*dx(u)*N.x*uh+nu*dy(u)*N.y*uh)
+ - int1d(Th, c2) (nu*dx(v)*N.x*vh+nu*dy(v)*N.y*vh)
+ + int2d(Th) (dx(u)*ph + dy(v)*ph)
+ + int2d(Th) (eps*p*ph)
+ + on ( c1, c3, c5, u=0.0, v=0.0 )
+ + on ( c4, u=4.0 * y/Ly * (1.0-y/Ly), v=0 );
+//
+//  Solve the steady Stokes equations.
+//
+steadystokes;
+//
+//  Plot the velocity and vorticity fields.
+//
+uplot = u;
+vplot = v;
+plot ( Th, [uplot,vplot], nbiso = 40, value = true, 
+  ps = "channel_navier_stokes_velocity_0.ps" );
+vort = dy ( u ) - dx ( v );
+plot ( vort, nbiso = 60, fill = false,
+  ps = "channel_navier_stokes_vorticity_0.ps" );
+//
+//  Set up the unsteady Navier−Stokes equations.
+//
+int it = 0;
+uold = u;
+vold = v;
+
+problem ChannelNavierStokes ( [u,v,p], [uh,vh,ph], init=it, solver = sparsesolver ) =
+   int2d(Th) (u*uh/dt)
+ - int2d(Th) (convect([uold,vold], -dt, uold)*uh/dt)
+ + int2d(Th) (v*vh/dt)
+ - int2d(Th) (convect([uold,vold], -dt, vold)*vh/dt)
+ + int2d(Th) ( nu*dx(u)*dx(uh) + nu*dy(u)*dy(uh) )
+ + int2d(Th) (nu*dx(v)*dx(vh) + nu*dy(v)*dy(vh) )
+ - int2d(Th) (p*dx(uh))
+ - int2d(Th) (p*dy(vh))
+ - int1d(Th, c2) (nu*dx(u)*N.x*uh+nu*dy(u)*N.y*uh)
+ - int1d(Th, c2) (nu*dx(v)*N.x*vh+nu*dy(v)*N.y*vh)
+ + int2d(Th) (dx(u)*ph + dy(v)*ph)
+ + int2d(Th) (eps*p*ph)
+ + on ( c1, c3, c5, u=0, v=0)
+ + on ( c4, u=4.0 * y/Ly * (1-y/Ly), v=0);
+//
+//  Carry out 20 iterations, possibly adapting the mesh.
+//
+for ( it = 1; it <= 20; it++ ) 
+{
+  for ( int subit = 0; subit < 5; subit++ ) 
+  {
+    ChannelNavierStokes;
+//
+//  Possibility of adapting the mesh.
+//
+//  Th = adaptmesh(Th, [u,v]);
+//  u = u;
+//  v = v;
+
+    uold = u;
+    vold = v;
+  }
+//
+//  Display the velocity and vorticity.
+//
+  uplot = u;
+  vplot = v;
+  vort = dy ( u ) - dx ( v );
+  plot ( Th, [uplot, vplot], nbiso = 60 );
+  plot ( vort, nbiso = 60, fill = false );
+//
+//  Plot the velocity and vorticity in files.
+//
+  if ( ( it % 5 ) == 0 )
+  {
+    uplot = u;
+    vplot = v;
+
+    plot ( Th, [uplot, vplot], nbiso = 60, 
+      ps = "channel_navier_stokes_velocity_"+it+".ps" );
+
+    vort = dy ( u ) - dx ( v );
+
+    plot ( vort, nbiso = 60, fill = false,
+      ps = "channel_navier_stokes_vorticity_"+it+".ps" );
+  }
+}
+//
+//  Terminate.
+//
+cout << "\n";
+cout << "channel_navier_stokes:\n";
+cout << "  Normal end of execution.\n";
+
+exit ( 0 );
