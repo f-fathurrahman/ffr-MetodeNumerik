@@ -1,0 +1,44 @@
+real L = 0.5;
+int meshSize = 60;
+
+int wall = 1;
+int inlet = 2;
+int outlet = 3;
+
+mesh Mesh;
+border b1(t=0.0, 1.0) {
+    x = L*t;
+    y = 0;
+    label = wall;
+};
+
+border b2(t=0.0, 1.0) {
+    x = L;
+    y = L*t;
+    label = outlet;
+};
+
+border b3(t=0.0, 1.0) {
+    x = L - L*t;
+    y = L;
+    label = wall;
+}
+
+border b4(t=0.0, 1.0) {
+    x = 0.0;
+    y = L - L*t;
+    label = inlet;
+}
+
+border largeCircle(t=0.0, 1.0) {
+    x = 1.1*cos(2*pi*t);
+    y = 1.1*sin(2*pi*t);
+    label = 4;
+}
+
+Mesh = buildmesh(largeCircle(50) + b1(-10) + b2(-10) + b3(-10) + b4(-10));
+plot( Mesh, wait=true );
+
+//load "iovtk"
+//savevtk("IMG_mesh1.vtk", Mesh);
+
