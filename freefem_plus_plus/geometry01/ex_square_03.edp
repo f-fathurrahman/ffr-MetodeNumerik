@@ -23,5 +23,6 @@ int Nx = 10;
 int Ny = 5;
 mesh Th = square(Nx, Ny, [x0+(x1-x0)*x, y0+(y1-y0)*y], flags=4);
 
-plot(Th, wait=true, aspectratio=1, ps="IMG_ex_square_03_icase4.ps");
-
+//plot(Th, wait=true, aspectratio=1, ps="IMG_ex_square_03_icase4.ps");
+plot(Th, wait=true, ps="IMG_ex_square_03_icase4.ps");
+// using aspectratio=1 will give wrong size ps file?
