@@ -1,0 +1,45 @@
+(* --- *)
+(* jupyter: *)
+(*   jupytext: *)
+(*     text_representation: *)
+(*       extension: .wolfram *)
+(*       format_name: percent *)
+(*       format_version: '1.3' *)
+(*       jupytext_version: 1.16.1 *)
+(*   kernelspec: *)
+(*     display_name: Wolfram Language 13.3 *)
+(*     language: Wolfram Language *)
+(*     name: wolframlanguage13.3 *)
+(* --- *)
+
+(* %% *)
+phihaar[x_] = WaveletPhi[ HaarWavelet[], x ];
+
+(* %% *)
+u = x^2 + 5*x;
+
+(* %% *)
+NIntegrate[ u*phihaar[x-1], {x, 0, 10}, Method->"GaussKronrodRule" ]
+
+(* %% *)
+c = {};
+For[ i = 0; c1, i < 11, i++,
+    c1 = NIntegrate[ u*phihaar[x-i], {x, 0, 10}, Method->"GaussKronrodRule" ];
+    AppendTo[c, c1];
+]
+
+(* %% *)
+c
+
+(* %% *)
+PjU = c[[1]] * phihaar[x] + c[[2]] * phihaar[x-1] + c[[3]] * phihaar[x-2] +
+      c[[4]] * phihaar[x-3] + c[[5]] * phihaar[x-4];
+
+(* %% *)
+Plot[ {u, PjU}, {x, -0.01, 5.01}, Exclusions->None, PlotRange->All]
+
+(* %% *)
+
+(* %% *)
+
+(* %% *)
