@@ -4,14 +4,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
-Nx = 101
-Ny = 101
-Nt = 81
+Nx = 41
+Ny = 41
+Nt = 120
 c = 1.0 # not used?
 Δx = 2.0/(Nx-1)
 Δy = 2.0/(Ny-1)
-σ = 0.2
-Δt = σ*Δx
+σ = 0.005 #0.0009
+ν = 0.01
+Δt = σ*Δx*Δy/ν
 
 x = np.linspace(0.0, 2.0, Nx)
 y = np.linspace(0.0, 2.0, Ny)
@@ -36,55 +37,45 @@ fig = plt.figure(figsize=(10,10))
 ax = fig.add_subplot(projection="3d")
 X, Y = np.meshgrid(x, y)
 
-ax.plot_surface(X, Y, u, cmap=cm.viridis)
+vmin = u.min()
+vmax = u.max()
+
+ax.plot_surface(X, Y, u, cmap=cm.viridis, vmin=vmin, vmax=vmax)
+
 ax.set_xlabel("$x$")
 ax.set_xlabel("$y$")
 ax.set_zlim(1.0, 2.1)
-plt.savefig("IMG_Step_06_0000.png", dpi=150)
+plt.savefig("IMG_Step_08_0000.png", dpi=150)
+
 
 from numba import jit
 
 @jit(nopython=True)
-def do_time_step(u, un, v, vn, Δt, Δx, Δy, ):
+def do_time_step(u, un, v, vn, ν, Δt, Δx, Δy):
     Nx = u.shape[0]
     Ny = u.shape[1]
     for i in range(1,Nx):
         for j in range(1,Ny):
             u[i,j] = un[i,j] - \
                      un[i,j] * Δt/Δx * ( un[i,j] - un[i-1,j] ) - \
-                     vn[i,j] * Δt/Δy * ( un[i,j] - un[i,j-1] )
+                     vn[i,j] * Δt/Δy * ( un[i,j] - un[i,j-1] ) + \
+                     ν*Δt/Δx**2 * ( un[i+1,j] - 2*un[i,j] + un[i-1,j] ) + \
+                     ν*Δt/Δy**2 * ( un[i,j+1] - 2*un[i,j] + un[i,j-1] )
+            #
             v[i,j] = vn[i,j] - \
                      un[i,j] * Δt/Δx * ( vn[i,j] - vn[i-1,j] ) - \
-                     vn[i,j] * Δt/Δy * ( vn[i,j] - vn[i,j-1] )
+                     vn[i,j] * Δt/Δy * ( vn[i,j] - vn[i,j-1] ) + \
+                     ν*Δt/Δx**2 * ( vn[i+1,j] - 2*vn[i,j] + vn[i-1,j] ) + \
+                     ν*Δt/Δy**2 * ( vn[i,j+1] - 2*vn[i,j] + vn[i,j-1] )
     return
 
 
-# warm-up
-def do_warm_up():
-    print("Doing warm up")
-    Nx = 2
-    Ny = 2
-    u = np.zeros((Nx,Ny))
-    v = np.zeros((Nx,Ny))
-    un = np.copy(u)
-    vn = np.copy(v)
-    do_time_step(u, un, v, vn, 1.0, 1.0, 1.0)
-    print("Done doing warm up")
-    return
-
-do_warm_up()
-
-import time
-time_start = time.perf_counter()
 
 for n in range(Nt + 1):
     #
     un = u.copy()
     vn = v.copy()
-    #
-    do_time_step(u, un, v, vn, Δt, Δx, Δy)
-    #
-    # Set BC
+    do_time_step(u, un, v, vn, ν, Δt, Δx, Δy)
     #
     u[0,  :] = 1.0
     u[-1, :] = 1.0
@@ -95,15 +86,12 @@ for n in range(Nt + 1):
     v[-1, :] = 1.0
     v[:,  0] = 1.0
     v[:, -1] = 1.0
-
-time_end = time.perf_counter()
-print("Elapsed time: {} s".format(time_end - time_start))
-
-ax.cla()
-surf = ax.plot_surface(X, Y, u, cmap=cm.viridis)
-ax.set_xlabel("$x$")
-ax.set_xlabel("$y$")
-ax.set_zlim(1.0, 2.1)
-filename = "IMG_Step_06_last.png"
-fig.savefig(filename, dpi=150)
-
+    #
+    ax.cla()
+    surf = ax.plot_surface(X, Y, u, cmap=cm.viridis, vmin=vmin, vmax=vmax)
+    ax.set_xlabel("$x$")
+    ax.set_xlabel("$y$")
+    ax.set_zlim(1.0, 2.1)
+    filename = "IMG_Step_08_{:04d}.png".format(n+1)
+    fig.savefig(filename, dpi=150)
+    print(f"Done: {n+1}")
