@@ -40,29 +40,36 @@ global gravity
 % Read in walls first: From the position of the
 % walls, that domain can be computed in which the 
 % particles should be initialized 
-walldatain=fopen('walldata.dat')
-dummy=textscan(walldatain,'commentStyle','%');
-dummy=textscan(walldatain,'commentStyle','%');
-wallNum=textscan(walldatain,'%d1','commentStyle','%');
-wallNum=cell2mat(wallNum);
+walldatain = fopen('walldata.dat');
+% This will read all lines
+lines_txt1 = textscan(walldatain, '%s', 'delimiter', '\n', 'CommentStyle', '%', 'MultipleDelimsAsOne',1);
+fclose(walldatain);
+lines_txt = lines_txt1{1};
+iline = 1;
+wallNum = str2double(lines_txt{iline});
 for i=1:wallNum
-  numcorn=textscan(walldatain,'%d1','commentStyle','%');
-  numcorn=cell2mat(numcorn)
-  wallSide(i)=numcorn;
-  isfree=textscan(walldatain,'%d1','commentStyle','%');
-  isfree=double(cell2mat(isfree))
-  wallisfree(i,1)=isfree;
-  for j=1:wallSide(i)
-    wallpos=fscanf(walldatain,'%g %g\n',[1 2])
-    wallX(j,i)=wallpos(1)
-    wallY(j,i)=wallpos(2)  
+  %
+  iline = iline + 1;
+  numcorn = str2double(lines_txt{iline});
+  wallSide(i) = numcorn;
+  %
+  iline = iline + 1;
+  isfree = str2double(lines_txt{iline});
+  wallisfree(i,1) = isfree;
+  %
+  for j = 1:wallSide(i)
+    iline = iline + 1;
+    wallpos = str2num(lines_txt{iline});
+    wallX(j,i) = wallpos(1);
+    wallY(j,i) = wallpos(2);
   end
-end  
+end
+
 
 
 % Initialize the maximal particle radius with 
 % the width of half the left wall
-particle_radius=.5*max(wallX(:,2))-min(wallX(:,2));
+particle_radius = 0.5*max(wallX(:,2)) - min(wallX(:,2));
 
 % for walldata.dat, 
 % Wall 1 is the floor,
