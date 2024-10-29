@@ -3,6 +3,7 @@
 %%%%%%%    I. Danaila, P. Joly, S. M. Kaber & M. Postel     %%%%%%%
 %%%%%%%                 Springer, 2023                      %%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  Resolution of 2D Navier-Stokes equations       %
@@ -12,170 +13,180 @@
 %  with periodic boundary conditions in  x and y  %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-     close all; clear all;
-     format long e;
+close all; clear all;
+format long e;
+
 %===============================%
 %  Global variables             %
 %===============================%
-     global dx dy Lx Ly;
-     global nxm nym ;
-     global ip im jp jm ic jc;
+global dx dy Lx Ly;
+global nxm nym ;
+global ip im jp jm ic jc;
 
-     iprint='n'; % y/n to print images 
+iprint = 'n'; % y/n to print images 
+
 %===============================%
 %  Input parameters             %
 %  Initial condition            %
 %===============================%
-icas=input(['Choose the run case\n'... 
-                            '1=Kelvin-Helmholtz (1)\n'...
-                            '2=Kelvin-Helmholtz (2)\n'...
-                            '3=dipole (1)\n'...
-                            '4=dipole (2)\n']);
+icas = input(['Choose the run case\n'... 
+            '1=Kelvin-Helmholtz (1)\n'...
+            '2=Kelvin-Helmholtz (2)\n'...
+            '3=dipole (1)\n'...
+            '4=dipole (2)\n']);
+
 switch icas
 case {1,2}
   fprintf('Evolution of the Kelvin-Helholtz instability\n');  
-      Lx=2; Ly=1;
-      nx=65;ny=65;
-      rey=1000;
-      pec=1000;
-
-      Tstepmax=210;
-      nprint=10;niso=10;  
-      
-      namecase=['KH-', num2str(icas)];
-   case{3,4}
-    fprintf('Evolution of a vortex dipole \n');  
-      Lx=1; Ly=1;
-      nx=65;ny=65;
-      rey=1000;
-      pec=1000;
-
-      Tstepmax=300;
-      nprint=10;niso=10;
-      
-      namecase=['DIP-', num2str(icas)];
-   end  
+  Lx = 2;
+  Ly = 1;
+  nx = 65;
+  ny = 65;
+  rey = 1000;
+  pec = 1000;
+  Tstepmax = 210;
+  nprint = 10;
+  niso = 10;
+  namecase = ['KH-', num2str(icas)];
+case{3,4}
+  fprintf('Evolution of a vortex dipole \n');  
+  Lx = 1;
+  Ly = 1;
+  nx = 65;
+  ny = 65;
+  rey = 1000;
+  pec = 1000;
+  Tstepmax = 300;
+  nprint = 10;
+  niso = 10;    
+  namecase = ['DIP-', num2str(icas)];
+end  
 
 %===============================%
 %  2D grid                      %
 %===============================%
-      nxm=nx-1  ;           nym=ny-1;  %number of cells
-      dx=Lx/nxm ;           dy=Ly/nym;
-
-      ic=1:nxm;             jc=1:nym;  % indices of cells
-
-      xc=(ic-1)*dx ;        yc=(jc-1)*dy ;   % primary grid
-      xm=(ic-0.5)*dx;       ym=(jc-0.5)*dy;  % mid-cell grid
-
-      ip=ic+1; ip(nxm)=1;   jp=jc+1; jp(nym)=1;  % indices for periodicity
-      im=ic-1; im(1)=nxm;   jm=jc-1; jm(1)=nym;  % cell 1 = cell nxm+1
+nxm = nx - 1;
+nym = ny - 1;  %number of cells
+dx = Lx/nxm;
+dy = Ly/nym;
+ic = 1:nxm;
+jc = 1:nym;  % indices of cells
+xc = (ic-1)*dx;
+yc = (jc-1)*dy;% primary grid
+xm = (ic-0.5)*dx;
+ym = (jc-0.5)*dy;  % mid-cell grid
+ip = ic + 1;
+ip(nxm) = 1;
+jp = jc + 1;
+jp(nym) = 1;  % indices for periodicity
+im = ic-1;
+im(1) = nxm;
+jm = jc-1;
+jm(1) = nym;  % cell 1 = cell nxm+1
                              
-[xx,yy]=meshgrid(xm,ym);xx=xx';yy=yy'; % centers of the cells for visualization
+[xx,yy] = meshgrid(xm,ym);
+xx = xx';
+yy = yy'; % centers of the cells for visualization
 
 %===============================%
 %  Initialization               %
 %===============================%
+u   =zeros(nxm,nym);      % velocity u
+v   =zeros(nxm,nym);      % velocity v
 
-      u   =zeros(nxm,nym);      % velocity u
-      v   =zeros(nxm,nym);      % velocity v
+gpu = zeros(nxm,nym);     % pressure gradient along x
+gpv = zeros(nxm,nym);     % pressure gradient along y
+hcu = zeros(nxm,nym);     % explicit terms for u
+hcv = zeros(nxm,nym);     % explicit terms for v
+hcs = zeros(nxm,nym);     % explicit terms for the passive scalar
 
-      gpu  =zeros(nxm,nym);     % pressure gradient along x
-      gpv  =zeros(nxm,nym);     % pressure gradient along y
-      hcu  =zeros(nxm,nym);     % explicit terms for u
-      hcv  =zeros(nxm,nym);     % explicit terms for v
-      hcs  =zeros(nxm,nym);     % explicit terms for the passive scalar
-
-      pres =zeros(nxm,nym);     % pressure
-      sca  =zeros(nxm,nym);     % passive scalar
+pres = zeros(nxm,nym);     % pressure
+sca = zeros(nxm,nym);     % passive scalar
      
-      rhs  =zeros(nxm,nym);     % work array for the RHS
-      phi  =zeros(nxm,nym);     % variable for the pressure correction (Poisson eq)
+rhs = zeros(nxm,nym);     % work array for the RHS
+phi = zeros(nxm,nym);     % variable for the pressure correction (Poisson eq)
 
 %===============================%
 %  Initial condition            %
 %===============================%
 switch icas
 case 1
-                       % initial velocity field
-      u  =NSE_F_init_KH(Lx,Ly,xc,ym,1,Ly/4,20,0.25,0.5*Lx);
-      sca=NSE_F_init_KH(Lx,Ly,xm,ym,1,Ly/4,20,0.00,0.5*Lx);
+  % initial velocity field
+  u  = NSE_F_init_KH(Lx,Ly,xc,ym,1,Ly/4,20,0.25,0.5*Lx);
+  sca = NSE_F_init_KH(Lx,Ly,xm,ym,1,Ly/4,20,0.00,0.5*Lx);
                        % cfl for the time step 
-      cfl=0.2;
+  cfl = 0.2;
 case 2
-                       % initial velocity field
-      u  =NSE_F_init_KH(Lx,Ly,xc,ym,1,Ly/4,20,0.25,0.25*Lx);
-      sca=NSE_F_init_KH(Lx,Ly,xm,ym,1,Ly/4,20,0.00,0.25*Lx);
+  % initial velocity field
+  u  =NSE_F_init_KH(Lx,Ly,xc,ym,1,Ly/4,20,0.25,0.25*Lx);
+  sca=NSE_F_init_KH(Lx,Ly,xm,ym,1,Ly/4,20,0.00,0.25*Lx);
                        % cfl for the time step 
-      cfl=0.1;Tstepmax=Tstepmax*2;nprint=nprint*2;
+  cfl=0.1;
+  Tstepmax=Tstepmax*2;
+  nprint=nprint*2;
 case 3
-                       % first vortex
-xv=Lx/4;
-yv=Ly/2+0.05;
-lv=min([xv,Lx-xv,yv,Ly-yv])*0.400*sqrt(2.);
-uin=0.;
-vin=0.;
-pm = +1;
-[rhs,phi]=NSE_F_init_vortex(Lx,Ly,xc,yc,xv,yv,lv,uin,vin,pm);
-u=u+rhs;v=v+phi;
-                       %second vortex
-xv=Lx/4;
-yv=Ly/2-0.05;
-lv=min([xv,Lx-xv,yv,Ly-yv])*0.400*sqrt(2.);
-uin=0.;
-vin=0.;
-pm = -1; 
-[rhs,phi]=NSE_F_init_vortex(Lx,Ly,xc,yc,xv,yv,lv,uin,vin,pm);
-u=u+rhs;v=v+phi;
-
-
-                       % scalar field (a stripe in the middle of the domain)
-      sca(nxm/2-10:nxm/2+10,:)=ones(21,nym);
-                       % cfl for the time step 
-      cfl=0.4;
+  % first vortex
+  xv=Lx/4;
+  yv=Ly/2+0.05;
+  lv=min([xv,Lx-xv,yv,Ly-yv])*0.400*sqrt(2.);
+  uin=0.;
+  vin=0.;
+  pm = +1;
+  [rhs,phi]=NSE_F_init_vortex(Lx,Ly,xc,yc,xv,yv,lv,uin,vin,pm);
+  u=u+rhs;v=v+phi;
+  %second vortex
+  xv=Lx/4;
+  yv=Ly/2-0.05;
+  lv=min([xv,Lx-xv,yv,Ly-yv])*0.400*sqrt(2.);
+  uin=0.;
+  vin=0.;
+  pm = -1; 
+  [rhs,phi]=NSE_F_init_vortex(Lx,Ly,xc,yc,xv,yv,lv,uin,vin,pm);
+  u=u+rhs;v=v+phi;
+  % scalar field (a stripe in the middle of the domain)
+  sca(nxm/2-10:nxm/2+10,:)=ones(21,nym);
+  % cfl for the time step 
+  cfl=0.4;
 case 4
-                        % first pair of vortices -> dipole 1
+  % first pair of vortices -> dipole 1
+  xv=Lx/4;
+  yv=Ly/2+0.05;
+  lv=min([xv,Lx-xv,yv,Ly-yv])*0.400*sqrt(2.);
+  uin=0.;
+  vin=0.;
+  pm = +1; 
+  [rhs,phi]=NSE_F_init_vortex(Lx,Ly,xc,yc,xv,yv,lv,uin,vin,pm);
+  u=u+rhs;v=v+phi;
+  %
+  xv=Lx/4;
+  yv=Ly/2-0.05;
+  lv=min([xv,Lx-xv,yv,Ly-yv])*0.400*sqrt(2.);
+  uin=0.;
+  vin=0.;
+  pm = -1; 
+  [rhs,phi]=NSE_F_init_vortex(Lx,Ly,xc,yc,xv,yv,lv,uin,vin,pm);
+  u=u+rhs;v=v+phi;
+  % second pair of vortices -> dipole 2      
+  xv=3*Lx/4;
+  yv=Ly/2+0.05;
+  lv=min([xv,Lx-xv,yv,Ly-yv])*0.400*sqrt(2.);
+  uin=0.;
+  vin=0.;
+  pm = -1; 
+  [rhs,phi]=NSE_F_init_vortex(Lx,Ly,xc,yc,xv,yv,lv,uin,vin,pm);
+  u=u+rhs;v=v+phi;
 
-xv=Lx/4;
-yv=Ly/2+0.05;
-lv=min([xv,Lx-xv,yv,Ly-yv])*0.400*sqrt(2.);
-uin=0.;
-vin=0.;
-pm = +1; 
-[rhs,phi]=NSE_F_init_vortex(Lx,Ly,xc,yc,xv,yv,lv,uin,vin,pm);
-u=u+rhs;v=v+phi;
-
-xv=Lx/4;
-yv=Ly/2-0.05;
-lv=min([xv,Lx-xv,yv,Ly-yv])*0.400*sqrt(2.);
-uin=0.;
-vin=0.;
-pm = -1; 
-[rhs,phi]=NSE_F_init_vortex(Lx,Ly,xc,yc,xv,yv,lv,uin,vin,pm);
-u=u+rhs;v=v+phi;
-
-                        % second pair of vortices -> dipole 2
-                        
-xv=3*Lx/4;
-yv=Ly/2+0.05;
-lv=min([xv,Lx-xv,yv,Ly-yv])*0.400*sqrt(2.);
-uin=0.;
-vin=0.;
-pm = -1; 
-[rhs,phi]=NSE_F_init_vortex(Lx,Ly,xc,yc,xv,yv,lv,uin,vin,pm);
-u=u+rhs;v=v+phi;
-
-xv=3*Lx/4;
-yv=Ly/2-0.05;
-uin=0.;
-vin=0.;
-pm = 1;  
-[rhs,phi]=NSE_F_init_vortex(Lx,Ly,xc,yc,xv,yv,lv,uin,vin,pm);
-u=u+rhs;v=v+phi;
-
-                       % scalar field (a stripe in the middle of the domain)
-      sca(nxm/2-10:nxm/2+10,:)=ones(21,nym);
-                       % cfl for the time step
-      cfl=0.4;        
+  xv=3*Lx/4;
+  yv=Ly/2-0.05;
+  uin=0.;
+  vin=0.;
+  pm = 1;  
+  [rhs,phi]=NSE_F_init_vortex(Lx,Ly,xc,yc,xv,yv,lv,uin,vin,pm);
+  u=u+rhs;v=v+phi;
+  % scalar field (a stripe in the middle of the domain)
+  sca(nxm/2-10:nxm/2+10,:)=ones(21,nym);
+  % cfl for the time step
+  cfl=0.4;        
 end  
 
 % visualization of the initial condition
@@ -193,15 +204,14 @@ NSE_F_visu_sca (xm,ym,sca,niso,0,0);
 %===============================%
 %   Time step                   %
 %===============================%
-										  
-      dt=NSE_F_calc_dt(u,v,cfl);       
-      fprintf('Time step dt=%d \n',dt);										  
+dt = NSE_F_calc_dt(u,v,cfl);       
+fprintf('Time step dt=%d \n',dt);										  
+
 %===============================%
 % Optimization of the ADI method%
-%===============================%
-      
-      bx=0.5*dt/(dx*dx)/rey;
-      by=0.5*dt/(dy*dy)/rey;
+%===============================%      
+bx=0.5*dt/(dx*dx)/rey;
+by=0.5*dt/(dy*dy)/rey;
 
 [amix,apix,alphx,xs2x]=NSE_F_ADI_init(-bx*ones(1,nxm),(1+2*bx)*ones(1,nxm),-bx*ones(1,nxm));
 [amiy,apiy,alphy,xs2y]=NSE_F_ADI_init(-by*ones(1,nym),(1+2*by)*ones(1,nym),-by*ones(1,nym));
