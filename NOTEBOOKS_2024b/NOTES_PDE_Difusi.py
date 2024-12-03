@@ -127,7 +127,7 @@ def create_anim_surf3d(Z, X, Y, t, zmin, zmax):
 # %% [markdown] hidden=true
 # Catatan: persamaan yang sama juga digunakan untuk menjelaskan fenomena difusi.
 
-# %% [markdown] hidden=true
+# %% [markdown] hidden=true jp-MarkdownHeadingCollapsed=true
 # ## Metode Euler Eksplisit
 
 # %% [markdown] hidden=true
@@ -291,6 +291,7 @@ plt.legend();
 plt.clf()
 plt.plot(x_exp, u_exp[:,-1], label="numerik t="+str(t_exp[-1]), marker="o")
 plt.plot(x_exp, sol_01_analitik(x_exp, t_exp[-1]), label="analitik t="+str(t_exp[-1]))
+plt.ylim(-0.1, 1.1)
 plt.legend();
 
 # %% [markdown] hidden=true
@@ -337,11 +338,31 @@ plt.plot( x_exp, u_exp[:,0], label="t="+str(t_exp[0]))
 plt.plot( x_exp, u_exp[:,-1], label="t="+str(t_exp[-1]))
 plt.legend();
 
-
 # %% [markdown] hidden=true
 # Perhatikan bahwa pada kasus ini solusi numerik yang diperoleh tidak stabil (kesalahan semakin membesar).
 
-# %% [markdown] heading_collapsed=true hidden=true jp-MarkdownHeadingCollapsed=true
+# %%
+anim = create_anim_2d(u_exp, x_exp, t_exp, 0.0, 1.1)
+
+# %% [markdown]
+# ### Buat menjadi stabil
+
+# %%
+# Dari soal atau masalah yang diberikan
+alpha = 1.0
+xf = 1.0
+tf = 0.1
+
+# ditentukan pengguna
+Nx = 50
+Nt = 500
+
+u_exp, x_exp, t_exp = heat_1d_euler_exp( alpha, xf, tf, initial_temp, bx0, bxf, Nx, Nt )
+
+
+# %%
+
+# %% [markdown] heading_collapsed=true hidden=true
 # ## Metode Euler implisit
 
 # %% [markdown] hidden=true
@@ -534,7 +555,7 @@ plt.legend();
 anim = create_anim_2d(u_imp, x_imp, t_imp, 0.0, 1.1);
 
 # %% hidden=true
-IPython.display.HTML(anim.to_html5_video())
+IPython.display.HTML(anim.to_jshtml())
 
 # %% [markdown]
 #
@@ -569,12 +590,12 @@ plt.legend();
 anim = create_anim_2d(u_exp, x_exp, t_exp, 0.0, 1.1);
 
 # %% hidden=true
-IPython.display.HTML(anim.to_html5_video())
+IPython.display.HTML(anim.to_jshtml())
 
 
 # %% hidden=true
 
-# %% [markdown] heading_collapsed=true hidden=true jp-MarkdownHeadingCollapsed=true
+# %% [markdown] heading_collapsed=true hidden=true
 # ## Metode Crank-Nicholson
 
 # %% [markdown] hidden=true
