@@ -1,61 +1,69 @@
+include("setup_works.jl")
+
+using Printf
+import LinearAlgebra
 import PyPlot
 
-pyFig_RealTime = PyPlot.figure("MPM Disk impact", figsize=(16/2.54, 16/2.54), edgecolor="white", facecolor="white")
-
 include("material_point_type.jl")
-include("mpm_grid_point.jl")
+include("mpm_grid.jl")
 include("my_basis.jl")
+
+#pyFig_RealTime = PyPlot.figure("MPM Disk impact", figsize=(16/2.54, 16/2.54), edgecolor="white", facecolor="white")
 
 function mpmMain()
     fGravity = 0.0
     # grid creation
     # nodes where fixation boundary conditions are hard coded in the following code!!!
-    thisGrid = moduleGrid.mpmGrid(60.0, 60.0, 51, 51)
-
-    # array holding all material points (these are references to MaterialDomain_01 & 02)
-    allMaterialPoint = Array{MaterialPointModule.mpmMaterialPoint_2D_Classic}(0)
+    thisGrid = mpmGrid(60.0, 60.0, 51, 51)
 
     fOffset = 60.0/50/2.0
-    thisMaterialDomain_01 = MaterialPointModule.createMaterialDomain_Circle([30.0; 50.0], 9.6/2.0, fOffset)
-    for iIndex_MP = 1:1:length(thisMaterialDomain_01)
-        fVolume = fOffset*fOffset#3.14159*0.2*0.2/length(thisMaterialDomain_01)
-        fMass = 7850e-12*fVolume
-        thisMaterialDomain_01[iIndex_MP].fMass = fMass
-        thisMaterialDomain_01[iIndex_MP].fVolumeInitial = fVolume
-        thisMaterialDomain_01[iIndex_MP].fVolume = fVolume
-        thisMaterialDomain_01[iIndex_MP].fElasticModulus = 200.0e3
-        thisMaterialDomain_01[iIndex_MP].fPoissonRatio = 0.3
-        thisMaterialDomain_01[iIndex_MP].fYieldStress = 1.0e24
-        thisMaterialDomain_01[iIndex_MP].v2Velocity = [0.0; -1160.0e3]
-        thisMaterialDomain_01[iIndex_MP].v2Momentum = fMass*thisMaterialDomain_01[iIndex_MP].v2Velocity
-        thisMaterialDomain_01[iIndex_MP].v2ExternalForce = [0.0; -fGravity*fMass]
-
-        thisMaterialDomain_01[iIndex_MP].m22DeformationGradient = eye(2,2)
-        thisMaterialDomain_01[iIndex_MP].m22DeformationGradientIncrement = eye(2,2)
-    end
-    for iIndex_MP = 1:1:length(thisMaterialDomain_01)
-        push!(allMaterialPoint, thisMaterialDomain_01[iIndex_MP])
+    thisMaterialDomain_01 = createMaterialDomain_Circle([30.0; 50.0], 9.6/2.0, fOffset)
+    fVolume = fOffset*fOffset #3.14159*0.2*0.2/length(thisMaterialDomain_01)
+    fMass = 7850e-12*fVolume
+    for thisMat in thisMaterialDomain_01
+        thisMat.fMass = fMass
+        thisMat.fVolumeInitial = fVolume
+        thisMat.fVolume = fVolume
+        thisMat.fElasticModulus = 200.0e3
+        thisMat.fPoissonRatio = 0.3
+        thisMat.fYieldStress = 1.0e24
+        thisMat.v2Velocity = [0.0; -1160.0e3]
+        thisMat.v2Momentum = fMass*thisMat.v2Velocity
+        thisMat.v2ExternalForce = [0.0; -fGravity*fMass]
+        thisMat.m22DeformationGradient[:,:] .= Matrix(LinearAlgebra.I(2))
+        thisMat.m22DeformationGradientIncrement[:,:] .= Matrix(LinearAlgebra.I(2))
     end
 
-    thisMaterialDomain_02 = MaterialPointModule.createMaterialDomain_Rectangle([30.0; 20.0], 60.0, 40.6, fOffset)
-    for iIndex_MP = 1:1:length(thisMaterialDomain_02)
-        fVolume = fOffset*fOffset#3.14159*0.2*0.2/length(thisMaterialDomain_02)
-        fMass = 2700e-12*fVolume
-        thisMaterialDomain_02[iIndex_MP].fMass = fMass
-        thisMaterialDomain_02[iIndex_MP].fVolumeInitial = fVolume
-        thisMaterialDomain_02[iIndex_MP].fVolume = fVolume
-        thisMaterialDomain_02[iIndex_MP].fElasticModulus = 78.2e3
-        thisMaterialDomain_02[iIndex_MP].fPoissonRatio = 0.3
-        thisMaterialDomain_02[iIndex_MP].fYieldStress = 300.0
-        thisMaterialDomain_02[iIndex_MP].v2Velocity = [0.0; 0.0]
-        thisMaterialDomain_02[iIndex_MP].v2Momentum = fMass*thisMaterialDomain_02[iIndex_MP].v2Velocity
-        thisMaterialDomain_02[iIndex_MP].v2ExternalForce = [0.0; -fGravity*fMass]
-
-        thisMaterialDomain_02[iIndex_MP].m22DeformationGradient = eye(2,2)
-        thisMaterialDomain_02[iIndex_MP].m22DeformationGradientIncrement = eye(2,2)
+    thisMaterialDomain_02 = createMaterialDomain_Rectangle([30.0; 20.0], 60.0, 40.6, fOffset)
+    fVolume = fOffset*fOffset #3.14159*0.2*0.2/length(thisMaterialDomain_02)
+    fMass = 2700e-12*fVolume
+    for thisMat in thisMaterialDomain_02
+        thisMat.fMass = fMass
+        thisMat.fVolumeInitial = fVolume
+        thisMat.fVolume = fVolume
+        thisMat.fElasticModulus = 78.2e3
+        thisMat.fPoissonRatio = 0.3
+        thisMat.fYieldStress = 300.0
+        thisMat.v2Velocity = [0.0; 0.0]
+        thisMat.v2Momentum = fMass*thisMat.v2Velocity
+        thisMat.v2ExternalForce = [0.0; -fGravity*fMass]
+        thisMat.m22DeformationGradient[:,:] .= Matrix(LinearAlgebra.I(2))
+        thisMat.m22DeformationGradientIncrement[:,:] = Matrix(LinearAlgebra.I(2))
     end
-    for iIndex_MP = 1:1:length(thisMaterialDomain_02)
-        push!(allMaterialPoint, thisMaterialDomain_02[iIndex_MP])
+
+    Npoints1 = length(thisMaterialDomain_01)
+    Npoints2 = length(thisMaterialDomain_02)
+    NpointsAll = Npoints1 + Npoints2
+    # array holding all material points (these are references to MaterialDomain_01 & 02)
+    allMaterialPoint = Vector{mpmMaterialPoint_2D_Classic}(undef,NpointsAll)
+    ip_all = 0
+    for iIndex_MP in 1:Npoints1
+        ip_all += 1
+        allMaterialPoint[ip_all] = thisMaterialDomain_01[iIndex_MP]
+    end
+    for iIndex_MP in 1:Npoints2
+        ip_all += 1
+        allMaterialPoint[ip_all] = thisMaterialDomain_02[iIndex_MP]
     end
 
     # ---------------------------------------------------------------------------
@@ -71,6 +79,8 @@ function mpmMain()
     @printf("    Disk, number of material points: %d \n", length(thisMaterialDomain_01))
     @printf("    Target, number of material points: %d \n", length(thisMaterialDomain_02))
     @printf("    Total number of material points: %d \n", length(allMaterialPoint))
+
+#=
 
     # ---------------------------------------------------------------------------
     # timers
@@ -388,6 +398,9 @@ function mpmMain()
     # PyPlot.plot(plot_Time, c="green", plot_KineticEnergy + plot_StrainEnergy, "-", label="\$ K+U \$", linewidth=1.0)
     # PyPlot.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., fontsize=8)
     # PyPlot.savefig("..\\..\\Figs\\plot_2Disk_Julia.pdf")
+=#
+
+
 end
 
 mpmMain()
