@@ -12,9 +12,6 @@ include("my_basis.jl")
 
 function mpmMain()
     fGravity = 0.0
-    # grid creation
-    # nodes where fixation boundary conditions are hard coded in the following code!!!
-    thisGrid = mpmGrid(60.0, 60.0, 51, 51)
 
     fOffset = 60.0/50/2.0
     thisMaterialDomain_01 = createMaterialDomain_Circle([30.0; 50.0], 9.6/2.0, fOffset)
@@ -80,7 +77,11 @@ function mpmMain()
     @printf("    Target, number of material points: %d \n", length(thisMaterialDomain_02))
     @printf("    Total number of material points: %d \n", length(allMaterialPoint))
 
-#=
+
+    # grid creation
+    # nodes where fixation boundary conditions are hard coded in the following code!!!
+    thisGrid = mpmGrid(60.0, 60.0, 51, 51)
+
 
     # ---------------------------------------------------------------------------
     # timers
@@ -110,29 +111,33 @@ function mpmMain()
     # plot arrays
     # ---------------------------------------------------------------------------
     # final results plot holder arrays
-    fMarkedParicle_y = thisMaterialDomain_01[1].v2Centroid[2]
-    plot_Time = Array{Real}(0)
-    plot_Displacement = Array{Real}(0)
-    plot_KineticEnergy = Array{Real}(0)
-    plot_StrainEnergy = Array{Real}(0)
+    plot_Time = Vector{Float64}(undef, 0)
+    plot_Displacement = Array{Float64}(undef, 0)
+    plot_KineticEnergy = Array{Float64}(undef, 0)
+    plot_StrainEnergy = Array{Float64}(undef, 0)
 
     # main analysis loop
     for fTime in 0.0:fTimeIncrement:fTimeEnd
+        @info "fTime = $(fTime)"
         iTimeCycle += 1
         # ------------------------------------------------------------------------
         # realtime graphical plotting routines
         # @printf("Plotting...")
         # ------------------------------------------------------------------------
         fPlotTime += fTimeIncrement
+        
+        #=
         if(fPlotTime > fPlotTimeInterval)
             fPlotTime = 0.0
 
             iMaterialPoints = length(allMaterialPoint)
             array_x = [allMaterialPoint[i].v2Centroid[1] for i in 1:iMaterialPoints]
-           array_y = [allMaterialPoint[i].v2Centroid[2] for i in 1:iMaterialPoints]
-           array_color = Array{Real}(iMaterialPoints, 3)
-            array_size = Array{Real}(iMaterialPoints, 1)
-           for iIndex in 1:1:iMaterialPoints
+            array_y = [allMaterialPoint[i].v2Centroid[2] for i in 1:iMaterialPoints]
+            array_color = Matrix{Float64}(undef, iMaterialPoints, 3)
+            array_size = Matrix{Float64}(undef, iMaterialPoints, 1)
+            
+            # Set color ?
+            for iIndex in 1:iMaterialPoints
                 thisColor = allMaterialPoint[iIndex].fAlpha
                 thisColor /= (allMaterialPoint[iIndex].fYieldStress/allMaterialPoint[iIndex].fElasticModulus)*500
 
@@ -152,6 +157,7 @@ function mpmMain()
             pyPlot01 = PyPlot.gca()
             # pyPlot01 = PyPlot.subplot2grid((1,1), (0,0), colspan=1, rowspan=1, aspect="equal")
             PyPlot.scatter(array_x, array_y, c=array_color, lw=0, s=array_size)
+            #
             pyPlot01[:spines]["top"][:set_color]("gray")
             pyPlot01[:spines]["right"][:set_color]("gray")
             pyPlot01[:spines]["bottom"][:set_color]("gray")
@@ -162,7 +168,7 @@ function mpmMain()
             pyPlot01[:set_ylim](0.0, 60.0)
             # pyPlot01[:set_xlabel]("")
             # pyPlot01[:set_ylabel]("")
-            pyPlot01[:grid](b=true, which="both", color="white", linestyle="-", linewidth=0.2)
+            pyPlot01[:grid](true, which="both", color="white", linestyle="-", linewidth=0.2)
             pyPlot01[:set_axisbelow](true)
             pyPlot01[:set_xticks]([])# empty to have no major ticks and grids
             pyPlot01[:set_xticks](collect(0.0:1.2:60.0),minor=true)
@@ -172,11 +178,12 @@ function mpmMain()
             # PyPlot.show()
             # PyPlot.hold(true)
 
-            strFileName = ".\\Figs\\DiskImpact_$(iTimeCycle).png"
+            strFileName = "TEMP_DiskImpact_$(iTimeCycle).png"
             PyPlot.savefig(strFileName, bbox_inches="tight")
-           PyPlot.hold(false)
+            #PyPlot.hold(false)
         end
-        tic();
+        =#
+
         #reset grid------------------------------------
         for iIndex in 1:1:thisGrid.iNodes
             thisGrid.GridPoints[iIndex].fMass = 0.0
@@ -184,17 +191,18 @@ function mpmMain()
             thisGrid.GridPoints[iIndex].v2Momentum = [0.0; 0.0]
             thisGrid.GridPoints[iIndex].v2Force = [0.0; 0.0]
         end
+
         # material to grid -------------------------------------------------------
-        for iIndex_MP in 1:1:length(allMaterialPoint)
+        for iIndex_MP in 1:NpointsAll
             thisMaterialPoint = allMaterialPoint[iIndex_MP]
-            thisAdjacentGridPoints = moduleGrid.getAdjacentGridPoints(allMaterialPoint[iIndex_MP], thisGrid)
+            thisAdjacentGridPoints = getAdjacentGridPoints(allMaterialPoint[iIndex_MP], thisGrid)
             for iIndex in 1:1:length(thisAdjacentGridPoints)
                 # sina, be careful here, this might not be by reference and might not be good for assignment
                 thisGridPoint = thisGrid.GridPoints[thisAdjacentGridPoints[iIndex]]
 
-                fShapeValue = moduleBasis.getShapeValue_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
+                fShapeValue = getShapeValue_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
 
-                v2ShapeGradient = moduleBasis.getShapeGradient_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
+                v2ShapeGradient = getShapeGradient_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
 
                 # mass
                 thisGridPoint.fMass += fShapeValue * thisMaterialPoint.fMass
@@ -224,20 +232,17 @@ function mpmMain()
             end
         end
 
-        fProfiler_Particle2Grid += toq()
-
-        tic()
         # ------------------------------------------------------------------------
         # grid to material pass 1-------------------------------------------------
         for iIndex_MP in 1:1:length(allMaterialPoint)
             thisMaterialPoint = allMaterialPoint[iIndex_MP]
-            thisAdjacentGridPoints = moduleGrid.getAdjacentGridPoints(thisMaterialPoint, thisGrid)
+            thisAdjacentGridPoints = getAdjacentGridPoints(thisMaterialPoint, thisGrid)
             v2CentroidIncrement = zeros(2)
             for iIndex in 1:1:length(thisAdjacentGridPoints)
                 thisGridPoint = thisGrid.GridPoints[thisAdjacentGridPoints[iIndex]]
 
-                fShapeValue = moduleBasis.getShapeValue_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
-                v2ShapeGradient = moduleBasis.getShapeGradient_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
+                fShapeValue = getShapeValue_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
+                v2ShapeGradient = getShapeGradient_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
 
                 thisMaterialPoint.v2Velocity += (fShapeValue * thisGridPoint.v2Force / thisGridPoint.fMass) * fTimeIncrement
            end
@@ -250,11 +255,11 @@ function mpmMain()
         # mass in NOT mapped here
         for iIndex_MP in 1:1:length(allMaterialPoint)
             thisMaterialPoint = allMaterialPoint[iIndex_MP]
-            thisAdjacentGridPoints = moduleGrid.getAdjacentGridPoints(thisMaterialPoint, thisGrid)
+            thisAdjacentGridPoints = getAdjacentGridPoints(thisMaterialPoint, thisGrid)
             for iIndex in 1:1:length(thisAdjacentGridPoints)
                 thisGridPoint = thisGrid.GridPoints[thisAdjacentGridPoints[iIndex]]
 
-                fShapeValue = moduleBasis.getShapeValue_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
+                fShapeValue = getShapeValue_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
 
                 # thisGridPoint.v2Momentum += fShapeValue * thisMaterialPoint.fMass * thisMaterialPoint.v2Velocity
                 thisGridPoint.v2Velocity += fShapeValue * thisMaterialPoint.fMass * thisMaterialPoint.v2Velocity / thisGridPoint.fMass
@@ -276,16 +281,18 @@ function mpmMain()
             end
         end
         # ------------------------------------------------------------------------
+        v2CentroidIncrement = zeros(Float64, 2)
         # grid to material pass 2 ------------------------------------------------
-        for iIndex_MP in 1:1:length(allMaterialPoint)
+        for iIndex_MP in 1:NpointsAll
             thisMaterialPoint = allMaterialPoint[iIndex_MP]
-            thisAdjacentGridPoints = moduleGrid.getAdjacentGridPoints(thisMaterialPoint, thisGrid)
-            v2CentroidIncrement = zeros(2)
+            thisAdjacentGridPoints = getAdjacentGridPoints(thisMaterialPoint, thisGrid)
+            fill!(v2CentroidIncrement, 0.0)
+
             for iIndex in 1:1:length(thisAdjacentGridPoints)
                 thisGridPoint = thisGrid.GridPoints[thisAdjacentGridPoints[iIndex]]
 
-                fShapeValue = moduleBasis.getShapeValue_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
-                v2ShapeGradient = moduleBasis.getShapeGradient_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
+                fShapeValue = getShapeValue_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
+                v2ShapeGradient = getShapeGradient_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
 
                 v2GridPointVelocity = thisGridPoint.v2Velocity#v2Momentum / thisGridPoint.fMass
 
@@ -300,7 +307,7 @@ function mpmMain()
             v3StrainIncrement[1] = thisMaterialPoint.m22DeformationGradientIncrement[1,1] - 1.0
             v3StrainIncrement[2] = thisMaterialPoint.m22DeformationGradientIncrement[2,2] - 1.0
             v3StrainIncrement[3] = thisMaterialPoint.m22DeformationGradientIncrement[1,2] + thisMaterialPoint.m22DeformationGradientIncrement[2,1]
-            thisMaterialPoint.m22DeformationGradientIncrement = eye(2,2)
+            thisMaterialPoint.m22DeformationGradientIncrement[:,:] .= Matrix(LinearAlgebra.I(2))
             thisMaterialPoint.v3Strain[1] += v3StrainIncrement[1]
             thisMaterialPoint.v3Strain[2] += v3StrainIncrement[2]
             thisMaterialPoint.v3Strain[3] += v3StrainIncrement[3]
@@ -315,7 +322,7 @@ function mpmMain()
             fAlphaCurrent = thisMaterialPoint.fAlpha
 
             v32Result = zeros(3,2)
-            v32Result = MaterialPointModule.getIncrement_Plastic(fE, fNu, fYield, fAlphaCurrent, v3StressCurrent, v3StrainCurrent, v3PlasticStrainCurrent, v3StrainIncrement)
+            v32Result = getIncrement_Plastic(fE, fNu, fYield, fAlphaCurrent, v3StressCurrent, v3StrainCurrent, v3PlasticStrainCurrent, v3StrainIncrement)
 
             v3StressIncrement = v32Result[:, 1]
             v3PlasticStrainIncrement = v32Result[:, 2]
@@ -325,12 +332,10 @@ function mpmMain()
             thisMaterialPoint.v3PlasticStrain += v3PlasticStrainIncrement
             thisMaterialPoint.fAlpha += fAlphaIncrement
 
-            thisMaterialPoint.fVolume = det(thisMaterialPoint.m22DeformationGradient) * thisMaterialPoint.fVolumeInitial
+            thisMaterialPoint.fVolume = LinearAlgebra.det(thisMaterialPoint.m22DeformationGradient) * thisMaterialPoint.fVolumeInitial
 
             thisMaterialPoint.v2Momentum = thisMaterialPoint.v2Velocity * thisMaterialPoint.fMass
         end
-
-        fProfiler_Grid2Particle += toq()
 
         # ------------------------------------------------------------------------
         # calculating strain and kinetic energy for final results plot
@@ -340,7 +345,7 @@ function mpmMain()
             fResultTime = 0.0
             fStrainEnergy = 0.0
             fKineticEnergy = 0.0
-            for iIndex_MP in 1:1:length(allMaterialPoint)
+            for iIndex_MP in 1:NpointsAll
                 thisMaterialPoint = allMaterialPoint[iIndex_MP]
                 fStrainEnergy += 0.5*thisMaterialPoint.v3Strain[1] * thisMaterialPoint.v3Stress[1] * thisMaterialPoint.fVolume
                 fStrainEnergy += 0.5*thisMaterialPoint.v3Strain[2] * thisMaterialPoint.v3Stress[2] * thisMaterialPoint.fVolume
@@ -351,9 +356,9 @@ function mpmMain()
             end
 
             #save to plot arrays
-            push!(plot_Time, fTime)
-            push!(plot_KineticEnergy, fKineticEnergy)
-            push!(plot_StrainEnergy, fStrainEnergy)
+            #push!(plot_Time, fTime)
+            #push!(plot_KineticEnergy, fKineticEnergy)
+            #push!(plot_StrainEnergy, fStrainEnergy)
         end
         # ------------------------------------------------------------------------
         # consol output
@@ -364,17 +369,17 @@ function mpmMain()
 
             fMass = 0.0
             fMomentum_x = 0.0
-            for iIndex_MP in 1:1:length(thisMaterialDomain_01)
+            for iIndex_MP in 1:Npoints1
                 fMass += thisMaterialDomain_01[iIndex_MP].fMass
-
                 fMomentum_x += thisMaterialDomain_01[iIndex_MP].v2Momentum[1]
             end
-            fProfiler_Total = fProfiler_Particle2Grid + fProfiler_Grid2Particle
-            @printf("fTime: %+.3e |", fTime)
-            @printf("M_x: %+.3e |", fMomentum_x)
-            @printf("(Profiler) Total: %+.3e ", fProfiler_Total)
-            @printf("P2G: %+.3e (%+.2f) ", fProfiler_Particle2Grid, fProfiler_Particle2Grid/fProfiler_Total)
-            @printf("G2P: %+.3e (%+.2f) \n", fProfiler_Grid2Particle, fProfiler_Grid2Particle/fProfiler_Total)
+            
+            #fProfiler_Total = fProfiler_Particle2Grid + fProfiler_Grid2Particle
+            #@printf("fTime: %+.3e |", fTime)
+            #@printf("M_x: %+.3e |", fMomentum_x)
+            #@printf("(Profiler) Total: %+.3e ", fProfiler_Total)
+            #@printf("P2G: %+.3e (%+.2f) ", fProfiler_Particle2Grid, fProfiler_Particle2Grid/fProfiler_Total)
+            #@printf("G2P: %+.3e (%+.2f) \n", fProfiler_Grid2Particle, fProfiler_Grid2Particle/fProfiler_Total)
         end
     end
 
@@ -398,6 +403,8 @@ function mpmMain()
     # PyPlot.plot(plot_Time, c="green", plot_KineticEnergy + plot_StrainEnergy, "-", label="\$ K+U \$", linewidth=1.0)
     # PyPlot.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., fontsize=8)
     # PyPlot.savefig("..\\..\\Figs\\plot_2Disk_Julia.pdf")
+
+#=
 =#
 
 
