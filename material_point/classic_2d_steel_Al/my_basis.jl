@@ -27,7 +27,12 @@ function getShapeValue_Classic(
     return(fShapeValue)
 end
 
-function getShapeGradient_Classic(thisMaterialPoint::MaterialPointModule.mpmMaterialPoint_2D_Classic, thisGridPoint::moduleGrid.mpmGridPoint, thisGrid::moduleGrid.mpmGrid)
+function getShapeGradient_Classic(
+    thisMaterialPoint::mpmMaterialPoint_2D_Classic,
+    thisGridPoint::mpmGridPoint,
+    thisGrid::mpmGrid
+)
+    
     v2Result = zeros(2)
 
     v2Distance = thisMaterialPoint.v2Centroid - thisGridPoint.v2Position

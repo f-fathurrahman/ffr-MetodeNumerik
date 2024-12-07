@@ -83,7 +83,7 @@ function getAdjacentGridPoints(
     thisGrid::mpmGrid
 )
     
-    thisAdjacentGridPoints = Array{Int64}(0)
+    thisAdjacentGridPoints = Array{Int64}(undef, 0)
     v2Coordinate = thisMaterialPoint.v2Centroid
 
     fLength_Cell_x = thisGrid.v2Length_Cell[1]

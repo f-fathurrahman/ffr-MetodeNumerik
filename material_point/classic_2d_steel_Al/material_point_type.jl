@@ -162,7 +162,7 @@ function getIncrement_Plastic(fE::Float64, fNu::Float64, fK0::Float64, fAlphaCur
 
     eye2   = [1.0; 1.0; 0.0];
     eye2x2 = [1.0 1.0 0.0; 1.0 1.0 0.0; 0.0 0.0 0.0];
-    I_dev  = eye(3) - 0.5*eye2x2;
+    I_dev  = Matrix(LinearAlgebra.I(3)) - 0.5*eye2x2;
     I      = [1.0 0.0 0.0; 0.0 1.0 0.0; 0.0 0.0 0.5];#0.5 to make engineering strain to physical one
     Iinv   = [1.0 0.0 0.0; 0.0 1.0 0.0; 0.0 0.0 2.0];
 
