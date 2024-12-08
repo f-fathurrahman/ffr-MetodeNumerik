@@ -144,12 +144,21 @@ function getStressIncrement_Elastic(fE::Float64, fNu::Float64, v3StrainIncrement
     v3Result[2] = fConstant * ((1.0-fNu)*v3StrainIncrement[2] + fNu*v3StrainIncrement[1])
     v3Result[3] = fConstant * ((0.5-fNu)*v3StrainIncrement[3])
 
-    return(v3Result)
+    return v3Result
 end
 
 
 
-function getIncrement_Plastic(fE::Float64, fNu::Float64, fK0::Float64, fAlphaCurrent::Float64, v3StressCurrent::Array{Float64}, v3StrainCurrent::Array{Float64}, v3PlasticStrainCurrent::Array{Float64}, v3StrainIncrement::Array{Float64})
+function getIncrement_Plastic(
+    fE::Float64,
+    fNu::Float64,
+    fK0::Float64,
+    fAlphaCurrent::Float64,
+    v3StressCurrent::Array{Float64},
+    v3StrainCurrent::Array{Float64},
+    v3PlasticStrainCurrent::Array{Float64},
+    v3StrainIncrement::Array{Float64}
+)
     v32Result = zeros(3,2)
 
     v3StressIncrement = zeros(3)
@@ -184,11 +193,11 @@ function getIncrement_Plastic(fE::Float64, fNu::Float64, fK0::Float64, fAlphaCur
     else # plastic step
         normal = s_trial/norm_s_trial;
         lambda = (norm_s_trial - k1*fAlphaCurrent - fK0)/(2.0*mu + k1);
-            fAlphaIncrement = lambda
+        fAlphaIncrement = lambda
         # Update plastic strain and stress
-            v3PlasticStrainIncrement = lambda*Iinv*normal;
-            v3StressIncrement = kappa*sum(v3StrainCurrent[1] + v3StrainCurrent[2])*eye2 + s_trial - 2.0*mu*lambda*normal;
-            v3StressIncrement -= v3StressCurrent
+        v3PlasticStrainIncrement = lambda*Iinv*normal;
+        v3StressIncrement = kappa*sum(v3StrainCurrent[1] + v3StrainCurrent[2])*eye2 + s_trial - 2.0*mu*lambda*normal;
+        v3StressIncrement -= v3StressCurrent
     end
 
     v32Result = hcat(v3StressIncrement, v3PlasticStrainIncrement)

@@ -13,18 +13,18 @@ function getShapeValue_Classic(
     v2ShapeValue[1] = 1.0 - abs(v2Distance[1]) / v2CellLength[1]
     v2ShapeValue[2] = 1.0 - abs(v2Distance[2]) / v2CellLength[2]
 
-    if(v2ShapeValue[1] < 0.0)
+    if v2ShapeValue[1] < 0.0
         # @printf("Negative shape value!!! %e \n", v2Distance[1])
         v2ShapeValue[1] = 0.0
     end
-    if(v2ShapeValue[2] < 0.0)
+    if v2ShapeValue[2] < 0.0
         # @printf("Negative shape value!!! \n")
         v2ShapeValue[2] = 0.0
     end
 
     fShapeValue = v2ShapeValue[1] * v2ShapeValue[2]
     #
-    return(fShapeValue)
+    return fShapeValue
 end
 
 function getShapeGradient_Classic(
