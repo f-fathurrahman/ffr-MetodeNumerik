@@ -1,7 +1,7 @@
 include("setup_works.jl")
 
 using Printf
-import LinearAlgebra
+using LinearAlgebra: I, det
 import PyPlot
 
 include("material_point_type.jl")
@@ -15,37 +15,37 @@ function mpmMain()
 
     fOffset = 60.0/50/2.0
     thisMaterialDomain_01 = createMaterialDomain_Circle([30.0; 50.0], 9.6/2.0, fOffset)
-    fVolume = fOffset*fOffset #3.14159*0.2*0.2/length(thisMaterialDomain_01)
-    fMass = 7850e-12*fVolume
+    volume = fOffset*fOffset #3.14159*0.2*0.2/length(thisMaterialDomain_01)
+    mass = 7850e-12*volume
     for thisMat in thisMaterialDomain_01
-        thisMat.fMass = fMass
-        thisMat.fVolumeInitial = fVolume
-        thisMat.fVolume = fVolume
-        thisMat.fElasticModulus = 200.0e3
-        thisMat.fPoissonRatio = 0.3
-        thisMat.fYieldStress = 1.0e24
-        thisMat.v2Velocity = [0.0; -1160.0e3]
-        thisMat.v2Momentum = fMass*thisMat.v2Velocity
-        thisMat.v2ExternalForce = [0.0; -fGravity*fMass]
-        thisMat.m22DeformationGradient[:,:] .= Matrix(LinearAlgebra.I(2))
-        thisMat.m22DeformationGradientIncrement[:,:] .= Matrix(LinearAlgebra.I(2))
+        thisMat.mass = mass
+        thisMat.initial_volume = volume
+        thisMat.volume = volume
+        thisMat.elastic_modulus = 200.0e3
+        thisMat.poisson_ratio = 0.3
+        thisMat.yield_stress = 1.0e24
+        thisMat.velocity = [0.0; -1160.0e3]
+        thisMat.momentum = mass*thisMat.velocity
+        thisMat.ext_force = [0.0; -fGravity*mass]
+        thisMat.deform_grad[:,:] .= Matrix(I(2))
+        thisMat.deform_grad_incr[:,:] .= Matrix(I(2))
     end
 
     thisMaterialDomain_02 = createMaterialDomain_Rectangle([30.0; 20.0], 60.0, 40.6, fOffset)
-    fVolume = fOffset*fOffset #3.14159*0.2*0.2/length(thisMaterialDomain_02)
-    fMass = 2700e-12*fVolume
+    volume = fOffset*fOffset #3.14159*0.2*0.2/length(thisMaterialDomain_02)
+    mass = 2700e-12*volume
     for thisMat in thisMaterialDomain_02
-        thisMat.fMass = fMass
-        thisMat.fVolumeInitial = fVolume
-        thisMat.fVolume = fVolume
-        thisMat.fElasticModulus = 78.2e3
-        thisMat.fPoissonRatio = 0.3
-        thisMat.fYieldStress = 300.0
-        thisMat.v2Velocity = [0.0; 0.0]
-        thisMat.v2Momentum = fMass*thisMat.v2Velocity
-        thisMat.v2ExternalForce = [0.0; -fGravity*fMass]
-        thisMat.m22DeformationGradient[:,:] .= Matrix(LinearAlgebra.I(2))
-        thisMat.m22DeformationGradientIncrement[:,:] = Matrix(LinearAlgebra.I(2))
+        thisMat.mass = mass
+        thisMat.initial_volume = volume
+        thisMat.volume = volume
+        thisMat.elastic_modulus = 78.2e3
+        thisMat.poisson_ratio = 0.3
+        thisMat.yield_stress = 300.0
+        thisMat.velocity = [0.0; 0.0]
+        thisMat.momentum = mass*thisMat.velocity
+        thisMat.ext_force = [0.0; -fGravity*mass]
+        thisMat.deform_grad[:,:] .= Matrix(I(2))
+        thisMat.deform_grad_incr[:,:] .= Matrix(I(2))
     end
 
     Npoints1 = length(thisMaterialDomain_01)
@@ -65,13 +65,13 @@ function mpmMain()
 
     # ---------------------------------------------------------------------------
     # information about the created domain
-    fMass = 0.0
+    mass = 0.0
     for iIndex_MP in 1:1:length(allMaterialPoint)
-        fMass += allMaterialPoint[iIndex_MP].fMass
+        mass += allMaterialPoint[iIndex_MP].mass
     end
     @printf("Initial configuration: \n")
-    @printf("    Single particle Mass: %+.6e \n", allMaterialPoint[1].fMass)
-    @printf("    Total mass: %+.6e \n", fMass)
+    @printf("    Single particle Mass: %+.6e \n", allMaterialPoint[1].mass)
+    @printf("    Total mass: %+.6e \n", mass)
 
     @printf("    Disk, number of material points: %d \n", length(thisMaterialDomain_01))
     @printf("    Target, number of material points: %d \n", length(thisMaterialDomain_02))
@@ -80,7 +80,7 @@ function mpmMain()
 
     # grid creation
     # nodes where fixation boundary conditions are hard coded in the following code!!!
-    thisGrid = mpmGrid(60.0, 60.0, 51, 51)
+    thisGrid = MPMGrid(60.0, 60.0, 51, 51)
 
 
     # ---------------------------------------------------------------------------
@@ -117,8 +117,8 @@ function mpmMain()
     plot_StrainEnergy = Array{Float64}(undef, 0)
 
     # main analysis loop
-    time_range = 0.0:fTimeIncrement:fTimeEnd
-    #time_range = 0.0:fTimeIncrement:4*fTimeIncrement
+    #time_range = 0.0:fTimeIncrement:fTimeEnd
+    time_range = 0.0:fTimeIncrement:2*fTimeIncrement
     @info "Length of time_range = $(length(time_range))"
 
     for fTime in time_range
@@ -135,25 +135,25 @@ function mpmMain()
             fPlotTime = 0.0
 
             iMaterialPoints = length(allMaterialPoint)
-            array_x = [allMaterialPoint[i].v2Centroid[1] for i in 1:iMaterialPoints]
-            array_y = [allMaterialPoint[i].v2Centroid[2] for i in 1:iMaterialPoints]
+            array_x = [allMaterialPoint[i].centroid[1] for i in 1:iMaterialPoints]
+            array_y = [allMaterialPoint[i].centroid[2] for i in 1:iMaterialPoints]
             array_color = Matrix{Float64}(undef, iMaterialPoints, 3)
             array_size = Matrix{Float64}(undef, iMaterialPoints, 1)
             
             # Set color ?
             for iIndex in 1:iMaterialPoints
-                thisColor = allMaterialPoint[iIndex].fAlpha
-                thisColor /= (allMaterialPoint[iIndex].fYieldStress/allMaterialPoint[iIndex].fElasticModulus)*500
+                thisColor = allMaterialPoint[iIndex].equiv_plastic_strain
+                thisColor /= (allMaterialPoint[iIndex].yield_stress/allMaterialPoint[iIndex].elastic_modulus)*500
 
                 if(thisColor > 1.0)
                     # @printf("thiscolor %f\n", thisColor)
                     thisColor = 1.0
                 end
 
-                if(allMaterialPoint[iIndex].fYieldStress > 1.0e3)
+                if(allMaterialPoint[iIndex].yield_stress > 1.0e3)
                     array_color[iIndex, :] = [1.0, 0.0, 0.0]
                 else
-                  array_color[iIndex, :] = [thisColor, 0.5*thisColor, 1.0-thisColor]#[thisGrid.GridPoints[iIndex].fMass/iMaterialPoints, 0.0, 0.0]
+                  array_color[iIndex, :] = [thisColor, 0.5*thisColor, 1.0-thisColor]#[thisGrid.points[iIndex].mass/iMaterialPoints, 0.0, 0.0]
                 end
                 array_size[iIndex, :] = [4.0]
            end
@@ -189,11 +189,11 @@ function mpmMain()
         =#
 
         #reset grid------------------------------------
-        for iIndex in 1:thisGrid.iNodes
-            thisGrid.GridPoints[iIndex].fMass = 0.0
-            thisGrid.GridPoints[iIndex].v2Velocity[:,:] .= 0.0
-            thisGrid.GridPoints[iIndex].v2Momentum[:,:] .= 0.0
-            thisGrid.GridPoints[iIndex].v2Force[:,:] .= 0.0
+        for iIndex in 1:thisGrid.NnodesTotal
+            thisGrid.points[iIndex].mass = 0.0
+            thisGrid.points[iIndex].velocity[:,:] .= 0.0
+            thisGrid.points[iIndex].momentum[:,:] .= 0.0
+            thisGrid.points[iIndex].force[:,:] .= 0.0
         end
 
         # material to grid -------------------------------------------------------
@@ -204,36 +204,36 @@ function mpmMain()
             #
             for iIndex in 1:Nadjacent
                 # sina, be careful here, this might not be by reference and might not be good for assignment
-                thisGridPoint = thisGrid.GridPoints[thisAdjacentGridPoints[iIndex]]
+                thisGridPoint = thisGrid.points[thisAdjacentGridPoints[iIndex]]
 
                 fShapeValue = getShapeValue_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
 
                 v2ShapeGradient = getShapeGradient_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
 
                 # mass
-                thisGridPoint.fMass += fShapeValue * thisMaterialPoint.fMass
+                thisGridPoint.mass += fShapeValue * thisMaterialPoint.mass
                 # momentum
-                thisGridPoint.v2Momentum += fShapeValue * thisMaterialPoint.fMass * thisMaterialPoint.v2Velocity
+                thisGridPoint.momentum += fShapeValue * thisMaterialPoint.mass * thisMaterialPoint.velocity
                 # internal forces
-                fVolume = thisMaterialPoint.fVolume
-                thisGridPoint.v2Force[1] += -fVolume * (v2ShapeGradient[1]*thisMaterialPoint.v3Stress[1] + v2ShapeGradient[2]*thisMaterialPoint.v3Stress[3])
-                thisGridPoint.v2Force[2] += -fVolume * (v2ShapeGradient[2]*thisMaterialPoint.v3Stress[2] + v2ShapeGradient[1]*thisMaterialPoint.v3Stress[3])
+                volume = thisMaterialPoint.volume
+                thisGridPoint.force[1] += -volume * (v2ShapeGradient[1]*thisMaterialPoint.stress[1] + v2ShapeGradient[2]*thisMaterialPoint.stress[3])
+                thisGridPoint.force[2] += -volume * (v2ShapeGradient[2]*thisMaterialPoint.stress[2] + v2ShapeGradient[1]*thisMaterialPoint.stress[3])
                 # external forces
-                thisGridPoint.v2Force += fShapeValue*thisMaterialPoint.v2ExternalForce
+                thisGridPoint.force += fShapeValue*thisMaterialPoint.ext_force
            end
         end
         #
         # update grid momentum and apply boundary conditions
-        for iIndex_GP in 1:thisGrid.iNodes
-            thisGridPoint = thisGrid.GridPoints[iIndex_GP]
-            thisGridPoint.v2Momentum += thisGridPoint.v2Force * fTimeIncrement
-            if thisGridPoint.v2Fixed[1]
-                thisGridPoint.v2Momentum[1] = 0.0
-                thisGridPoint.v2Force[1] = 0.0
+        for iIndex_GP in 1:thisGrid.NnodesTotal
+            thisGridPoint = thisGrid.points[iIndex_GP]
+            thisGridPoint.momentum += thisGridPoint.force * fTimeIncrement
+            if thisGridPoint.is_fixed[1]
+                thisGridPoint.momentum[1] = 0.0
+                thisGridPoint.force[1] = 0.0
             end
-            if thisGridPoint.v2Fixed[2]
-                thisGridPoint.v2Momentum[2] = 0.0
-                thisGridPoint.v2Force[2] = 0.0
+            if thisGridPoint.is_fixed[2]
+                thisGridPoint.momentum[2] = 0.0
+                thisGridPoint.force[2] = 0.0
             end
         end
 
@@ -245,17 +245,17 @@ function mpmMain()
             thisAdjacentGridPoints = getAdjacentGridPoints(thisMaterialPoint, thisGrid)
             #v2CentroidIncrement = zeros(2)
             for iIndex in 1:1:length(thisAdjacentGridPoints)
-                thisGridPoint = thisGrid.GridPoints[thisAdjacentGridPoints[iIndex]]
+                thisGridPoint = thisGrid.points[thisAdjacentGridPoints[iIndex]]
 
                 fShapeValue = getShapeValue_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
                 #v2ShapeGradient = getShapeGradient_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
 
-                thisMaterialPoint.v2Velocity += (fShapeValue * thisGridPoint.v2Force / thisGridPoint.fMass) * fTimeIncrement
+                thisMaterialPoint.velocity += (fShapeValue * thisGridPoint.force / thisGridPoint.mass) * fTimeIncrement
            end
         end
         # reset grid momenta -----------------------------------------------------
-        # for iIndex_GP in 1:1:thisGrid.iNodes
-        #     thisGrid.GridPoints[iIndex_GP].v2Momentum = [0.0; 0.0]
+        # for iIndex_GP in 1:1:thisGrid.NnodesTotal
+        #     thisGrid.points[iIndex_GP].momentum = [0.0; 0.0]
         # end
         # map particle momenta back to grid------------------------------
         # mass in NOT mapped here
@@ -263,27 +263,27 @@ function mpmMain()
             thisMaterialPoint = allMaterialPoint[iIndex_MP]
             thisAdjacentGridPoints = getAdjacentGridPoints(thisMaterialPoint, thisGrid)
             for iIndex in 1:1:length(thisAdjacentGridPoints)
-                thisGridPoint = thisGrid.GridPoints[thisAdjacentGridPoints[iIndex]]
+                thisGridPoint = thisGrid.points[thisAdjacentGridPoints[iIndex]]
 
                 fShapeValue = getShapeValue_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
 
-                # thisGridPoint.v2Momentum += fShapeValue * thisMaterialPoint.fMass * thisMaterialPoint.v2Velocity
-                thisGridPoint.v2Velocity += fShapeValue * thisMaterialPoint.fMass * thisMaterialPoint.v2Velocity / thisGridPoint.fMass
+                # thisGridPoint.momentum += fShapeValue * thisMaterialPoint.mass * thisMaterialPoint.velocity
+                thisGridPoint.velocity += fShapeValue * thisMaterialPoint.mass * thisMaterialPoint.velocity / thisGridPoint.mass
             end
         end
         #apply boundary conditions velocity------------------------------------
-        for iIndex_GP in 1:1:thisGrid.iNodes
-            thisGridPoint = thisGrid.GridPoints[iIndex_GP]
+        for iIndex_GP in 1:1:thisGrid.NnodesTotal
+            thisGridPoint = thisGrid.points[iIndex_GP]
 
-            if thisGridPoint.v2Fixed[1]
-                thisGridPoint.v2Velocity[1] = 0.0
-                thisGridPoint.v2Momentum[1] = 0.0
-                thisGridPoint.v2Force[1] = 0.0
+            if thisGridPoint.is_fixed[1]
+                thisGridPoint.velocity[1] = 0.0
+                thisGridPoint.momentum[1] = 0.0
+                thisGridPoint.force[1] = 0.0
             end
-            if thisGridPoint.v2Fixed[2]
-                thisGridPoint.v2Velocity[2] = 0.0
-                thisGridPoint.v2Momentum[2] = 0.0
-                thisGridPoint.v2Force[2] = 0.0
+            if thisGridPoint.is_fixed[2]
+                thisGridPoint.velocity[2] = 0.0
+                thisGridPoint.momentum[2] = 0.0
+                thisGridPoint.force[2] = 0.0
             end
         end
         # ------------------------------------------------------------------------
@@ -299,36 +299,36 @@ function mpmMain()
             Nadjacent = length(thisAdjacentGridPoints)
             #println("Nadjacent = ", Nadjacent)
             for iIndex in 1:Nadjacent
-                thisGridPoint = thisGrid.GridPoints[thisAdjacentGridPoints[iIndex]]
+                thisGridPoint = thisGrid.points[thisAdjacentGridPoints[iIndex]]
 
                 fShapeValue = getShapeValue_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
                 v2ShapeGradient = getShapeGradient_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
 
-                v2GridPointVelocity = thisGridPoint.v2Velocity#v2Momentum / thisGridPoint.fMass
+                v2GridPointVelocity = thisGridPoint.velocity#momentum / thisGridPoint.mass
 
-                v2CentroidIncrement .+= (fShapeValue * thisGridPoint.v2Momentum / thisGridPoint.fMass) * fTimeIncrement
+                v2CentroidIncrement .+= (fShapeValue * thisGridPoint.momentum / thisGridPoint.mass) * fTimeIncrement
 
                 # from (2011) A convected particle domain interpolation technique to extend ...
-                thisMaterialPoint.m22DeformationGradientIncrement += v2GridPointVelocity*transpose(v2ShapeGradient)*fTimeIncrement;
+                thisMaterialPoint.deform_grad_incr += v2GridPointVelocity*transpose(v2ShapeGradient)*fTimeIncrement;
             end
-            thisMaterialPoint.v2Centroid += v2CentroidIncrement
-            thisMaterialPoint.m22DeformationGradient = thisMaterialPoint.m22DeformationGradientIncrement * thisMaterialPoint.m22DeformationGradient
-            v3StrainIncrement[1] = thisMaterialPoint.m22DeformationGradientIncrement[1,1] - 1.0
-            v3StrainIncrement[2] = thisMaterialPoint.m22DeformationGradientIncrement[2,2] - 1.0
-            v3StrainIncrement[3] = thisMaterialPoint.m22DeformationGradientIncrement[1,2] + thisMaterialPoint.m22DeformationGradientIncrement[2,1]
-            thisMaterialPoint.m22DeformationGradientIncrement[:,:] .= Matrix(LinearAlgebra.I(2))
-            thisMaterialPoint.v3Strain[1] += v3StrainIncrement[1]
-            thisMaterialPoint.v3Strain[2] += v3StrainIncrement[2]
-            thisMaterialPoint.v3Strain[3] += v3StrainIncrement[3]
+            thisMaterialPoint.centroid += v2CentroidIncrement
+            thisMaterialPoint.deform_grad = thisMaterialPoint.deform_grad_incr * thisMaterialPoint.deform_grad
+            v3StrainIncrement[1] = thisMaterialPoint.deform_grad_incr[1,1] - 1.0
+            v3StrainIncrement[2] = thisMaterialPoint.deform_grad_incr[2,2] - 1.0
+            v3StrainIncrement[3] = thisMaterialPoint.deform_grad_incr[1,2] + thisMaterialPoint.deform_grad_incr[2,1]
+            thisMaterialPoint.deform_grad_incr[:,:] .= Matrix(I(2))
+            thisMaterialPoint.strain[1] += v3StrainIncrement[1]
+            thisMaterialPoint.strain[2] += v3StrainIncrement[2]
+            thisMaterialPoint.strain[3] += v3StrainIncrement[3]
 
-            fE = thisMaterialPoint.fElasticModulus;
-            fNu = thisMaterialPoint.fPoissonRatio
-            fYield = thisMaterialPoint.fYieldStress
+            fE = thisMaterialPoint.elastic_modulus;
+            fNu = thisMaterialPoint.poisson_ratio
+            fYield = thisMaterialPoint.yield_stress
 
-            v3StrainCurrent = thisMaterialPoint.v3Strain
-            v3StressCurrent = thisMaterialPoint.v3Stress
-            v3PlasticStrainCurrent = thisMaterialPoint.v3PlasticStrain
-            fAlphaCurrent = thisMaterialPoint.fAlpha
+            v3StrainCurrent = thisMaterialPoint.strain
+            v3StressCurrent = thisMaterialPoint.stress
+            v3PlasticStrainCurrent = thisMaterialPoint.plastic_strain
+            fAlphaCurrent = thisMaterialPoint.equiv_plastic_strain
 
             v32Result = getIncrement_Plastic(fE, fNu, fYield, fAlphaCurrent, v3StressCurrent, v3StrainCurrent, v3PlasticStrainCurrent, v3StrainIncrement)
 
@@ -336,13 +336,13 @@ function mpmMain()
             v3PlasticStrainIncrement = v32Result[:, 2]
             fAlphaIncrement = v32Result[1, 3]
 
-            thisMaterialPoint.v3Stress += v3StressIncrement
-            thisMaterialPoint.v3PlasticStrain += v3PlasticStrainIncrement
-            thisMaterialPoint.fAlpha += fAlphaIncrement
+            thisMaterialPoint.stress += v3StressIncrement
+            thisMaterialPoint.plastic_strain += v3PlasticStrainIncrement
+            thisMaterialPoint.equiv_plastic_strain += fAlphaIncrement
 
-            thisMaterialPoint.fVolume = LinearAlgebra.det(thisMaterialPoint.m22DeformationGradient) * thisMaterialPoint.fVolumeInitial
+            thisMaterialPoint.volume = det(thisMaterialPoint.deform_grad) * thisMaterialPoint.initial_volume
 
-            thisMaterialPoint.v2Momentum = thisMaterialPoint.v2Velocity * thisMaterialPoint.fMass
+            thisMaterialPoint.momentum = thisMaterialPoint.velocity * thisMaterialPoint.mass
         end
 
         # ------------------------------------------------------------------------
@@ -355,12 +355,12 @@ function mpmMain()
             fKineticEnergy = 0.0
             for iIndex_MP in 1:NpointsAll
                 thisMaterialPoint = allMaterialPoint[iIndex_MP]
-                fStrainEnergy += 0.5*thisMaterialPoint.v3Strain[1] * thisMaterialPoint.v3Stress[1] * thisMaterialPoint.fVolume
-                fStrainEnergy += 0.5*thisMaterialPoint.v3Strain[2] * thisMaterialPoint.v3Stress[2] * thisMaterialPoint.fVolume
-                fStrainEnergy += 0.5*thisMaterialPoint.v3Strain[3] * thisMaterialPoint.v3Stress[3] * thisMaterialPoint.fVolume
+                fStrainEnergy += 0.5*thisMaterialPoint.strain[1] * thisMaterialPoint.stress[1] * thisMaterialPoint.volume
+                fStrainEnergy += 0.5*thisMaterialPoint.strain[2] * thisMaterialPoint.stress[2] * thisMaterialPoint.volume
+                fStrainEnergy += 0.5*thisMaterialPoint.strain[3] * thisMaterialPoint.stress[3] * thisMaterialPoint.volume
 
-                fVelocity = thisMaterialPoint.v2Velocity[1]^2 + thisMaterialPoint.v2Velocity[2]^2
-                fKineticEnergy += 0.5*fVelocity * thisMaterialPoint.fMass
+                fVelocity = thisMaterialPoint.velocity[1]^2 + thisMaterialPoint.velocity[2]^2
+                fKineticEnergy += 0.5*fVelocity * thisMaterialPoint.mass
             end
             @info "$(fTime) $(fKineticEnergy) $(fStrainEnergy)"
             #save to plot arrays
@@ -375,11 +375,11 @@ function mpmMain()
         if(fConsolTime > fConsolTimeInterval)
             fConsolTime = 0.0
 
-            fMass = 0.0
+            mass = 0.0
             fMomentum_x = 0.0
             for iIndex_MP in 1:Npoints1
-                fMass += thisMaterialDomain_01[iIndex_MP].fMass
-                fMomentum_x += thisMaterialDomain_01[iIndex_MP].v2Momentum[1]
+                mass += thisMaterialDomain_01[iIndex_MP].mass
+                fMomentum_x += thisMaterialDomain_01[iIndex_MP].momentum[1]
             end
             
             #fProfiler_Total = fProfiler_Particle2Grid + fProfiler_Grid2Particle
