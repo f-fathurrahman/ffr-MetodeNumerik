@@ -1,71 +1,73 @@
+using LinearAlgebra: I
+
 mutable struct mpmMaterialPoint_2D_Classic
-    fMass::Float64
-    fVolumeInitial::Float64
-    fVolume::Float64
-    fElasticModulus::Float64
-    fPoissonRatio::Float64
-    fYieldStress::Float64
-    v2Centroid::Vector{Float64}
-    v2Velocity::Vector{Float64}
-    v2Momentum::Vector{Float64}
-    v2ExternalForce::Vector{Float64}
+    mass::Float64
+    initial_volume::Float64
+    volume::Float64
+    elastic_modulus::Float64
+    poisson_ratio::Float64
+    yield_stress::Float64
+    centroid::Vector{Float64}
+    velocity::Vector{Float64}
+    momentum::Vector{Float64}
+    ext_force::Vector{Float64}
     # 0.0=no restraint, 1.0=fully restrained
-    v2Restraint::Array{Float64}
-    v2Corner::Matrix{Float64} # corner position
-    m22DeformationGradient::Matrix{Float64}
-    m22DeformationGradientIncrement::Matrix{Float64}
-    v3Strain::Array{Float64} # xx, yy, zz, xy, yz, zx
-    v3PlasticStrain::Array{Float64} # xx, yy, zz, xy, yz, zx
-    fAlpha::Float64 # equivalent plastic strain
-    v3Stress::Array{Float64}
+    restraint::Array{Float64}
+    corner::Matrix{Float64} # corner position
+    deform_grad::Matrix{Float64}
+    deform_grad_incr::Matrix{Float64}
+    strain::Array{Float64} # xx, yy, zz, xy, yz, zx
+    plastic_strain::Array{Float64} # xx, yy, zz, xy, yz, zx
+    equiv_plastic_strain::Float64 # equivalent plastic strain
+    stress::Array{Float64}
 end
 
 # constructor
 function mpmMaterialPoint_2D_Classic()
 
-    fMass = 1.0
-    fVolumeInitial = 1.0
-    fVolume = 1.0
+    mass = 1.0
+    initial_volume = 1.0
+    volume = 1.0
     
-    fElasticModulus = 1.0
-    fPoissonRatio = 0.3
-    fYieldStress = 1e24
+    elastic_modulus = 1.0
+    poisson_ratio = 0.3
+    yield_stress = 1e24
 
     NDIM = 2
 
-    v2Centroid = zeros(Float64, NDIM)
-    v2Velocity = zeros(Float64, NDIM)
-    v2Momentum = zeros(Float64, NDIM)
-    v2ExternalForce = zeros(Float64, NDIM)
-    v2Restraint = zeros(Float64, NDIM) # FIXME: change to Bool?
+    centroid = zeros(Float64, NDIM)
+    velocity = zeros(Float64, NDIM)
+    momentum = zeros(Float64, NDIM)
+    ext_force = zeros(Float64, NDIM)
+    restraint = zeros(Float64, NDIM) # FIXME: change to Bool?
 
-    v2Corner = zeros(Float64, NDIM, 4)
-    m22DeformationGradient = Matrix{Float64}(LinearAlgebra.I(2))
-    m22DeformationGradientIncrement = Matrix{Float64}(LinearAlgebra.I(2))
-    v3Strain = zeros(Float64, 3)
-    v3PlasticStrain = zeros(Float64, 3)
-    fAlpha = 0.0
-    v3Stress = zeros(Float64, 3)
+    corner = zeros(Float64, NDIM, 4)
+    deform_grad = Matrix{Float64}(I(2))
+    deform_grad_incr = Matrix{Float64}(I(2))
+    strain = zeros(Float64, 3)
+    plastic_strain = zeros(Float64, 3)
+    equiv_plastic_strain = 0.0
+    stress = zeros(Float64, 3)
 
     return mpmMaterialPoint_2D_Classic(
-        fMass,
-        fVolumeInitial,
-        fVolume,
-        fElasticModulus,
-        fPoissonRatio,
-        fYieldStress,
-        v2Centroid,
-        v2Velocity,
-        v2Momentum,
-        v2ExternalForce,
-        v2Restraint,
-        v2Corner,
-        m22DeformationGradient,
-        m22DeformationGradientIncrement,
-        v3Strain,
-        v3PlasticStrain,
-        fAlpha,
-        v3Stress
+        mass,
+        initial_volume,
+        volume,
+        elastic_modulus,
+        poisson_ratio,
+        yield_stress,
+        centroid,
+        velocity,
+        momentum,
+        ext_force,
+        restraint,
+        corner,
+        deform_grad,
+        deform_grad_incr,
+        strain,
+        plastic_strain,
+        equiv_plastic_strain,
+        stress
     )
 
 end
@@ -96,7 +98,7 @@ function createMaterialDomain_Circle(
                 ip += 1
                 thisMaterialDomain[ip] = mpmMaterialPoint_2D_Classic()
                 # Modify centroid
-                thisMaterialDomain[ip].v2Centroid[:] .= [fCenter[1] + fx; fCenter[2] + fy]
+                thisMaterialDomain[ip].centroid[:] .= [fCenter[1] + fx; fCenter[2] + fy]
             end
         end
     end
@@ -128,7 +130,7 @@ function createMaterialDomain_Rectangle(
         for fx in -0.5*fWidth+0.5*fOffset:fOffset:+0.5*fWidth-0.5*fOffset
             ip += 1
             thisMaterialDomain[ip] = mpmMaterialPoint_2D_Classic()
-            thisMaterialDomain[ip].v2Centroid[:] .= v2Center .+ [fx; fy]
+            thisMaterialDomain[ip].centroid[:] .= v2Center .+ [fx; fy]
         end
     end
     return thisMaterialDomain
@@ -171,13 +173,13 @@ function getIncrement_Plastic(
 
     eye2   = [1.0; 1.0; 0.0];
     eye2x2 = [1.0 1.0 0.0; 1.0 1.0 0.0; 0.0 0.0 0.0];
-    I_dev  = Matrix(LinearAlgebra.I(3)) - 0.5*eye2x2;
-    I      = [1.0 0.0 0.0; 0.0 1.0 0.0; 0.0 0.0 0.5];#0.5 to make engineering strain to physical one
+    I_dev  = Matrix(I(3)) - 0.5*eye2x2;
+    I33      = [1.0 0.0 0.0; 0.0 1.0 0.0; 0.0 0.0 0.5]; #0.5 to make engineering strain to physical one
     Iinv   = [1.0 0.0 0.0; 0.0 1.0 0.0; 0.0 0.0 2.0];
 
     # Compute trial stress
     epsilon_dev  = I_dev * v3StrainCurrent;
-    s_trial      = 2.0 * mu * I * (epsilon_dev - v3PlasticStrainCurrent);
+    s_trial      = 2.0 * mu * I33 * (epsilon_dev - v3PlasticStrainCurrent);
     norm_s_trial = sqrt(s_trial[1]^2 + s_trial[2]^2 + 2*s_trial[3]^2);
     sigma_trial  = kappa*sum(v3StrainCurrent[1] + v3StrainCurrent[2])*eye2 + s_trial;
 
@@ -200,6 +202,7 @@ function getIncrement_Plastic(
         v3StressIncrement -= v3StressCurrent
     end
 
+    # why use hcat?
     v32Result = hcat(v3StressIncrement, v3PlasticStrainIncrement)
     v32Result = hcat(v32Result, [fAlphaIncrement; fAlphaIncrement; fAlphaIncrement])
     return v32Result

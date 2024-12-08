@@ -1,13 +1,13 @@
 
 function getShapeValue_Classic(
     thisMaterialPoint::mpmMaterialPoint_2D_Classic,
-    thisGridPoint::mpmGridPoint,
-    thisGrid::mpmGrid
+    thisGridPoint::MPMGridPoint,
+    thisGrid::MPMGrid
 )
     fShapeValue = 0.0
 
-    v2Distance = thisMaterialPoint.v2Centroid - thisGridPoint.v2Position
-    v2CellLength = thisGrid.v2Length_Cell;
+    v2Distance = thisMaterialPoint.centroid - thisGridPoint.position
+    v2CellLength = thisGrid.cell_L;
 
     v2ShapeValue = zeros(2)
     v2ShapeValue[1] = 1.0 - abs(v2Distance[1]) / v2CellLength[1]
@@ -29,14 +29,14 @@ end
 
 function getShapeGradient_Classic(
     thisMaterialPoint::mpmMaterialPoint_2D_Classic,
-    thisGridPoint::mpmGridPoint,
-    thisGrid::mpmGrid
+    thisGridPoint::MPMGridPoint,
+    thisGrid::MPMGrid
 )
     
     v2Result = zeros(2)
 
-    v2Distance = thisMaterialPoint.v2Centroid - thisGridPoint.v2Position
-    v2CellLength = thisGrid.v2Length_Cell;
+    v2Distance = thisMaterialPoint.centroid - thisGridPoint.position
+    v2CellLength = thisGrid.cell_L;
 
     v2ShapeValue = zeros(2)
     v2ShapeValue[1] = 1.0 - abs(v2Distance[1]) / v2CellLength[1]
