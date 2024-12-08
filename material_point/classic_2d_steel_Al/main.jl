@@ -117,8 +117,12 @@ function mpmMain()
     plot_StrainEnergy = Array{Float64}(undef, 0)
 
     # main analysis loop
-    for fTime in 0.0:fTimeIncrement:fTimeEnd
-        @info "fTime = $(fTime)"
+    time_range = 0.0:fTimeIncrement:fTimeEnd
+    #time_range = 0.0:fTimeIncrement:4*fTimeIncrement
+    @info "Length of time_range = $(length(time_range))"
+
+    for fTime in time_range
+
         iTimeCycle += 1
         # ------------------------------------------------------------------------
         # realtime graphical plotting routines
@@ -185,18 +189,20 @@ function mpmMain()
         =#
 
         #reset grid------------------------------------
-        for iIndex in 1:1:thisGrid.iNodes
+        for iIndex in 1:thisGrid.iNodes
             thisGrid.GridPoints[iIndex].fMass = 0.0
-            thisGrid.GridPoints[iIndex].v2Velocity = [0.0; 0.0]
-            thisGrid.GridPoints[iIndex].v2Momentum = [0.0; 0.0]
-            thisGrid.GridPoints[iIndex].v2Force = [0.0; 0.0]
+            thisGrid.GridPoints[iIndex].v2Velocity[:,:] .= 0.0
+            thisGrid.GridPoints[iIndex].v2Momentum[:,:] .= 0.0
+            thisGrid.GridPoints[iIndex].v2Force[:,:] .= 0.0
         end
 
         # material to grid -------------------------------------------------------
         for iIndex_MP in 1:NpointsAll
             thisMaterialPoint = allMaterialPoint[iIndex_MP]
             thisAdjacentGridPoints = getAdjacentGridPoints(allMaterialPoint[iIndex_MP], thisGrid)
-            for iIndex in 1:1:length(thisAdjacentGridPoints)
+            Nadjacent = length(thisAdjacentGridPoints)
+            #
+            for iIndex in 1:Nadjacent
                 # sina, be careful here, this might not be by reference and might not be good for assignment
                 thisGridPoint = thisGrid.GridPoints[thisAdjacentGridPoints[iIndex]]
 
@@ -216,17 +222,16 @@ function mpmMain()
                 thisGridPoint.v2Force += fShapeValue*thisMaterialPoint.v2ExternalForce
            end
         end
-        # update grid momentum and apply boundary conditions ---------------------
-        for iIndex_GP in 1:1:thisGrid.iNodes
+        #
+        # update grid momentum and apply boundary conditions
+        for iIndex_GP in 1:thisGrid.iNodes
             thisGridPoint = thisGrid.GridPoints[iIndex_GP]
-
             thisGridPoint.v2Momentum += thisGridPoint.v2Force * fTimeIncrement
-
-            if(thisGridPoint.v2Fixed[1] == true)
+            if thisGridPoint.v2Fixed[1]
                 thisGridPoint.v2Momentum[1] = 0.0
                 thisGridPoint.v2Force[1] = 0.0
             end
-            if(thisGridPoint.v2Fixed[2] == true)
+            if thisGridPoint.v2Fixed[2]
                 thisGridPoint.v2Momentum[2] = 0.0
                 thisGridPoint.v2Force[2] = 0.0
             end
@@ -234,15 +239,16 @@ function mpmMain()
 
         # ------------------------------------------------------------------------
         # grid to material pass 1-------------------------------------------------
-        for iIndex_MP in 1:1:length(allMaterialPoint)
+        for iIndex_MP in 1:NpointsAll
+            #
             thisMaterialPoint = allMaterialPoint[iIndex_MP]
             thisAdjacentGridPoints = getAdjacentGridPoints(thisMaterialPoint, thisGrid)
-            v2CentroidIncrement = zeros(2)
+            #v2CentroidIncrement = zeros(2)
             for iIndex in 1:1:length(thisAdjacentGridPoints)
                 thisGridPoint = thisGrid.GridPoints[thisAdjacentGridPoints[iIndex]]
 
                 fShapeValue = getShapeValue_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
-                v2ShapeGradient = getShapeGradient_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
+                #v2ShapeGradient = getShapeGradient_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
 
                 thisMaterialPoint.v2Velocity += (fShapeValue * thisGridPoint.v2Force / thisGridPoint.fMass) * fTimeIncrement
            end
@@ -269,12 +275,12 @@ function mpmMain()
         for iIndex_GP in 1:1:thisGrid.iNodes
             thisGridPoint = thisGrid.GridPoints[iIndex_GP]
 
-            if(thisGridPoint.v2Fixed[1] == true)
+            if thisGridPoint.v2Fixed[1]
                 thisGridPoint.v2Velocity[1] = 0.0
                 thisGridPoint.v2Momentum[1] = 0.0
                 thisGridPoint.v2Force[1] = 0.0
             end
-            if(thisGridPoint.v2Fixed[2] == true)
+            if thisGridPoint.v2Fixed[2]
                 thisGridPoint.v2Velocity[2] = 0.0
                 thisGridPoint.v2Momentum[2] = 0.0
                 thisGridPoint.v2Force[2] = 0.0
@@ -282,13 +288,17 @@ function mpmMain()
         end
         # ------------------------------------------------------------------------
         v2CentroidIncrement = zeros(Float64, 2)
+        v3StrainIncrement = zeros(Float64, 3)
+
         # grid to material pass 2 ------------------------------------------------
         for iIndex_MP in 1:NpointsAll
             thisMaterialPoint = allMaterialPoint[iIndex_MP]
             thisAdjacentGridPoints = getAdjacentGridPoints(thisMaterialPoint, thisGrid)
             fill!(v2CentroidIncrement, 0.0)
 
-            for iIndex in 1:1:length(thisAdjacentGridPoints)
+            Nadjacent = length(thisAdjacentGridPoints)
+            #println("Nadjacent = ", Nadjacent)
+            for iIndex in 1:Nadjacent
                 thisGridPoint = thisGrid.GridPoints[thisAdjacentGridPoints[iIndex]]
 
                 fShapeValue = getShapeValue_Classic(thisMaterialPoint, thisGridPoint, thisGrid)
@@ -296,14 +306,13 @@ function mpmMain()
 
                 v2GridPointVelocity = thisGridPoint.v2Velocity#v2Momentum / thisGridPoint.fMass
 
-                v2CentroidIncrement += (fShapeValue * thisGridPoint.v2Momentum / thisGridPoint.fMass) * fTimeIncrement
+                v2CentroidIncrement .+= (fShapeValue * thisGridPoint.v2Momentum / thisGridPoint.fMass) * fTimeIncrement
 
                 # from (2011) A convected particle domain interpolation technique to extend ...
                 thisMaterialPoint.m22DeformationGradientIncrement += v2GridPointVelocity*transpose(v2ShapeGradient)*fTimeIncrement;
-           end
+            end
             thisMaterialPoint.v2Centroid += v2CentroidIncrement
             thisMaterialPoint.m22DeformationGradient = thisMaterialPoint.m22DeformationGradientIncrement * thisMaterialPoint.m22DeformationGradient
-            v3StrainIncrement = zeros(3)
             v3StrainIncrement[1] = thisMaterialPoint.m22DeformationGradientIncrement[1,1] - 1.0
             v3StrainIncrement[2] = thisMaterialPoint.m22DeformationGradientIncrement[2,2] - 1.0
             v3StrainIncrement[3] = thisMaterialPoint.m22DeformationGradientIncrement[1,2] + thisMaterialPoint.m22DeformationGradientIncrement[2,1]
@@ -321,7 +330,6 @@ function mpmMain()
             v3PlasticStrainCurrent = thisMaterialPoint.v3PlasticStrain
             fAlphaCurrent = thisMaterialPoint.fAlpha
 
-            v32Result = zeros(3,2)
             v32Result = getIncrement_Plastic(fE, fNu, fYield, fAlphaCurrent, v3StressCurrent, v3StrainCurrent, v3PlasticStrainCurrent, v3StrainIncrement)
 
             v3StressIncrement = v32Result[:, 1]
@@ -341,7 +349,7 @@ function mpmMain()
         # calculating strain and kinetic energy for final results plot
         # ------------------------------------------------------------------------
         fResultTime += fTimeIncrement
-        if(fResultTime > fResultTimeInterval)
+        if fResultTime > fResultTimeInterval
             fResultTime = 0.0
             fStrainEnergy = 0.0
             fKineticEnergy = 0.0
@@ -354,7 +362,7 @@ function mpmMain()
                 fVelocity = thisMaterialPoint.v2Velocity[1]^2 + thisMaterialPoint.v2Velocity[2]^2
                 fKineticEnergy += 0.5*fVelocity * thisMaterialPoint.fMass
             end
-
+            @info "$(fTime) $(fKineticEnergy) $(fStrainEnergy)"
             #save to plot arrays
             #push!(plot_Time, fTime)
             #push!(plot_KineticEnergy, fKineticEnergy)
@@ -410,4 +418,4 @@ function mpmMain()
 
 end
 
-mpmMain()
+@time mpmMain()

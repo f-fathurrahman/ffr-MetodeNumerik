@@ -82,27 +82,26 @@ function getAdjacentGridPoints(
     thisMaterialPoint::mpmMaterialPoint_2D_Classic,
     thisGrid::mpmGrid
 )
-    
-    thisAdjacentGridPoints = Array{Int64}(undef, 0)
     v2Coordinate = thisMaterialPoint.v2Centroid
-
     fLength_Cell_x = thisGrid.v2Length_Cell[1]
     fLength_Cell_y = thisGrid.v2Length_Cell[2]
 
     iBottomLeft_i    = (floor(v2Coordinate[1] / fLength_Cell_x) + 1.0)
     iBottomLeft_j    = (floor(v2Coordinate[2] / fLength_Cell_y) + 1.0)
 
-    if(iBottomLeft_j < 1 || iBottomLeft_j > thisGrid.v2Nodes[2])
-        @printf("Index out of bounds: j: %d \n", iBottomLeft_j)
-        @printf("v2Coordinate[2]: %e \n", v2Coordinate[2])
+    if (iBottomLeft_j < 1) || (iBottomLeft_j > thisGrid.v2Nodes[2])
+        error("Index out of bounds: j: $(iBottomLeft_j) v2Coordinate[2]: $(v2Coordinate[2])")
     end
 
-    for i = iBottomLeft_i:1:iBottomLeft_i+1
-        for j = iBottomLeft_j:1:iBottomLeft_j+1
-            iIndex = index2DTo1D(Int64(i), Int64(j), thisGrid.v2Nodes[1], thisGrid.v2Nodes[2])
-
-            push!(thisAdjacentGridPoints, iIndex)
-        end
+    range1 = iBottomLeft_i:iBottomLeft_i+1
+    range2 = iBottomLeft_j:iBottomLeft_j+1
+    Nadjacent = length(range1) * length(range2)
+    thisAdjacentGridPoints = Array{Int64}(undef, Nadjacent)
+    ip = 0
+    for i in range1, j in range2
+        iIndex = index2DTo1D(Int64(i), Int64(j), thisGrid.v2Nodes[1], thisGrid.v2Nodes[2])
+        ip += 1
+        thisAdjacentGridPoints[ip] = iIndex
     end
 
     return thisAdjacentGridPoints
