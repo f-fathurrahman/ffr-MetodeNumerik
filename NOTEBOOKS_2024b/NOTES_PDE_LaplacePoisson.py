@@ -25,7 +25,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # %%
-# %matplotlib ipympl
+# #%matplotlib ipympl
 
 # %%
 import matplotlib_inline
@@ -119,7 +119,7 @@ matplotlib.style.use("dark_background")
 # \end{align}
 # $$
 
-# %% [markdown] jp-MarkdownHeadingCollapsed=true
+# %% [markdown]
 # ## Implementasi
 
 # %%
@@ -188,6 +188,24 @@ def solve_poisson2d_dirichlet( \
 # %% [markdown]
 # ## Contoh 1
 
+# %% [markdown]
+# Sumber: Yang - Applied Numerical Methods using MATLAB (2nd Ed), Contoh 9.1
+
+# %% [markdown]
+# Pada contoh ini, kita akan menyelesaikan persamaan Laplace:
+# $$
+# \nabla^2 u(x,y) = 0
+# $$
+# pada domain $0 \le x \le \pi$ dan $0 \le y \le \pi$, dengan kondisi batas:
+# $$
+# \begin{align}
+# u(0, y) & = 0 \\
+# u(\pi, y) & = 0 \\
+# u(x, 0) & = \sin(2x) \\
+# u(x, \pi) & = 0
+# \end{align}
+# $$
+
 # %%
 def f_func(x,y):
     return 0.0
@@ -219,17 +237,15 @@ u, x, y = solve_poisson2d_dirichlet( \
 
 
 # %%
-X, Y = np.meshgrid(x, y)
-
-fig = plt.figure()
 plt.clf()
+fig = plt.figure()
 ax = fig.subplots(subplot_kw={"projection": "3d"})
-plt.ylabel("y label")
-plt.xlabel("x label")
-
+X, Y = np.meshgrid(x, y)
 # Need to transpose u
 surf = ax.plot_surface(X, Y, u.T, linewidth=1, cmap=matplotlib.cm.coolwarm, antialiased=True)
 #ax.view_init(elev=10, azim=135, roll=0)
+plt.ylabel("y label")
+plt.xlabel("x label");
 
 # %%
 
