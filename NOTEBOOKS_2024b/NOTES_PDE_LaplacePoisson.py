@@ -25,7 +25,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # %%
-# #%matplotlib ipympl
+# %matplotlib ipympl
 
 # %%
 import matplotlib_inline
@@ -34,10 +34,10 @@ matplotlib_inline.backend_inline.set_matplotlib_formats("svg")
 # %%
 import matplotlib
 matplotlib.style.use("dark_background")
-#matplotlib.rcParams.update({
-#    "axes.grid" : True,
-#    "grid.color": "gray"
-#})
+matplotlib.rcParams.update({
+    "axes.grid" : True,
+    "grid.color": "gray"
+})
 
 # %% [markdown]
 # # Persamaan Laplace dan Poisson
@@ -79,15 +79,15 @@ matplotlib.style.use("dark_background")
 # %% [markdown]
 # Gunakan notasi:
 #
-# - $u(x,y) = u_{i,j}$
+# - $u(x_i, y_j) = u_{i,j}$
 #
-# - $u(x+\Delta x, y) = u_{i+1,j}$
+# - $u(x_i + \Delta x, y_j) = u_{i+1,j}$
 #
-# - $u(x-\Delta x, y) = u_{i-1,j}$
+# - $u(x_i - \Delta x, y_j) = u_{i-1,j}$
 #
-# - $u(x, y + \Delta y) = u_{i,j+1}$
+# - $u(x_i, y_j + \Delta y) = u_{i,j+1}$
 #
-# - $u(x, y - \Delta y) = u_{i,j-1}$
+# - $u(x_i, y_j - \Delta y) = u_{i,j-1}$
 #
 
 # %% [markdown]
@@ -143,14 +143,14 @@ def solve_poisson2d_dirichlet( \
 
     u = np.zeros( (Nx+1, Ny+1) )
 
+    # impose boundary conditions
     for j in range(Ny+1):
         u[0,j] = bx0( y[j] )
         u[Nx,j] = bxf( y[j] )
-
+    #
     for i in range(Nx+1):
         u[i,0] = by0( x[i] )
         u[i,Ny] = byf( x[i] )
-
 
     # Initial values for other nodes
     sum_of_bv = np.sum(u[0,:]) + np.sum(u[Nx,:]) + \
@@ -227,17 +227,16 @@ def byf(x):
 
 Nx = 50
 Ny = 50
-D = [0.0, np.pi, 0.0, np.pi]
+D = [0.0, np.pi, 0.0, np.pi] # [x0, xf, y0, yf]
 
 u, x, y = solve_poisson2d_dirichlet( \
     f_func, g_func, \
     bx0, bxf, by0, byf, \
     D, Nx, Ny, \
-    TOL=1e-8, NiterMax=500)
+    TOL=1e-8, NiterMax=500, verbose=True)
 
 
 # %%
-plt.clf()
 fig = plt.figure()
 ax = fig.subplots(subplot_kw={"projection": "3d"})
 X, Y = np.meshgrid(x, y)
