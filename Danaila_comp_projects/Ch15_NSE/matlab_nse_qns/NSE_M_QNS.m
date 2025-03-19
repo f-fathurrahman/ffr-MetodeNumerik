@@ -1,26 +1,19 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%    An Introduction to Scientific Computing          %%%%%%%
-%%%%%%%    I. Danaila, P. Joly, S. M. Kaber & M. Postel     %%%%%%%
-%%%%%%%                 Springer, 2023                      %%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  Resolution of 2D Navier-Stokes equations       %
-%   incompressible fluid                          %
-%=================================================%
-%  rectangular 2D domain (L_x,L_y)                % 
-%  with periodic boundary conditions in  x and y  %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-close all; clear all;
+% Resolution of 2D Navier-Stokes equations incompressible fluid 
+% Rectangular 2D domain (L_x,L_y) with periodic boundary conditions in  x and y  %
+
+close all;
+clear variables;
 format long e;
 
 %===============================%
 %  Global variables             %
 %===============================%
 global dx dy Lx Ly;
-global nxm nym ;
+global nxm nym;
+
+% indices
 global ip im jp jm ic jc;
 
 iprint = 'n'; % y/n to print images 
@@ -91,8 +84,8 @@ yy = yy'; % centers of the cells for visualization
 %===============================%
 %  Initialization               %
 %===============================%
-u   =zeros(nxm,nym);      % velocity u
-v   =zeros(nxm,nym);      % velocity v
+u = zeros(nxm,nym);      % velocity u
+v = zeros(nxm,nym);      % velocity v
 
 gpu = zeros(nxm,nym);     % pressure gradient along x
 gpv = zeros(nxm,nym);     % pressure gradient along y
@@ -106,16 +99,13 @@ sca = zeros(nxm,nym);     % passive scalar
 rhs = zeros(nxm,nym);     % work array for the RHS
 phi = zeros(nxm,nym);     % variable for the pressure correction (Poisson eq)
 
-%===============================%
-%  Initial condition            %
-%===============================%
+% Initial condition: can vary according to icas
 switch icas
 case 1
   % initial velocity field
   u  = NSE_F_init_KH(Lx,Ly,xc,ym,1,Ly/4,20,0.25,0.5*Lx);
   sca = NSE_F_init_KH(Lx,Ly,xm,ym,1,Ly/4,20,0.00,0.5*Lx);
-                       % cfl for the time step 
-  cfl = 0.2;
+  cfl = 0.2;  % cfl for the time step 
 case 2
   % initial velocity field
   u  =NSE_F_init_KH(Lx,Ly,xc,ym,1,Ly/4,20,0.25,0.25*Lx);
@@ -201,20 +191,16 @@ NSE_F_visu_sca (xm,ym,sca,niso,0,0);
  if(iprint=='y'); fname=['print -depsc ' namecase '-init-scal.eps'];eval(fname);end
 
 
-%===============================%
-%   Time step                   %
-%===============================%
+% Time step                   %
 dt = NSE_F_calc_dt(u,v,cfl);       
 fprintf('Time step dt=%d \n',dt);										  
 
-%===============================%
-% Optimization of the ADI method%
-%===============================%      
-bx=0.5*dt/(dx*dx)/rey;
-by=0.5*dt/(dy*dy)/rey;
+% Optimization of the ADI method
+bx = 0.5*dt/(dx*dx)/rey;
+by = 0.5*dt/(dy*dy)/rey;
 
-[amix,apix,alphx,xs2x]=NSE_F_ADI_init(-bx*ones(1,nxm),(1+2*bx)*ones(1,nxm),-bx*ones(1,nxm));
-[amiy,apiy,alphy,xs2y]=NSE_F_ADI_init(-by*ones(1,nym),(1+2*by)*ones(1,nym),-by*ones(1,nym));
+[amix, apix, alphx, xs2x] = NSE_F_ADI_init(-bx*ones(1,nxm),(1+2*bx)*ones(1,nxm),-bx*ones(1,nxm));
+[amiy, apiy, alphy, xs2y] = NSE_F_ADI_init(-by*ones(1,nym),(1+2*by)*ones(1,nym),-by*ones(1,nym));
 
 %=========================================%
 %   Optimization of the Poisson solver    %
