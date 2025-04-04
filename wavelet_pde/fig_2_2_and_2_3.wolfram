@@ -1,0 +1,27 @@
+(* --- *)
+(* jupyter: *)
+(*   jupytext: *)
+(*     text_representation: *)
+(*       extension: .wolfram *)
+(*       format_name: percent *)
+(*       format_version: '1.3' *)
+(*       jupytext_version: 1.16.1 *)
+(*   kernelspec: *)
+(*     display_name: Wolfram Language 13.3 *)
+(*     language: Wolfram Language *)
+(*     name: wolframlanguage13.3 *)
+(* --- *)
+
+(* %% *)
+u = WaveletPhi[HaarWavelet[], x];
+v = WaveletPhi[HaarWavelet[], x-1];
+w = WaveletPhi[HaarWavelet[], x-2];
+
+(* %% *)
+Plot[ u, {x, 0, 4}, Exclusions->None]
+
+(* %% *)
+Plot[ v, {x, 0, 4}, Exclusions->None]
+
+(* %% *)
+Plot[ w, {x, 0, 4}, Exclusions->None]
