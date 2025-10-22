@@ -1,0 +1,11 @@
+{
+    "files.exclude": {
+        "LOG_*": true,
+        "ORIG_*": true,
+        "*.o": true,
+        "*.out": true,
+        "*.a": true,
+        "**/TEMP_*": true,
+        "**/__pycache__": true,
+    },
+}
