@@ -156,7 +156,7 @@ disp(['C = ' num2str(C*1e12) 'pF/m'])
 %*******************
 [Vp, xp, yp] = create2darray(x, y, V, delx, dely);
 
-figure, clf, whitebg('white')
+figure, clf %, whitebg('white')
 imagesc(xp, yp, Vp);
 colormap(jet)
 axis equal tight;
@@ -170,7 +170,7 @@ hold on
 % quiver(xmid, ymid, Ex, Ey, 'color', 'k'); % plot Efield vectors
 plot(x(s_node), y(s_node),'k','linewidth',5)
 
-figure, clf, whitebg('white')
+figure, clf %, whitebg('white')
 contour(xp, yp, Vp, 'LevelStep',0.2)
 colormap(jet)
 axis equal tight;
@@ -185,7 +185,7 @@ plot(x(s_node), y(s_node),'k','linewidth',5)
 %****************
 [Emagp, xp, yp] = create2darray(xmid, ymid, Emag, delx, dely);
 
-figure, clf, whitebg('white')
+figure, clf %, whitebg('white')
 imagesc(xp, yp, Emagp);
 colormap(jet)
 axis equal tight;

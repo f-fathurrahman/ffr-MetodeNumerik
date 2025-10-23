@@ -60,7 +60,7 @@ for i = 1:nx
             elseif i == nx
               u2d(i,j) = u2dt(i-1,j); 
             else
-              if ((u2dt(i+1,j) < 1e-6) & (u2dt(i+1,j) > -1e-6)) | ((u2dt(i-1,j) < 1e-6) & (u2dt(i-1,j) > -1e-6)),
+              if ((u2dt(i+1,j) < 1e-6) && (u2dt(i+1,j) > -1e-6)) || ((u2dt(i-1,j) < 1e-6) && (u2dt(i-1,j) > -1e-6)),
                  u2d(i,j) = 0;
               else
                  u2d(i,j) = 0.5*(u2dt(i+1,j)+u2dt(i-1,j));
