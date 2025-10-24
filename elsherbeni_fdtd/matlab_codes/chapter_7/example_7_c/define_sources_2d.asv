@@ -1,0 +1,21 @@
+disp('defining sources');
+
+impressed_J = [];
+impressed_M = [];
+
+% define source waveform types and parameters
+waveforms.gaussian(1).number_of_cells_per_wavelength = 0; 
+waveforms.gaussian(2).number_of_cells_per_wavelength = 15; 
+waveforms.sinusoidal(1).frequency = 1e9; 
+
+% magnetic current sources
+% direction: 'xp', 'xn', 'yp', 'yn', 'zp', or 'zn'
+impressed_J(1).min_x = 0.8;
+impressed_J(1).min_y = 0.5;
+impressed_J(1).max_x = 0.8;
+impressed_J(1).max_y = 0.5;
+impressed_J(1).direction = 'zp';
+impressed_J(1).magnitude = 1;
+impressed_J(1).waveform_type = 'sinusoidal';
+impressed_J(1).waveform_index = 1;
+
