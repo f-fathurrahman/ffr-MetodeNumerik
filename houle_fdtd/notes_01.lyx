@@ -1,0 +1,255 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{babel}
+% Added by lyx2lyx
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children no
+\language american
+\language_package default
+\inputencoding iso8859-15
+\fontencoding T1
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 2
+\use_package amssymb 2
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip halfline
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+Persamaan curl Maxwell:
+\begin_inset Formula 
+\[
+\frac{\partial\mathbf{E}}{\partial t}=\frac{1}{\epsilon_{0}}\nabla\times\mathbf{H}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\partial\mathbf{H}}{\partial t}=-\frac{1}{\mu_{0}}\nabla\times\mathbf{E}
+\]
+
+\end_inset
+
+Untuk kasus satu dimensi,
+ hanya menggunakan komponen-komponen 
+\begin_inset Formula $E_{x}$
+\end_inset
+
+ dan 
+\begin_inset Formula $H_{y}$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+\frac{\partial E_{x}}{\partial t}=-\frac{1}{\epsilon_{0}}\frac{\partial H_{y}}{\partial z}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\partial H_{y}}{\partial t}=-\frac{1}{\mu_{0}}\frac{\partial E_{x}}{\partial z}
+\]
+
+\end_inset
+
+Dengan menggunakan aproksimasi diferensi tengah:
+ 
+\begin_inset Formula $E_{x}(z,t)$
+\end_inset
+
+,
+ 
+\begin_inset Formula $H_{y}(z,t)$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{E_{x}(k,n+\frac{1}{2})-E_{x}(k,n-\frac{1}{2})}{\Delta t}=-\frac{1}{\epsilon_{0}}\frac{H_{y}(k+\frac{1}{2},n)-H_{y}(k-\frac{1}{2},n)}{\Delta z}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{H_{y}(k+\frac{1}{2},n+1)-H_{y}(k+\frac{1}{2},n)}{\Delta t}=-\frac{1}{\mu_{0}}\frac{E_{x}(k+1,n+\frac{1}{2})-E_{x}(k,n+\frac{1}{2})}{\Delta z}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Susun ulang persamaan diferensi di atas untuk mendapatkan:
+\begin_inset Formula 
+\[
+E_{x}(k,n+\frac{1}{2})=E_{x}(k,n-\frac{1}{2})-\frac{\Delta t}{\epsilon_{0}\Delta z}\left[H_{y}(k+\frac{1}{2},n)-H_{y}(k-\frac{1}{2},n)\right]
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+H_{y}(k+\frac{1}{2},n+1)=H_{y}(k+\frac{1}{2},n)-\frac{\Delta t}{\mu_{0}\Delta z}\left[E_{x}(k+1,n+\frac{1}{2})-E_{x}(k,n+\frac{1}{2})\right]
+\]
+
+\end_inset
+
+Dengan menggunakan:
+\begin_inset Formula 
+\[
+\tilde{E}=\sqrt{\frac{\epsilon_{0}}{\mu_{0}}}E
+\]
+
+\end_inset
+
+diperoleh
+\begin_inset Formula 
+\[
+\tilde{E}_{x}(k,n+\frac{1}{2})=\tilde{E}_{x}(k,n-\frac{1}{2})-\frac{\Delta t}{\sqrt{\epsilon_{0}\mu_{0}}\Delta z}\left[\tilde{H}_{y}(k+\frac{1}{2},n)-\tilde{H}_{y}(k-\frac{1}{2},n)\right]
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\tilde{H}_{y}(k+\frac{1}{2},n+1)=\tilde{H}_{y}(k+\frac{1}{2},n)-\frac{\Delta t}{\sqrt{\epsilon_{0}\mu_{0}}\Delta z}\left[\tilde{E}_{x}(k+1,n+\frac{1}{2})-\tilde{E}_{x}(k,n+\frac{1}{2})\right]
+\]
+
+\end_inset
+
+Jika 
+\begin_inset Formula $\Delta z$
+\end_inset
+
+ sudah dipilih,
+ maka ukuran langkah waktu 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+ dapat ditentukan dari:
+\begin_inset Formula 
+\[
+\Delta t=\frac{\Delta z}{2c_{0}}
+\]
+
+\end_inset
+
+dengan 
+\begin_inset Formula $c_{0}$
+\end_inset
+
+ adalah kecepatan cahaya pada ruang hampa.
+ Dengan menggunakan
+\begin_inset Formula 
+\[
+\epsilon_{0}\mu_{0}=\frac{1}{c_{0}^{2}}\Rightarrow\sqrt{\epsilon_{0}\mu_{0}}=\frac{1}{c_{0}}\Rightarrow\frac{1}{\sqrt{\epsilon_{0}\mu_{0}}}=c_{0}
+\]
+
+\end_inset
+
+diperoleh:
+\begin_inset Formula 
+\[
+\frac{\Delta t}{\sqrt{\epsilon_{0}\mu_{0}}\Delta z}=\frac{\Delta z}{2c_{0}}\frac{c_{0}}{\Delta z}=\frac{1}{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
