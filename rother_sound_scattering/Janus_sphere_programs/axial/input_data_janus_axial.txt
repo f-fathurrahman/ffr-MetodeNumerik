@@ -1,0 +1,8 @@
+para = hp
+k_p_k = 2.0
+rho_p = 1.0
+a = 2.0
+beta = 1.0
+theta_j = 40.0
+ncut = 3
+plot_para = ll
