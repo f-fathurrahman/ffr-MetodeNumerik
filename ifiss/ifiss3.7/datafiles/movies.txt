@@ -1,0 +1,48 @@
+List of movies generated in ifiss3.7
+
+--------------------- Navier-Stokes flow
+
+1) Channel domain
+	   * VelocityMovie - velocity streamlines
+ 	   * VelocityProfileMovie - horizontal velocity ux at a specified 
+             grid line x
+2) Flow over backward facing step
+           * VelocityMovie - velocity streamlines
+ 	   * VelocityProfileMovie - horizontal velocity ux at a specified 
+             grid line x
+3) Lid driven cavity
+	   * VelocityMovie - velocity streamlines
+	   * VorticityMovie - flow vorticity
+ 	   * xVelocityProfileMovie - horizontal velocity ux at a specified 
+             grid line x
+	   * yVelocityProfileMovie - vertical velocity uy at a specified 
+             grid line y
+4) Flow around a square obstruction
+	   * VelocityMovie - velocity streamlines
+	   * VelocityProfileMovie - horizontal velocity ux at a specified 
+             grid line x
+5) Flow in a symmetric step channel
+  	   * VelocityMovie - velocity streamlines
+	   * VelocityProfileMovie - horizontal velocity ux at a specified 
+             grid line x
+
+--------------------- Boussinesq flow
+
+1) Bottom heated cavity
+	   * VelocityMovie - velocity streamlines
+	   * VelocityProfileMovie - vertical velocity uy at a 
+             specified grid line y
+           * TemperatureMovie - temperature isotherms
+2) Laterally heated cavity
+	   * VelocityMovie - velocity streamlines
+	   * xVelocityProfileMovie - horizontal velocity ux at a specified 
+             grid line x
+	   * yVelocityProfileMovie - vertical velocity uy at a specified 
+             grid line y
+	   * TemperatureMovie - temperature isotherms
+3) Bottom heated forward step
+	   * VelocityMovie - velocity streamlines
+	   * VelocityProfileMovie - horizontal velocity ux at a 
+             specified grid line x
+	   * VorticityMovie - flow vorticity
+	   * TemperatureMovie - temperature isotherms

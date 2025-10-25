@@ -1,0 +1,934 @@
+unsunsteadyflowdemo
+This is IFISS version 3.7: released 30 August 2023
+For help, type "helpme".
+
+Driven cavity unsteady flow  ... 
+running STABTR to 100 time units ... 
+Working in batch mode from data file T-NS3_batch.m
+
+specification of reference unsteady flow problem.
+
+choose specific example (default is step)
+     1  Channel domain
+     2  Flow over a backward facing step
+     3  Lid driven cavity
+     5  Flow around a square obstruction
+     6  Flow in a symmetric step channel
+     3
+
+cavity type leaky/tight/regularised 1/2/3 (regularised)
+     3
+
+
+
+Grid generation for cavity domain.
+grid parameter: 3 for underlying 8x8 grid (default is 16x16)
+     6
+
+uniform/stretched grid (1/2) (default is uniform)
+     2
+
+computed stretch ratio is     1.0977 
+Q1-Q1/Q1-P0/Q2-Q1/Q2-P1: 1/2/3/4? (default Q1-P0)
+     3
+
+setting up Q2-Q1 matrices...  done
+system matrices saved in square_stokes_nobc.mat ...
+Unsteady flow in a square domain ...
+viscosity parameter (default 1/200)
+    0.0050
+
+Discrete Saddle-Point DAE system ...
+target time? (default 1e8)
+       10000
+
+number of timesteps (x200)? (default 5)
+     2
+
+accuracy tolerance? (default 3e-5)
+   3.0000e-05
+
+number of Picard steps? (default 2)
+     0
+
+averaging frequency? (default 10)
+    10
+
+plot vorticity evolution? 1/0
+     0
+
+Solving discrete N-S system using stabilized TR ...
+
+AxBhandle =
+
+  <a href="matlab:helpPopup function_handle" style="font-weight:bold">function_handle</a> with value:
+
+    @defaultAxB
+
+intermediate (CheckPoint) datafile: stabtrNS_end
+
+  initial nonlinear residual is 2.569594e-03 
+             boundary change is 5.188603e-08 
+setting up Q2 convection matrix...  done.
+[Warning: Matrix is close to singular or badly scaled. Results may be inaccurate. RCOND =
+1.159529e-16.] 
+[> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('stabtrNS', '/Users/user/Desktop/ifiss3.7/timestepping/stabtrNS.m', 77)" style="font-weight:bold">stabtrNS</a> (<a href="matlab: opentoline('/Users/user/Desktop/ifiss3.7/timestepping/stabtrNS.m',77,0)">line 77</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('unsteady_navier', '/Users/user/Desktop/ifiss3.7/timestepping/unsteady_navier.m', 53)" style="font-weight:bold">unsteady_navier</a> (<a href="matlab: opentoline('/Users/user/Desktop/ifiss3.7/timestepping/unsteady_navier.m',53,0)">line 53</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('unsteady_navier_testproblem', '/Users/user/Desktop/ifiss3.7/timestepping/test_problems/unsteady_navier_testproblem.m', 32)" style="font-weight:bold">unsteady_navier_testproblem</a> (<a href="matlab: opentoline('/Users/user/Desktop/ifiss3.7/timestepping/test_problems/unsteady_navier_testproblem.m',32,0)">line 32</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('batchmode', '/Users/user/Desktop/ifiss3.7/batchmode.m', 88)" style="font-weight:bold">batchmode</a> (<a href="matlab: opentoline('/Users/user/Desktop/ifiss3.7/batchmode.m',88,0)">line 88</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('unsteadyflowdemo', '/Users/user/Desktop/ifiss3.7/ifissdemos/unsteadyflowdemo.m', 6)" style="font-weight:bold">unsteadyflowdemo</a> (<a href="matlab: opentoline('/Users/user/Desktop/ifiss3.7/ifissdemos/unsteadyflowdemo.m',6,0)">line 6</a>)
+] 
+
+lastmsg =
+
+    'Matrix is close to singular or badly scaled. Results may be inaccurate. RCOND =  1.159529e-16.'
+
+This should not cause difficulty for enclosed flow problems.
+
+ StabTR with no nonlinear corrections
+   step  timestep       time        residual      divresidual     acceleration
+     1   1.000e-09     2.000e-09    0.000e+00     0.000e+00        4.298e-01
+     2   1.000e-09     2.000e-09    4.706e-17     7.595e-26        4.298e-01
+     3   3.354e-05     3.354e-05    9.210e-18     3.840e-22        4.298e-01
+     4   9.031e-04     9.366e-04    1.744e-17     1.501e-20        4.298e-01
+     5   1.145e-03     2.082e-03    1.078e-15     1.919e-18        4.815e-01
+     6   1.372e-03     3.455e-03    7.627e-16     1.446e-18        5.488e-01
+     7   2.023e-03     5.478e-03    2.018e-16     7.065e-19        6.070e-01
+     8   2.740e-03     8.218e-03    2.675e-16     1.452e-18        6.698e-01
+     9   3.428e-03     1.165e-02    1.459e-16     1.149e-18        7.281e-01
+    10   4.239e-03     1.589e-02    8.569e-16     7.061e-18        7.757e-01
+    11   5.190e-03     2.108e-02    7.538e-16     6.775e-18        8.126e-01
+    12   6.233e-03     2.731e-02    8.541e-16     8.005e-18        8.389e-01
+    13   7.329e-03     3.464e-02    1.029e-15     1.114e-17        8.545e-01
+    14   8.490e-03     4.313e-02    4.830e-14     7.077e-16        8.592e-01
+    15   9.740e-03     5.287e-02    7.423e-15     1.083e-16        8.533e-01
+    16   1.108e-02     6.395e-02    3.275e-15     2.901e-17        8.374e-01
+    17   1.251e-02     7.645e-02    4.676e-15     6.825e-17        8.122e-01
+    18   1.402e-02     9.047e-02    2.887e-16     7.764e-18        7.791e-01
+    19   1.560e-02     1.061e-01    1.156e-15     2.663e-17        7.393e-01
+    20   1.721e-02     1.233e-01    7.487e-15     2.085e-16        6.945e-01
+    21   1.883e-02     1.421e-01    3.609e-15     1.277e-16        6.466e-01
+    22   2.041e-02     1.625e-01    9.427e-15     3.981e-16        5.973e-01
+    23   2.196e-02     1.845e-01    1.341e-15     5.297e-17        5.483e-01
+    24   2.350e-02     2.080e-01    1.434e-15     6.644e-17        5.010e-01
+    25   2.506e-02     2.330e-01    7.399e-16     4.071e-17        4.564e-01
+    26   2.671e-02     2.598e-01    3.689e-14     1.541e-15        4.151e-01
+    27   2.848e-02     2.882e-01    1.373e-14     5.670e-16        3.773e-01
+    28   3.041e-02     3.186e-01    1.106e-15     4.273e-17        3.431e-01
+    29   3.256e-02     3.512e-01    8.868e-16     3.946e-17        3.122e-01
+    30   3.496e-02     3.862e-01    1.023e-15     5.778e-17        2.845e-01
+    31   3.766e-02     4.238e-01    2.056e-15     1.646e-16        2.597e-01
+    32   4.071e-02     4.645e-01    8.565e-16     6.401e-17        2.375e-01
+    33   4.414e-02     5.087e-01    1.359e-15     1.035e-16        2.176e-01
+    34   4.802e-02     5.567e-01    1.034e-15     8.159e-17        1.998e-01
+    35   5.238e-02     6.091e-01    7.482e-16     7.027e-17        1.838e-01
+    36   5.725e-02     6.663e-01    5.636e-16     6.294e-17        1.695e-01
+    37   6.267e-02     7.290e-01    3.904e-16     3.986e-17        1.565e-01
+    38   6.862e-02     7.976e-01    5.954e-15     9.805e-16        1.449e-01
+    39   7.508e-02     8.727e-01    6.044e-16     1.173e-16        1.344e-01
+    40   8.196e-02     9.547e-01    1.878e-15     2.645e-16        1.249e-01
+    41   8.915e-02     1.044e+00    2.752e-16     9.602e-17        1.164e-01
+    42   9.651e-02     1.140e+00    1.389e-15     2.678e-16        1.087e-01
+    43   1.038e-01     1.244e+00    5.322e-16     1.012e-16        1.019e-01
+    44   1.110e-01     1.355e+00    3.151e-16     7.487e-17        9.576e-02
+    45   1.178e-01     1.473e+00    4.572e-16     1.110e-16        9.031e-02
+    46   1.242e-01     1.597e+00    4.815e-16     9.393e-17        8.547e-02
+    47   1.301e-01     1.727e+00    3.354e-16     8.143e-17        8.119e-02
+    48   1.357e-01     1.863e+00    1.210e-15     3.385e-16        7.738e-02
+    49   1.411e-01     2.004e+00    3.479e-15     8.166e-16        7.399e-02
+    50   7.314e-02     2.077e+00  --- Averaging step
+    50   1.463e-01     2.077e+00    1.898e-04     4.378e-16        7.097e-02
+    51   1.514e-01     2.229e+00    5.009e-16     4.312e-16        6.948e-02
+    52   1.548e-01     2.383e+00    4.981e-16     1.365e-16        6.685e-02
+    53   1.616e-01     2.545e+00    3.177e-16     8.644e-17        6.450e-02
+    54   1.650e-01     2.710e+00    2.716e-16     7.468e-17        6.231e-02
+    55   1.707e-01     2.881e+00    2.249e-16     7.638e-17        6.031e-02
+    56   1.766e-01     3.057e+00    1.438e-15     5.335e-16        5.844e-02
+    57   1.824e-01     3.240e+00    2.837e-16     9.788e-17        5.669e-02
+    58   1.887e-01     3.428e+00    4.048e-16     1.136e-16        5.502e-02
+    59   1.958e-01     3.624e+00    2.255e-16     7.216e-17        5.344e-02
+    60   1.018e-01     3.726e+00  --- Averaging step
+    60   2.036e-01     3.726e+00    2.311e-04     1.175e-16        5.193e-02
+    61   2.111e-01     3.937e+00    8.585e-16     4.117e-16        5.111e-02
+    62   2.155e-01     4.152e+00    1.944e-16     6.894e-17        4.969e-02
+    63   2.252e-01     4.378e+00    3.298e-15     1.757e-15        4.834e-02
+    64   2.304e-01     4.608e+00    2.077e-15     1.326e-15        4.699e-02
+    65   2.395e-01     4.848e+00    1.755e-16     5.683e-17        4.570e-02
+    66   2.495e-01     5.097e+00    2.259e-16     1.225e-16        4.444e-02
+    67   2.587e-01     5.356e+00    3.190e-16     1.752e-16        4.322e-02
+    68   2.667e-01     5.623e+00    5.759e-16     3.568e-16        4.204e-02
+    69   2.743e-01     5.897e+00    1.943e-16     1.046e-16        4.086e-02
+    70   1.417e-01     6.039e+00  --- Averaging step
+    70   2.833e-01     6.039e+00    2.609e-04     6.843e-17        3.966e-02
+    71   2.948e-01     6.333e+00    1.762e-15     1.446e-15        3.900e-02
+    72   3.024e-01     6.636e+00    2.159e-16     1.065e-16        3.779e-02
+    73   3.204e-01     6.956e+00    1.598e-16     8.129e-17        3.661e-02
+    74   3.295e-01     7.286e+00    1.388e-16     3.174e-17        3.546e-02
+    75   3.408e-01     7.627e+00    2.007e-16     1.464e-16        3.435e-02
+    76   3.512e-01     7.978e+00    1.607e-16     5.014e-17        3.327e-02
+    77   3.632e-01     8.341e+00    1.695e-16     6.937e-17        3.218e-02
+    78   3.786e-01     8.720e+00    1.667e-16     8.876e-17        3.107e-02
+    79   3.976e-01     9.117e+00    2.764e-16     2.785e-16        2.994e-02
+    80   2.093e-01     9.327e+00  --- Averaging step
+    80   4.186e-01     9.327e+00    2.556e-04     1.397e-16        2.878e-02
+    81   4.397e-01     9.766e+00    1.169e-15     1.513e-15        2.816e-02
+    82   4.507e-01     1.022e+01    2.635e-16     3.637e-16        2.699e-02
+    83   4.791e-01     1.070e+01    2.810e-16     3.114e-16        2.585e-02
+    84   4.941e-01     1.119e+01    1.133e-15     2.031e-15        2.470e-02
+    85   5.169e-01     1.171e+01    1.582e-15     2.255e-15        2.357e-02
+    86   5.425e-01     1.225e+01    4.671e-16     7.857e-16        2.243e-02
+    87   5.709e-01     1.282e+01    1.639e-16     5.797e-17        2.129e-02
+    88   6.019e-01     1.342e+01    2.023e-16     2.446e-16        2.013e-02
+    89   6.354e-01     1.406e+01    1.933e-16     1.264e-16        1.897e-02
+    90   3.361e-01     1.439e+01  --- Averaging step
+    90   6.721e-01     1.439e+01    1.998e-04     4.337e-16        1.781e-02
+    91   7.132e-01     1.511e+01    4.147e-16     8.799e-16        1.721e-02
+    92   7.357e-01     1.584e+01    1.577e-16     4.646e-17        1.602e-02
+    93   7.950e-01     1.664e+01    1.575e-16     1.070e-16        1.487e-02
+    94   8.468e-01     1.748e+01    1.669e-16     1.077e-16        1.371e-02
+    95   9.057e-01     1.839e+01    1.707e-15     4.197e-15        1.256e-02
+    96   9.671e-01     1.936e+01    1.437e-16     3.619e-17        1.144e-02
+    97   1.027e+00     2.038e+01    1.561e-16     3.291e-17        1.037e-02
+    98   1.091e+00     2.148e+01    2.287e-16     4.327e-16        9.347e-03
+    99   1.168e+00     2.264e+01    1.865e-16     2.541e-16        8.391e-03
+   100   6.348e-01     2.328e+01  --- Averaging step
+   100   1.270e+00     2.328e+01    1.245e-04     1.334e-16        7.491e-03
+   101   1.398e+00     2.468e+01    1.766e-16     1.869e-16        7.059e-03
+   102   1.484e+00     2.616e+01    1.658e-16     7.511e-17        6.177e-03
+   103   1.619e+00     2.778e+01    1.608e-16     4.121e-17        5.354e-03
+   104   1.817e+00     2.960e+01    1.676e-16     4.018e-17        4.559e-03
+   105   1.938e+00     3.153e+01    1.350e-16     6.469e-17        3.781e-03
+   106   2.083e+00     3.362e+01    4.841e-16     1.080e-15        3.071e-03
+   107   2.173e+00     3.579e+01    1.805e-16     2.714e-16        2.433e-03
+   108   2.285e+00     3.808e+01    8.596e-16     2.484e-15        1.893e-03
+   109   2.435e+00     4.051e+01    1.502e-16     5.501e-17        1.445e-03
+   110   1.310e+00     4.182e+01  --- Averaging step
+   110   2.621e+00     4.182e+01    2.987e-05     4.049e-17        1.079e-03
+   111   2.880e+00     4.470e+01    2.175e-16     3.751e-16        9.303e-04
+   112   3.021e+00     4.772e+01    1.468e-16     3.719e-17        6.522e-04
+   113   3.372e+00     5.109e+01    1.654e-16     8.744e-17        4.440e-04
+   114   3.755e+00     5.485e+01    1.666e-16     4.602e-17        2.833e-04
+   115   4.153e+00     5.900e+01    1.449e-16     3.719e-17        1.699e-04
+   116   4.850e+00     6.385e+01    1.733e-16     1.479e-16        9.652e-05
+   117   5.738e+00     6.959e+01    1.672e-16     5.105e-17        5.068e-05
+   118   7.106e+00     7.670e+01    1.663e-16     4.117e-17        2.648e-05
+   119   9.320e+00     8.602e+01    3.386e-16     6.004e-16        1.509e-05
+   120   6.035e+00     9.205e+01  --- Averaging step
+   120   1.207e+01     9.205e+01    1.720e-06     3.006e-16        9.384e-06
+   121   1.709e+01     1.091e+02    1.527e-16     1.763e-16        7.494e-06
+   122   2.379e+01     1.329e+02    1.619e-16     7.924e-17        3.250e-06
+   123   3.424e+01     1.672e+02    1.523e-16     3.475e-17        1.247e-06
+   124   5.366e+01     2.208e+02    1.619e-16     4.617e-17        6.143e-07
+   125   6.399e+01     2.848e+02    1.767e-16     4.921e-17        3.996e-07
+   126   9.345e+01     3.783e+02    1.697e-16     8.000e-17        8.287e-07
+   127   1.059e+02     4.842e+02    1.628e-16     3.462e-17        3.384e-07
+   128   1.254e+02     6.095e+02    1.541e-16     5.831e-17        4.445e-07
+   129   1.420e+02     7.515e+02    1.665e-16     3.418e-17        5.031e-07
+   130   7.608e+01     8.275e+02  --- Averaging step
+   130   1.522e+02     8.275e+02    2.401e-07     1.743e-16        3.782e-07
+   131   1.654e+02     9.929e+02    1.607e-16     1.636e-16        7.700e-08
+   132   6.753e+02     1.668e+03    1.514e-16     3.106e-17        3.667e-08
+   133   8.607e+02     2.529e+03    1.624e-16     4.000e-17        1.791e-08
+   134   1.973e+03     4.502e+03    1.406e-16     7.026e-17        1.516e-08
+   135   2.184e+03     6.686e+03    1.771e-16     2.924e-16        7.317e-09
+   136   3.282e+03     9.968e+03    1.654e-16     1.111e-16        1.639e-08
+   137   3.183e+01     1.000e+04    3.006e-16     1.868e-16        1.058e-08
+finished in  137 steps!
+final time solution data is saved in stabtrNS_end.mat
+Integration took  2.978e+01 seconds
+
+use new (enter figno) or existing (0) figure, default is 0
+    14
+
+137 timesteps
+All done
+
+CHECK OUT the time step history 
+
+   Plotting flow field snapshots ... 
+   step   time    mean_vorticity    min_phi  max_phi
+    50    2.077    1.600e+00       -0.09082  8.094e-08
+    80    9.327    1.600e+00       -0.16335  1.099e-05
+   137  10000.000    1.600e+00       -0.21185  1.063e-03
+   All done
+
+CHECK OUT the snapshots of the flow evolution 
+
+x-section analysis | y = 6.5226e-16 
+x-section flow volume is -8.1055e-04 
+
+CHECK OUT the final time solution mid-plane X-section 
+
+
+CHECK the iterative solver convergence ...
+Working in batch mode from data file snapshot_flowx1_batch.m
+
+Iterative solution of a SNAPSHOT linear system
+Solution data available for 10000 seconds
+Approximate time for the SNAPSHOT? (default is the end)
+    10
+
+
+Time step number 81
+Constructing system at time 9.76626 seconds
+    current timestep is 0.439689 seconds
+enclosed flow (cavity) problem ...
+stopping tolerance? (default 1e-8)
+   1.0000e-06
+
+maximum number of iterations? (default 100)
+    30
+
+preconditioner:
+   0  none
+   2  modified pressure convection-diffusion (Fp)
+   3  least-squares commutator
+   4  corrected pressure convection-diffusion (Fp*)
+   5  boundary-adjusted least-squares commutator (LSC*)
+default is Fp*
+     4
+
+ideal / AMG iterated  preconditioning? 1/2 (default ideal)
+     2
+
+setting up modified Q1 pressure preconditioning matrices... 
+singular matrices are used here
+AMG grid coarsening ... 
+
+Level 2 step 1 coarsening started
+C points after 1st pass: 3920
+C points after 2nd pass: 3988
+C points after coarsening: 3988
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (3988 Coarse, 3950 Fine and 512 Unconnected points)
+
+
+Level 3 step 1 coarsening started
+C points after 1st pass: 1734
+C points after 2nd pass: 1950
+C points after coarsening: 1950
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (1950 Coarse, 2038 Fine and 0 Unconnected points)
+
+
+Level 4 step 1 coarsening started
+C points after 1st pass: 844
+C points after 2nd pass: 1000
+C points after coarsening: 1000
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (1000 Coarse, 950 Fine and 0 Unconnected points)
+
+
+Level 5 step 1 coarsening started
+C points after 1st pass: 438
+C points after 2nd pass: 496
+C points after coarsening: 496
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (496 Coarse, 504 Fine and 0 Unconnected points)
+
+
+Level 6 step 1 coarsening started
+C points after 1st pass: 228
+C points after 2nd pass: 252
+C points after coarsening: 252
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (252 Coarse, 244 Fine and 0 Unconnected points)
+
+
+Level 7 step 1 coarsening started
+C points after 1st pass: 110
+C points after 2nd pass: 120
+C points after coarsening: 120
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (120 Coarse, 132 Fine and 0 Unconnected points)
+
+
+Level 8 step 1 coarsening started
+C points after 1st pass: 54
+C points after 2nd pass: 58
+C points after coarsening: 58
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (58 Coarse, 62 Fine and 0 Unconnected points)
+
+
+Level 9 step 1 coarsening started
+C points after 1st pass: 34
+C points after 2nd pass: 34
+
+Warning: some points remain neither F nor C.
+AMG is setting these to be C points to allow coarsening to continue
+C points after coarsening: 36
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (36 Coarse, 22 Fine and 0 Unconnected points)
+
+
+Level 10 step 1 coarsening started
+C points after 1st pass: 18
+C points after 2nd pass: 18
+
+Warning: some points remain neither F nor C.
+AMG is setting these to be C points to allow coarsening to continue
+C points after coarsening: 20
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (20 Coarse, 16 Fine and 0 Unconnected points)
+
+
+Level 11 step 1 coarsening started
+C points after 1st pass: 10
+C points after 2nd pass: 10
+
+Warning: some points remain neither F nor C.
+AMG is setting these to be C points to allow coarsening to continue
+C points after coarsening: 12
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (12 Coarse, 6 Fine and 2 Unconnected points)
+
+
+Level 12 step 1 coarsening started
+C points after 1st pass: 10
+C points after 2nd pass: 10
+C points after coarsening: 10
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (10 Coarse, 2 Fine and 0 Unconnected points)
+
+
+Level 13 step 1 coarsening started
+C points after 1st pass: 8
+C points after 2nd pass: 8
+C points after coarsening: 8
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (8 Coarse, 2 Fine and 0 Unconnected points)
+
+
+Level 14 step 1 coarsening started
+C points after 1st pass: 6
+C points after 2nd pass: 6
+C points after coarsening: 6
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (6 Coarse, 2 Fine and 0 Unconnected points)
+
+
+Level 15 step 1 coarsening started
+C points after 1st pass: 4
+C points after 2nd pass: 4
+C points after coarsening: 4
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (4 Coarse, 2 Fine and 0 Unconnected points)
+
+
+Level 16 step 1 coarsening started
+C points after 1st pass: 2
+C points after 2nd pass: 2
+C points after coarsening: 2
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (2 Coarse, 2 Fine and 0 Unconnected points)
+
+
+Level 17 step 1 coarsening started
+
+Warning: no negative connections exist for coarsening step 1 on level 17
+Coarsening has stopped: last viable coarse level is level 16
+AMG fine level smoothing strategy? PDJ/ILU 1/2  (default ILU)
+     2
+
+ILU smoothing on finest level..
+AMG iterated PCD* preconditioning ...
+fixing singularity in pressure matrix... done 
+AMG grid coarsening ... 
+
+Level 2 step 1 coarsening started
+C points after 1st pass: 512
+C points after 2nd pass: 531
+C points after coarsening: 531
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (531 Coarse, 557 Fine and 0 Unconnected points)
+
+
+Level 3 step 1 coarsening started
+C points after 1st pass: 234
+C points after 2nd pass: 249
+C points after coarsening: 249
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (249 Coarse, 282 Fine and 0 Unconnected points)
+
+
+Level 4 step 1 coarsening started
+C points after 1st pass: 115
+C points after 2nd pass: 130
+C points after coarsening: 130
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (130 Coarse, 119 Fine and 0 Unconnected points)
+
+
+Level 5 step 1 coarsening started
+C points after 1st pass: 53
+C points after 2nd pass: 65
+C points after coarsening: 65
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (65 Coarse, 65 Fine and 0 Unconnected points)
+
+
+Level 6 step 1 coarsening started
+C points after 1st pass: 27
+C points after 2nd pass: 28
+C points after coarsening: 28
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (28 Coarse, 37 Fine and 0 Unconnected points)
+
+
+Level 7 step 1 coarsening started
+C points after 1st pass: 11
+C points after 2nd pass: 11
+C points after coarsening: 11
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (11 Coarse, 17 Fine and 0 Unconnected points)
+
+
+Level 8 step 1 coarsening started
+C points after 1st pass: 4
+C points after 2nd pass: 4
+C points after coarsening: 4
+
+Coarsening completed (4 Coarse, 7 Fine and 0 Unconnected points)
+
+
+Level 9 step 1 coarsening started
+C points after 1st pass: 1
+C points after 2nd pass: 1
+C points after coarsening: 1
+
+Coarsening completed (1 Coarse, 3 Fine and 0 Unconnected points)
+AMG setup of Ap done.
+ILU smoothing on finest level..
+
+GMRES iteration ...
+
+    k  log10(||r_k||/||r_0||)   
+    0           0.0000 
+    1          -0.0132 
+    2          -0.2007 
+    3          -0.4528 
+    4          -0.6473 
+    5          -0.7853 
+    6          -0.9010 
+    7          -0.9709 
+    8          -1.0262 
+    9          -1.0960 
+   10          -1.1550 
+   11          -1.2253 
+   12          -1.2772 
+   13          -1.3295 
+   14          -1.4014 
+   15          -1.5013 
+   16          -1.6549 
+   17          -1.8169 
+   18          -1.9751 
+   19          -2.1468 
+   20          -2.3251 
+   21          -2.4941 
+   22          -2.6509 
+   23          -2.8134 
+   24          -2.9766 
+   25          -3.1437 
+   26          -3.3327 
+   27          -3.5414 
+   28          -3.7502 
+   29          -3.9878 
+   30          -4.2154 
+iteration aborted! Iteration returned with flag equal to   1 
+use new (enter figno) or existing (0) figure, default is 0
+     1
+
+colour (b,g,r,c,m,y,k): enter 1--7 (default 1)
+     1
+
+Working in batch mode from data file snapshot_flowx2_batch.m
+
+Iterative solution of a SNAPSHOT linear system
+Solution data available for 10000 seconds
+Approximate time for the SNAPSHOT? (default is the end)
+    10
+
+
+Time step number 81
+Constructing system at time 9.76626 seconds
+    current timestep is 0.439689 seconds
+enclosed flow (cavity) problem ...
+stopping tolerance? (default 1e-8)
+   1.0000e-06
+
+maximum number of iterations? (default 100)
+    50
+
+preconditioner:
+   0  none
+   2  modified pressure convection-diffusion (Fp)
+   3  least-squares commutator
+   4  corrected pressure convection-diffusion (Fp*)
+   5  boundary-adjusted least-squares commutator (LSC*)
+default is Fp*
+     4
+
+ideal / AMG iterated  preconditioning? 1/2 (default ideal)
+     2
+
+setting up modified Q1 pressure preconditioning matrices... 
+singular matrices are used here
+AMG grid coarsening ... 
+
+Level 2 step 1 coarsening started
+C points after 1st pass: 3920
+C points after 2nd pass: 3988
+C points after coarsening: 3988
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (3988 Coarse, 3950 Fine and 512 Unconnected points)
+
+
+Level 3 step 1 coarsening started
+C points after 1st pass: 1734
+C points after 2nd pass: 1950
+C points after coarsening: 1950
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (1950 Coarse, 2038 Fine and 0 Unconnected points)
+
+
+Level 4 step 1 coarsening started
+C points after 1st pass: 844
+C points after 2nd pass: 1000
+C points after coarsening: 1000
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (1000 Coarse, 950 Fine and 0 Unconnected points)
+
+
+Level 5 step 1 coarsening started
+C points after 1st pass: 438
+C points after 2nd pass: 496
+C points after coarsening: 496
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (496 Coarse, 504 Fine and 0 Unconnected points)
+
+
+Level 6 step 1 coarsening started
+C points after 1st pass: 228
+C points after 2nd pass: 252
+C points after coarsening: 252
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (252 Coarse, 244 Fine and 0 Unconnected points)
+
+
+Level 7 step 1 coarsening started
+C points after 1st pass: 110
+C points after 2nd pass: 120
+C points after coarsening: 120
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (120 Coarse, 132 Fine and 0 Unconnected points)
+
+
+Level 8 step 1 coarsening started
+C points after 1st pass: 54
+C points after 2nd pass: 58
+C points after coarsening: 58
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (58 Coarse, 62 Fine and 0 Unconnected points)
+
+
+Level 9 step 1 coarsening started
+C points after 1st pass: 34
+C points after 2nd pass: 34
+
+Warning: some points remain neither F nor C.
+AMG is setting these to be C points to allow coarsening to continue
+C points after coarsening: 36
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (36 Coarse, 22 Fine and 0 Unconnected points)
+
+
+Level 10 step 1 coarsening started
+C points after 1st pass: 18
+C points after 2nd pass: 18
+
+Warning: some points remain neither F nor C.
+AMG is setting these to be C points to allow coarsening to continue
+C points after coarsening: 20
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (20 Coarse, 16 Fine and 0 Unconnected points)
+
+
+Level 11 step 1 coarsening started
+C points after 1st pass: 10
+C points after 2nd pass: 10
+
+Warning: some points remain neither F nor C.
+AMG is setting these to be C points to allow coarsening to continue
+C points after coarsening: 12
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (12 Coarse, 6 Fine and 2 Unconnected points)
+
+
+Level 12 step 1 coarsening started
+C points after 1st pass: 10
+C points after 2nd pass: 10
+C points after coarsening: 10
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (10 Coarse, 2 Fine and 0 Unconnected points)
+
+
+Level 13 step 1 coarsening started
+C points after 1st pass: 8
+C points after 2nd pass: 8
+C points after coarsening: 8
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (8 Coarse, 2 Fine and 0 Unconnected points)
+
+
+Level 14 step 1 coarsening started
+C points after 1st pass: 6
+C points after 2nd pass: 6
+C points after coarsening: 6
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (6 Coarse, 2 Fine and 0 Unconnected points)
+
+
+Level 15 step 1 coarsening started
+C points after 1st pass: 4
+C points after 2nd pass: 4
+C points after coarsening: 4
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (4 Coarse, 2 Fine and 0 Unconnected points)
+
+
+Level 16 step 1 coarsening started
+C points after 1st pass: 2
+C points after 2nd pass: 2
+C points after coarsening: 2
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (2 Coarse, 2 Fine and 0 Unconnected points)
+
+
+Level 17 step 1 coarsening started
+
+Warning: no negative connections exist for coarsening step 1 on level 17
+Coarsening has stopped: last viable coarse level is level 16
+AMG fine level smoothing strategy? PDJ/ILU 1/2  (default ILU)
+     1
+
+point damped Jacobi smoothing on finest level ..
+AMG iterated PCD* preconditioning ...
+fixing singularity in pressure matrix... done 
+AMG grid coarsening ... 
+
+Level 2 step 1 coarsening started
+C points after 1st pass: 512
+C points after 2nd pass: 531
+C points after coarsening: 531
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (531 Coarse, 557 Fine and 0 Unconnected points)
+
+
+Level 3 step 1 coarsening started
+C points after 1st pass: 234
+C points after 2nd pass: 249
+C points after coarsening: 249
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (249 Coarse, 282 Fine and 0 Unconnected points)
+
+
+Level 4 step 1 coarsening started
+C points after 1st pass: 115
+C points after 2nd pass: 130
+C points after coarsening: 130
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (130 Coarse, 119 Fine and 0 Unconnected points)
+
+
+Level 5 step 1 coarsening started
+C points after 1st pass: 53
+C points after 2nd pass: 65
+C points after coarsening: 65
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (65 Coarse, 65 Fine and 0 Unconnected points)
+
+
+Level 6 step 1 coarsening started
+C points after 1st pass: 27
+C points after 2nd pass: 28
+C points after coarsening: 28
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (28 Coarse, 37 Fine and 0 Unconnected points)
+
+
+Level 7 step 1 coarsening started
+C points after 1st pass: 11
+C points after 2nd pass: 11
+C points after coarsening: 11
+
+Weak positive connections exist
+Strong positive connections exist
+Coarsening completed (11 Coarse, 17 Fine and 0 Unconnected points)
+
+
+Level 8 step 1 coarsening started
+C points after 1st pass: 4
+C points after 2nd pass: 4
+C points after coarsening: 4
+
+Coarsening completed (4 Coarse, 7 Fine and 0 Unconnected points)
+
+
+Level 9 step 1 coarsening started
+C points after 1st pass: 1
+C points after 2nd pass: 1
+C points after coarsening: 1
+
+Coarsening completed (1 Coarse, 3 Fine and 0 Unconnected points)
+AMG setup of Ap done.
+point damped Jacobi smoothing on finest level ..
+
+GMRES iteration ...
+convergence in  45 iterations
+
+    k  log10(||r_k||/||r_0||)   
+    0           0.0000 
+    1          -0.0137 
+    2          -0.1359 
+    3          -0.2518 
+    4          -0.3808 
+    5          -0.5618 
+    6          -0.6942 
+    7          -0.8023 
+    8          -0.8897 
+    9          -0.9463 
+   10          -0.9598 
+   11          -0.9665 
+   12          -0.9914 
+   13          -1.0226 
+   14          -1.0575 
+   15          -1.1337 
+   16          -1.1899 
+   17          -1.2524 
+   18          -1.3178 
+   19          -1.3765 
+   20          -1.4796 
+   21          -1.6507 
+   22          -1.8148 
+   23          -2.0005 
+   24          -2.1720 
+   25          -2.3234 
+   26          -2.4884 
+   27          -2.6445 
+   28          -2.8298 
+   29          -2.9886 
+   30          -3.1569 
+   31          -3.3467 
+   32          -3.5732 
+   33          -3.7442 
+   34          -3.9775 
+   35          -4.1755 
+   36          -4.3721 
+   37          -4.5784 
+   38          -4.7608 
+   39          -4.9543 
+   40          -5.1458 
+   41          -5.3463 
+   42          -5.5462 
+   43          -5.7357 
+   44          -5.9121 
+   45          -6.0855 
+Bingo!
+
+  1.7975e-01 seconds
+
+
+use new (enter figno) or existing (0) figure, default is 0
+     0
+
+figure number (default is current active figure)
+     1
+
+colour (b,g,r,c,m,y,k): enter 1--7 (default 1)
+     7
+
+End of unsteady NS flow demo. Voila!
+diary off

@@ -1,0 +1,383 @@
+navier_testproblem
+
+specification of reference Navier-Stokes problem.
+
+choose specific example (default is cavity)
+     1  Channel domain
+     2  Flow over a backward facing step
+     3  Lid driven cavity
+     4  Flow over a plate
+     5  Flow over an obstacle
+     6  Flow in a symmetric step channel
+ : 2
+horizontal dimensions [-1,L]: L? (default L=5) : 
+
+Grid generation for backward-facing step domain.
+grid parameter: 3 for underlying 8x24 grid (default is 4) : 6
+grid stretch factor (default is 1) : 
+   Grid generation for x-channel ...done.
+   Grid generation for x-channel ...done.
+   Merger of two x-channel grids 
+   zip distance is 0.0000e+00 ... it should be close to zero!
+  All done.
+
+Q1-Q1/Q1-P0/Q2-Q1/Q2-P1: 1/2/3/4? (default Q1-P0) : 4
+setting up Q2-P1 matrices...  done
+system matrices saved in step_stokes_nobc.mat ...
+Incompressible flow problem on step domain ...
+viscosity parameter (default 1/210) : 1/50
+Picard/Newton/hybrid linearization 1/2/3 (default hybrid) : 
+number of Picard iterations (default 3) : 
+number of Newton iterations (default 5) : 
+nonlinear tolerance (default 1.1*eps) : 
+stokes system ...
+setting up Q2 convection matrix...  done.
+uniform/nonuniform streamlines 1/2 (default uniform) : 
+number of contour lines (default 50) : 75
+
+
+initial nonlinear residual is 7.159385e+00 
+Stokes solution residual is 5.179062e-01
+
+Picard iteration number 1 
+setting up Q2 convection matrix...  done.
+nonlinear residual is 6.103023e-03
+   velocity change is 8.526022e+00
+
+Picard iteration number 2 
+setting up Q2 convection matrix...  done.
+nonlinear residual is 2.288736e-03
+   velocity change is 4.045893e+00
+
+Picard iteration number 3 
+setting up Q2 convection matrix...  done.
+nonlinear residual is 8.139507e-04
+   velocity change is 1.963080e+00
+
+Newton iteration number 1 
+setting up Q2 Newton Jacobian matrices...  done.
+setting up Q2 convection matrix...  done.
+nonlinear residual is 3.809723e-05
+   velocity change is 1.286093e+00
+
+Newton iteration number 2 
+setting up Q2 Newton Jacobian matrices...  done.
+setting up Q2 convection matrix...  done.
+nonlinear residual is 1.611983e-08
+   velocity change is 3.042741e-02
+
+Newton iteration number 3 
+setting up Q2 Newton Jacobian matrices...  done.
+setting up Q2 convection matrix...  done.
+nonlinear residual is 8.587155e-15
+   velocity change is 1.851570e-05
+
+Newton iteration number 4 
+setting up Q2 Newton Jacobian matrices...  done.
+setting up Q2 convection matrix...  done.
+nonlinear residual is 5.852187e-16
+   velocity change is 9.973345e-12
+
+finished, nonlinear convergence test satisfied
+
+Natural outflow on right hand vertical boundary ..
+FAST Q2-P1 NS a posteriori error estimation 
+checking edge numbering and computing edge lengths ... done
+Q2-P1 local N-S error estimator ...  
+interior residual RHS assembly took 2.5498e-01 seconds
+flux jump RHS assembly took 4.9451e-02 seconds
+LDLT factorization took 1.4428e-02 seconds
+triangular solves took 1.1457e-02 seconds
+      computing divergence of discrete velocity solution ...  done
+      estimated velocity divergence error:  3.168182e-02 
+estimated energy error is 7.4832e-02 
+plotting element data... done
+
+refviscosity= viscosity;
+save steadysol xns nnv refviscosity
+
+%--------- run stabTR(0) for long time
+unsteady_step_navier
+Unsteady flow in a step domain ...
+viscosity parameter (default 1/220) : 1/50
+Discrete Saddle-Point DAE system ...
+target time? (default 1e8) : 
+number of timesteps (x200)? (default 5) : 1
+accuracy tolerance? (default 3e-5) : 1e-4
+number of Picard steps? (default 2) : 0
+averaging frequency? (default 10) : 
+plot solution evolution? 1/0 : 1
+plotting frequency (default every 10 time steps) : 4
+movie frame rate [fps] (default 16) : 8
+x coordinate for the horisontal velocity profile (default L/2) : 
+Solving discrete N-S system using stabilized TR ...
+
+AxBhandle = @defaultAxB
+
+intermediate (CheckPoint) datafile: stabtrNS_end
+
+  initial nonlinear residual is 6.336914e-03 
+             boundary change is 4.131180e-08 
+setting up Q2 convection matrix...  done.
+
+lastmsg =
+
+    'Matrix is close to singular or badly scaled. Results may be inaccurate. RCOND =  1.902117e-16.'
+
+This should not cause difficulty for enclosed flow problems.
+
+ StabTR with no nonlinear corrections
+   step  timestep       time        residual      divresidual     acceleration
+     1   1.000e-09     2.000e-09    0.000e+00     0.000e+00        1.303e+01
+     2   1.000e-09     2.000e-09    5.162e-15     4.602e-24        1.303e+01
+     3   1.607e-05     1.607e-05    5.427e-15     4.411e-20        1.303e+01
+     4   3.928e-04     4.089e-04    5.473e-15     1.254e-18        1.303e+01
+     5   3.191e-03     3.600e-03    5.087e-15     9.956e-18        1.298e+01
+     6   3.680e-03     7.280e-03    4.915e-15     1.697e-17        1.257e+01
+     7   4.297e-03     1.158e-02    4.704e-15     3.231e-17        1.213e+01
+     8   5.575e-03     1.715e-02    4.643e-15     4.383e-17        1.163e+01
+     9   6.823e-03     2.397e-02    4.025e-15     6.089e-17        1.102e+01
+    10   8.101e-03     3.208e-02    3.813e-15     7.362e-17        1.031e+01
+    11   9.058e-03     4.113e-02    3.721e-15     8.730e-17        9.527e+00
+    12   9.979e-03     5.111e-02    3.303e-15     1.064e-16        8.722e+00
+    13   1.053e-02     6.165e-02    3.105e-15     1.153e-16        7.916e+00
+    14   1.120e-02     7.285e-02    2.759e-15     1.317e-16        7.147e+00
+    15   1.168e-02     8.453e-02    2.350e-15     1.534e-16        6.414e+00
+    16   1.223e-02     9.676e-02    1.969e-15     1.522e-16        5.731e+00
+    17   1.277e-02     1.095e-01    1.813e-15     1.621e-16        5.096e+00
+    18   1.332e-02     1.228e-01    1.686e-15     1.635e-16        4.512e+00
+    19   1.393e-02     1.368e-01    1.544e-15     1.891e-16        3.976e+00
+    20   1.456e-02     1.513e-01    1.365e-15     1.919e-16        3.489e+00
+    21   1.526e-02     1.666e-01    1.151e-15     2.079e-16        3.047e+00
+    22   1.602e-02     1.826e-01    1.043e-15     2.124e-16        2.650e+00
+    23   1.685e-02     1.995e-01    9.126e-16     2.243e-16        2.295e+00
+    24   1.777e-02     2.172e-01    8.028e-16     2.324e-16        1.979e+00
+    25   1.878e-02     2.360e-01    6.887e-16     2.333e-16        1.701e+00
+    26   1.991e-02     2.559e-01    5.868e-16     2.407e-16        1.459e+00
+    27   2.117e-02     2.771e-01    5.841e-16     2.387e-16        1.250e+00
+    28   2.258e-02     2.997e-01    5.237e-16     2.400e-16        1.072e+00
+    29   2.419e-02     3.239e-01    4.681e-16     2.471e-16        9.227e-01
+    30   2.602e-02     3.499e-01    4.510e-16     2.418e-16        7.989e-01
+    31   2.811e-02     3.780e-01    4.284e-16     2.449e-16        6.979e-01
+    32   3.053e-02     4.085e-01    4.178e-16     2.477e-16        6.164e-01
+    33   3.333e-02     4.418e-01    4.083e-16     2.454e-16        5.510e-01
+    34   3.660e-02     4.784e-01    4.074e-16     2.504e-16        4.984e-01
+    35   4.041e-02     5.189e-01    4.156e-16     2.502e-16        4.553e-01
+    36   4.486e-02     5.637e-01    4.062e-16     2.491e-16        4.191e-01
+    37   4.998e-02     6.137e-01    4.048e-16     2.511e-16        3.879e-01
+    38   5.577e-02     6.695e-01    4.030e-16     2.583e-16        3.602e-01
+    39   6.208e-02     7.316e-01    3.991e-16     2.594e-16        3.350e-01
+    40   6.872e-02     8.003e-01    4.089e-16     2.615e-16        3.121e-01
+    41   7.549e-02     8.758e-01    4.050e-16     2.585e-16        2.912e-01
+    42   8.233e-02     9.581e-01    4.022e-16     2.630e-16        2.724e-01
+    43   8.934e-02     1.047e+00    4.082e-16     2.545e-16        2.554e-01
+    44   9.665e-02     1.144e+00    4.034e-16     2.524e-16        2.404e-01
+    45   1.044e-01     1.248e+00    4.031e-16     2.587e-16        2.270e-01
+    46   1.126e-01     1.361e+00    4.074e-16     2.676e-16        2.151e-01
+    47   1.215e-01     1.483e+00    4.159e-16     2.590e-16        2.046e-01
+    48   1.312e-01     1.614e+00    4.188e-16     2.565e-16        1.950e-01
+    49   1.416e-01     1.755e+00    4.216e-16     2.611e-16        1.862e-01
+    50   7.623e-02     1.832e+00  --- Averaging step
+    50   1.525e-01     1.832e+00    3.264e-04     2.515e-16        1.780e-01
+    51   1.633e-01     1.995e+00    4.240e-16     4.048e-16        1.736e-01
+    52   1.705e-01     2.165e+00    4.345e-16     2.565e-16        1.654e-01
+    53   1.792e-01     2.345e+00    4.250e-16     2.628e-16        1.575e-01
+    54   1.869e-01     2.532e+00    4.179e-16     2.685e-16        1.496e-01
+    55   1.938e-01     2.725e+00    4.229e-16     2.621e-16        1.417e-01
+    56   2.006e-01     2.926e+00    4.271e-16     2.548e-16        1.340e-01
+    57   2.075e-01     3.133e+00    4.293e-16     2.643e-16        1.263e-01
+    58   2.151e-01     3.349e+00    4.268e-16     2.636e-16        1.188e-01
+    59   2.232e-01     3.572e+00    4.271e-16     2.652e-16        1.115e-01
+    60   1.160e-01     3.688e+00  --- Averaging step
+    60   2.321e-01     3.688e+00    2.359e-04     2.579e-16        1.043e-01
+    61   2.416e-01     3.929e+00    4.406e-16     4.270e-16        1.006e-01
+    62   2.487e-01     4.178e+00    4.267e-16     2.644e-16        9.367e-02
+    63   2.585e-01     4.437e+00    4.348e-16     2.635e-16        8.714e-02
+    64   2.700e-01     4.707e+00    4.436e-16     2.695e-16        8.093e-02
+    65   2.819e-01     4.988e+00    4.373e-16     2.664e-16        7.505e-02
+    66   2.944e-01     5.283e+00    4.481e-16     2.676e-16        6.949e-02
+    67   3.076e-01     5.590e+00    4.484e-16     2.699e-16        6.428e-02
+    68   3.214e-01     5.912e+00    4.420e-16     2.714e-16        5.939e-02
+    69   3.358e-01     6.248e+00    4.411e-16     2.772e-16        5.482e-02
+    70   1.754e-01     6.423e+00  --- Averaging step
+    70   3.508e-01     6.423e+00    1.299e-04     2.668e-16        5.055e-02
+    71   3.665e-01     6.790e+00    4.460e-16     4.464e-16        4.836e-02
+    72   3.775e-01     7.167e+00    4.403e-16     2.737e-16        4.443e-02
+    73   3.934e-01     7.561e+00    4.431e-16     2.778e-16        4.080e-02
+    74   4.114e-01     7.972e+00    4.472e-16     2.696e-16        3.739e-02
+    75   4.294e-01     8.401e+00    4.443e-16     2.822e-16        3.416e-02
+    76   4.486e-01     8.850e+00    4.477e-16     2.767e-16        3.109e-02
+    77   4.689e-01     9.319e+00    4.491e-16     2.794e-16        2.814e-02
+    78   4.914e-01     9.810e+00    4.489e-16     2.751e-16        2.532e-02
+    79   5.174e-01     1.033e+01    4.447e-16     2.765e-16        2.266e-02
+    80   2.736e-01     1.060e+01  --- Averaging step
+    80   5.471e-01     1.060e+01    5.162e-05     2.666e-16        2.019e-02
+    81   5.786e-01     1.118e+01    4.522e-16     4.392e-16        1.894e-02
+    82   6.005e-01     1.178e+01    4.458e-16     2.791e-16        1.673e-02
+    83   6.309e-01     1.241e+01    4.523e-16     2.774e-16        1.468e-02
+    84   6.714e-01     1.308e+01    4.517e-16     2.801e-16        1.265e-02
+    85   7.284e-01     1.381e+01    4.462e-16     2.799e-16        1.058e-02
+    86   8.109e-01     1.462e+01    4.505e-16     2.748e-16        8.550e-03
+    87   9.087e-01     1.553e+01    4.550e-16     2.751e-16        6.698e-03
+    88   9.970e-01     1.653e+01    4.503e-16     2.775e-16        5.199e-03
+    89   1.086e+00     1.761e+01    4.494e-16     2.747e-16        4.094e-03
+    90   6.077e-01     1.822e+01  --- Averaging step
+    90   1.215e+00     1.822e+01    8.514e-06     2.626e-16        3.229e-03
+    91   1.434e+00     1.965e+01    4.570e-16     4.019e-16        2.834e-03
+    92   1.615e+00     2.127e+01    4.542e-16     2.829e-16        2.016e-03
+    93   2.031e+00     2.330e+01    4.466e-16     2.828e-16        1.339e-03
+    94   2.453e+00     2.575e+01    4.494e-16     2.785e-16        7.750e-04
+    95   2.844e+00     2.860e+01    4.487e-16     2.775e-16        3.804e-04
+    96   3.433e+00     3.203e+01    4.490e-16     2.760e-16        1.466e-04
+    97   4.260e+00     3.629e+01    4.513e-16     2.717e-16        3.474e-05
+    98   5.744e+00     4.203e+01    4.473e-16     2.757e-16        2.162e-05
+    99   8.648e+00     5.068e+01    4.631e-16     2.803e-16        2.058e-05
+   100   8.447e+00     5.913e+01  --- Averaging step
+   100   1.689e+01     5.913e+01    5.521e-07     2.651e-16        1.011e-05
+   101   2.706e+01     8.619e+01    4.535e-16     3.587e-16        5.976e-06
+   102   3.654e+01     1.227e+02    4.496e-16     2.820e-16        7.253e-07
+   103   5.392e+01     1.766e+02    4.538e-16     2.787e-16        9.129e-07
+   104   1.410e+02     3.177e+02    4.546e-16     2.826e-16        1.339e-06
+   105   1.775e+02     4.952e+02    4.457e-16     2.814e-16        4.332e-07
+   106   2.272e+02     7.224e+02    4.524e-16     2.782e-16        3.773e-07
+   107   3.030e+02     1.025e+03    4.503e-16     2.714e-16        6.175e-07
+   108   3.441e+02     1.370e+03    4.553e-16     2.809e-16        4.455e-07
+   109   3.986e+02     1.768e+03    4.624e-16     2.853e-16        4.726e-07
+   110   2.222e+02     1.990e+03  --- Averaging step
+   110   4.443e+02     1.990e+03    1.037e-07     2.680e-16        4.935e-07
+   111   4.805e+02     2.471e+03    4.404e-16     4.359e-16        2.379e-08
+   112   2.102e+03     4.572e+03    4.438e-16     2.754e-16        1.159e-08
+   113   3.617e+03     8.189e+03    4.453e-16     2.706e-16        4.259e-09
+   114   8.097e+03     1.629e+04    4.570e-16     2.708e-16        4.420e-09
+   115   1.280e+04     2.908e+04    4.595e-16     2.792e-16        4.022e-09
+   116   1.973e+04     4.881e+04    4.600e-16     2.767e-16        4.113e-09
+   117   2.663e+04     7.544e+04    4.547e-16     2.730e-16        4.006e-09
+   118   3.395e+04     1.094e+05    4.547e-16     2.794e-16        3.987e-09
+   119   4.077e+04     1.502e+05    4.466e-16     2.763e-16        4.043e-09
+   120   2.346e+04     1.736e+05  --- Averaging step
+   120   4.692e+04     1.736e+05    2.143e-08     2.735e-16        4.016e-09
+   121   5.226e+04     2.259e+05    4.542e-16     4.281e-16        2.135e-11
+   122   3.480e+05     5.738e+05    4.438e-16     2.759e-16        2.450e-11
+   123   6.914e+05     1.265e+06    4.489e-16     2.770e-16        1.057e-11
+   124   1.681e+06     2.946e+06    4.491e-16     2.771e-16        1.183e-11
+   125   3.139e+06     6.085e+06    4.491e-16     2.793e-16        1.323e-11
+   126   5.004e+06     1.109e+07    4.590e-16     2.735e-16        1.280e-11
+   127   7.155e+06     1.824e+07    4.504e-16     2.704e-16        1.257e-11
+   128   9.482e+06     2.773e+07    4.491e-16     2.747e-16        1.244e-11
+   129   1.176e+07     3.949e+07    4.584e-16     2.749e-16        1.264e-11
+   130   6.924e+06     4.641e+07  --- Averaging step
+   130   1.385e+07     4.641e+07    3.093e-08     2.637e-16        1.271e-11
+   131   1.569e+07     6.210e+07    4.546e-16     4.129e-16        1.068e-13
+   132   3.790e+07     1.000e+08    4.575e-16     2.728e-16        7.691e-14
+finished in  132 steps!
+final time solution data is saved in stabtrNS_end.mat
+Integration took  5.068e+01 seconds
+
+use new (enter figno) or existing (0) figure, default is 0 : 19
+132 timesteps
+
+Generating movies ... 
+%--------- movie generation might fail with unhelpful MATLAB error message
+%--------- Error... the specified profile is not valid. 
+%--------- It will almost certainly fail in Octave 
+   Segment 1: Time steps 1 to 132
+      computing divergence of discrete velocity solution ...  done
+      estimated velocity divergence error:  3.168183e-02 
+      minimum energy is 1.30301e-08       and maximum is 1.50739
+All done
+
+%--------- the following code should work even if movie generation fails
+%---------- check snapshots
+load MovieData1
+snaptime=[10,50,100,130];
+step_unsteadyflowrefX(qmethod,mv,U,time,A,By,Bx,G,xy,xyp,x,y,bound,snaptime,symm);
+
+   Plotting flow field snapshots ... 
+   step   time    mean_vorticity    min_phi  max_phi
+    10    0.032    3.000e-06        0.00000  1.829e-01
+    50    1.832    3.275e-05       -0.01650  6.667e-01
+   100   59.130   -7.493e-04       -0.02829  6.667e-01
+   130  46410278.414   -7.382e-04       -0.02829  6.667e-01
+   All done
+
+%---------- compare with steady state
+load steadysol
+norm(viscosity-refviscosity,inf)
+ans = 0
+
+ufinal=U(:,end);
+norm(ufinal-xns(1:nnv),inf)
+ans = 9.6900e-07
+
+%--------- restart integration with stabTR(1)
+restart_step_navier
+Navier-Stokes flow in step domain ... 
+Restarting integration from Checkpoint datafile ...
+viscosity parameter is    2.000e-02
+restarting from   1.000e+08 seconds
+new final time? (1e14) : 
+number of timesteps (x200)? (default 5) : 1
+accuracy tolerance? (default 3e-5) : 1e-4
+number of Picard steps? (default 1) : 
+averaging frequency? (default 10) : 
+plot solution evolution? 1/0 : 0
+Solving discrete N-S system using stabilized TR ...
+
+AxBhandle =   @defaultAxB
+
+Timestep   132  Time   1.000e+08 
+Restarting integration ...
+ 
+ StabTR with  1 nonlinear corrections
+   step  timestep       time        residual      divresidual     acceleration
+  8.52e-14   --- nonlinear correction  
+     2   5.487e+08     6.487e+08    4.568e-16     3.161e-16        2.893e-14
+  2.67e-14   --- nonlinear correction  
+     3   8.164e+08     1.465e+09    4.776e-16     3.261e-16        2.466e-14
+  8.57e-15   --- nonlinear correction  
+     4   1.738e+09     3.203e+09    4.804e-16     3.287e-16        2.306e-14
+  2.62e-15   --- nonlinear correction  
+     5   2.623e+09     5.826e+09    4.627e-16     3.268e-16        2.291e-14
+  9.99e-16   --- nonlinear correction  
+     6   3.905e+09     9.731e+09    4.740e-16     3.247e-16        2.298e-14
+  3.36e-16   --- nonlinear correction  
+     7   5.114e+09     1.485e+10    4.665e-16     3.301e-16        2.303e-14
+  1.20e-16   --- nonlinear correction  
+     8   6.385e+09     2.123e+10    4.748e-16     3.123e-16        2.305e-14
+  4.77e-17   --- nonlinear correction  
+     9   7.519e+09     2.875e+10    4.645e-16     3.118e-16        2.305e-14
+  1.94e-17   --- nonlinear correction  
+    10   4.274e+09     3.302e+10  --- Averaging step
+    10   8.549e+09     3.302e+10    1.183e-10     2.900e-16        2.305e-14
+  6.61e-18   --- nonlinear correction  
+    11   9.422e+09     4.245e+10    4.551e-16     4.641e-16        6.480e-19
+  2.13e-18   --- nonlinear correction  
+    12   3.101e+11     3.526e+11    4.676e-16     3.195e-16        2.991e-19
+  2.67e-19   --- nonlinear correction  
+    13   1.256e+12     1.608e+12    4.647e-16     3.142e-16        2.502e-19
+  6.88e-20   --- nonlinear correction  
+    14   7.578e+12     9.186e+12    4.619e-16     3.166e-16        2.374e-19
+  1.47e-20   --- nonlinear correction  
+    15   2.274e+13     3.192e+13    4.615e-16     3.255e-16        2.375e-19
+  4.03e-21   --- nonlinear correction  
+    16   6.015e+13     9.208e+13    4.699e-16     3.158e-16        2.379e-19
+  3.73e-21   --- nonlinear correction  
+    17   7.923e+12     1.000e+14    4.617e-16     3.125e-16        2.381e-19
+finished in   17 steps!
+final time solution data is saved in stabtrNS_end.mat
+Integration took  1.923e+01 seconds
+
+132 timesteps
+use new (enter figno) or existing (0) figure, default is 0 : 
+figure number (default is current active figure) : 
+150 timesteps
+All done
+
+%---------- compare with steady state
+load steadysol
+load MovieData1
+ufinal=U(:,end);
+norm(ufinal-xns(1:nnv),inf)
+ans = 4.2034e-10
+
+diary off

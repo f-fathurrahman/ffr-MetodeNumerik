@@ -1,0 +1,70 @@
+These notes are associated with the updates from version 3.4 to 3.7.
+
+The major updates in IFISS 3.4 were:
+o new function install_ifiss (to supplement helpme)
+o new function newchannel_domain 
+  (extended outflow compared to channel_domain)
+o inclusion of rsquare_domain and usquare_domain 
+  (called in place of square_domain for convection-difusion test problems) 
+o new symmetric step domain and functionality for solving associated 
+  steady and unsteady flow problems (see symmetricstep.txt)
+
+
+The significant updates in IFISS 3.5 were the addition of new 
+functionality within the /timestepping/ directory:
+o  updated driver function stabtrNS with the inclusion of an option 
+   to perform nonlinear (Picard) iterations at every time step
+o  new driver restart_stabtrNS to effect a warm restart from a 
+   previously computed solution
+o  new post-processing function (energymeanvorticity) that generates
+   mean vorticity and acceleration data (to allow one to assess 
+   convergence to a steady-state)  
+o  enhanced post-processing of unsteady flow solution data: notably
+   in the generation of (.avi) animations using the enhanced 
+   video functionality built into recent releases of MATLAB.
+
+The most significant update in IFISS 3.6 is the addition of 
+the /biharmonic/ directory and functionality. 
+Other changes include
+o removal of the GMG functionality when solving Stokes and 
+  N-S flow problems using it_solve
+o removal of stabilised approximation (Q1-P0, Q1-Q1) when solving
+  unsteady flow problems
+o removal of shifted domain option when solving poisson control
+  problems
+o correction of the error estimation for steady Stokes and N-S
+  (the functions q1div and q2div were originally coded incorrectly
+  so Tables 3.4 and 3.5 and 8.1 in [ESW2014] are incorrect)
+
+
+A minor issue with the implementation of time-dependent boundary 
+conditions after a stabilized integration step has been addressed in 
+a rerelease of the package.
+. The updated routines are stabtr, stabtrNS and restart_stabTR, while 
+  the originals are renamed as stabtrz, stabtrNSz and restart_stabTRz. 
+. The updated version of stabtrBouss included within /boussinesq_flow/ 
+  as stabtrBoussX is not called by default. This is to ensure that the 
+  results reported in chapter 11 of [ESW2014] are reproducible.
+
+One other addition in the rerelease gives the user the option of solving 
+a "regularised" double glazing problem when running cd_testproblem. (The
+original specification of the problem does not have a weak solution!)
+ 
+
+The most significant update in IFISS 3.7 is the inclusion of additional 
+functionality within the /biharmonic/ and /timestepping/ directories. 
+These changes facilitate the automatic creation of videos. These
+are stored in the /datafiles/ directory and can be viewed using 
+QuickTime player on a Mac or Windows Media player on a PC. 
+
+The second update is the inclusion of two-field pressure functionality
+for Stokes and Navier-Stokes flow
+
+Other changes include 
+o removal of the biharmonic directory/functionality
+o removal of the original versions of stabTR that were retained in 3.6
+o optimisation of the AMG grid setup code 
+
+ 
+David Silvester
+5 August 2023.
