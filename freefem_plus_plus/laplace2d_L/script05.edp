@@ -1,0 +1,23 @@
+// Step size for border discretization
+real h = 0.05;
+
+// L-shaped domain definition (counterclockwise):
+// Path: (0,0) -> (1,0) -> (1,0.5) -> (0.5,0.5) -> (0.5,1) -> (0,1) -> (0,0)
+
+// Borders defined in proper order with correct connectivity
+border b1(t = 0, 1)     { x = t;     y = 0;     label = 1; } // bottom
+border b2(t = 0, 0.5)   { x = 1;     y = t;     label = 2; } // right lower
+border b3(t = 1, 0.5)   { x = t;     y = 0.5;   label = 3; } // inner bottom
+border b4(t = 0.5, 1)   { x = 0.5;   y = t;     label = 4; } // inner right
+border b5(t = 0.5, 0)   { x = t;     y = 1;     label = 5; } // top
+border b6(t = 1, 0)     { x = 0;     y = t;     label = 6; } // left
+
+// Plot only borders to debug geometry (no mesh)
+plot(b1(20) + b2(20) + b3(20) + b4(20) + b5(20) + b6(20),
+     wait=true, fill=false, cmm="L-shaped border (no mesh)");
+
+// Now safely build the mesh
+mesh Th = buildmesh(b1(h) + b2(h) + b3(h) + b4(h) + b5(h) + b6(h));
+
+// Plot the mesh to verify
+plot(Th, wait=true, cmm="Mesh of L-shaped domain");

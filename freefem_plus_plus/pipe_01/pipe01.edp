@@ -1,0 +1,57 @@
+// Parameters
+real nu = 0.01;  // kinematic viscosity
+int n = 30;      // mesh resolution
+
+// Geometry: S-shaped pipe
+// Define pipe width and height
+real L = 4.0, H = 1.0;
+
+border bottom1(t=0,L){x=t; y=0;}
+border right1(t=0,H){x=L; y=t;}
+border top1(t=0,L){x=L-t; y=H;}
+border right2(t=0,H){x=0; y=H+t;}
+border top2(t=0,L){x=t; y=2*H;}
+border right3(t=0,H){x=L; y=2*H-t;}
+border top3(t=0,L){x=L-t; y=H;}
+border left(t=0,H){x=0; y=H-t;}
+
+plot(bottom1(n) + right1(n) + top1(n) + right2(n) + top2(n) + right3(n) + top3(n) + left(n) ,
+    wait=true, cmm = "Just the border lines", fill=false);
+
+
+//mesh Th = buildmesh(bottom1(n) + right1(n) + top1(n) + right2(n)
+//                    + top2(n) + right3(n) + top3(n) + left(n));
+
+/*
+// Plot mesh with labels
+plot(Th, wait=true, cmm="S-shaped mesh");
+
+// Finite element spaces
+fespace Vh(Th, P2); // velocity
+fespace Ph(Th, P1); // pressure
+Vh u, v, ux, uy;
+Ph p, q;
+
+// Define boundaries
+func inlet = y<=0.01;
+func outlet = y>=2*H - 0.01;
+
+// Boundary condition
+func inletProfile = 4*y*(H - y)/(H*H); // parabolic
+
+// Problem definition (Taylor-Hood P2-P1)
+problem NS([u,v,p],[ux,uy,q])
+    = int2d(Th)( nu*(dx(u)*dx(ux) + dy(u)*dy(ux)
+                    + dx(v)*dx(uy) + dy(v)*dy(uy))
+                + (u*dx(u)+v*dy(u))*ux
+                + (u*dx(v)+v*dy(v))*uy
+                - p*(dx(ux)+dy(uy)) - q*(dx(u)+dy(v)) )
+    + on(inlet, u=inletProfile, v=0)
+    + on(outlet, p=0)
+    + on(bottom1, top1, top2, top3, right1, right2, right3, left, u=0, v=0);
+
+real[int] sol = NS;
+
+plot([u,v], wait=true, cmm="Velocity field");
+plot(p, wait=true, cmm="Pressure");
+*/
