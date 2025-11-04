@@ -1,0 +1,39 @@
+% Calculate incident plane wave power
+radiated_power = zeros(number_of_farfield_frequencies,1);
+
+for mi=1:number_of_farfield_frequencies
+
+    powr_zp = farfield_cell_areas_zp_zn .* ...
+        (cmyzp(mi,:,:,:).* conj(cjxzp(mi,:,:,:)) ...
+        - cmxzp(mi,:,:,:) .* conj(cjyzp(mi,:,:,:)));
+    
+    powr_zn = farfield_cell_areas_zp_zn .* ...
+        (cmyzn(mi,:,:,:)  .* conj(cjxzn(mi,:,:,:)) ...
+        - cmxzn(mi,:,:,:) .* conj(cjyzn(mi,:,:,:)));
+
+    powr_yp = farfield_cell_areas_yp_yn .* ...
+        (cmxyp(mi,:,:,:) .* conj(cjzyp(mi,:,:,:)) ...
+        - cmzyp(mi,:,:,:) .* conj(cjxyp(mi,:,:,:)));
+    
+    powr_yn = farfield_cell_areas_yp_yn .* ...
+        (cmxyn(mi,:,:,:) .* conj(cjzyn(mi,:,:,:)) ...
+        - cmzyn(mi,:,:,:) .* conj(cjxyn(mi,:,:,:)));
+    
+    powr_xp = farfield_cell_areas_xp_xn .* ...
+        (cmzxp(mi,:,:,:) .* conj(cjyxp(mi,:,:,:)) ...
+        - cmyxp(mi,:,:,:) .* conj(cjzxp(mi,:,:,:)));
+    
+    powr_xn = farfield_cell_areas_xp_xn .* ...
+        (sum(cmzxn(mi,:,:,:) .* conj(cjyxn(mi,:,:,:)) ...
+        - cmyxn(mi,:,:,:) .* conj(cjzxn(mi,:,:,:)))));
+
+    powr_zp = sum(sum(sum(powr_zp);
+    powr_zn = sum(sum(sum(powr_zn);
+    powr_yp = sum(sum(sum(powr_yp);
+    powr_yn = sum(sum(sum(powr_yn);
+    powr_xp = sum(sum(sum(powr_xp);
+    powr_xn = sum(sum(sum(powr_xn);
+
+    powr = powr_zp - powr_zn + powr_yp - powr_yn + powr_xp - powr_xn;
+    radiated_power(mi) = 0.5 * real(powr);
+end

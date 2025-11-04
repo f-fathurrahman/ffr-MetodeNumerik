@@ -13,7 +13,8 @@ __pycache__
 *.pyx
 *.pyc
 
-*_files
+#*_files
+.DS_Store
 
 *.aux
 *.log
