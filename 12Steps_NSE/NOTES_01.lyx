@@ -339,6 +339,8 @@ Persamaan Burgers 2d
 \end_layout
 
 \begin_layout Standard
+Persamaan Burger adalah persamaan diferensial parsial terkopel.
+ Dalam 2d persamaan ini dapat dituliskan sebagai:
 \begin_inset Formula 
 \[
 \frac{\partial u}{\partial t}+u\frac{\partial u}{\partial x}+v\frac{\partial u}{\partial y}=\nu\left(\frac{\partial^{2}u}{\partial x^{2}}+\frac{\partial^{2}u}{\partial y^{2}}\right)
@@ -347,9 +349,6 @@ Persamaan Burgers 2d
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\partial v}{\partial t}+u\frac{\partial v}{\partial x}+v\frac{\partial v}{\partial y}=\nu\left(\frac{\partial^{2}v}{\partial x^{2}}+\frac{\partial^{2}v}{\partial y^{2}}\right)
