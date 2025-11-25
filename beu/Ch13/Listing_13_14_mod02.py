@@ -4,45 +4,46 @@ import numpy as np
 import cmath
 
 import matplotlib.pyplot as plt
+
 import matplotlib
 matplotlib.style.use("dark_background")
 
-def TriDiagSys(a, b, c, d, n):
-    #----------------------------------------------------------------------------
+import matplotlib_inline
+matplotlib_inline.backend_inline.set_matplotlib_formats("svg")
+
+
+def linsolve_tridiag(N, a, b, c, d):
     # Solves a system with tridiagonal matrix by LU factorization (diag(L) = 1).
     # a - lower codiagonal (i=2,n)
     # b - main diagonal (i=1,n)
     # c - upper codiagonal (i=1,n-1)
     # d - constant terms (i=1,n); solution on exit
     # n - order of system.
-    #----------------------------------------------------------------------------
     if b[1] == 0.0:
-        print("TriDiagSys: singular matrix !")
-        return
+        raise RuntimeError("TriDiagSys: singular matrix !")
 
-    for i in range(2,n+1):
+    for i in range(2,N+1):
         # factorization
         a[i] = a[i]/b[i-1]
         b[i] = b[i] - a[i]*c[i-1]
         if b[i] == 0.0:
-            print("TriDiagSys: singular matrix !")
-            return
+            raise RuntimeError("TriDiagSys: singular matrix !")
         d[i] = d[i] - a[i]*d[i-1]
     
-    d[n] = d[n]/b[n]
+    d[N] = d[N]/b[N]
     # backward substitution
-    for i in range(n-1,0,-1):
+    for i in range(N-1,0,-1):
         d[i] = (d[i] - c[i]*d[i+1])/b[i]
     return
 
-def PropagQTD(Psi, V, Nx, Δx, Δt):
+def propagate(Psi, V, Nx, Δx, Δt):
     # Propagates the solution PSI = Psi + i Chi of the 1D Schrodinger equation
     #
     # i d/dt PSI(x,t) = [-(1/2) d2/dx2 - V(x)] PSI(x,t),
-    # over the time interval ht. Uses the Crank-Nicolson scheme on a grid with
+    # over the time interval Δt.
+    # Uses the Crank-Nicolson scheme on a grid with
     # nx nodes and spacing hx and solves the tridiagonal discretized system by
     # LU factorization. Uses complex arithmetic.
-    #----------------------------------------------------------------------------
     a = np.zeros(Nx+1, dtype=np.complex128) # diagonals of discretized system
     b = np.zeros(Nx+1, dtype=np.complex128)
     c = np.zeros(Nx+1, dtype=np.complex128)
@@ -63,19 +64,22 @@ def PropagQTD(Psi, V, Nx, Δx, Δt):
     b[Nx] = 1.0
     d[Nx] = 0.0
     # solve tridiagonal discretized system
-    TriDiagSys(a, b, c, d, Nx)
+    linsolve_tridiag(Nx, a, b, c, d)
     return d
 
 
-def Pot(x, a, V0):
-    return V0 if fabs(x) <= 0.5*a else 0.0
+def calc_potential_square(x, a, V0):
+    if fabs(x) <= 0.5*a:
+        return V0
+    else:
+        return 0
 
 # Initial Gaussian wave packet
-def Init(Psi, x, nx, x0, sig, k0):
+def initial_wavepacket(Psi, x, nx, x0, σ, k0):
     # Psi(x,0) = 1/sqrt(sqrt(2*pi)*sig) * exp[-(x-x0)^2/(4*sig^2)] * exp(ikx)
     # x0 - position of center, sig - half-width, k0 - average wave number
-    a =  1.0/sqrt(sqrt(2*pi)*sig)
-    b = -1.0/(4*sig*sig)
+    a =  1.0/sqrt(sqrt(2*pi)*σ)
+    b = -1.0/(4*σ**2)
     for i in range(1,nx+1):
         dx = x[i] - x0
         f = a * np.exp(b*dx*dx)
@@ -85,14 +89,15 @@ def Init(Psi, x, nx, x0, sig, k0):
 
 
 # Calculates the probability density Psi2[] of the wave function Psi[]
-def ProbDens(Psi, Psi2, nx, hx):
+def calc_prob_dens(Psi, Psi2, nx, hx):
     for i in range(1,nx+1):
         Psi2[i] = abs(Psi[i])*abs(Psi[i])
         # unnormalized probability density
-        if (Psi2[i] <= 1e-10): Psi2[i] = 0.0
+        if (Psi2[i] <= 1e-10):
+            Psi2[i] = 0.0
 
     # integral by trapezoidal rule    
-    PsiNorm = 0.5e0*(Psi2[1] + Psi2[nx])
+    PsiNorm = 0.5*(Psi2[1] + Psi2[nx])
     for i in range(2,nx):
         PsiNorm = PsiNorm + Psi2[i]
     PsiNorm = PsiNorm*hx
@@ -105,35 +110,47 @@ def ProbDens(Psi, Psi2, nx, hx):
 # main
 a = 5.0     # width of potential barrier
 V0 = 30.0   # height of potential barrier
-x0 = -20.0  # initial position of wave packet
+x0 = 0.0  # initial position of wave packet
 sig = 1.0    # half-width of packet
-k0 = 10.0   # average wave number of packet
+k0 = 5.0   # average wave number of packet
 xmax = 100.0
-hx = 5e-2 # spatial step size
-tmax = 5.0
-ht = 5e-3 # time step
+Δx = 5e-2 # spatial step size
+tmax = 10.0
+Δt = 5e-3 # time step
 nout = 50 # output every nout steps
 
-Nx = 2*int((xmax/hx + 0.5) + 1) # odd number of spatial nodes
-Nt = int((tmax/ht + 0.5)) # number of time steps
+Nx = 2*int((xmax/Δx + 0.5) + 1) # odd number of spatial nodes
+Nt = int((tmax/Δt + 0.5)) # number of time steps
 Nx2 = int(Nx/2)
+print("Nx = ", Nx)
+print("Nt = ", Nt)
 
 Psi = np.zeros(Nx+1, dtype=np.complex128)
 Psi2 = np.zeros(Nx+1)
 V = np.zeros(Nx+1)
 x = np.zeros(Nx+1)
-
 for i in range(1,Nx+1):
-    x[i] = (i - Nx2 - 1)*hx
-    V[i] = Pot(x[i], a, V0)
+    x[i] = (i - Nx2 - 1)*Δx
+    V[i] = 0.5*x[i]**2 * 0.1
 
-Init(Psi, x, Nx, x0, sig, k0)
+print(f"x[0] = {x[0]} x[end] = {x[-1]}")
+
+initial_wavepacket(Psi, x, Nx, x0, sig, k0)
+Psir = np.real(Psi)
+Psii = np.imag(Psi)
+plt.figure(figsize=(6,3))
+plt.plot(x, Psir, label="real")
+plt.plot(x, Psii, label="imag")
+plt.plot(x, np.real(np.conj(Psi)*Psi), label="squared")
+plt.xlim(x0-5,x0+5)
+plt.legend()
+plt.savefig("IMG_initial.png", dpi=150);
 
 for it in range(1,Nt+1):
-    t = it*ht
+    t = it*Δt
     print("time = %.5f" % t)
-    Psi = PropagQTD(Psi, V, Nx, hx, ht) # propagate solution by tridiagonal solver
-    PsiNorm = ProbDens(Psi, Psi2, Nx, hx) # probability density
+    Psi = propagate(Psi, V, Nx, Δx, Δt) # propagate solution by tridiagonal solver
+    PsiNorm = calc_prob_dens(Psi, Psi2, Nx, Δx) # probability density
     if (it % nout == 0 or it == Nt):
         # output every nout steps
         fname = "IMG_psi2_{:08d}.png".format(it)
