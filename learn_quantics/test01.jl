@@ -1,13 +1,11 @@
-using Pkg
-Pkg.activate("QUANTICS", shared=true)
-
-using Plots
-using PlotThemes
-themes!(:dark)
 
 import QuanticsGrids as QG
 import TensorCrossInterpolation as TCI
 using QuanticsTCI: QuanticsTCI, quanticscrossinterpolate, integral
+
+using Plots
+using PlotThemes
+themes!(:dark)
 
 B = 2^(-30);
 function f(x)
