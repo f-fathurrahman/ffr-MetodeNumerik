@@ -41,3 +41,42 @@ class ElectrostaticElement(Element):
         self.jpg = eps # why jpg ???
         self.rho = rho
 
+
+class MagnetostaticElement(Element):
+    def __init__(self):
+        super().__init__()
+        self.mu0 = 4*np.pi*1e-7
+        self.nu0 = 1/(self.mu0)
+        # Local matrices
+        self.S = np.zeros((3, 3))
+        self.I = np.zeros(3)
+        # Properties
+        self.nu = self.nu0
+        self.J = 0
+        # Nodal potentials
+        self.A = None
+        # Field components
+        self.Bx = None
+        self.By = None
+        self.modB = None
+    
+    def computeMatrix(self):
+        fac = self.nu * self.nu0 / (4 * self.Delta)
+        self.S = fac * (np.outer(self.b, self.b) + np.outer(self.c, self.c))
+        self.I = (self.J * self.Delta / 3) * np.ones(3)
+
+    def setNodes(self, x, y):
+        super().setNodes(x, y)
+        self.computeMatrix()
+
+    def setProperties(self, nu, J):
+        self.nu, self.J = nu * self.nu0, J
+        self.computeMatrix()
+
+    def setNodePotentials(self, A):
+        self.A = A
+        # Calculate Bx based on A, b, and c
+        self.Bx = 1/(2*self.Delta) * (self.c[0]*A[0] + self.c[1]*A[1] + self.c[2]*A[2])
+        # Calculate By based on A, b, and c
+        self.By = -1/(2*self.Delta) * (self.b[0]*A[0] + self.b[1]*A[1] + self.c[2]*A[2])
+        self.modB = np.sqrt(self.Bx**2 + self.By**2) # Magnitude of B
