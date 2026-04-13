@@ -6,7 +6,10 @@
 %addpath(genpath('D:\WORKS\my_github_repos\ffr-MetodeNumerik\ufvm\src'))
 %addpath(genpath('D:\WORKS\my_github_repos\ffr-MetodeNumerik\ufvm\src\utilities'))
 
-addpath(genpath('D:\WORKS\my_github_repos\ffr-MetodeNumerik\ufvm\src_debug'))
+addpath(genpath('c:\Users\Mariya/WORKS\my_github_repos\ffr-MetodeNumerik\ufvm\src_debug'))
+addpath(genpath('c:\Users\Mariya/WORKS\my_github_repos\ffr-MetodeNumerik\ufvm\src_debug\utilities'))
+
+%addpath(genpath('D:\WORKS\my_github_repos\ffr-MetodeNumerik\ufvm\src_debug'))
 
 % Need a robust way to join strings
 
