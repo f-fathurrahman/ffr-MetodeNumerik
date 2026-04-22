@@ -1,0 +1,49 @@
+// Load required plugins
+load "msh3"
+load "TetGen"
+load "medit"
+include "MeshSurface.idp"
+
+// Geometry parameters
+real rSphere = 0.5;
+real rCyl    = 0.3;
+real lenCyl  = 1.5;
+real centerDist = 1.8;
+real meshSize = 0.1;
+
+real xLeft  = -centerDist/2;
+real xRight =  centerDist/2;
+
+// 1. Create the two spheres (surface meshes) - FIX: use separate coordinates
+meshS sphereLeft  = Sphere(rSphere, meshSize, 1, 1, xLeft, 0.0, 0.0);
+meshS sphereRight = Sphere(rSphere, meshSize, 2, 1, xRight, 0.0, 0.0);
+
+// 2. Create the cylinder (surface mesh)
+int nTheta = 40;
+int nZ = 20;
+real zStart = -lenCyl/2;
+real zEnd   =  lenCyl/2;
+
+// Lateral surface (cylinder function expects real arrays of length 3)
+real[int] start1 = [rCyl, 0.0, zStart];
+real[int] end1   = [rCyl, 0.0, zEnd];
+meshS cylLat = cylinder(start1, end1, nTheta, nZ, 3);
+
+// Bottom and top caps
+border diskBorder(t=0, 2*pi) { x = rCyl*cos(t); y = rCyl*sin(t); }
+mesh diskMesh = buildmesh(diskBorder(nTheta));
+meshS cylBottom = movemeshS(diskMesh, [x, y, zStart]);
+meshS cylTop    = movemeshS(diskMesh, [x, y, zEnd]);
+
+meshS cylinderSurf = cylLat + cylBottom + cylTop;
+
+// 3. Assemble the full surface mesh
+meshS dumbbellSurf = sphereLeft + sphereRight + cylinderSurf;
+
+// 4. Generate the volume tetrahedral mesh using TetGen
+real[int, int] regions = [[0.0, 0.0, 0.0, 1, meshSize^3]];
+mesh3 Th3D = tetg(dumbbellSurf, switch="pqaAAYYQ", nbofregions=1, regionlist=regions);
+
+// 5. Show the mesh (command to display)
+plot(Th3D, wait=true, cmm="Dumbbell mesh");
+// Optional: medit("Dumbbell mesh", Th3D);

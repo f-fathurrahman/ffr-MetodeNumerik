@@ -1,0 +1,59 @@
+// Load necessary plugins
+load "msh3"
+load "TetGen"
+load "medit"
+include "MeshSurface.idp"
+
+// ==================================================
+// Define Geometry Parameters
+// ==================================================
+real Rsphere = 0.5;           // Sphere radius
+real Rcylinder = 0.3;         // Cylinder radius
+real Lcylinder = 1.5;         // Cylinder length (distance between sphere centers)
+real centerdistance = 1.8;     // Distance between sphere centers (Lcylinder + 2 * offset)
+real hsize = 0.1;               // Mesh size on surfaces
+
+// Center coordinates for spheres and cylinder
+real xcleft = -centerdistance/2;      // Left sphere center (-0.9)
+real xcright = centerdistance/2;      // Right sphere center (0.9)
+
+// ==================================================
+// 1. Create Spheres (Surface Meshes)
+// ==================================================
+meshS ThSleft = Sphere(Rsphere, hsize, 1, 1, [xcleft, 0.0, 0.0]);   // Left sphere
+meshS ThSright = Sphere(Rsphere, hsize, 2, 1, [xcright, 0.0, 0.0]); // Right sphere
+
+// ==================================================
+// 2. Create Cylinder (Surface Mesh)
+// ==================================================
+int nTheta = 40;          // Azimuthal divisions
+int nZ = 20;              // Longitudinal divisions
+real zStart = -Lcylinder/2;
+real zEnd = Lcylinder/2;
+
+// Lateral surface (theta, z) -> (R*cos(theta), R*sin(theta), z)
+meshS ThCyllat = cylinder( [Rcylinder, 0.0, zStart], [Rcylinder, 0.0, zEnd], nTheta, nZ, 3 );
+
+// Bottom cap (disk) in the x-y plane at z = zStart
+border Cbottom(t=0, 2*pi) { x = Rcylinder*cos(t); y = Rcylinder*sin(t); }
+mesh Thbottomdisk = buildmesh( Cbottom( nTheta ) );
+meshS ThCylbottom = movemeshS( Thbottomdisk, [x, y, zStart] );
+
+// Top cap (disk) at z = zEnd
+meshS ThCyltop = movemeshS( Thbottomdisk, [x, y, zEnd] );
+
+// Combine cylinder surfaces into one meshS
+meshS ThCyl = ThCyllat + ThCylbottom + ThCyltop;
+
+// ==================================================
+// 3. Assemble the Full Surface Mesh
+// ==================================================
+meshS ThDumbbell = ThSleft + ThSright + ThCyl;
+
+// ==================================================
+// 4. Generate the Volumetric Tetrahedral Mesh with TetGen
+// ==================================================
+// Define the interior region: choose a point inside the dumbbell
+real[int, int] regions = [[0.0, 0.0, 0.0, 1, hsize^3]]; // [x, y, z, regionlabel, maxtetvolume]
+mesh3 Th3D = tetg( ThDumbbell, switch="pqaAAYYQ", nbofregions=1, regionlist=regions );
+
